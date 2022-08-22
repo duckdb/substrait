@@ -47,7 +47,7 @@ jobs:
 
     - name: Test Python
       run: |
-        (cd test/python && python3.7 -m pytest)
+        (cd test/python && python -m pytest)
 
     - name: Test R
       run: |
