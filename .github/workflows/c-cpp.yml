@@ -56,7 +56,6 @@ jobs:
 
     - name: Test Python
       run: |
-        
         python3 -m pip install duckdb --pre
         python3 -m pip install pytest python3 -m pip install pandas && && python3 -m python3 -m pip install --prefer-binary "ibis-framework[duckdb]" && python3 -m pip install --prefer-binary "ibis-substrait"  && python3 -m python3 -m pip install --prefer-binary "substrait-validator"  python3 -m pip uninstall protobuf && python3 -m pip install --no-binary protobuf protobuf
         (cd test/python && python3 -m pytest)
