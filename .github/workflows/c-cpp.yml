@@ -25,13 +25,9 @@ jobs:
         python3 get-pip.py --user
         python3 -m pip install awscli --upgrade --user
 
-    - uses: actions/setup-python@v2
-      with:
-        python-version: '3.7'
-
-    - uses: r-lib/actions/setup-r@v1
-      with:
-        r-version: 'devel'
+#    - uses: r-lib/actions/setup-r@v1
+#      with:
+#        r-version: 'devel'
 
     - uses: actions/checkout@v2
       with:
@@ -50,9 +46,9 @@ jobs:
 
     - name: Test Python
       run: |
-        pip install duckdb --pre
-        pip install pytest && pip install --prefer-binary "ibis-framework[duckdb]" && pip install --prefer-binary "ibis-substrait"  && pip install --prefer-binary "substrait-validator"  pip uninstall protobuf && pip install --no-binary protobuf protobuf
-        (cd test/python && python -m pytest)
+        python3 -m pip install duckdb --pre
+        python3 -m pip install pytest && python3 -m python3 -m pip install --prefer-binary "ibis-framework[duckdb]" && python3 -m pip install --prefer-binary "ibis-substrait"  && python3 -m python3 -m pip install --prefer-binary "substrait-validator"  python3 -m pip uninstall protobuf && python3 -m pip install --no-binary protobuf protobuf
+        (cd test/python && python3 -m pytest)
 
     - name: Test R
       run: |
