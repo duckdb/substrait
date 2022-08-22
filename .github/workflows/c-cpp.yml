@@ -29,6 +29,10 @@ jobs:
       with:
         python-version: '3.7'
 
+    - uses: r-lib/actions/setup-r@v1
+      with:
+        r-version: 'devel'
+
     - uses: actions/checkout@v2
       with:
         fetch-depth: 0
@@ -49,6 +53,11 @@ jobs:
         pip install duckdb --pre
         pip install pytest && pip install --prefer-binary "ibis-framework[duckdb]" && pip install --prefer-binary "ibis-substrait"  && pip install --prefer-binary "substrait-validator"  pip uninstall protobuf && pip install --no-binary protobuf protobuf
         (cd test/python && python -m pytest)
+
+    - name: Test R
+      run: |
+        R -f test/r/dependencies.R
+        R -f test/r/test_substrait.R
 
     - uses: actions/upload-artifact@v2
       with:

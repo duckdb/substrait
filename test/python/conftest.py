@@ -18,7 +18,7 @@ def require():
     def _require(extension_name, db_name=''):
         # Paths to search for extensions
         extension_search_patterns = [
-            "../..//build/release/*.duckdb_extension",
+            "../../build/release/*.duckdb_extension",
             "../../build/debug/*.duckdb_extension",
         ]
 
