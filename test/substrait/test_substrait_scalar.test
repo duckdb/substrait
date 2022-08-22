@@ -1,0 +1,18 @@
+# name: test/substrait/test_substrait_scalar.test
+# description: Test scalar functions with substrait
+# group: [substrait]
+
+statement ok
+LOAD 'build/release/substrait.duckdb_extension';
+
+statement ok
+PRAGMA enable_verification
+
+statement ok
+create table t (a date)
+
+statement ok
+insert into t values ('1992-07-30')
+
+statement ok
+CALL get_substrait('SELECT EXTRACT(year FROM a) FROM t')
