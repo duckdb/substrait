@@ -23,11 +23,11 @@ clean:
 
 duckdb_debug:
 	cd duckdb && \
-	BUILD_TPCH=1 BUILD_PYTHON=1 make debug
+	BUILD_TPCH=1 make debug
 
 duckdb_release:
 	cd duckdb && \
-	BUILD_TPCH=1 BUILD_PYTHON=1 make release
+	BUILD_TPCH=1 make release
 
 debug: pull
 	mkdir -p build/debug && \

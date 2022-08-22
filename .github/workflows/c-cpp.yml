@@ -44,6 +44,7 @@ jobs:
         python3.7 -m pip install --prefer-binary "substrait-validator" 
         python3.7 -m pip uninstall -y protobuf
         python3.7 -m pip install --no-binary protobuf protobuf
+        python3.7 -m pip install duckdb --pre
 
 
 #    - uses: r-lib/actions/setup-r@v1
