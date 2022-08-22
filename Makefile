@@ -7,6 +7,12 @@ ifeq (${OSX_BUILD_UNIVERSAL}, 1)
 	OSX_BUILD_UNIVERSAL_FLAG=-DOSX_BUILD_UNIVERSAL=1
 endif
 
+ifeq ($(GEN),ninja)
+	GENERATOR=-G "Ninja"
+	FORCE_COLOR=-DFORCE_COLORED_OUTPUT=1
+endif
+
+
 pull:
 	git submodule init
 	git submodule update --recursive --remote
@@ -26,18 +32,17 @@ duckdb_release:
 debug: pull
 	mkdir -p build/debug && \
 	cd build/debug && \
-	cmake -DCMAKE_BUILD_TYPE=Debug -DDUCKDB_INCLUDE_FOLDER=duckdb/src/include -DDUCKDB_LIBRARY_FOLDER=duckdb/build/debug/src ${OSX_BUILD_UNIVERSAL_FLAG}  ../.. && \
+	cmake $(GENERATOR) $(FORCE_COLOR) -DCMAKE_BUILD_TYPE=Debug -DDUCKDB_INCLUDE_FOLDER=duckdb/src/include -DDUCKDB_LIBRARY_FOLDER=duckdb/build/debug/src ${OSX_BUILD_UNIVERSAL_FLAG}  ../.. && \
 	cmake --build .
 
 release: pull
 	mkdir -p build/release && \
 	cd build/release && \
-	cmake  -DCMAKE_BUILD_TYPE=RelWithDebInfo -DDUCKDB_INCLUDE_FOLDER=duckdb/src/include -DDUCKDB_LIBRARY_FOLDER=duckdb/build/release/src ${OSX_BUILD_UNIVERSAL_FLAG} ../.. && \
+	cmake $(GENERATOR) $(FORCE_COLOR) -DCMAKE_BUILD_TYPE=RelWithDebInfo -DDUCKDB_INCLUDE_FOLDER=duckdb/src/include -DDUCKDB_LIBRARY_FOLDER=duckdb/build/release/src ${OSX_BUILD_UNIVERSAL_FLAG} ../.. && \
 	cmake --build .
 
-test_release: release duckdb_release
+test_release:
 	./duckdb/build/release/test/unittest --test-dir . "[sql]"
-
 
 test:
 	./duckdb/build/debug/test/unittest --test-dir . "[sql]"
