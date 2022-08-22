@@ -24,6 +24,11 @@ jobs:
         curl -O https://bootstrap.pypa.io/pip/3.6/get-pip.py
         python3 get-pip.py --user
         python3 -m pip install awscli --upgrade --user
+
+    - uses: actions/setup-python@v2
+      with:
+        python-version: '3.7'
+
     - uses: actions/checkout@v2
       with:
         fetch-depth: 0
@@ -39,31 +44,14 @@ jobs:
     - name: Test
       run: make test_release
 
+    - name: Test Python
+      run: |
+        pip install duckdb --pre
+        pip install pytest && pip install --prefer-binary "ibis-framework[duckdb]" && pip install --prefer-binary "ibis-substrait"  && pip install --prefer-binary "substrait-validator"  pip uninstall protobuf && pip install --no-binary protobuf protobuf
+        (cd test/python && python -m pytest)
+
     - uses: actions/upload-artifact@v2
       with:
         name: substrait-linux
-        path: |
-          build/release/substrait.duckdb_extension
-          
-
-  windows:
-    name: Windows (64-bit)
-    runs-on: windows-latest
-
-    steps:
-    - uses: actions/checkout@v2
-      with:
-        fetch-depth: 0
-
-    - name: Build
-      run: |
-        make release
-
-    - name: Test
-      run: make test_release
-
-    - uses: actions/upload-artifact@v2
-      with:
-        name: substrait-windows
         path: |
           build/release/substrait.duckdb_extension

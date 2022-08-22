@@ -1,6 +1,6 @@
-# name: test/substrait/test_substrait_schema_json.test
+# name: test/sql/test_substrait_schema_json.test
 # description: Test scalar functions with substrait
-# group: [substrait]
+# group: [sql]
 
 statement ok
 LOAD 'build/release/substrait.duckdb_extension';

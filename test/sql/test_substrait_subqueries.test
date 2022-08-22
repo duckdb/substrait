@@ -1,6 +1,6 @@
-# name: test/substrait/test_substrait_subqueries.test
+# name: test/sql/test_substrait_subqueries.test
 # description: Test get_substrait with simple subqueries
-# group: [substrait]
+# group: [sql]
 
 statement ok
 LOAD 'build/release/substrait.duckdb_extension';

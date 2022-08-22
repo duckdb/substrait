@@ -36,10 +36,11 @@ release: pull
 	cmake --build .
 
 test_release: release duckdb_release
-	./duckdb/build/release/test/unittest --test-dir . "[substrait]"
+	./duckdb/build/release/test/unittest --test-dir . "[sql]"
+
 
 test:
-	./duckdb/build/debug/test/unittest --test-dir . "[substrait]"
+	./duckdb/build/debug/test/unittest --test-dir . "[sql]"
 
 
 format:

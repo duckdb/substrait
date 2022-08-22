@@ -1,6 +1,6 @@
-# name: test/substrait/test_substrait_in.test
+# name: test/sql/test_substrait_in.test
 # description: Test get_substrait on in clauses
-# group: [substrait]
+# group: [sql]
 
 statement ok
 LOAD 'build/release/substrait.duckdb_extension';

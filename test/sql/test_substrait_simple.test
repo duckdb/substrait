@@ -1,6 +1,6 @@
-# name: test/substrait/test_substrait_simple.test
+# name: test/sql/test_substrait_simple.test
 # description: Test get_substrait with simple operators
-# group: [substrait]
+# group: [sql]
 
 statement ok
 LOAD 'build/release/substrait.duckdb_extension';

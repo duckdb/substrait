@@ -1,6 +1,6 @@
-# name: test/substrait/test_substrait_topn.test
+# name: test/sql/test_substrait_topn.test
 # description: Test get_substrait with top-n queries
-# group: [substrait]
+# group: [sql]
 
 statement ok
 LOAD 'build/release/substrait.duckdb_extension';

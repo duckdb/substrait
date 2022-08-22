@@ -1,6 +1,6 @@
-# name: test/substrait/test_substrait_tpch.test
+# name: test/sql/test_substrait_tpch.test
 # description: Test get_substrait with TPC-H queries
-# group: [substrait]
+# group: [sql]
 
 statement ok
 PRAGMA enable_verification
