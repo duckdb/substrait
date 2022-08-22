@@ -16,8 +16,10 @@ jobs:
     - name: Install
       run: yum install -y gcc gcc-c++ cmake make python3
 
-    - name: Install ninja-build tool
-      uses: seanmiddleditch/gha-setup-ninja@v3
+    - name: Install Ninja
+      run: |
+        yum -y install http://repo.okay.com.mx/centos/7/x86_64/release/okay-release-1-1.noarch.rpm
+        yum install -y ninja-build
 
     - name: Install recent git
       run: |
