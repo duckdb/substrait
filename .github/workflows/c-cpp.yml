@@ -29,6 +29,7 @@ jobs:
         pip install pytest pandas "ibis-framework[duckdb]" "ibis-substrait" "substrait-validator" 
         pip uninstall protobuf -y
         pip install --no-binary protobuf protobuf
+        pip uninstall duckdb -y
         pip install duckdb --pre
 
     - name: Update DuckDB submodule
