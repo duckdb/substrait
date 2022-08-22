@@ -5,55 +5,30 @@ defaults:
     shell: bash
 
 jobs:
-  linux:
-    name: Linux (CentOS 7)
-    runs-on: ubuntu-latest
-    container: centos:7
+  mac:
+    name: Mac-OS
+    runs-on: macos-latest
     env:
       GEN: ninja
 
     steps:
-    - name: Install
-      run: yum groupinstall "Development Tools" -y && yum install -y gcc gcc-c++ cmake make wget openssl-devel libffi-devel bzip2-devel
-
     - name: Install Ninja
-      run: |
-        yum -y install http://repo.okay.com.mx/centos/7/x86_64/release/okay-release-1-1.noarch.rpm
-        yum install -y ninja-build
-
-    - name: Install recent git
-      run: |
-        yum -y install https://packages.endpointdev.com/rhel/7/os/x86_64/endpoint-repo.x86_64.rpm
-        yum install -y git
-
-    - name: Install AWS client
-      run: |
-        wget https://www.python.org/ftp/python/3.7.12/Python-3.7.12.tgz
-        tar xvf Python-3.7.12.tgz
-        cd Python-3.7.12
-        mkdir -p pythonbin
-        ./configure --with-ensurepip=install
-        make -j
-        make install
-        python3.7 --version
-        python3.7 -m pip install pip
-        python3.7 -m pip install requests awscli
-        python3.7 -m pip install pytest pandas 
-        python3.7 -m pip install --prefer-binary "ibis-framework[duckdb]" 
-        python3.7 -m pip install --prefer-binary "ibis-substrait"  
-        python3.7 -m pip install --prefer-binary "substrait-validator" 
-        python3.7 -m pip uninstall -y protobuf
-        python3.7 -m pip install --no-binary protobuf protobuf
-        python3.7 -m pip install duckdb --pre
-
-
-#    - uses: r-lib/actions/setup-r@v1
-#      with:
-#        r-version: 'devel'
+      run: brew install ninja
 
     - uses: actions/checkout@v2
       with:
         fetch-depth: 0
+
+    - uses: actions/setup-python@v2
+      with:
+        python-version: '3.9'
+
+    - name: Install Python Dependencies
+      shell: bash
+      run: pip install pytest pandas "ibis-framework[duckdb]" "ibis-substrait" "substrait-validator" 
+        pip uninstall -y protobuf
+        pip install --no-binary protobuf protobuf
+        pip install duckdb --pre
 
     - name: Update DuckDB submodule
       run: |
@@ -77,9 +52,3 @@ jobs:
       run: |
         R -f test/r/dependencies.R
         R -f test/r/test_substrait.R
-
-    - uses: actions/upload-artifact@v2
-      with:
-        name: substrait-linux
-        path: |
-          build/release/substrait.duckdb_extension
