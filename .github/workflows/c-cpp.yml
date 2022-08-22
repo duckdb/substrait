@@ -14,7 +14,7 @@ jobs:
 
     steps:
     - name: Install
-      run: yum install -y gcc gcc-c++ cmake make python3
+      run: yum install -y gcc gcc-c++ cmake make
 
     - name: Install Ninja
       run: |
@@ -28,9 +28,16 @@ jobs:
 
     - name: Install AWS client
       run: |
-        curl -O https://bootstrap.pypa.io/pip/3.6/get-pip.py
-        python3 get-pip.py --user
-        python3 -m pip install awscli --upgrade --user
+        wget https://www.python.org/ftp/python/3.7.12/Python-3.7.12.tgz
+        tar xvf Python-3.7.12.tgz
+        cd Python-3.7.12
+        mkdir -p pythonbin
+        ./configure --with-ensurepip=install
+        make -j
+        make install
+        python3.7 --version
+        python3.7 -m pip install pip
+        python3.7 -m pip install requests awscli
 
 #    - uses: r-lib/actions/setup-r@v1
 #      with:
@@ -56,9 +63,9 @@ jobs:
 
     - name: Test Python
       run: |
-        python3 -m pip install duckdb --pre
-        python3 -m pip install pytest && python3 -m pip install pandas && python3 -m python3 -m pip install --prefer-binary "ibis-framework[duckdb]" && python3 -m pip install --prefer-binary "ibis-substrait"  && python3 -m python3 -m pip install --prefer-binary "substrait-validator"  python3 -m pip uninstall protobuf && python3 -m pip install --no-binary protobuf protobuf
-        (cd test/python && python3 -m pytest)
+        python3.7 -m pip install duckdb --pre
+        python3.7 -m pip install pytest && python3.7 -m pip install pandas && python3.7 -m python3.7 -m pip install --prefer-binary "ibis-framework[duckdb]" && python3.7 -m pip install --prefer-binary "ibis-substrait"  &&  python3.7 -m pip install --prefer-binary "substrait-validator"  python3.7 -m pip uninstall protobuf && python3.7 -m pip install --no-binary protobuf protobuf
+        (cd test/python && python3.7 -m pytest)
 
     - name: Test R
       run: |
