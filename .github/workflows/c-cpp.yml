@@ -14,7 +14,10 @@ jobs:
 
     steps:
     - name: Install
-      run: yum makecache && yum install -y gcc gcc-c++ cmake make python3 ninja-build
+      run: yum install -y gcc gcc-c++ cmake make python3
+
+    - name: Install ninja-build tool
+      uses: seanmiddleditch/gha-setup-ninja@v3
 
     - name: Install recent git
       run: |
