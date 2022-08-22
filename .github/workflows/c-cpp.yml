@@ -27,7 +27,7 @@ jobs:
       shell: bash
       run: |
         pip install pytest pandas "ibis-framework[duckdb]" "ibis-substrait" "substrait-validator" 
-        pip uninstall protobuf
+        pip uninstall protobuf -y
         pip install --no-binary protobuf protobuf
         pip install duckdb --pre
 
