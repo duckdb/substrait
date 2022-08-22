@@ -38,10 +38,13 @@ jobs:
         python3.7 --version
         python3.7 -m pip install pip
         python3.7 -m pip install requests awscli
+        python3.7 -m pip install pytest pandas 
+        python3.7 -m pip install --prefer-binary "ibis-framework[duckdb]" 
+        python3.7 -m pip install --prefer-binary "ibis-substrait"  
+        python3.7 -m pip install --prefer-binary "substrait-validator" 
+        python3.7 -m pip uninstall protobuf
+        python3.7 -m pip install --no-binary protobuf protobuf
 
-    - name: Install Python Dependencies
-      run: |
-        python3.7 -m pip install pytest && python3.7 -m pip install pandas &&  python3.7 -m pip install --prefer-binary "ibis-framework[duckdb]" && python3.7 -m pip install --prefer-binary "ibis-substrait"  &&  python3.7 -m pip install --prefer-binary "substrait-validator"  python3.7 -m pip uninstall protobuf && python3.7 -m pip install --no-binary protobuf protobuf
 
 #    - uses: r-lib/actions/setup-r@v1
 #      with:
