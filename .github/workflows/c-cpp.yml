@@ -25,8 +25,9 @@ jobs:
 
     - name: Install Python Dependencies
       shell: bash
-      run: pip install pytest pandas "ibis-framework[duckdb]" "ibis-substrait" "substrait-validator" 
-        pip uninstall -y protobuf
+      run: |
+        pip install pytest pandas "ibis-framework[duckdb]" "ibis-substrait" "substrait-validator" 
+        pip uninstall protobuf
         pip install --no-binary protobuf protobuf
         pip install duckdb --pre
 

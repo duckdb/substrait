@@ -3,8 +3,6 @@ import duckdb
 
 def test_roundtrip_substrait(require):
     connection = require('substrait')
-    if connection is None:
-        return
 
     connection.execute('CREATE TABLE integers (i integer)')
     connection.execute('INSERT INTO integers VALUES (0),(1),(2),(3),(4),(5),(6),(7),(8),(9),(NULL)')
