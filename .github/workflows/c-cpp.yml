@@ -42,7 +42,7 @@ jobs:
         python3.7 -m pip install --prefer-binary "ibis-framework[duckdb]" 
         python3.7 -m pip install --prefer-binary "ibis-substrait"  
         python3.7 -m pip install --prefer-binary "substrait-validator" 
-        python3.7 -m pip uninstall protobuf
+        python3.7 -m pip uninstall -y protobuf
         python3.7 -m pip install --no-binary protobuf protobuf
 
 
