@@ -24,7 +24,28 @@ This extension is mainly supported in 3 different APIs. 1) The SQL API, 2) The P
 Here we depict how to consume and produce substrait query plans in each API.
 
 ### Install and Load
-Before using the extension, you must always properly install and load it.
+Before using the extension, you must always properly install and load it. 
+To install and load the released version of the substrait library, you must execute the following SQL commands.
+```sql
+INSTALL('substrait');
+LOAD('substrait')
+```
+
+To load an extension in python, you must execute the sql commands within a connection.
+```python
+import duckdb
+
+con = duckdb.connect()
+con.execute("INSTALL('substrait')");
+con.execute("LOAD('substrait')")
+```
+
+A similar process can be performed in R.
+```r
+con <- dbConnect(duckdb::duckdb(config=list("allow_unsigned_extensions"="true")))
+query <- paste("LOAD '", extension_name, "';", sep = "")
+dbExecute(con, query)
+```
 
 ### SQL
 In the SQL API, users can generate substrait plans (into a blob or a JSON) and consume substrait plans.
