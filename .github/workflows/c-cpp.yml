@@ -37,8 +37,8 @@ jobs:
         git config --global --add safe.directory '*'
         make pull
 
-    - name: Build DuckDB
-      run: make duckdb_release
+    - name: Build DuckDB (Python + R + CLI)
+      run: make duckdb_release_all
 
     - name: Build
       run: make release
