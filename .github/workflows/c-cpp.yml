@@ -5,8 +5,36 @@ defaults:
     shell: bash
 
 jobs:
-  mac:
-    name: Mac-OS
+  sql:
+    name: SQL
+    runs-on: macos-latest
+    env:
+      GEN: ninja
+
+    steps:
+    - name: Install Ninja
+      run: brew install ninja
+
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - name: Update DuckDB submodule
+      run: |
+        git config --global --add safe.directory '*'
+        make pull
+
+    - name: Build DuckDB
+      run: make duckdb_release
+
+    - name: Build
+      run: make release
+
+    - name: Test
+      run: make test_release
+
+  python:
+    name: Python
     runs-on: macos-latest
     env:
       GEN: ninja
@@ -32,6 +60,40 @@ jobs:
         pip uninstall duckdb -y
         pip install duckdb --pre
 
+    - name: Update DuckDB submodule
+      run: |
+        git config --global --add safe.directory '*'
+        make pull
+
+    - name: Build DuckDB (Python)
+      run: make duckdb_release_py
+
+    - name: Build
+      run: make release
+
+    - name: Test Python
+      run: |
+        (cd test/python && python -m pytest)
+
+
+  R:
+    name: R
+    runs-on: macos-latest
+    env:
+      GEN: ninja
+
+    steps:
+    - name: Install Ninja
+      run: brew install ninja
+
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - uses: actions/setup-python@v2
+      with:
+        python-version: '3.9'
+
     - name: Install R Dependencies
       run: |
         (cd test/r && R -f dependencies.R)
@@ -41,18 +103,11 @@ jobs:
         git config --global --add safe.directory '*'
         make pull
 
-    - name: Build DuckDB (Python + R + CLI)
-      run: make duckdb_release_all
+    - name: Build DuckDB (R)
+      run: make duckdb_release_r
 
     - name: Build
       run: make release
-
-    - name: Test
-      run: make test_release
-
-    - name: Test Python
-      run: |
-        (cd test/python && python -m pytest)
 
     - name: Test R
       run: |
