@@ -28,9 +28,6 @@ else()
   set(CMAKE_CXX_STANDARD 11)
 endif()
 
-include_directories(${PROJECT_SOURCE_DIR}/extension/tpch/include)
-add_definitions(-DBUILD_TPCH_EXTENSION=${BUILD_TPCH_EXTENSION})
-
 option(
   OSX_BUILD_UNIVERSAL
   "Build both architectures on OSX and create a single binary containing both."
