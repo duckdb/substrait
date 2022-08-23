@@ -31,7 +31,7 @@ duckdb_release:
 
 duckdb_release_all:
 	cd duckdb && \
-	BUILD_TPCH=1 BUILD_PYTHON=1 BUILD_R=1 make release
+	BUILD_TPCH=1  BUILD_R=1 make release
 
 debug: pull
 	mkdir -p build/debug && \
