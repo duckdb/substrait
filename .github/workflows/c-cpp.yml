@@ -52,5 +52,5 @@ jobs:
 
     - name: Test R
       run: |
-        R -f test/r/dependencies.R
-        R -f test/r/test_substrait.R
+        (cd test/r && R -f dependencies.R)
+        (cd test/r && R -f test_substrait.R)
