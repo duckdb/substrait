@@ -6,10 +6,11 @@ statement ok
 PRAGMA enable_verification
 
 statement ok
-LOAD 'duckdb/build/release/extension/tpch/tpch.duckdb_extension';
+LOAD 'build/release/extension/substrait/substrait.duckdb_extension';
 
 statement ok
-LOAD 'build/release/substrait.duckdb_extension';
+LOAD 'build/release/extension/tpch/tpch.duckdb_extension';
+
 
 statement ok
 CALL dbgen(sf=0.01)

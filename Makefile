@@ -12,6 +12,14 @@ ifeq ($(GEN),ninja)
 	FORCE_COLOR=-DFORCE_COLORED_OUTPUT=1
 endif
 
+BUILD_FLAGS=-DEXTENSION_STATIC_BUILD=1 -DBUILD_TPCH_EXTENSION=1 ${OSX_BUILD_UNIVERSAL_FLAG}
+
+ifeq (${BUILD_PYTHON}, 1)
+	BUILD_FLAGS:=${EXTENSIONS} -DBUILD_PYTHON=1 -DBUILD_JSON_EXTENSION=1 -DBUILD_FTS_EXTENSION=1 -DBUILD_TPCH_EXTENSION=1 -DBUILD_VISUALIZER_EXTENSION=1 -DBUILD_TPCDS_EXTENSION=1
+endif
+ifeq (${BUILD_R}, 1)
+	BUILD_FLAGS:=${EXTENSIONS} -DBUILD_R=1
+endif
 
 pull:
 	git submodule init
@@ -19,43 +27,21 @@ pull:
 
 clean:
 	rm -rf build
-	rm -rf duckdb/build
-
-duckdb_debug:
-	cd duckdb && \
-	BUILD_TPCH=1 make debug
-
-duckdb_release:
-	cd duckdb && \
-	BUILD_TPCH=1 make release
-
-duckdb_release_py:
-	cd duckdb && \
-	BUILD_TPCH=1 BUILD_PYTHON=1 make release
-
-
-duckdb_release_r:
-	cd duckdb && \
-	BUILD_TPCH=1 BUILD_R=1 make release
-
-duckdb_release_all:
-	cd duckdb && \
-	BUILD_TPCH=1 BUILD_PYTHON=1 BUILD_R=1 make release
 
 debug: pull
 	mkdir -p build/debug && \
 	cd build/debug && \
-	cmake $(GENERATOR) $(FORCE_COLOR) -DCMAKE_BUILD_TYPE=Debug -DDUCKDB_INCLUDE_FOLDER=duckdb/src/include -DDUCKDB_LIBRARY_FOLDER=duckdb/build/debug/src  ../.. && \
-	cmake --build .
+	cmake $(GENERATOR) $(FORCE_COLOR) -DCMAKE_BUILD_TYPE=Debug ${BUILD_FLAGS} ../../duckdb/CMakeLists.txt -DEXTERNAL_EXTENSION_DIRECTORY=../../substrait -B. && \
+	cmake --build . --config Debug
 
 release: pull
 	mkdir -p build/release && \
 	cd build/release && \
-	cmake $(GENERATOR) $(FORCE_COLOR) -DCMAKE_BUILD_TYPE=RelWithDebInfo -DDUCKDB_INCLUDE_FOLDER=duckdb/src/include -DDUCKDB_LIBRARY_FOLDER=duckdb/build/release/src ../.. && \
-	cmake --build .
+	cmake $(GENERATOR) $(FORCE_COLOR) -DCMAKE_BUILD_TYPE=RelWithDebInfo ${BUILD_FLAGS} ../../duckdb/CMakeLists.txt -DEXTERNAL_EXTENSION_DIRECTORY=../../substrait -B. && \
+	cmake --build . --config Release
 
 test_release:
-	./duckdb/build/release/test/unittest --test-dir . "[sql]"
+	./build/release/test/unittest --test-dir . "[sql]"
 
 test:
 	./duckdb/build/debug/test/unittest --test-dir . "[sql]"

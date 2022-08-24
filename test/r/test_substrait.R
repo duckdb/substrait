@@ -1,15 +1,14 @@
 library("DBI")
 library("testthat")
 
-load_extension <- function(extension_name) {
+load_extension <- function() {
   con <- dbConnect(duckdb::duckdb(config=list("allow_unsigned_extensions"="true")))
-  query <- paste("LOAD '", extension_name, "';", sep = "")
-  dbExecute(con, query)
+  dbExecute(con, "LOAD '../../build/release/extension/substrait/substrait.duckdb_extension';")
   return (con)
 }
 
 test_that("substrait extension test", {
-  con <- load_extension("../../build/release/substrait.duckdb_extension")
+  con <- load_extension()
   on.exit(dbDisconnect(con, shutdown = TRUE))
   dbExecute(con, "CREATE TABLE integers (i INTEGER)")
   dbExecute(con, "INSERT INTO integers VALUES (42)")
@@ -24,7 +23,7 @@ test_that("substrait extension test", {
 })
 
 test_that("substrait extension json test", {
-  con <- load_extension("../../build/release/substrait.duckdb_extension")
+  con <- load_extension()
   on.exit(dbDisconnect(con, shutdown = TRUE))
   dbExecute(con, "CREATE TABLE integers (i INTEGER)")
   expected_json <- "{\"relations\":[{\"root\":{\"input\":{\"fetch\":{\"input\":{\"project\":{\"input\":{\"read\":{\"baseSchema\":{\"names\":[\"i\"],\"struct\":{\"types\":[{\"i32\":{\"nullability\":\"NULLABILITY_NULLABLE\"}}],\"nullability\":\"NULLABILITY_REQUIRED\"}},\"projection\":{\"select\":{\"structItems\":[{}]},\"maintainSingularStruct\":true},\"namedTable\":{\"names\":[\"integers\"]}}},\"expressions\":[{\"selection\":{\"directReference\":{\"structField\":{}},\"rootReference\":{}}}]}},\"count\":\"5\"}},\"names\":[\"i\"]}}]}"
