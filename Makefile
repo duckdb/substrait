@@ -17,6 +17,7 @@ BUILD_FLAGS=-DEXTENSION_STATIC_BUILD=1 -DBUILD_TPCH_EXTENSION=1 ${OSX_BUILD_UNIV
 ifeq (${BUILD_PYTHON}, 1)
 	BUILD_FLAGS:=${EXTENSIONS} -DBUILD_PYTHON=1 -DBUILD_JSON_EXTENSION=1 -DBUILD_FTS_EXTENSION=1 -DBUILD_TPCH_EXTENSION=1 -DBUILD_VISUALIZER_EXTENSION=1 -DBUILD_TPCDS_EXTENSION=1
 endif
+
 ifeq (${BUILD_R}, 1)
 	BUILD_FLAGS:=${EXTENSIONS} -DBUILD_R=1
 endif
@@ -45,7 +46,6 @@ test_release:
 
 test:
 	./duckdb/build/debug/test/unittest --test-dir . "[sql]"
-
 
 format:
 	clang-format --sort-includes=0 -style=file -i src/from_substrait.cpp src/to_substrait.cpp src/substrait-extension.cpp
