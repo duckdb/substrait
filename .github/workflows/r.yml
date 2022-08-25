@@ -1,0 +1,44 @@
+on: [push, pull_request]
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  R:
+    name: R
+    runs-on: macos-latest
+    env:
+      GEN: ninja
+
+    steps:
+    - name: Install Ninja
+      run: brew install ninja
+
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - uses: actions/setup-python@v2
+      with:
+        python-version: '3.9'
+
+    - name: Install R Dependencies
+      run: |
+        (cd test/r && R -f dependencies.R)
+
+    - name: Update DuckDB submodule
+      run: |
+        git config --global --add safe.directory '*'
+        make pull
+
+    - name: Build DuckDB (R)
+      run: |
+        cd duckdb/tools/rpkg
+        ./configure
+        R CMD build .
+        R CMD INSTALL -d duckdb_*.tar.gz
+
+    - name: Test R
+      run: |
+        (cd test/r && R -f test_substrait.R)
