@@ -31,7 +31,11 @@ jobs:
       run: |
         git config --global --add safe.directory '*'
         make pull
-
+        
+    - name: Build Extension
+      run: |
+        make release
+        
     - name: Build DuckDB (R)
       run: |
         cd duckdb/tools/rpkg
