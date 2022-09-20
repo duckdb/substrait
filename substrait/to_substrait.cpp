@@ -889,8 +889,7 @@ substrait::Rel *DuckDBToSubstrait::TransformGet(LogicalOperator &dop) {
   auto get_rel = new substrait::Rel();
   substrait::Rel *rel = get_rel;
   auto &dget = (LogicalGet &)dop;
-  if (dget.function.name == "parquet_scan"){
- auto &table_scan_bind_data = (TableScanBindData &)*dget.bind_data;
+  auto &table_scan_bind_data = (TableScanBindData &)*dget.bind_data;
   auto sget = get_rel->mutable_read();
 
   if (!dget.table_filters.filters.empty()) {
@@ -944,63 +943,6 @@ substrait::Rel *DuckDBToSubstrait::TransformGet(LogicalOperator &dop) {
   base_schema->set_allocated_struct_(type_info);
   sget->set_allocated_base_schema(base_schema);
   return rel;
-  } else{
-     auto &table_scan_bind_data = (TableScanBindData &)*dget.bind_data;
-  auto sget = get_rel->mutable_read();
-
-  if (!dget.table_filters.filters.empty()) {
-    // Pushdown filter
-    auto filter = CreateConjunction(
-        dget.table_filters.filters,
-        [&](std::pair<const idx_t, unique_ptr<TableFilter>> &in) {
-          auto col_idx = in.first;
-          auto return_type = dget.returned_types[col_idx];
-          auto &filter = *in.second;
-          return TransformFilter(col_idx, filter, return_type);
-        });
-    sget->set_allocated_filter(filter);
-  }
-
-  if (!dget.column_ids.empty()) {
-    // Projection Pushdown
-    auto projection = new substrait::Expression_MaskExpression();
-    // fixme: whatever this means
-    projection->set_maintain_singular_struct(true);
-    auto select = new substrait::Expression_MaskExpression_StructSelect();
-    for (auto col_idx : dget.column_ids) {
-      auto struct_item = select->add_struct_items();
-      struct_item->set_field((int32_t)col_idx);
-      // FIXME do we need to set the child? if yes, to what?
-    }
-    projection->set_allocated_select(select);
-    sget->set_allocated_projection(projection);
-  }
-
-  // Add Table Schema
-  sget->mutable_named_table()->add_names(table_scan_bind_data.table->name);
-  auto base_schema = new ::substrait::NamedStruct();
-  auto type_info = new substrait::Type_Struct();
-  type_info->set_nullability(substrait::Type_Nullability_NULLABILITY_REQUIRED);
-  auto not_null_constraint =
-      GetNotNullConstraintCol(*table_scan_bind_data.table);
-  for (idx_t i = 0; i < dget.names.size(); i++) {
-    auto cur_type = dget.returned_types[i];
-    if (cur_type.id() == LogicalTypeId::STRUCT) {
-      throw std::runtime_error("Structs are not yet accepted in table scans");
-    }
-    base_schema->add_names(dget.names[i]);
-    auto column_statistics =
-        dget.function.statistics(context, &table_scan_bind_data, i);
-    bool not_null = not_null_constraint.find(i) != not_null_constraint.end();
-    auto new_type = type_info->add_types();
-    *new_type =
-        DuckToSubstraitType(cur_type, column_statistics.get(), not_null);
-  }
-  base_schema->set_allocated_struct_(type_info);
-  sget->set_allocated_base_schema(base_schema);
-  return rel;
-  }
-
 }
 
 substrait::Rel *DuckDBToSubstrait::TransformCrossProduct(LogicalOperator &dop) {

@@ -1,8 +1,8 @@
 #define DUCKDB_EXTENSION_MAIN
 
-#include "substrait-extension.hpp"
-#include "to_substrait.hpp"
 #include "from_substrait.hpp"
+#include "substrait_extension.hpp"
+#include "to_substrait.hpp"
 
 #ifndef DUCKDB_AMALGAMATION
 #include "duckdb/function/table_function.hpp"
@@ -97,7 +97,7 @@ static void ToJsonFunction(ClientContext &context, TableFunctionInput &data_p,
 }
 
 struct FromSubstraitFunctionData : public TableFunctionData {
-  FromSubstraitFunctionData() {}
+  FromSubstraitFunctionData() = default;
   shared_ptr<Relation> plan;
   unique_ptr<QueryResult> res;
   unique_ptr<Connection> conn;

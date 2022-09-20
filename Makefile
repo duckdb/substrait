@@ -31,25 +31,25 @@ clean:
 
 debug: pull
 	mkdir -p build/debug && \
-	cd build/debug && \
-	cmake $(GENERATOR) $(FORCE_COLOR) -DCMAKE_BUILD_TYPE=Debug ${BUILD_FLAGS} ../../duckdb -B. -DEXTERNAL_EXTENSION_DIRECTORY=../../substrait/src && \
-	cmake --build . --config Debug
+	cmake $(GENERATOR) $(FORCE_COLOR) -DCMAKE_BUILD_TYPE=Debug ${BUILD_FLAGS} -S ./ -B build/debug   && \
+	cmake --build build/debug  --target unittest
 
 release: pull
 	mkdir -p build/release && \
-	cd build/release && \
-	cmake $(GENERATOR) $(FORCE_COLOR) -DCMAKE_BUILD_TYPE=RelWithDebInfo ${BUILD_FLAGS} ../../duckdb -B. -DEXTERNAL_EXTENSION_DIRECTORY=../../substrait/src  -B. && \
-	cmake --build . --config Release
+	cmake $(GENERATOR) $(FORCE_COLOR) -DCMAKE_BUILD_TYPE=RelWithDebInfo ${BUILD_FLAGS} -S ./ -B build/release   && \
+	cmake --build build/release  --target unittest
+
 
 test_release:
-	./build/release/test/unittest --test-dir . "[sql]"
+	./build/release/duckdb/test/unittest --test-dir . "[sql]"
 
-test:
-	./duckdb/build/debug/test/unittest --test-dir . "[sql]"
+test_debug:
+	./build/debug/duckdb/test/unittest --test-dir . "[sql]"
 
 format:
-	clang-format --sort-includes=0 -style=file -i src/from_substrait.cpp src/to_substrait.cpp src/substrait-extension.cpp
+	clang-format --sort-includes=0 -style=file -i substrait/from_substrait.cpp substrait/to_substrait.cpp substrait/substrait_extension.cpp
 	cmake-format -i CMakeLists.txt
+	cmake-format -i substrait/CMakeLists.txt
 
 update:
 	git submodule update --remote --merge

@@ -90,18 +90,15 @@ set(SUBSTRAIT_SOURCES
     ../third_party/substrait/substrait/type_expressions.pb.cc
     ../third_party/substrait/substrait/extensions/extensions.pb.cc)
 
-set(ALL_SOURCES
-    to_substrait.cpp from_substrait.cpp substrait-extension.cpp
-    ${SUBSTRAIT_SOURCES} ${PROTOBUF_SOURCES})
+set(ALL_SOURCES to_substrait.cpp from_substrait.cpp substrait_extension.cpp
+                ${SUBSTRAIT_SOURCES} ${PROTOBUF_SOURCES})
 
-add_library(excel_extension STATIC ${ALL_SOURCES})
-set(INGORE_WARNINGS OFF)
+add_library(substrait_extension STATIC ${ALL_SOURCES})
 
 build_loadable_extension(${TARGET_NAME} ${ALL_SOURCES})
 
 install(
-  TARGETS excel_extension
+  TARGETS substrait_extension
   EXPORT "${DUCKDB_EXPORT_SET}"
   LIBRARY DESTINATION "${INSTALL_LIB_DIR}"
   ARCHIVE DESTINATION "${INSTALL_LIB_DIR}")
-
