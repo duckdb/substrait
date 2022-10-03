@@ -94,4 +94,5 @@ set(ALL_SOURCES
     src/to_substrait.cpp src/from_substrait.cpp src/substrait-extension.cpp
     ${SUBSTRAIT_SOURCES} ${PROTOBUF_SOURCES})
 
-build_loadable_extension(${TARGET_NAME} ${ALL_SOURCES})
+set(PARAMETERS "-warnings")
+build_loadable_extension(${TARGET_NAME} ${PARAMETERS} ${ALL_SOURCES})
