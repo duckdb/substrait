@@ -24,4 +24,4 @@ statement ok
 CALL get_substrait('select k,i from test order by j limit 1')
 
 statement ok
-CALL get_substrait('select j,i from test where k < ''f'' order by i limit 1')
+CALL get_substrait('select j,i from test where k < ''f''  limit 1')

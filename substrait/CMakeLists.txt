@@ -95,7 +95,9 @@ set(ALL_SOURCES to_substrait.cpp from_substrait.cpp substrait_extension.cpp
 
 add_library(substrait_extension STATIC ${ALL_SOURCES})
 
-build_loadable_extension(${TARGET_NAME} ${ALL_SOURCES})
+set(PARAMETERS "-no-warnings")
+
+build_loadable_extension(${TARGET_NAME} ${PARAMETERS} ${ALL_SOURCES})
 
 install(
   TARGETS substrait_extension
