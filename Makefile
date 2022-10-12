@@ -34,11 +34,15 @@ debug: pull
 	cmake $(GENERATOR) $(FORCE_COLOR) -DCMAKE_BUILD_TYPE=Debug ${BUILD_FLAGS} -S ./ -B build/debug   && \
 	cmake --build build/debug  --target unittest
 
-release: pull
+release_bundled: pull
 	mkdir -p build/release && \
 	cmake $(GENERATOR) $(FORCE_COLOR) -DCMAKE_BUILD_TYPE=RelWithDebInfo ${BUILD_FLAGS} -S ./ -B build/release   && \
 	cmake --build build/release  --target unittest
 
+release: pull
+	mkdir -p build/release && \
+	cmake $(GENERATOR) $(FORCE_COLOR) ./duckdb/CMakeLists.txt -DEXTERNAL_EXTENSION_DIRECTORIES=../substrait -DCMAKE_BUILD_TYPE=RelWithDebInfo ${BUILD_FLAGS}  -B build/release   && \
+	cmake --build build/release
 
 test_release:
 	./build/release/duckdb/test/unittest --test-dir . "[sql]"
