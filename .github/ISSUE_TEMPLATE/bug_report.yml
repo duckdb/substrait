@@ -1,6 +1,13 @@
 name: Bug report
 description: Create a report to help us improve
 body:
+  - type: checkboxes
+    attributes:
+      label: The substrait integration is experimental. Support is only given to DuckDB Labs Partners or with [official requests](https://duckdblabs.com/contact/). If you are not a partner, we will close your issue without further review.
+      options:
+        - label: I am a partner.
+          required: true
+          
   - type: textarea
     attributes:
       label: What happens?
@@ -26,6 +33,12 @@ body:
       required: true
   - type: input
     attributes:
+      label: "Substrait-Extension Version:"
+      placeholder: e.g. 22
+    validations:
+      required: true
+  - type: input
+    attributes:
       label: "DuckDB Version:"
       placeholder: e.g. 22
     validations:
@@ -37,22 +50,7 @@ body:
     validations:
       required: true
 
-  - type: markdown
-    attributes:
-      value: "# Identity Disclosure:"
-  - type: input
-    attributes:
-      label: "Full Name:"
-      placeholder: e.g. John Doe
-    validations:
-      required: true
-  - type: input
-    attributes:
-      label: "Affiliation:"
-      placeholder: e.g. Oracle
-    validations:
-      required: true
-
+ 
   - type: markdown
     attributes:
       value: |
