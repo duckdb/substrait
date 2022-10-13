@@ -3,7 +3,7 @@ description: Create a report to help us improve
 body:
   - type: checkboxes
     attributes:
-      label: The substrait integration is experimental. Support is only given to DuckDB Labs Partners or with [official requests](https://duckdblabs.com/contact/). If you are not a partner, we will close your issue without further review.
+      label: The substrait integration is experimental. Support is only given to DuckDB Labs Partners or with [official requests](https://duckdblabs.com/contact/) . If you are not a partner, we will close your issue without further review.
       options:
         - label: I am a partner.
           required: true
