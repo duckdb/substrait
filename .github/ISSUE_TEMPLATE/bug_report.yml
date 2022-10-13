@@ -3,12 +3,17 @@ description: Create a report to help us improve
 body:
   - type: checkboxes
     attributes:
-      label: The substrait integration is experimental. Support is only given to DuckDB Labs Partners or with [official requests](https://duckdblabs.com/contact/) . If you are not a partner, we will close your issue without further review.
+      label: The substrait integration is experimental. Support is only given to DuckDB Labs Partners.
       options:
         - label: I am a partner.
           required: true
-          
-  - type: textarea
+  - type: markdown
+    attributes:
+      value: |
+         If you are not yet a partner, contact us throw an [official request](https://duckdblabs.com/contact/). If you open an issue without being a partner, we will close it without further review.        
+       
+ 
+ - type: textarea
     attributes:
       label: What happens?
       description: A short, clear and concise description of what the bug is.
