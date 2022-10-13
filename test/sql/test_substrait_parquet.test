@@ -1,0 +1,11 @@
+# name: test/sql/test_substrait_parquet.test
+# description: Test get_substrait and from_substrait from parquet
+# group: [substrait]
+
+statement ok
+PRAGMA enable_verification
+
+require parquet
+#
+#statement ok
+#CALL get_substrait('SELECT sum(l_extendedprice * l_discount) as revenue FROM parquet_scan(''data/parquet-testing/lineitem-top10000.gzip.parquet'')')

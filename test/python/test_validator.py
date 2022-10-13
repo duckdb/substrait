@@ -35,14 +35,14 @@ def run_tpch_validator(require, query_number):
 def test_substrait_tpch_validator(require,query_number):
     run_tpch_validator(require,query_number)
 
-@pytest.mark.xfail(reason="DuckDB Compilation: INTERNAL Error: INTERNAL Error: CHUNK_GET")
+@pytest.mark.skip(reason="DuckDB Compilation: INTERNAL Error: INTERNAL Error: CHUNK_GET")
 def test_substrait_tpch_validator_16(require):
     run_tpch_validator(require,16)
 
-@pytest.mark.xfail(reason="DuckDB Compilation: INTERNAL Error: INTERNAL Error: DELIM_JOIN")
+@pytest.mark.skip(reason="DuckDB Compilation: INTERNAL Error: INTERNAL Error: DELIM_JOIN")
 def test_substrait_tpch_validator_21(require):
     run_tpch_validator(require,21)
 
-@pytest.mark.xfail(reason="DuckDB Compilation: INTERNAL Error: INTERNAL Error: CHUNK_GET")
+@pytest.mark.skip(reason="DuckDB Compilation: INTERNAL Error: INTERNAL Error: CHUNK_GET")
 def test_substrait_tpch_validator_22(require):
     run_tpch_validator(require,22)

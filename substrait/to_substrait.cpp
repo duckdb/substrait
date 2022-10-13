@@ -905,15 +905,15 @@ substrait::Rel *DuckDBToSubstrait::TransformGet(LogicalOperator &dop) {
     sget->set_allocated_filter(filter);
   }
 
-  if (!dget.column_ids.empty()) {
+  if (!dget.projection_ids.empty()) {
     // Projection Pushdown
     auto projection = new substrait::Expression_MaskExpression();
     // fixme: whatever this means
     projection->set_maintain_singular_struct(true);
     auto select = new substrait::Expression_MaskExpression_StructSelect();
-    for (auto col_idx : dget.column_ids) {
+    for (auto col_idx : dget.projection_ids) {
       auto struct_item = select->add_struct_items();
-      struct_item->set_field((int32_t)col_idx);
+      struct_item->set_field((int32_t)dget.column_ids[col_idx]);
       // FIXME do we need to set the child? if yes, to what?
     }
     projection->set_allocated_select(select);
