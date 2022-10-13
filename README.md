@@ -1,3 +1,5 @@
+## The substrait integration is experimental. Support is currently only available [on request.](https://duckdblabs.com/contact/) 
+
 # Substrait - DuckDB
 Substrait - DuckDB is an extension that provides substrait support to [DuckDB](https://www.duckdb.org).
 The main goal of this extension is to support a both production and consumption of substrait query plans in DuckDB.
