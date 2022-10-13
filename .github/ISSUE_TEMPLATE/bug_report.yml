@@ -3,7 +3,7 @@ description: Create a report to help us improve
 body:
   - type: checkboxes
     attributes:
-      label: The substrait integration is experimental. Support is currently only available [on request.](https://duckdblabs.com/contact/). 
+      label: The substrait integration is experimental. Support is currently only available on request.
       options:
         - label: I have permission to ask for support.
           required: true
