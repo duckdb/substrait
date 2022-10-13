@@ -29,7 +29,7 @@ pull:
 clean:
 	rm -rf build
 
-debug: pull
+debug_bundled: pull
 	mkdir -p build/debug && \
 	cmake $(GENERATOR) $(FORCE_COLOR) -DCMAKE_BUILD_TYPE=Debug ${BUILD_FLAGS} -S ./ -B build/debug   && \
 	cmake --build build/debug  --target unittest
@@ -38,6 +38,11 @@ release_bundled: pull
 	mkdir -p build/release && \
 	cmake $(GENERATOR) $(FORCE_COLOR) -DCMAKE_BUILD_TYPE=RelWithDebInfo ${BUILD_FLAGS} -S ./ -B build/release   && \
 	cmake --build build/release  --target unittest
+
+debug: pull
+	mkdir -p build/debug && \
+	cmake $(GENERATOR) $(FORCE_COLOR) ./duckdb/CMakeLists.txt -DEXTERNAL_EXTENSION_DIRECTORIES=../substrait -DCMAKE_BUILD_TYPE=Debug ${BUILD_FLAGS}  -B build/debug   && \
+	cmake --build build/debug
 
 release: pull
 	mkdir -p build/release && \
