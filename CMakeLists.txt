@@ -1,22 +1,28 @@
 cmake_minimum_required(VERSION 2.8.12)
-set(TARGET_NAME substrait)
-project(${TARGET_NAME})
 
-# set(EXTENSION_CLASS ${TARGET_NAME}Extension)
-string(SUBSTRING ${TARGET_NAME} 0 1 FIRST_LETTER)
-string(TOUPPER ${FIRST_LETTER} FIRST_LETTER)
-string(REGEX REPLACE "^.(.*)" "${FIRST_LETTER}\\1" EXTENSION_CLASS
-                     "${TARGET_NAME}")
+if(DEFINED EXTERNAL_EXTENSION_DIRECTORIES)
+    # Extension is being built from DuckDB CMake file, just add the extension dir
+    add_subdirectory(arrow)
+else()
+    set(TARGET_NAME substrait)
+    project(${TARGET_NAME})
 
-cmake_policy(SET CMP0079 NEW)
+    # set(EXTENSION_CLASS ${TARGET_NAME}Extension)
+    string(SUBSTRING ${TARGET_NAME} 0 1 FIRST_LETTER)
+    string(TOUPPER ${FIRST_LETTER} FIRST_LETTER)
+    string(REGEX REPLACE "^.(.*)" "${FIRST_LETTER}\\1" EXTENSION_CLASS
+                         "${TARGET_NAME}")
 
-include_directories(${TARGET_NAME}/include)
-add_compile_definitions(DUCKDB_OUT_OF_TREE)
-add_compile_definitions(DUCKDB_EXTENSION_CLASS=${EXTENSION_CLASS}Extension)
-add_compile_definitions(DUCKDB_EXTENSION_HEADER="${TARGET_NAME}_extension.hpp")
+    cmake_policy(SET CMP0079 NEW)
 
-set(EXTERNAL_EXTENSION_DIRECTORIES ../${TARGET_NAME})
+    include_directories(${TARGET_NAME}/include)
+    add_compile_definitions(DUCKDB_OUT_OF_TREE)
+    add_compile_definitions(DUCKDB_EXTENSION_CLASS=${EXTENSION_CLASS}Extension)
+    add_compile_definitions(DUCKDB_EXTENSION_HEADER="${TARGET_NAME}_extension.hpp")
 
-add_subdirectory(duckdb)
+    set(EXTERNAL_EXTENSION_DIRECTORIES ../${TARGET_NAME})
 
-target_link_libraries(unittest ${TARGET_NAME}_extension)
+    add_subdirectory(duckdb)
+
+    target_link_libraries(unittest ${TARGET_NAME}_extension)
+endif()
