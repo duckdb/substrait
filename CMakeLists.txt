@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8.12)
 
 if(DEFINED EXTERNAL_EXTENSION_DIRECTORIES)
     # Extension is being built from DuckDB CMake file, just add the extension dir
-    add_subdirectory(arrow)
+    add_subdirectory(substrait)
 else()
     set(TARGET_NAME substrait)
     project(${TARGET_NAME})
