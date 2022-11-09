@@ -879,7 +879,7 @@ set<idx_t> GetNotNullConstraintCol(TableCatalogEntry &tbl) {
   set<idx_t> not_null;
   for (auto &constraint : tbl.constraints) {
     if (constraint->type == ConstraintType::NOT_NULL) {
-      not_null.insert(((NotNullConstraint *)constraint.get())->index);
+      not_null.insert(((NotNullConstraint *)constraint.get())->index.index);
     }
   }
   return not_null;
