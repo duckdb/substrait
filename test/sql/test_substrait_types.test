@@ -1,0 +1,117 @@
+# name: test/sql/test_substrait_types.test
+# description: Test conversion of DuckDB types to Substrait and vice versa
+# group: [sql]
+
+statement ok
+PRAGMA enable_verification
+
+statement ok
+CREATE table types (
+    a BOOL,
+    b SMALLINT, 
+    c INT, 
+    d BIGINT, 
+    e TIMESTAMP,
+    f TIMESTAMP_S, 
+    g TIMESTAMP_MS, 
+    h TIMESTAMP_NS, 
+    i TIMESTAMPTZ, 
+    j TIMETZ,
+    k INTERVAL,
+    l UUID,
+    m JSON,
+    n BLOB)
+
+statement ok
+INSERT into types VALUES(
+    true, 
+    2, 
+    0, 
+    100, 
+    '2942-01-10 04:00:54', 
+    '2942-01-10 04:00:54', 
+    '2942-01-10 04:00:54.775', 
+    '2262-04-11 23:47:16.854775', 
+    '2947-01-10 04:00:54.775806+00',
+    '12:00:00+02',
+    '1 years 2 months 3 days 04:05:06.789',
+    '64f4a03d-3839-4877-8a2d-3bca0bb364eb',
+    '{}',
+    '\x12\x07\x1A\x05\x1A\x03lte\x12\x11'
+    );
+
+statement ok
+CALL get_substrait('SELECT * FROM types');
+
+###  -------   Constants    -----------
+
+statement ok
+CREATE table bools (b BOOL);
+
+statement ok
+CALL get_substrait('SELECT * FROM bools WHERE b != true');
+
+
+
+statement ok
+CREATE table times_s (s TIMESTAMP_S);
+
+statement ok
+INSERT INTO times_s VALUES ('2001-01-01'), ('1999-12-31');
+
+statement ok
+CALL get_substrait('SELECT s FROM times_s WHERE s > ''2000-01-01'' ');
+
+
+
+
+statement ok
+CREATE table times_ms (s TIMESTAMP_MS);
+
+statement ok
+INSERT INTO times_ms VALUES ('2001-01-01'), ('1999-12-31');
+
+statement ok
+CALL get_substrait('SELECT s FROM times_ms WHERE s > ''2000-04-11 12:34:56.854'' ');
+
+
+statement ok
+CREATE table times_ns (s TIMESTAMP_NS);
+
+statement ok
+INSERT INTO times_ns VALUES ('2001-01-01'), ('1999-12-31');
+
+statement ok
+CALL get_substrait('SELECT s FROM times_ns WHERE s > ''2000-04-11 12:34:56.854775'' ');
+
+
+statement ok
+CREATE table uuids (u UUID);
+
+statement ok
+INSERT INTO uuids VALUES ('14991022-112a-48ac-998d-3619b2c4a3a8');
+
+statement ok
+CALL get_substrait('SELECT u FROM uuids WHERE u = gen_random_uuid() ');
+
+
+
+statement ok
+CREATE table tinys (t TINYINT);
+
+statement ok
+INSERT INTO tinys VALUES (1), (2);
+
+statement ok
+CALL get_substrait('SELECT t FROM tinys WHERE t > 0 ');
+
+# query I
+# CALL get_substrait_json('SELECT u FROM uuids WHERE u = ''14991022-112a-48ac-998d-3619b2c4a3a8''::UUID ');
+# ----
+
+# statement ok
+# create table all_types AS SELECT * FROM test_all_types();
+
+# statement ok
+# CALL get_substrait('SELECT * FROM all_types')
+

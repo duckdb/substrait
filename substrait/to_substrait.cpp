@@ -118,6 +118,12 @@ void DuckDBToSubstrait::TransformInteger(Value &dval,
   sval.set_i32(dval.GetValue<int32_t>());
 }
 
+void DuckDBToSubstrait::TransformSmallInt(Value &dval,
+                                         substrait::Expression &sexpr) {
+    auto &sval = *sexpr.mutable_literal();
+    sval.set_i16(dval.GetValue<int16_t>());
+}
+
 void DuckDBToSubstrait::TransformDouble(Value &dval,
                                         substrait::Expression &sexpr) {
   auto &sval = *sexpr.mutable_literal();
@@ -135,6 +141,18 @@ void DuckDBToSubstrait::TransformDate(Value &dval,
   // TODO how are we going to represent dates?
   auto &sval = *sexpr.mutable_literal();
   sval.set_string(dval.ToString());
+}
+
+void DuckDBToSubstrait::TransformTimestamp(Value &dval,
+                                      substrait::Expression &sexpr) {
+    auto &sval = *sexpr.mutable_literal();
+
+//    printf("%s\n", dval.ToString().c_str());
+//    printf("%hhu\n", dval.type().id());
+
+    //set_timestamp requires microseconds, duckdb has in seconds, milliseconds, microseconds or nanoseconds
+//    sval.set_timestamp(dval.GetValue<int64_t>());
+    sval.set_string(dval.ToString());
 }
 
 void DuckDBToSubstrait::TransformVarchar(Value &dval,
@@ -175,17 +193,26 @@ void DuckDBToSubstrait::TransformConstant(Value &dval,
   case LogicalTypeId::INTEGER:
     TransformInteger(dval, sexpr);
     break;
+  case LogicalTypeId::SMALLINT:
+    TransformSmallInt(dval, sexpr);
+    break;
   case LogicalTypeId::BIGINT:
     TransformBigInt(dval, sexpr);
+    break;
+  case LogicalTypeId::HUGEINT:
+    TransformHugeInt(dval, sexpr);
     break;
   case LogicalTypeId::DATE:
     TransformDate(dval, sexpr);
     break;
+  case LogicalTypeId::TIMESTAMP_SEC:
+  case LogicalTypeId::TIMESTAMP_MS:
+  case LogicalTypeId::TIMESTAMP_NS:
+  case LogicalTypeId::TIMESTAMP:
+    TransformTimestamp(dval, sexpr);
+    break;
   case LogicalTypeId::VARCHAR:
     TransformVarchar(dval, sexpr);
-    break;
-  case LogicalTypeId::HUGEINT:
-    TransformHugeInt(dval, sexpr);
     break;
   case LogicalTypeId::BOOLEAN:
     TransformBoolean(dval, sexpr);
@@ -194,7 +221,7 @@ void DuckDBToSubstrait::TransformConstant(Value &dval,
     TransformDouble(dval, sexpr);
     break;
   default:
-    throw InternalException(duckdb_type.ToString());
+    throw InternalException("Transform constant of type %s", duckdb_type.ToString());
   }
 }
 
@@ -818,18 +845,34 @@ DuckDBToSubstrait::TransformAggregateGroup(LogicalOperator &dop) {
     date_type->set_nullability(type_nullability);
     s_type.set_allocated_date(date_type);
     return s_type;
-  }
+  }  
+  case LogicalTypeId::TIME_TZ:
   case LogicalTypeId::TIME: {
     auto time_type = new substrait::Type_Time;
     time_type->set_nullability(type_nullability);
     s_type.set_allocated_time(time_type);
     return s_type;
   }
-  case LogicalTypeId::TIMESTAMP: {
+  case LogicalTypeId::TIMESTAMP:
+  case LogicalTypeId::TIMESTAMP_MS:
+  case LogicalTypeId::TIMESTAMP_NS:
+  case LogicalTypeId::TIMESTAMP_SEC: {
     // FIXME: Shouldn't this have a precision?
     auto timestamp_type = new substrait::Type_Timestamp;
     timestamp_type->set_nullability(type_nullability);
     s_type.set_allocated_timestamp(timestamp_type);
+    return s_type;
+  }
+  case LogicalTypeId::TIMESTAMP_TZ: {
+      auto timestamp_type = new substrait::Type_TimestampTZ;
+      timestamp_type->set_nullability(type_nullability);
+      s_type.set_allocated_timestamp_tz(timestamp_type);
+      return s_type;
+  }
+  case LogicalTypeId::INTERVAL: {
+    auto interval_type = new substrait::Type_IntervalDay();
+    interval_type->set_nullability(type_nullability);
+    s_type.set_allocated_interval_day(interval_type);
     return s_type;
   }
   case LogicalTypeId::FLOAT: {
@@ -852,6 +895,7 @@ DuckDBToSubstrait::TransformAggregateGroup(LogicalOperator &dop) {
     s_type.set_allocated_decimal(decimal_type);
     return s_type;
   }
+  case LogicalTypeId::JSON:
   case LogicalTypeId::VARCHAR: {
     auto varchar_type = new substrait::Type_VarChar;
     varchar_type->set_nullability(type_nullability);
@@ -868,6 +912,18 @@ DuckDBToSubstrait::TransformAggregateGroup(LogicalOperator &dop) {
     s_type.set_allocated_varchar(varchar_type);
     return s_type;
   }
+  case LogicalTypeId::BLOB:{
+      auto binary_type = new substrait::Type_Binary;
+      binary_type->set_nullability(type_nullability);
+      s_type.set_allocated_binary(binary_type);
+      return s_type;
+  }
+  case LogicalTypeId::UUID: {
+    auto uuid_type = new substrait::Type_UUID;
+    uuid_type->set_nullability(type_nullability);
+    s_type.set_allocated_uuid(uuid_type);
+    return s_type;
+  }
   default:
     throw NotImplementedException(
         "Logical Type " + type.ToString() +
@@ -879,7 +935,7 @@ set<idx_t> GetNotNullConstraintCol(TableCatalogEntry &tbl) {
   set<idx_t> not_null;
   for (auto &constraint : tbl.constraints) {
     if (constraint->type == ConstraintType::NOT_NULL) {
-      not_null.insert(((NotNullConstraint *)constraint.get())->index);
+      not_null.insert(((NotNullConstraint *)constraint.get())->index.index);
     }
   }
   return not_null;
@@ -995,8 +1051,8 @@ substrait::RelRoot *DuckDBToSubstrait::TransformRootOp(LogicalOperator &dop) {
   // first projection to get the aliases
   while (current_op->type != LogicalOperatorType::LOGICAL_PROJECTION) {
     if (current_op->children.size() != 1) {
-      throw InternalException("Root node has more than 1, or 0 children up to "
-                              "reaching a projection node");
+      throw InternalException("Root node has more than 1, or 0 children (%d) up to "
+                              "reaching a projection node. Type %d", current_op->children.size(), current_op->type);
     }
     current_op = current_op->children[0].get();
   }
