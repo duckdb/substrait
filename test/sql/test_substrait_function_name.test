@@ -1,0 +1,288 @@
+# name: test/sql/test_substrait_function_name.test
+# description: Test conversion of DuckDB built-in function names to Substrait function names
+# group: [sql]
+
+statement ok
+PRAGMA enable_verification
+
+statement ok
+CREATE table ints (i INT);
+
+statement ok
+INSERT INTO ints VALUES (-10), (100), (3), (43);
+
+statement ok
+CREATE table varchars (v VARCHAR);
+
+statement ok
+INSERT INTO varchars VALUES ('Duck'), ('DB'), ('🦆'), ('Quack');
+
+#-------------------------------------------------------------------------------------
+
+statement ok
+CALL get_substrait('SELECT stddev(i) FROM ints');
+
+query I
+CALL from_substrait('\x12\x0D\x1A\x0B\x10\x01\x1A\x07std_dev\x1Av\x12t\x0AW:U\x12I\x22G\x12!\x0A\x1F\x12\x0D\x0A\x01i\x12\x08\x0A\x04*\x02\x10\x01\x18\x02\x22\x06\x0A\x02\x0A\x00\x10\x01:\x06\x0A\x04ints\x1A\x00\x22 \x0A\x1E\x08\x01*\x04Z\x02\x10\x01:\x14\x1A\x12Z\x10\x0A\x04Z\x02\x10\x01\x12\x08\x12\x06\x0A\x02\x12\x00\x22\x00\x1A\x08\x12\x06\x0A\x02\x12\x00\x22\x00\x12\x19stddev(CAST(i AS DOUBLE))'::BLOB)
+----
+49.44357052910587
+
+query I
+SELECT stddev(i) FROM ints;
+----
+49.44357052910587
+
+#-------------------------------------------------------------------------------------
+
+statement ok
+CALL get_substrait('SELECT count(i) FROM ints');
+
+query I
+CALL from_substrait('\x12\x0B\x1A\x09\x10\x01\x1A\x05count\x1AO\x12M\x0AA:?\x123\x221\x12!\x0A\x1F\x12\x0D\x0A\x01i\x12\x08\x0A\x04*\x02\x10\x01\x18\x02\x22\x06\x0A\x02\x0A\x00\x10\x01:\x06\x0A\x04ints\x1A\x00\x22\x0A\x0A\x08\x08\x01*\x04:\x02\x10\x01\x1A\x08\x12\x06\x0A\x02\x12\x00\x22\x00\x12\x08count(i)'::BLOB);
+----
+4
+
+query I
+SELECT count(i) FROM ints
+----
+4
+
+#-------------------------------------------------------------------------------------
+
+query I
+CALL get_substrait('SELECT mod(i,3) FROM ints');
+----
+\x12\x0D\x1A\x0B\x10\x01\x1A\x07modulus\x1AT\x12R\x0AE:C\x12!\x0A\x1F\x12\x0D\x0A\x01i\x12\x08\x0A\x04*\x02\x10\x01\x18\x02\x22\x06\x0A\x02\x0A\x00\x10\x01:\x06\x0A\x04ints\x1A\x1E\x1A\x1C\x08\x01\x1A\x04*\x02\x10\x01\x22\x0A\x1A\x08\x12\x06\x0A\x02\x12\x00\x22\x00\x22\x06\x1A\x04\x0A\x02(\x03\x12\x09mod(i, 3)
+
+query I
+CALL from_substrait('\x12\x0D\x1A\x0B\x10\x01\x1A\x07modulus\x1AT\x12R\x0AE:C\x12!\x0A\x1F\x12\x0D\x0A\x01i\x12\x08\x0A\x04*\x02\x10\x01\x18\x02\x22\x06\x0A\x02\x0A\x00\x10\x01:\x06\x0A\x04ints\x1A\x1E\x1A\x1C\x08\x01\x1A\x04*\x02\x10\x01\x22\x0A\x1A\x08\x12\x06\x0A\x02\x12\x00\x22\x00\x22\x06\x1A\x04\x0A\x02(\x03\x12\x09mod(i, 3)'::BLOB);
+----
+-1
+1
+0
+1
+
+query I 
+SELECT mod(i,3) FROM ints;
+----
+-1
+1
+0
+1
+
+#-------------------------------------------------------------------------------------
+
+statement ok
+CALL get_substrait('SELECT sum(i) FROM ints');
+
+query I
+CALL from_substrait('\x12\x09\x1A\x07\x10\x01\x1A\x03sum\x1A\x5C\x12Z\x0AP:N\x12B\x22@\x12!\x0A\x1F\x12\x0D\x0A\x01i\x12\x08\x0A\x04*\x02\x10\x01\x18\x02\x22\x06\x0A\x02\x0A\x00\x10\x01:\x06\x0A\x04ints\x1A\x00\x22\x19\x0A\x17\x08\x01*\x07\xC2\x01\x04\x10& \x01:\x0A\x1A\x08\x12\x06\x0A\x02\x12\x00\x22\x00\x1A\x08\x12\x06\x0A\x02\x12\x00\x22\x00\x12\x06sum(i)'::BLOB);
+----
+136
+
+query I
+SELECT sum(i) FROM ints;
+----
+136
+
+#-------------------------------------------------------------------------------------
+
+query I
+CALL get_substrait_json('SELECT abs(i) FROM ints');
+----
+{"extensions":[{"extensionFunction":{"functionAnchor":1,"name":"abs"}}],"relations":[{"root":{"input":{"project":{"input":{"read":{"baseSchema":{"names":["i"],"struct":{"types":[{"i32":{"nullability":"NULLABILITY_NULLABLE"}}],"nullability":"NULLABILITY_REQUIRED"}},"projection":{"select":{"structItems":[{}]},"maintainSingularStruct":true},"namedTable":{"names":["ints"]}}},"expressions":[{"scalarFunction":{"functionReference":1,"outputType":{"i32":{"nullability":"NULLABILITY_NULLABLE"}},"arguments":[{"value":{"selection":{"directReference":{"structField":{}},"rootReference":{}}}}]}}]}},"names":["abs(i)"]}}]}
+
+query I
+CALL from_substrait('\x12\x09\x1A\x07\x10\x01\x1A\x03abs\x1AI\x12G\x0A=:;\x12!\x0A\x1F\x12\x0D\x0A\x01i\x12\x08\x0A\x04*\x02\x10\x01\x18\x02\x22\x06\x0A\x02\x0A\x00\x10\x01:\x06\x0A\x04ints\x1A\x16\x1A\x14\x08\x01\x1A\x04*\x02\x10\x01\x22\x0A\x1A\x08\x12\x06\x0A\x02\x12\x00\x22\x00\x12\x06abs(i)'::BLOB);
+----
+10
+100
+3
+43
+
+query I 
+SELECT abs(i) FROM ints;
+----
+10
+100
+3
+43
+
+
+#-------------------------------------------------------------------------------------
+
+statement ok
+CALL get_substrait('SELECT prefix(i, ''1'') FROM ints');
+
+query I
+CALL from_substrait('\x12\x11\x1A\x0F\x10\x01\x1A\x0Bstarts_with\x1Ax\x12v\x0AS:Q\x12!\x0A\x1F\x12\x0D\x0A\x01i\x12\x08\x0A\x04*\x02\x10\x01\x18\x02\x22\x06\x0A\x02\x0A\x00\x10\x01:\x06\x0A\x04ints\x1A,\x1A*\x08\x01\x1A\x04\x0A\x02\x10\x01\x22\x17\x1A\x15Z\x13\x0A\x07\xB2\x01\x04\x08\x01\x18\x01\x12\x08\x12\x06\x0A\x02\x12\x00\x22\x00\x22\x07\x1A\x05\x0A\x03b\x011\x12\x1Fprefix(CAST(i AS VARCHAR), \x271\x27)'::BLOB);
+----
+false
+true
+false
+false
+
+query I
+SELECT prefix(i, '1') FROM ints;
+----
+false
+true
+false
+false
+
+#-------------------------------------------------------------------------------------
+
+statement ok
+CALL get_substrait('SELECT suffix(i, ''3'') FROM ints');
+
+query I
+CALL from_substrait('\x12\x0F\x1A\x0D\x10\x01\x1A\x09ends_with\x1Ax\x12v\x0AS:Q\x12!\x0A\x1F\x12\x0D\x0A\x01i\x12\x08\x0A\x04*\x02\x10\x01\x18\x02\x22\x06\x0A\x02\x0A\x00\x10\x01:\x06\x0A\x04ints\x1A,\x1A*\x08\x01\x1A\x04\x0A\x02\x10\x01\x22\x17\x1A\x15Z\x13\x0A\x07\xB2\x01\x04\x08\x01\x18\x01\x12\x08\x12\x06\x0A\x02\x12\x00\x22\x00\x22\x07\x1A\x05\x0A\x03b\x013\x12\x1Fsuffix(CAST(i AS VARCHAR), \x273\x27)'::BLOB);
+----
+false
+false
+true
+true
+
+query I
+SELECT suffix(i, '3') FROM ints;
+----
+false
+false
+true
+true
+
+#-------------------------------------------------------------------------------------
+
+statement ok
+CALL get_substrait('SELECT substr(v, 1, 1) FROM varchars');
+
+query I
+CALL from_substrait('\x12\x0F\x1A\x0D\x10\x01\x1A\x09substring\x1Al\x12j\x0AW:U\x12(\x0A&\x12\x10\x0A\x01v\x12\x0B\x0A\x07\xB2\x01\x04\x08\x05\x18\x01\x18\x02\x22\x06\x0A\x02\x0A\x00\x10\x01:\x0A\x0A\x08varchars\x1A)\x1A\x27\x08\x01\x1A\x07\xB2\x01\x04\x08\x05\x18\x01\x22\x0A\x1A\x08\x12\x06\x0A\x02\x12\x00\x22\x00\x22\x06\x1A\x04\x0A\x028\x01\x22\x06\x1A\x04\x0A\x028\x01\x12\x0Fsubstr(v, 1, 1)'::BLOB);
+----
+D
+D
+🦆
+Q
+
+query I
+SELECT substr(v, 1, 1) FROM varchars;
+----
+D
+D
+🦆
+Q
+
+#-------------------------------------------------------------------------------------
+
+statement ok
+CALL get_substrait('SELECT length(v) FROM varchars');
+
+query I
+CALL from_substrait('\x12\x11\x1A\x0F\x10\x01\x1A\x0Bchar_length\x1AS\x12Q\x0AD:B\x12(\x0A&\x12\x10\x0A\x01v\x12\x0B\x0A\x07\xB2\x01\x04\x08\x05\x18\x01\x18\x02\x22\x06\x0A\x02\x0A\x00\x10\x01:\x0A\x0A\x08varchars\x1A\x16\x1A\x14\x08\x01\x1A\x04:\x02\x10\x01\x22\x0A\x1A\x08\x12\x06\x0A\x02\x12\x00\x22\x00\x12\x09length(v)'::BLOB);
+----
+4
+2
+1
+5
+
+query I 
+SELECT length(v) FROM varchars;
+----
+4
+2
+1
+5
+
+#-------------------------------------------------------------------------------------
+
+statement ok
+CALL get_substrait('SELECT isnan(i) FROM ints');
+
+query I
+CALL from_substrait('\x12\x0C\x1A\x0A\x10\x01\x1A\x06is_nan\x1Ae\x12c\x0AG:E\x12!\x0A\x1F\x12\x0D\x0A\x01i\x12\x08\x0A\x04*\x02\x10\x01\x18\x02\x22\x06\x0A\x02\x0A\x00\x10\x01:\x06\x0A\x04ints\x1A \x1A\x1E\x08\x01\x1A\x04\x0A\x02\x10\x01\x22\x14\x1A\x12Z\x10\x0A\x04Z\x02\x10\x01\x12\x08\x12\x06\x0A\x02\x12\x00\x22\x00\x12\x18isnan(CAST(i AS DOUBLE))'::BLOB);
+----
+false
+false
+false
+false
+
+query I 
+SELECT isnan(i) FROM ints;
+----
+false
+false
+false
+false
+
+#-------------------------------------------------------------------------------------
+
+statement ok
+CALL get_substrait('SELECT isinf(i) FROM ints');
+
+query I
+CALL from_substrait('\x12\x11\x1A\x0F\x10\x01\x1A\x0Bis_infinite\x1Ae\x12c\x0AG:E\x12!\x0A\x1F\x12\x0D\x0A\x01i\x12\x08\x0A\x04*\x02\x10\x01\x18\x02\x22\x06\x0A\x02\x0A\x00\x10\x01:\x06\x0A\x04ints\x1A \x1A\x1E\x08\x01\x1A\x04\x0A\x02\x10\x01\x22\x14\x1A\x12Z\x10\x0A\x04Z\x02\x10\x01\x12\x08\x12\x06\x0A\x02\x12\x00\x22\x00\x12\x18isinf(CAST(i AS DOUBLE))'::BLOB);
+----
+false
+false
+false
+false
+
+query I 
+SELECT isinf(i) FROM ints;
+----
+false
+false
+false
+false
+
+#-------------------------------------------------------------------------------------
+
+statement ok
+CALL get_substrait('SELECT isfinite(i) FROM ints');
+
+query I
+CALL from_substrait('\x12\x0F\x1A\x0D\x10\x01\x1A\x09is_finite\x1Ah\x12f\x0AG:E\x12!\x0A\x1F\x12\x0D\x0A\x01i\x12\x08\x0A\x04*\x02\x10\x01\x18\x02\x22\x06\x0A\x02\x0A\x00\x10\x01:\x06\x0A\x04ints\x1A \x1A\x1E\x08\x01\x1A\x04\x0A\x02\x10\x01\x22\x14\x1A\x12Z\x10\x0A\x04Z\x02\x10\x01\x12\x08\x12\x06\x0A\x02\x12\x00\x22\x00\x12\x1Bisfinite(CAST(i AS DOUBLE))'::BLOB);
+----
+true
+true
+true
+true
+
+query I 
+SELECT isfinite(i) FROM ints;
+----
+true
+true
+true
+true
+
+# -------------------------------------------------------------------------------------
+
+
+# TODO extract (extract) - extract using year SELECT COL, extract('year' FROM COL). the function name in the substrait plan is year
+# Somehow make use of the Substrait component options: [ YEAR, MONTH, DAY, SECOND ] so reverse is also possible
+
+# statement ok
+# CREATE table dates (d TIMESTAMP);
+
+# statement ok
+# INSERT INTO dates VALUES ('1992-09-20 20:38:48'), ('1971-09-15 15:14:28'), ('2030-01-03 03:01:54');
+
+# query I
+# CALL get_substrait_json('SELECT extract(hour FROM d) FROM dates');
+# ----
+# {"extensions":[{"extensionFunction":{"functionAnchor":1,"name":"extract"}}],"relations":[{"root":{"input":{"project":{"input":{"read":{"baseSchema":{"names":["d"],"struct":{"types":[{"timestamp":{"nullability":"NULLABILITY_NULLABLE"}}],"nullability":"NULLABILITY_REQUIRED"}},"projection":{"select":{"structItems":[{}]},"maintainSingularStruct":true},"namedTable":{"names":["dates"]}}},"expressions":[{"scalarFunction":{"functionReference":1,"outputType":{"i64":{"nullability":"NULLABILITY_NULLABLE"}},"arguments":[{"value":{"selection":{"directReference":{"structField":{}},"rootReference":{}}}}]}}]}},"names":["hour(d)"]}}]} <> {"extensions":[{"extensionFunction":{"functionAnchor":1,"name":"hour"}}],"relations":[{"root":{"input":{"project":{"input":{"read":{"baseSchema":{"names":["d"],"struct":{"types":[{"timestamp":{"nullability":"NULLABILITY_NULLABLE"}}],"nullability":"NULLABILITY_REQUIRED"}},"projection":{"select":{"structItems":[{}]},"maintainSingularStruct":true},"namedTable":{"names":["dates"]}}},"expressions":[{"scalarFunction":{"functionReference":1,"outputType":{"i64":{"nullability":"NULLABILITY_NULLABLE"}},"arguments":[{"value":{"selection":{"directReference":{"structField":{}},"rootReference":{}}}}]}}]}},"names":["hour(d)"]}}]}
+# query I 
+# CALL from_substrait('\x12\x0D\x1A\x0B\x10\x01\x1A\x07extract\x1AK\x12I\x0A>:<\x12\x22\x0A \x12\x0D\x0A\x01d\x12\x08\x0A\x04r\x02\x10\x01\x18\x02\x22\x06\x0A\x02\x0A\x00\x10\x01:\x07\x0A\x05dates\x1A\x16\x1A\x14\x08\x01\x1A\x04:\x02\x10\x01\x22\x0A\x1A\x08\x12\x06\x0A\x02\x12\x00\x22\x00\x12\x07hour(d)'::BLOB)
+# ----
+# 20
+# 15
+# 03
+
+# query I
+# SELECT extract(hour FROM d) FROM dates;
+# ----
+# 20
+# 15
+# 03
+

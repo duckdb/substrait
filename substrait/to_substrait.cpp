@@ -213,11 +213,54 @@ void DuckDBToSubstrait::TransformCastExpression(Expression &dexpr,
   *scast->mutable_type() = DuckToSubstraitType(dcast.return_type);
 }
 
+
+static string CorrectSubstraitFunctionName(const string& function_name) {
+    // some if statement for all the exceptions in the issue
+    if (function_name == "mod") {
+        return "modulus";
+    }
+    if (function_name == "sum_no_overflow") {
+        return "sum";
+    }
+    if (function_name == "count_star") { 
+      return "count";
+    }
+    if (function_name == "stddev") {
+      return "std_dev";
+    }
+    if (function_name == "prefix") {
+      return "starts_with";
+    }
+    if (function_name == "suffix") {
+      return "ends_with";
+    }
+    if (function_name == "substr") {
+      return "substring";
+    }
+    if (function_name == "length") {
+      return "char_length";
+    }
+    if (function_name == "isnan") {
+      return "is_nan";
+    }
+    if (function_name == "isfinite") {
+      return "is_finite";
+    }
+    if (function_name == "isinf") {
+      return "is_infinite";
+    }
+    if (function_name == "hour") {
+      return "extract";
+    }
+    return function_name;
+}
+
+
 void DuckDBToSubstrait::TransformFunctionExpression(
     Expression &dexpr, substrait::Expression &sexpr, uint64_t col_offset) {
   auto &dfun = (BoundFunctionExpression &)dexpr;
   auto sfun = sexpr.mutable_scalar_function();
-  sfun->set_function_reference(RegisterFunction(dfun.function.name));
+  sfun->set_function_reference(RegisterFunction(CorrectSubstraitFunctionName(dfun.function.name)));
 
   for (auto &darg : dfun.children) {
     auto sarg = sfun->add_arguments();
@@ -743,7 +786,7 @@ DuckDBToSubstrait::TransformAggregateGroup(LogicalOperator &dop) {
       throw InternalException("No non-aggregate expressions in measures yet");
     }
     auto &daexpr = (BoundAggregateExpression &)*dmeas;
-    smeas->set_function_reference(RegisterFunction(daexpr.function.name));
+    smeas->set_function_reference(RegisterFunction(CorrectSubstraitFunctionName(daexpr.function.name)));
 
     *smeas->mutable_output_type() = DuckToSubstraitType(daexpr.return_type);
     for (auto &darg : daexpr.children) {
@@ -879,7 +922,7 @@ set<idx_t> GetNotNullConstraintCol(TableCatalogEntry &tbl) {
   set<idx_t> not_null;
   for (auto &constraint : tbl.constraints) {
     if (constraint->type == ConstraintType::NOT_NULL) {
-      not_null.insert(((NotNullConstraint *)constraint.get())->index);
+      not_null.insert(((NotNullConstraint *)constraint.get())->index.index);
     }
   }
   return not_null;
