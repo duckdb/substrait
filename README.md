@@ -74,10 +74,10 @@ con.load_extension("substrait")
      
      To generate a substrait blob the ```get_substrait(SQL)``` function must be called, from a connection, with a valid SQL select query.
      ```python
-     con.execute('CREATE TABLE crossfit (exercise text,dificulty_level int);')
-     con.execute("INSERT INTO crossfit VALUES ('Push Ups', 3), ('Pull Ups', 5) , (' Push Jerk', 7), ('Bar Muscle Up', 10);")
+     con.execute(query='CREATE TABLE crossfit (exercise text,dificulty_level int);')
+     con.execute(query="INSERT INTO crossfit VALUES ('Push Ups', 3), ('Pull Ups', 5) , (' Push Jerk', 7), ('Bar Muscle Up', 10);")
      
-     proto_bytes = con.get_substrait("select count(exercise) as exercise from crossfit where dificulty_level <=5").fetchone()[0]    
+     proto_bytes = con.get_substrait(query="select count(exercise) as exercise from crossfit where dificulty_level <=5").fetchone()[0]    
    ```
 2) Json Generation
      
@@ -89,7 +89,7 @@ con.load_extension("substrait")
      
      To consume a substrait blob the ```from_substrait(blob)``` function must be called, from the connection, with a valid substrait BLOB plan.
      ```python
-     query_result = con.from_substrait(proto_bytes)
+     query_result = con.from_substrait(proto=proto_bytes)
     ```
 
 ### R
