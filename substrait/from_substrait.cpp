@@ -122,6 +122,37 @@ SubstraitToDuckDB::TransformSelectionExpr(const substrait::Expression &sexpr) {
       sexpr.selection().direct_reference().struct_field().field() + 1);
 }
 
+static string ConvertFunctionName(string fname) {
+  if (fname == "modulus") {
+    return "mod";
+  }
+  if (fname == "std_dev") {
+    return "stddev";
+  }
+  if (fname == "starts_with") {
+    return "prefix";
+  }
+  if (fname == "ends_with") {
+    return "suffix";
+  }
+  if (fname == "substring") {
+    return "substr";
+  }
+  if (fname == "char_length") {
+    return "length";
+  }
+  if (fname == "is_nan") {
+    return "isnan";
+  }
+  if (fname == "is_finite") {
+    return "isfinite";
+  }
+  if (fname == "is_infinite") {
+    return "isinf";
+  }
+  return fname;
+}
+
 unique_ptr<ParsedExpression> SubstraitToDuckDB::TransformScalarFunctionExpr(
     const substrait::Expression &sexpr) {
   auto function_name =
@@ -181,7 +212,7 @@ unique_ptr<ParsedExpression> SubstraitToDuckDB::TransformScalarFunctionExpr(
                                           move(children[2]));
   }
 
-  return make_unique<FunctionExpression>(function_name, move(children));
+  return make_unique<FunctionExpression>(ConvertFunctionName(function_name), move(children));
 }
 
 unique_ptr<ParsedExpression>
@@ -403,7 +434,7 @@ SubstraitToDuckDB::TransformAggregateOp(const substrait::Rel &sop) {
       function_name = "count_star";
     }
     expressions.push_back(
-        make_unique<FunctionExpression>(function_name, move(children)));
+        make_unique<FunctionExpression>(ConvertFunctionName(function_name), move(children)));
   }
 
   return make_shared<AggregateRelation>(TransformOp(sop.aggregate().input()),
