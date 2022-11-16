@@ -67,8 +67,8 @@ Before using the extension you must remember to properly load it. To load an ext
 import duckdb
 
 con = duckdb.connect()
-con.execute("INSTALL('substrait')");
-con.execute("LOAD('substrait')")
+con.install_extension("substrait")
+con.load_extension("substrait")
 ```
 1) Blob Generation
      
@@ -77,7 +77,7 @@ con.execute("LOAD('substrait')")
      con.execute('CREATE TABLE crossfit (exercise text,dificulty_level int);')
      con.execute("INSERT INTO crossfit VALUES ('Push Ups', 3), ('Pull Ups', 5) , (' Push Jerk', 7), ('Bar Muscle Up', 10);")
      
-     proto_bytes =  con.get_substrait("select count(exercise) as exercise from crossfit where dificulty_level <=5")     
+     proto_bytes = con.get_substrait("select count(exercise) as exercise from crossfit where dificulty_level <=5").fetchone()[0]    
    ```
 2) Json Generation
      
