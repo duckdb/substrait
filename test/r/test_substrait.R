@@ -31,3 +31,14 @@ test_that("substrait extension json test", {
   expect_equal(json, expected_json)
 })
 
+test_that("substrait extension from json test", {
+  con <- load_extension()
+  on.exit(dbDisconnect(con, shutdown = TRUE))
+  dbExecute(con, "CREATE TABLE integers (i INTEGER)")
+  dbExecute(con, "INSERT INTO integers VALUES (42)")
+  json <- "{\"relations\":[{\"root\":{\"input\":{\"fetch\":{\"input\":{\"project\":{\"input\":{\"read\":{\"baseSchema\":{\"names\":[\"i\"],\"struct\":{\"types\":[{\"i32\":{\"nullability\":\"NULLABILITY_NULLABLE\"}}],\"nullability\":\"NULLABILITY_REQUIRED\"}},\"projection\":{\"select\":{\"structItems\":[{}]},\"maintainSingularStruct\":true},\"namedTable\":{\"names\":[\"integers\"]}}},\"expressions\":[{\"selection\":{\"directReference\":{\"structField\":{}},\"rootReference\":{}}}]}},\"count\":\"5\"}},\"names\":[\"i\"]}}]}"
+  
+  result <- duckdb::duckdb_prepare_substrait_json(con, json)
+  df <- dbFetch(result)
+  expect_equal(df$i, 42L)
+})
