@@ -42,8 +42,9 @@ static unique_ptr<FunctionData> ToJsonBind(ClientContext &context,
 }
 
 shared_ptr<Relation> SubstraitPlanToDuckDBRel(Connection &conn,
-                                              string &serialized) {
-  SubstraitToDuckDB transformer_s2d(conn, serialized);
+                                              string &serialized,
+                                              bool json = false) {
+  SubstraitToDuckDB transformer_s2d(conn, serialized, json);
   return transformer_s2d.TransformPlan();
 }
 
@@ -103,18 +104,33 @@ struct FromSubstraitFunctionData : public TableFunctionData {
   unique_ptr<Connection> conn;
 };
 
-static unique_ptr<FunctionData>
-FromSubstraitBind(ClientContext &context, TableFunctionBindInput &input,
-                  vector<LogicalType> &return_types, vector<string> &names) {
+static unique_ptr<FunctionData> SubstraitBind(ClientContext &context,
+                                              TableFunctionBindInput &input,
+                                              vector<LogicalType> &return_types,
+                                              vector<string> &names,
+                                              bool is_json) {
   auto result = make_unique<FromSubstraitFunctionData>();
   result->conn = make_unique<Connection>(*context.db);
   string serialized = input.inputs[0].GetValueUnsafe<string>();
-  result->plan = SubstraitPlanToDuckDBRel(*result->conn, serialized);
+  result->plan = SubstraitPlanToDuckDBRel(*result->conn, serialized, is_json);
   for (auto &column : result->plan->Columns()) {
     return_types.emplace_back(column.Type());
     names.emplace_back(column.Name());
   }
   return move(result);
+}
+
+static unique_ptr<FunctionData>
+FromSubstraitBind(ClientContext &context, TableFunctionBindInput &input,
+                  vector<LogicalType> &return_types, vector<string> &names) {
+  return SubstraitBind(context, input, return_types, names, false);
+}
+
+static unique_ptr<FunctionData>
+FromSubstraitBindJSON(ClientContext &context, TableFunctionBindInput &input,
+                      vector<LogicalType> &return_types,
+                      vector<string> &names) {
+  return SubstraitBind(context, input, return_types, names, true);
 }
 
 static void FromSubFunction(ClientContext &context, TableFunctionInput &data_p,
@@ -149,6 +165,14 @@ void SubstraitExtension::Load(DuckDB &db) {
                               FromSubFunction, FromSubstraitBind);
   CreateTableFunctionInfo from_sub_info(from_sub_func);
   catalog.CreateTableFunction(*con.context, &from_sub_info);
+
+  // create the from_substrait table function that allows us to get a query
+  // result from a substrait plan
+  TableFunction from_sub_func_json("from_substrait_json",
+                                   {LogicalType::VARCHAR}, FromSubFunction,
+                                   FromSubstraitBindJSON);
+  CreateTableFunctionInfo from_sub_info_json(from_sub_func_json);
+  catalog.CreateTableFunction(*con.context, &from_sub_info_json);
 
   // create the from_substrait table function that allows us to get a query
   // result from a substrait plan

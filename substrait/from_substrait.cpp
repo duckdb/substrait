@@ -18,14 +18,24 @@
 #include "duckdb/parser/expression/comparison_expression.hpp"
 
 #include "substrait/plan.pb.h"
+#include "google/protobuf/util/json_util.h"
 
 namespace duckdb {
-SubstraitToDuckDB::SubstraitToDuckDB(Connection &con_p, string &serialized)
+SubstraitToDuckDB::SubstraitToDuckDB(Connection &con_p, string &serialized,
+                                     bool json)
     : con(con_p) {
-  if (!plan.ParseFromString(serialized)) {
-    throw std::runtime_error(
-        "Was not possible to convert binary into Substrait plan");
+  if (!json) {
+    if (!plan.ParseFromString(serialized)) {
+      throw std::runtime_error(
+          "Was not possible to convert binary into Substrait plan");
+    }
+  } else {
+    if (!google::protobuf::util::JsonStringToMessage(serialized, &plan).ok()) {
+      throw std::runtime_error(
+          "Was not possible to convert binary into Substrait plan");
+    }
   }
+
   for (auto &sext : plan.extensions()) {
     if (!sext.has_extension_function()) {
       continue;
