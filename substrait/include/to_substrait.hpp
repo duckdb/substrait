@@ -10,6 +10,7 @@
 #include "duckdb/planner/joinside.hpp"
 #include "duckdb/planner/table_filter.hpp"
 #include "duckdb/planner/bound_result_modifier.hpp"
+#include "duckdb/function/table_function.hpp"
 
 namespace duckdb {
 class DuckDBToSubstrait {
@@ -47,6 +48,12 @@ private:
 	substrait::Rel *TransformAggregateGroup(duckdb::LogicalOperator &dop);
 	substrait::Rel *TransformGet(duckdb::LogicalOperator &dop);
 	substrait::Rel *TransformCrossProduct(duckdb::LogicalOperator &dop);
+
+        //! Methods to transform different LogicalGet Types (e.g., Table, Parquet)
+        //! To Substrait;
+        void TransformTableScanToSubstrait(LogicalGet & dget, substrait::ReadRel* sget);
+        void TransformParquetScanToSubstrait(LogicalGet & dget, substrait::ReadRel* sget, BindInfo& bind_info, FunctionData& bind_data);
+
 
 	//! Methods to transform DuckDBConstants to Substrait Expressions
 	void TransformConstant(duckdb::Value &dval, substrait::Expression &sexpr);
