@@ -30,7 +30,6 @@ jobs:
         pip uninstall protobuf -y
         pip install --no-binary protobuf protobuf
         pip uninstall duckdb -y
-        pip install duckdb --pre
 
     - name: Update DuckDB submodule
       run: |
@@ -39,7 +38,6 @@ jobs:
 
     - name: Build DuckDB (Python)
       run: BUILD_PYTHON=1 make release
-
 
     - name: Test Python
       run: |

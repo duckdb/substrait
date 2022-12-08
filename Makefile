@@ -22,6 +22,11 @@ ifeq (${BUILD_R}, 1)
 	BUILD_FLAGS:=${EXTENSIONS} -DBUILD_R=1
 endif
 
+ifeq (${BUILD_PARQUET}, 1)
+	BUILD_FLAGS:=${EXTENSIONS} -DBUILD_PARQUET_EXTENSION=1
+endif
+
+
 pull:
 	git submodule init
 	git submodule update --recursive --remote
