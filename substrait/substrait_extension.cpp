@@ -58,6 +58,7 @@ static void ToSubFunction(ClientContext &context, TableFunctionInput &data_p,
   auto new_conn = Connection(*context.db);
   // We might want to disable the optimizer of our new connection
   new_conn.context->config.enable_optimizer = context.config.enable_optimizer;
+  new_conn.context->config.use_replacement_scans = false;
   auto query_plan = new_conn.context->ExtractPlan(data.query);
   DuckDBToSubstrait transformer_d2s(context, *query_plan);
   auto serialized = transformer_d2s.SerializeToString();
@@ -89,6 +90,7 @@ static void ToJsonFunction(ClientContext &context, TableFunctionInput &data_p,
   auto new_conn = Connection(*context.db);
   // We might want to disable the optimizer of our new connection
   new_conn.context->config.enable_optimizer = context.config.enable_optimizer;
+  new_conn.context->config.use_replacement_scans = false;
   auto query_plan = new_conn.context->ExtractPlan(data.query);
   DuckDBToSubstrait transformer_d2s(context, *query_plan);
   auto serialized = transformer_d2s.SerializeToJson();
