@@ -150,7 +150,7 @@ static void FromSubFunction(ClientContext &context, TableFunctionInput &data_p,
 void SubstraitExtension::Load(DuckDB &db) {
   Connection con(db);
   con.BeginTransaction();
-  auto &catalog = Catalog::GetCatalog(*con.context);
+  auto &catalog = Catalog::GetSystemCatalog(*con.context);
 
   // create the get_substrait table function that allows us to get a substrait
   // binary from a valid SQL Query
