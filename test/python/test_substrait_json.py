@@ -24,4 +24,4 @@ def test_stack_not_deep_enough(require):
     con = require('substrait')
     for i in range(0,1000):
         with pytest.raises(duckdb.CatalogException, match="Table with name p does not exist!"):
-            con.get_substrait_json("select * from p limit 5").exee()
+            con.get_substrait_json("select * from p limit 5")
