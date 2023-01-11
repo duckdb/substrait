@@ -9,7 +9,7 @@
 namespace duckdb {
 class SubstraitToDuckDB {
 public:
-	SubstraitToDuckDB(Connection &con_p, string &serialized);
+	SubstraitToDuckDB(Connection &con_p, string &serialized, bool json = false);
 	//! Transforms Substrait Plan to DuckDB Relation
 	shared_ptr<Relation> TransformPlan();
 

@@ -1,0 +1,23 @@
+# name: test/sql/test_substrait_json.test
+# description: Test get_substrait_json and from_substrait_json basic functionality
+# group: [substrait]
+
+statement ok
+PRAGMA enable_verification
+
+statement ok
+CREATE TABLE integers (i integer)
+
+statement ok
+insert into integers values (1),(6)
+
+query I
+CALL get_substrait_json('select * from integers limit 5')
+----
+{"relations":[{"root":{"input":{"fetch":{"input":{"project":{"input":{"read":{"baseSchema":{"names":["i"],"struct":{"types":[{"i32":{"nullability":"NULLABILITY_NULLABLE"}}],"nullability":"NULLABILITY_REQUIRED"}},"projection":{"select":{"structItems":[{}]},"maintainSingularStruct":true},"namedTable":{"names":["integers"]}}},"expressions":[{"selection":{"directReference":{"structField":{}},"rootReference":{}}}]}},"count":"5"}},"names":["i"]}}]}
+
+query I
+CALL from_substrait_json('{"relations":[{"root":{"input":{"fetch":{"input":{"project":{"input":{"read":{"baseSchema":{"names":["i"],"struct":{"types":[{"i32":{"nullability":"NULLABILITY_NULLABLE"}}],"nullability":"NULLABILITY_REQUIRED"}},"projection":{"select":{"structItems":[{}]},"maintainSingularStruct":true},"namedTable":{"names":["integers"]}}},"expressions":[{"selection":{"directReference":{"structField":{}},"rootReference":{}}}]}},"count":"5"}},"names":["i"]}}]}')
+----
+1
+6
