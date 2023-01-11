@@ -150,6 +150,9 @@ static string ConvertFunctionName(string fname) {
   if (fname == "is_infinite") {
     return "isinf";
   }
+  if (fname == "like") {
+    return "~~";
+  }
   return fname;
 }
 
