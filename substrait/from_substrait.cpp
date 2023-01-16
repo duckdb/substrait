@@ -21,6 +21,27 @@
 #include "google/protobuf/util/json_util.h"
 
 namespace duckdb {
+const std::unordered_map<std::string, std::string> SubstraitToDuckDB::function_names_remap = { 
+  {"modulus", "mod"},
+  {"std_dev", "stddev"},
+  {"starts_with", "prefix"},
+  {"ends_with", "suffix"}, 
+  {"substring", "substr"},
+  {"char_length", "length"},
+  {"is_nan", "isnan"},
+  {"is_finite", "isfinite"},
+  {"is_infinite", "isinf"},
+  {"like", "~~"}
+};
+
+std::string &SubstraitToDuckDB::remap_function_name(std::string &function_name){
+  auto it = function_names_remap.find(function_name);
+  if (it != function_names_remap.end()) {
+    function_name = it->second;
+  }
+  return function_name;
+}
+
 SubstraitToDuckDB::SubstraitToDuckDB(Connection &con_p, string &serialized,
                                      bool json)
     : con(con_p) {
@@ -132,40 +153,6 @@ SubstraitToDuckDB::TransformSelectionExpr(const substrait::Expression &sexpr) {
       sexpr.selection().direct_reference().struct_field().field() + 1);
 }
 
-static string ConvertFunctionName(string fname) {
-  if (fname == "modulus") {
-    return "mod";
-  }
-  if (fname == "std_dev") {
-    return "stddev";
-  }
-  if (fname == "starts_with") {
-    return "prefix";
-  }
-  if (fname == "ends_with") {
-    return "suffix";
-  }
-  if (fname == "substring") {
-    return "substr";
-  }
-  if (fname == "char_length") {
-    return "length";
-  }
-  if (fname == "is_nan") {
-    return "isnan";
-  }
-  if (fname == "is_finite") {
-    return "isfinite";
-  }
-  if (fname == "is_infinite") {
-    return "isinf";
-  }
-  if (fname == "like") {
-    return "~~";
-  }
-  return fname;
-}
-
 unique_ptr<ParsedExpression> SubstraitToDuckDB::TransformScalarFunctionExpr(
     const substrait::Expression &sexpr) {
   auto function_name =
@@ -225,7 +212,7 @@ unique_ptr<ParsedExpression> SubstraitToDuckDB::TransformScalarFunctionExpr(
                                           move(children[2]));
   }
 
-  return make_unique<FunctionExpression>(ConvertFunctionName(function_name), move(children));
+  return make_unique<FunctionExpression>(remap_function_name(function_name), move(children));
 }
 
 unique_ptr<ParsedExpression>
@@ -241,6 +228,7 @@ SubstraitToDuckDB::TransformIfThenExpr(const substrait::Expression &sexpr) {
   dcase->else_expr = TransformExpr(scase.else_());
   return move(dcase);
 }
+
 LogicalType
 SubstraitToDuckDB::SubstraitToDuckType(const ::substrait::Type &s_type) {
 
@@ -447,7 +435,7 @@ SubstraitToDuckDB::TransformAggregateOp(const substrait::Rel &sop) {
       function_name = "count_star";
     }
     expressions.push_back(
-        make_unique<FunctionExpression>(ConvertFunctionName(function_name), move(children)));
+        make_unique<FunctionExpression>(remap_function_name(function_name), move(children)));
   }
 
   return make_shared<AggregateRelation>(TransformOp(sop.aggregate().input()),
