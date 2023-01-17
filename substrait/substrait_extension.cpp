@@ -17,6 +17,7 @@ namespace duckdb {
 struct ToSubstraitFunctionData : public TableFunctionData {
   ToSubstraitFunctionData() {}
   string query;
+  bool enable_optimizer = true;
   bool finished = false;
 };
 
@@ -25,6 +26,9 @@ ToSubstraitBind(ClientContext &context, TableFunctionBindInput &input,
                 vector<LogicalType> &return_types, vector<string> &names) {
   auto result = make_unique<ToSubstraitFunctionData>();
   result->query = input.inputs[0].ToString();
+  if (input.inputs.size() > 1) {
+      result->enable_optimizer = input.inputs[1].GetValue<bool>();
+  }
   return_types.emplace_back(LogicalType::BLOB);
   names.emplace_back("Plan Blob");
   return move(result);
@@ -57,7 +61,7 @@ static void ToSubFunction(ClientContext &context, TableFunctionInput &data_p,
   output.SetCardinality(1);
   auto new_conn = Connection(*context.db);
   // We might want to disable the optimizer of our new connection
-  new_conn.context->config.enable_optimizer = context.config.enable_optimizer;
+  new_conn.context->config.enable_optimizer = data.enable_optimizer;
   auto query_plan = new_conn.context->ExtractPlan(data.query);
   DuckDBToSubstrait transformer_d2s(context, *query_plan);
   auto serialized = transformer_d2s.SerializeToString();
@@ -156,7 +160,10 @@ void SubstraitExtension::Load(DuckDB &db) {
   // binary from a valid SQL Query
   TableFunction to_sub_func("get_substrait", {LogicalType::VARCHAR},
                             ToSubFunction, ToSubstraitBind);
+  TableFunction to_sub_func_optimize("get_substrait", {LogicalType::VARCHAR, LogicalType::BOOLEAN},
+                              ToSubFunction, ToSubstraitBind);
   CreateTableFunctionInfo to_sub_info(to_sub_func);
+  to_sub_info.functions.AddFunction(to_sub_func_optimize);
   catalog.CreateTableFunction(*con.context, &to_sub_info);
 
   // create the from_substrait table function that allows us to get a query

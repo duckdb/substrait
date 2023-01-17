@@ -29,7 +29,8 @@ const std::unordered_map<std::string, std::string> DuckDBToSubstrait::function_n
   {"isfinite", "is_finite"},
   {"isinf", "is_infinite"},
   {"sum_no_overflow", "sum"},
-  {"count_star", "count"}
+  {"count_star", "count"}, 
+  {"~~", "like"}
 };
 
 std::string &DuckDBToSubstrait::remap_function_name(std::string &function_name){
@@ -767,7 +768,7 @@ DuckDBToSubstrait::TransformAggregateGroup(LogicalOperator &dop) {
     auto &daexpr = (BoundAggregateExpression &)*dmeas;
 
     smeas->set_function_reference(RegisterFunction(remap_function_name(daexpr.function.name)));
-    
+
     *smeas->mutable_output_type() = DuckToSubstraitType(daexpr.return_type);
     for (auto &darg : daexpr.children) {
       auto s_arg = smeas->add_arguments();
