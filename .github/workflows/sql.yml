@@ -25,7 +25,7 @@ jobs:
         make pull
 
     - name: Build
-      run: make release_bundled
+      run: BUILD_PARQUET=1 make release_bundled
 
     - name: Test
       run: make test_release

@@ -941,11 +941,77 @@ set<idx_t> GetNotNullConstraintCol(TableCatalogEntry &tbl) {
   return not_null;
 }
 
+void DuckDBToSubstrait::TransformTableScanToSubstrait(
+    LogicalGet &dget, substrait::ReadRel *sget) {
+  auto &table_scan_bind_data = (TableScanBindData &)*dget.bind_data;
+  sget->mutable_named_table()->add_names(table_scan_bind_data.table->name);
+  auto base_schema = new ::substrait::NamedStruct();
+  auto type_info = new substrait::Type_Struct();
+  type_info->set_nullability(substrait::Type_Nullability_NULLABILITY_REQUIRED);
+  auto not_null_constraint =
+      GetNotNullConstraintCol(*table_scan_bind_data.table);
+  for (idx_t i = 0; i < dget.names.size(); i++) {
+    auto cur_type = dget.returned_types[i];
+    if (cur_type.id() == LogicalTypeId::STRUCT) {
+      throw std::runtime_error("Structs are not yet accepted in table scans");
+    }
+    base_schema->add_names(dget.names[i]);
+    auto column_statistics =
+        dget.function.statistics(context, &table_scan_bind_data, i);
+    bool not_null = not_null_constraint.find(i) != not_null_constraint.end();
+    auto new_type = type_info->add_types();
+    *new_type =
+        DuckToSubstraitType(cur_type, column_statistics.get(), not_null);
+  }
+  base_schema->set_allocated_struct_(type_info);
+  sget->set_allocated_base_schema(base_schema);
+}
+
+void DuckDBToSubstrait::TransformParquetScanToSubstrait(
+    LogicalGet &dget, substrait::ReadRel *sget, BindInfo &bind_info,
+    FunctionData &bind_data) {
+  auto files_path = bind_info.GetOptionList<string>("file_path");
+  if (files_path.size() != 1) {
+    throw NotImplementedException(
+        "Substrait Parquet Reader only supports single file");
+  }
+
+  auto parquet_item = sget->mutable_local_files()->add_items();
+  // FIXME: should this be uri or file ogw
+  auto *path = new string();
+  *path = files_path[0];
+  parquet_item->set_allocated_uri_file(path);
+
+  auto parquet_options = parquet_item->mutable_parquet();
+
+  auto base_schema = new ::substrait::NamedStruct();
+  auto type_info = new substrait::Type_Struct();
+  type_info->set_nullability(substrait::Type_Nullability_NULLABILITY_REQUIRED);
+  for (idx_t i = 0; i < dget.names.size(); i++) {
+    auto cur_type = dget.returned_types[i];
+    if (cur_type.id() == LogicalTypeId::STRUCT) {
+      throw std::runtime_error("Structs are not yet accepted in table scans");
+    }
+    base_schema->add_names(dget.names[i]);
+    auto column_statistics = dget.function.statistics(context, &bind_data, i);
+    auto new_type = type_info->add_types();
+    *new_type = DuckToSubstraitType(cur_type, column_statistics.get(), false);
+  }
+  base_schema->set_allocated_struct_(type_info);
+  sget->set_allocated_base_schema(base_schema);
+}
+
 substrait::Rel *DuckDBToSubstrait::TransformGet(LogicalOperator &dop) {
   auto get_rel = new substrait::Rel();
   substrait::Rel *rel = get_rel;
   auto &dget = (LogicalGet &)dop;
-  auto &table_scan_bind_data = (TableScanBindData &)*dget.bind_data;
+
+  if (!dget.function.get_batch_info) {
+    throw NotImplementedException(
+        "This Scanner Type can't be used in substrait because a get batch info "
+        "is not yet implemented");
+  }
+  auto bind_info = dget.function.get_batch_info(dget.bind_data.get());
   auto sget = get_rel->mutable_read();
 
   if (!dget.table_filters.filters.empty()) {
@@ -977,27 +1043,18 @@ substrait::Rel *DuckDBToSubstrait::TransformGet(LogicalOperator &dop) {
   }
 
   // Add Table Schema
-  sget->mutable_named_table()->add_names(table_scan_bind_data.table->name);
-  auto base_schema = new ::substrait::NamedStruct();
-  auto type_info = new substrait::Type_Struct();
-  type_info->set_nullability(substrait::Type_Nullability_NULLABILITY_REQUIRED);
-  auto not_null_constraint =
-      GetNotNullConstraintCol(*table_scan_bind_data.table);
-  for (idx_t i = 0; i < dget.names.size(); i++) {
-    auto cur_type = dget.returned_types[i];
-    if (cur_type.id() == LogicalTypeId::STRUCT) {
-      throw std::runtime_error("Structs are not yet accepted in table scans");
-    }
-    base_schema->add_names(dget.names[i]);
-    auto column_statistics =
-        dget.function.statistics(context, &table_scan_bind_data, i);
-    bool not_null = not_null_constraint.find(i) != not_null_constraint.end();
-    auto new_type = type_info->add_types();
-    *new_type =
-        DuckToSubstraitType(cur_type, column_statistics.get(), not_null);
+  switch (bind_info.type) {
+  case ScanType::TABLE:
+    TransformTableScanToSubstrait(dget, sget);
+    break;
+  case ScanType::PARQUET:
+    TransformParquetScanToSubstrait(dget, sget, bind_info, *dget.bind_data);
+    break;
+  default:
+    throw NotImplementedException(
+        "This Scan Type is not yet implement for the to_substrait function");
   }
-  base_schema->set_allocated_struct_(type_info);
-  sget->set_allocated_base_schema(base_schema);
+
   return rel;
 }
 

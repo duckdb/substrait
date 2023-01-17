@@ -104,3 +104,15 @@ install(
   EXPORT "${DUCKDB_EXPORT_SET}"
   LIBRARY DESTINATION "${INSTALL_LIB_DIR}"
   ARCHIVE DESTINATION "${INSTALL_LIB_DIR}")
+
+# Filthy hack: currently duckdb ci expects extensions to build their loadable
+# extensions to their root build folder so we perform this copy to move the file
+# to the expected location FIXME: DuckDB should provide a neat way for
+# extensions to specify where the loadable_execution will be located
+add_custom_command(
+  TARGET substrait_loadable_extension
+  POST_BUILD
+  COMMAND
+    ${CMAKE_COMMAND} -E copy
+    ${CMAKE_CURRENT_BINARY_DIR}/substrait.duckdb_extension
+    ${CMAKE_CURRENT_BINARY_DIR}/../)

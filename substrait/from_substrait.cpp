@@ -18,14 +18,24 @@
 #include "duckdb/parser/expression/comparison_expression.hpp"
 
 #include "substrait/plan.pb.h"
+#include "google/protobuf/util/json_util.h"
 
 namespace duckdb {
-SubstraitToDuckDB::SubstraitToDuckDB(Connection &con_p, string &serialized)
+SubstraitToDuckDB::SubstraitToDuckDB(Connection &con_p, string &serialized,
+                                     bool json)
     : con(con_p) {
-  if (!plan.ParseFromString(serialized)) {
-    throw std::runtime_error(
-        "Was not possible to convert binary into Substrait plan");
+  if (!json) {
+    if (!plan.ParseFromString(serialized)) {
+      throw std::runtime_error(
+          "Was not possible to convert binary into Substrait plan");
+    }
+  } else {
+    if (!google::protobuf::util::JsonStringToMessage(serialized, &plan).ok()) {
+      throw std::runtime_error(
+          "Was not possible to convert binary into Substrait plan");
+    }
   }
+
   for (auto &sext : plan.extensions()) {
     if (!sext.has_extension_function()) {
       continue;
@@ -413,11 +423,34 @@ SubstraitToDuckDB::TransformAggregateOp(const substrait::Rel &sop) {
 shared_ptr<Relation>
 SubstraitToDuckDB::TransformReadOp(const substrait::Rel &sop) {
   auto &sget = sop.read();
-  if (!sget.has_named_table()) {
-    throw InternalException("Can only scan named tables for now");
+  shared_ptr<Relation> scan;
+  if (sget.has_named_table()) {
+    scan = con.Table(sget.named_table().names(0));
+  } else if (sget.has_local_files()) {
+    auto local_file_items = sget.local_files().items();
+    if (local_file_items.size() > 1) {
+      throw NotImplementedException(
+          "Can't handle more than one file in the read operator of substrait");
+    }
+    auto current_file = local_file_items[0];
+    if (current_file.has_parquet()) {
+      if (current_file.has_uri_file()) {
+        scan = con.ReadParquet(local_file_items[0].uri_file(), false);
+      } else if (current_file.has_uri_path()) {
+        scan = con.ReadParquet(local_file_items[0].uri_path(), false);
+      } else {
+        throw NotImplementedException(
+            "Unsupported type for file path, Only uri_file and uri_path are "
+            "currently supported");
+      }
+    } else {
+      throw NotImplementedException(
+          "Unsupported type of local file for read operator on substrait");
+    }
+  } else {
+    throw NotImplementedException(
+        "Unsupported type of read operator for substrait");
   }
-
-  auto scan = con.Table(sop.read().named_table().names(0));
 
   if (sget.has_filter()) {
     scan =
