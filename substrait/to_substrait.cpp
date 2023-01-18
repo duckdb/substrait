@@ -32,7 +32,7 @@ const std::unordered_map<std::string, std::string> DuckDBToSubstrait::function_n
   {"count_star", "count"}
 };
 
-std::string &DuckDBToSubstrait::remap_function_name(std::string &function_name){
+std::string &DuckDBToSubstrait::RemapFunctionName(std::string &function_name){
   auto it = function_names_remap.find(function_name);
   if (it != function_names_remap.end()) {
     function_name = it->second;
@@ -239,7 +239,7 @@ void DuckDBToSubstrait::TransformFunctionExpression(
   auto &dfun = (BoundFunctionExpression &)dexpr;
   auto sfun = sexpr.mutable_scalar_function();
 
-  sfun->set_function_reference(RegisterFunction(remap_function_name(dfun.function.name)));
+  sfun->set_function_reference(RegisterFunction(RemapFunctionName(dfun.function.name)));
 
   for (auto &darg : dfun.children) {
     auto sarg = sfun->add_arguments();
@@ -766,7 +766,7 @@ DuckDBToSubstrait::TransformAggregateGroup(LogicalOperator &dop) {
     }
     auto &daexpr = (BoundAggregateExpression &)*dmeas;
 
-    smeas->set_function_reference(RegisterFunction(remap_function_name(daexpr.function.name)));
+    smeas->set_function_reference(RegisterFunction(RemapFunctionName(daexpr.function.name)));
     
     *smeas->mutable_output_type() = DuckToSubstraitType(daexpr.return_type);
     for (auto &darg : daexpr.children) {
