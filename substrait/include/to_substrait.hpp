@@ -81,7 +81,7 @@ private:
 	void TransformInExpression(duckdb::Expression &dexpr, substrait::Expression &sexpr);
 
 	//! Transforms a DuckDB Logical Type into a Substrait Type
-	::substrait::Type DuckToSubstraitType(LogicalType &type, BaseStatistics *column_statistics = nullptr,
+	::substrait::Type DuckToSubstraitType(const LogicalType &type, BaseStatistics *column_statistics = nullptr,
 	                                      bool not_null = false);
 
 	//! Methods to transform DuckDB Filters to Substrait Expression

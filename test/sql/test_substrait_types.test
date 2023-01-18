@@ -6,6 +6,9 @@ statement ok
 PRAGMA enable_verification
 
 statement ok
+CREATE TYPE color AS ENUM ('red', 'black');
+
+statement ok
 CREATE table types (
     a BOOL,
     b SMALLINT, 
@@ -20,7 +23,21 @@ CREATE table types (
     k INTERVAL,
     l UUID,
     m JSON,
-    n BLOB)
+    n BLOB,
+    o DATE,
+    p DOUBLE,
+    q DECIMAL,
+    r HUGEINT,
+    s REAL,
+    t TIME,
+    u TINYINT,
+    v UBIGINT,
+    w UINTEGER,
+    x USMALLINT,
+    y UTINYINT,
+    z VARCHAR,
+    aa color
+    )
 
 statement ok
 INSERT into types VALUES(
@@ -37,7 +54,20 @@ INSERT into types VALUES(
     '1 years 2 months 3 days 04:05:06.789',
     '64f4a03d-3839-4877-8a2d-3bca0bb364eb',
     '{}',
-    '\x12\x07\x1A\x05\x1A\x03lte\x12\x11'
+    '\x12\x07\x1A\x05\x1A\x03lte\x12\x11',
+    '2942-01-10',
+    1.2,
+    0.32,
+    123465789456432123123,
+    1.23,
+    '04:05:06',
+    1,
+    2,
+    3,
+    4,
+    5,
+    'hi',
+    'red'
     );
 
 statement ok
@@ -51,8 +81,6 @@ CREATE table bools (b BOOL);
 statement ok
 CALL get_substrait('SELECT * FROM bools WHERE b != true');
 
-
-
 statement ok
 CREATE table times_s (s TIMESTAMP_S);
 
@@ -61,9 +89,6 @@ INSERT INTO times_s VALUES ('2001-01-01'), ('1999-12-31');
 
 statement ok
 CALL get_substrait('SELECT s FROM times_s WHERE s > ''2000-01-01'' ');
-
-
-
 
 statement ok
 CREATE table times_ms (s TIMESTAMP_MS);
@@ -74,7 +99,6 @@ INSERT INTO times_ms VALUES ('2001-01-01'), ('1999-12-31');
 statement ok
 CALL get_substrait('SELECT s FROM times_ms WHERE s > ''2000-04-11 12:34:56.854'' ');
 
-
 statement ok
 CREATE table times_ns (s TIMESTAMP_NS);
 
@@ -83,7 +107,6 @@ INSERT INTO times_ns VALUES ('2001-01-01'), ('1999-12-31');
 
 statement ok
 CALL get_substrait('SELECT s FROM times_ns WHERE s > ''2000-04-11 12:34:56.854775'' ');
-
 
 statement ok
 CREATE table uuids (u UUID);
@@ -94,8 +117,6 @@ INSERT INTO uuids VALUES ('14991022-112a-48ac-998d-3619b2c4a3a8');
 statement ok
 CALL get_substrait('SELECT u FROM uuids WHERE u = gen_random_uuid() ');
 
-
-
 statement ok
 CREATE table tinys (t TINYINT);
 
@@ -105,10 +126,7 @@ INSERT INTO tinys VALUES (1), (2);
 statement ok
 CALL get_substrait('SELECT t FROM tinys WHERE t > 0 ');
 
-# query I
-# CALL get_substrait_json('SELECT u FROM uuids WHERE u = ''14991022-112a-48ac-998d-3619b2c4a3a8''::UUID ');
-# ----
-
+# Nested types are not yet integrated
 # statement ok
 # create table all_types AS SELECT * FROM test_all_types();
 

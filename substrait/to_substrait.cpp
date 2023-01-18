@@ -782,7 +782,7 @@ DuckDBToSubstrait::TransformAggregateGroup(LogicalOperator &dop) {
 }
 
 ::substrait::Type DuckDBToSubstrait::DuckToSubstraitType(
-    LogicalType &type, BaseStatistics *column_statistics, bool not_null) {
+    const LogicalType &type, BaseStatistics *column_statistics, bool not_null) {
   ::substrait::Type s_type;
   substrait::Type_Nullability type_nullability;
   if (not_null) {
@@ -922,6 +922,12 @@ DuckDBToSubstrait::TransformAggregateGroup(LogicalOperator &dop) {
     auto uuid_type = new substrait::Type_UUID;
     uuid_type->set_nullability(type_nullability);
     s_type.set_allocated_uuid(uuid_type);
+    return s_type;
+  }
+  case LogicalTypeId::ENUM: {
+    auto enum_type = new substrait::Type_UserDefined;
+    enum_type->set_nullability(type_nullability);
+    s_type.set_allocated_user_defined(enum_type);
     return s_type;
   }
   default:
