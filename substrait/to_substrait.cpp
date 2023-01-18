@@ -29,7 +29,8 @@ const std::unordered_map<std::string, std::string> DuckDBToSubstrait::function_n
   {"isfinite", "is_finite"},
   {"isinf", "is_infinite"},
   {"sum_no_overflow", "sum"},
-  {"count_star", "count"}
+  {"count_star", "count"},
+  {"~~", "like"}
 };
 
 std::string &DuckDBToSubstrait::RemapFunctionName(std::string &function_name){
