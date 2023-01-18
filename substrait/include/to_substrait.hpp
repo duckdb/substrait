@@ -97,7 +97,7 @@ private:
 	void TransformOrder(duckdb::BoundOrderByNode &dordf, substrait::SortField &sordf);
 
 	void AllocateFunctionArgument(substrait::Expression_ScalarFunction *scalar_fun, substrait::Expression *value);
-	std::string &remap_function_name(std::string &function_name);
+	std::string &RemapFunctionName(std::string &function_name);
 
 	//! Creates a Conjuction
 	template <typename T, typename FUNC>

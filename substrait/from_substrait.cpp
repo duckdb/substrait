@@ -34,7 +34,7 @@ const std::unordered_map<std::string, std::string> SubstraitToDuckDB::function_n
   {"like", "~~"}
 };
 
-std::string &SubstraitToDuckDB::remap_function_name(std::string &function_name){
+std::string &SubstraitToDuckDB::RemapFunctionName(std::string &function_name){
   auto it = function_names_remap.find(function_name);
   if (it != function_names_remap.end()) {
     function_name = it->second;
@@ -212,7 +212,7 @@ unique_ptr<ParsedExpression> SubstraitToDuckDB::TransformScalarFunctionExpr(
                                           move(children[2]));
   }
 
-  return make_unique<FunctionExpression>(remap_function_name(function_name), move(children));
+  return make_unique<FunctionExpression>(RemapFunctionName(function_name), move(children));
 }
 
 unique_ptr<ParsedExpression>
@@ -435,7 +435,7 @@ SubstraitToDuckDB::TransformAggregateOp(const substrait::Rel &sop) {
       function_name = "count_star";
     }
     expressions.push_back(
-        make_unique<FunctionExpression>(remap_function_name(function_name), move(children)));
+        make_unique<FunctionExpression>(RemapFunctionName(function_name), move(children)));
   }
 
   return make_shared<AggregateRelation>(TransformOp(sop.aggregate().input()),
