@@ -60,13 +60,17 @@ private:
 	void TransformInteger(duckdb::Value &dval, substrait::Expression &sexpr);
     void TransformSmallInt(duckdb::Value &dval, substrait::Expression &sexpr);
     void TransformDouble(Value &dval, substrait::Expression &sexpr);
+	void TransformFloat(Value &dval, substrait::Expression &sexpr);
 	void TransformBigInt(duckdb::Value &dval, substrait::Expression &sexpr);
 	void TransformDate(duckdb::Value &dval, substrait::Expression &sexpr);
+	void TransformTime(Value &dval, substrait::Expression &sexpr);
+	void TransformInterval(Value &dval, substrait::Expression &sexpr);
     void TransformTimestamp(Value &dval, substrait::Expression &sexpr);
 	void TransformVarchar(duckdb::Value &dval, substrait::Expression &sexpr);
 	void TransformBoolean(duckdb::Value &dval, substrait::Expression &sexpr);
 	void TransformDecimal(duckdb::Value &dval, substrait::Expression &sexpr);
 	void TransformHugeInt(Value &dval, substrait::Expression &sexpr);
+	void TransformEnum(duckdb::Value &dval, substrait::Expression &sexpr);
 
 	//! Methods to transform a DuckDB Expression to a Substrait Expression
 	void TransformExpr(duckdb::Expression &dexpr, substrait::Expression &sexpr, uint64_t col_offset = 0);

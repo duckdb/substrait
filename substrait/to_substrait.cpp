@@ -119,15 +119,21 @@ void DuckDBToSubstrait::TransformInteger(Value &dval,
 }
 
 void DuckDBToSubstrait::TransformSmallInt(Value &dval,
-                                         substrait::Expression &sexpr) {
-    auto &sval = *sexpr.mutable_literal();
-    sval.set_i16(dval.GetValue<int16_t>());
+                                          substrait::Expression &sexpr) {
+  auto &sval = *sexpr.mutable_literal();
+  sval.set_i16(dval.GetValue<int16_t>());
 }
 
 void DuckDBToSubstrait::TransformDouble(Value &dval,
                                         substrait::Expression &sexpr) {
   auto &sval = *sexpr.mutable_literal();
   sval.set_fp64(dval.GetValue<double>());
+}
+
+void DuckDBToSubstrait::TransformFloat(Value &dval,
+                                       substrait::Expression &sexpr) {
+  auto &sval = *sexpr.mutable_literal();
+  sval.set_fp32(dval.GetValue<float>());
 }
 
 void DuckDBToSubstrait::TransformBigInt(Value &dval,
@@ -138,21 +144,42 @@ void DuckDBToSubstrait::TransformBigInt(Value &dval,
 
 void DuckDBToSubstrait::TransformDate(Value &dval,
                                       substrait::Expression &sexpr) {
-  // TODO how are we going to represent dates?
+  auto &sval = *sexpr.mutable_literal();
+  sval.set_date(dval.GetValue<date_t>().days);
+}
+
+void DuckDBToSubstrait::TransformTime(Value &dval,
+                                      substrait::Expression &sexpr) {
+  auto &sval = *sexpr.mutable_literal();
+  sval.set_time(dval.GetValue<dtime_t>().micros);
+}
+
+void DuckDBToSubstrait::TransformTimestamp(Value &dval,
+                                           substrait::Expression &sexpr) {
   auto &sval = *sexpr.mutable_literal();
   sval.set_string(dval.ToString());
 }
 
-void DuckDBToSubstrait::TransformTimestamp(Value &dval,
-                                      substrait::Expression &sexpr) {
-    auto &sval = *sexpr.mutable_literal();
-
-//    printf("%s\n", dval.ToString().c_str());
-//    printf("%hhu\n", dval.type().id());
-
-    //set_timestamp requires microseconds, duckdb has in seconds, milliseconds, microseconds or nanoseconds
-//    sval.set_timestamp(dval.GetValue<int64_t>());
-    sval.set_string(dval.ToString());
+void DuckDBToSubstrait::TransformInterval(Value &dval,
+                                          substrait::Expression &sexpr) {
+  // Substrait supports two types of INTERVAL (interval_year and interval_day)
+  // whereas DuckDB INTERVAL combines both in one type. Therefore intervals
+  // containing both months and days or seconds will lose some data
+  // unfortunately. This implementation opts to set the largest interval value.
+  auto &sval = *sexpr.mutable_literal();
+  auto months = dval.GetValue<interval_t>().months;
+  if (months != 0) {
+    auto interval_year =
+        make_unique<substrait::Expression_Literal_IntervalYearToMonth>();
+    interval_year->set_months(months);
+    sval.set_allocated_interval_year_to_month(interval_year.release());
+  } else {
+    auto interval_day =
+        make_unique<substrait::Expression_Literal_IntervalDayToSecond>();
+    interval_day->set_days(dval.GetValue<interval_t>().days);
+    interval_day->set_microseconds(dval.GetValue<interval_t>().micros);
+    sval.set_allocated_interval_day_to_second(interval_day.release());
+  }
 }
 
 void DuckDBToSubstrait::TransformVarchar(Value &dval,
@@ -183,6 +210,12 @@ void DuckDBToSubstrait::TransformHugeInt(Value &dval,
   sval.set_allocated_decimal(allocated_decimal);
 }
 
+void DuckDBToSubstrait::TransformEnum(Value &dval,
+                                      substrait::Expression &sexpr) {
+  auto &sval = *sexpr.mutable_literal();
+  sval.set_string(dval.ToString());
+}
+
 void DuckDBToSubstrait::TransformConstant(Value &dval,
                                           substrait::Expression &sexpr) {
   auto &duckdb_type = dval.type();
@@ -205,13 +238,21 @@ void DuckDBToSubstrait::TransformConstant(Value &dval,
   case LogicalTypeId::DATE:
     TransformDate(dval, sexpr);
     break;
+  case LogicalTypeId::TIME:
+    TransformTime(dval, sexpr);
+    break;
   case LogicalTypeId::TIMESTAMP_SEC:
   case LogicalTypeId::TIMESTAMP_MS:
   case LogicalTypeId::TIMESTAMP_NS:
   case LogicalTypeId::TIMESTAMP:
     TransformTimestamp(dval, sexpr);
     break;
+  case LogicalTypeId::INTERVAL:
+    TransformInterval(dval, sexpr);
+    break;
   case LogicalTypeId::VARCHAR:
+  case LogicalTypeId::JSON:
+  case LogicalTypeId::BLOB:
     TransformVarchar(dval, sexpr);
     break;
   case LogicalTypeId::BOOLEAN:
@@ -220,8 +261,15 @@ void DuckDBToSubstrait::TransformConstant(Value &dval,
   case LogicalTypeId::DOUBLE:
     TransformDouble(dval, sexpr);
     break;
+  case LogicalTypeId::FLOAT:
+    TransformFloat(dval, sexpr);
+    break;
+  case LogicalTypeId::ENUM:
+    TransformEnum(dval, sexpr);
+    break;
   default:
-    throw InternalException("Transform constant of type %s", duckdb_type.ToString());
+    throw InternalException("Transform constant of type %s",
+                            duckdb_type.ToString());
   }
 }
 
@@ -845,7 +893,7 @@ DuckDBToSubstrait::TransformAggregateGroup(LogicalOperator &dop) {
     date_type->set_nullability(type_nullability);
     s_type.set_allocated_date(date_type);
     return s_type;
-  }  
+  }
   case LogicalTypeId::TIME_TZ:
   case LogicalTypeId::TIME: {
     auto time_type = new substrait::Type_Time;
@@ -864,10 +912,10 @@ DuckDBToSubstrait::TransformAggregateGroup(LogicalOperator &dop) {
     return s_type;
   }
   case LogicalTypeId::TIMESTAMP_TZ: {
-      auto timestamp_type = new substrait::Type_TimestampTZ;
-      timestamp_type->set_nullability(type_nullability);
-      s_type.set_allocated_timestamp_tz(timestamp_type);
-      return s_type;
+    auto timestamp_type = new substrait::Type_TimestampTZ;
+    timestamp_type->set_nullability(type_nullability);
+    s_type.set_allocated_timestamp_tz(timestamp_type);
+    return s_type;
   }
   case LogicalTypeId::INTERVAL: {
     auto interval_type = new substrait::Type_IntervalDay();
@@ -912,11 +960,11 @@ DuckDBToSubstrait::TransformAggregateGroup(LogicalOperator &dop) {
     s_type.set_allocated_varchar(varchar_type);
     return s_type;
   }
-  case LogicalTypeId::BLOB:{
-      auto binary_type = new substrait::Type_Binary;
-      binary_type->set_nullability(type_nullability);
-      s_type.set_allocated_binary(binary_type);
-      return s_type;
+  case LogicalTypeId::BLOB: {
+    auto binary_type = new substrait::Type_Binary;
+    binary_type->set_nullability(type_nullability);
+    s_type.set_allocated_binary(binary_type);
+    return s_type;
   }
   case LogicalTypeId::UUID: {
     auto uuid_type = new substrait::Type_UUID;
@@ -1114,8 +1162,10 @@ substrait::RelRoot *DuckDBToSubstrait::TransformRootOp(LogicalOperator &dop) {
   // first projection to get the aliases
   while (current_op->type != LogicalOperatorType::LOGICAL_PROJECTION) {
     if (current_op->children.size() != 1) {
-      throw InternalException("Root node has more than 1, or 0 children (%d) up to "
-                              "reaching a projection node. Type %d", current_op->children.size(), current_op->type);
+      throw InternalException(
+          "Root node has more than 1, or 0 children (%d) up to "
+          "reaching a projection node. Type %d",
+          current_op->children.size(), current_op->type);
     }
     current_op = current_op->children[0].get();
   }

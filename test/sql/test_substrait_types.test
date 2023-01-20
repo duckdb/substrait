@@ -11,62 +11,62 @@ CREATE TYPE color AS ENUM ('red', 'black');
 statement ok
 CREATE table types (
     a BOOL,
-    b SMALLINT, 
-    c INT, 
-    d BIGINT, 
-    e TIMESTAMP,
-    f TIMESTAMP_S, 
-    g TIMESTAMP_MS, 
-    h TIMESTAMP_NS, 
-    i TIMESTAMPTZ, 
-    j TIMETZ,
+    b VARCHAR,
+    c DATE, 
+    d TIMESTAMP,
+    e TIMESTAMP_S, 
+    f TIMESTAMP_MS, 
+    g TIMESTAMP_NS, 
+    h TIMESTAMPTZ, 
+    i TIMETZ,
+    j TIME,
     k INTERVAL,
     l UUID,
     m JSON,
     n BLOB,
-    o DATE,
-    p DOUBLE,
-    q DECIMAL,
-    r HUGEINT,
-    s REAL,
-    t TIME,
-    u TINYINT,
-    v UBIGINT,
+    o DOUBLE,
+    p DECIMAL,
+    q REAL,
+    r INT,
+    s TINYINT,
+    t SMALLINT,
+    u BIGINT,
+    v HUGEINT,
     w UINTEGER,
-    x USMALLINT,
-    y UTINYINT,
-    z VARCHAR,
+    x UTINYINT,
+    y USMALLINT,
+    z UBIGINT,
     aa color
     )
 
 statement ok
 INSERT into types VALUES(
-    true, 
-    2, 
-    0, 
-    100, 
+    true,
+    'hi',
+    '2942-01-10',
     '2942-01-10 04:00:54', 
     '2942-01-10 04:00:54', 
     '2942-01-10 04:00:54.775', 
     '2262-04-11 23:47:16.854775', 
     '2947-01-10 04:00:54.775806+00',
     '12:00:00+02',
+    '04:05:06',
     '1 years 2 months 3 days 04:05:06.789',
     '64f4a03d-3839-4877-8a2d-3bca0bb364eb',
     '{}',
     '\x12\x07\x1A\x05\x1A\x03lte\x12\x11',
-    '2942-01-10',
     1.2,
     0.32,
+    5559959.03030,
+    3,
+    2, 
+    0, 
+    100, 
     123465789456432123123,
-    1.23,
-    '04:05:06',
-    1,
     2,
     3,
     4,
     5,
-    'hi',
     'red'
     );
 
@@ -80,6 +80,33 @@ CREATE table bools (b BOOL);
 
 statement ok
 CALL get_substrait('SELECT * FROM bools WHERE b != true');
+
+statement ok
+CREATE table varchars (v VARCHAR);
+
+statement ok
+INSERT INTO varchars VALUES ('Hello'), ('DuckDB');
+
+statement ok
+CALL get_substrait('SELECT * FROM varchars WHERE v LIKE ''DuckDB'' ');
+
+statement ok
+CREATE table dates (d DATE);
+
+statement ok
+INSERT INTO dates VALUES ('2001-01-01'), ('1999-12-31');
+
+statement ok
+CALL get_substrait('SELECT d FROM dates WHERE d > ''2000-01-01'' ');
+
+statement ok
+CREATE table timest (t TIMESTAMP);
+
+statement ok
+INSERT INTO timest VALUES ('2001-01-01 06:10:23'), ('1999-12-31 04:00:54');
+
+statement ok
+CALL get_substrait('SELECT t FROM timest WHERE t > ''2000-01-01 02:31:23'' ');
 
 statement ok
 CREATE table times_s (s TIMESTAMP_S);
@@ -109,13 +136,106 @@ statement ok
 CALL get_substrait('SELECT s FROM times_ns WHERE s > ''2000-04-11 12:34:56.854775'' ');
 
 statement ok
+CREATE table timestz (s TIMESTAMPTZ);
+
+statement ok
+INSERT INTO timestz VALUES ('2021-11-26 10:15:13.123456+00');
+
+statement ok
+CALL get_substrait('SELECT s FROM timestz WHERE s > ''2001-11-26 05:02:23.123456+00'' ');
+
+statement ok
+CREATE table times_tz (s TIMETZ);
+
+statement ok
+INSERT INTO times_tz VALUES ('05:40:00.000001');
+
+statement ok
+CALL get_substrait('SELECT s FROM times_tz WHERE s = ''05:40:00.000001'' ');
+
+statement ok
+CREATE table times (s TIME);
+
+statement ok
+INSERT INTO times VALUES ('14:05:16'), ('07:27:12');
+
+statement ok
+CALL get_substrait('SELECT s FROM times WHERE s = ''07:27:12''::TIME ');
+
+statement ok
+CREATE table intervals (i INTERVAL);
+
+statement ok
+INSERT INTO intervals VALUES ('3 days 04:05:06.789'), ('6 years 8 months 2 days 02:05:13.789');
+
+statement ok
+CALL get_substrait('SELECT i FROM intervals WHERE i > ''3 years 2 months'' ');
+
+statement ok
+CALL get_substrait('SELECT i FROM intervals WHERE i < ''5 days 40 seconds'' ');
+
+statement ok
 CREATE table uuids (u UUID);
 
 statement ok
 INSERT INTO uuids VALUES ('14991022-112a-48ac-998d-3619b2c4a3a8');
 
 statement ok
-CALL get_substrait('SELECT u FROM uuids WHERE u = gen_random_uuid() ');
+CALL get_substrait('SELECT u FROM uuids WHERE u = ''14991022-112a-48ac-998d-3619b2c4a3a8'' ');
+
+statement ok
+CREATE table jsons (j JSON);
+
+statement ok
+INSERT INTO jsons VALUES ('{ "fruit": "Apple", "size": "Large", "color": "Red" }');
+
+statement ok
+CALL get_substrait('SELECT j FROM jsons WHERE j = ''{ "fruit": "Apple", "size": "Large", "color": "Red" }'' ');
+
+statement ok
+CREATE table blobs (b BLOB);
+
+statement ok
+INSERT INTO blobs VALUES ('\x12\x07\x1A\x05\x1A\x03lte\x12\x11');
+
+statement ok
+CALL get_substrait('SELECT b FROM blobs WHERE b = ''\x12\x07\x1A\x05\x1A\x03lte\x12\x11'' ');
+
+statement ok
+CREATE table doubles (d DOUBLE);
+
+statement ok
+INSERT INTO doubles VALUES (1.99292), (-57.36);
+
+statement ok
+CALL get_substrait('SELECT d FROM doubles WHERE d > 0 ');
+
+statement ok
+CREATE table decimals (d DECIMAL);
+
+statement ok
+INSERT INTO decimals VALUES (1.99292), (-57.36);
+
+statement ok
+CALL get_substrait('SELECT d FROM decimals WHERE d > 0::DECIMAL ');
+
+statement ok
+CREATE table floats (f REAL);
+
+statement ok
+INSERT INTO floats VALUES (1.99292), (-57.36);
+
+statement ok
+CALL get_substrait('SELECT f FROM floats WHERE f > 0 ');
+
+statement ok
+CREATE table ints (i INT);
+
+statement ok
+INSERT INTO ints VALUES (-9), (2);
+
+statement ok
+CALL get_substrait('SELECT i FROM ints WHERE i > 0 ');
 
 statement ok
 CREATE table tinys (t TINYINT);
@@ -125,6 +245,79 @@ INSERT INTO tinys VALUES (1), (2);
 
 statement ok
 CALL get_substrait('SELECT t FROM tinys WHERE t > 0 ');
+
+statement ok
+CREATE table smalls (s SMALLINT);
+
+statement ok
+INSERT INTO smalls VALUES (1), (2);
+
+statement ok
+CALL get_substrait('SELECT s FROM smalls WHERE s > 0 ');
+
+statement ok
+CREATE table bigs (b BIGINT);
+
+statement ok
+INSERT INTO bigs VALUES (1), (2);
+
+statement ok
+CALL get_substrait('SELECT b FROM bigs WHERE b > 0 ');
+
+statement ok
+CREATE table huges (h HUGEINT);
+
+statement ok
+INSERT INTO huges VALUES (143435345452), (22423534545646);
+
+statement ok
+CALL get_substrait('SELECT h FROM huges WHERE h > 1434353454523 ');
+
+statement ok
+CREATE table uints (i UINTEGER);
+
+statement ok
+INSERT INTO uints VALUES (9), (2);
+
+statement ok
+CALL get_substrait('SELECT i FROM uints WHERE i > 0 ');
+
+statement ok
+CREATE table utinys (t UTINYINT);
+
+statement ok
+INSERT INTO utinys VALUES (1), (2);
+
+statement ok
+CALL get_substrait('SELECT t FROM utinys WHERE t > 0 ');
+
+statement ok
+CREATE table usmalls (s USMALLINT);
+
+statement ok
+INSERT INTO usmalls VALUES (1), (2);
+
+statement ok
+CALL get_substrait('SELECT s FROM usmalls WHERE s > 0 ');
+
+statement ok
+CREATE table ubigs (b UBIGINT);
+
+statement ok
+INSERT INTO ubigs VALUES (1), (2);
+
+statement ok
+CALL get_substrait('SELECT b FROM ubigs WHERE b > 0 ');
+
+statement ok
+CREATE table enums (e color);
+
+statement ok
+INSERT INTO enums VALUES ('red'), ('black');
+
+statement ok
+CALL get_substrait('SELECT e FROM enums WHERE e = ''red'' ');
+
 
 # Nested types are not yet integrated
 # statement ok

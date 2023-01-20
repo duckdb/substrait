@@ -69,7 +69,6 @@ static void ToSubFunction(ClientContext &context, TableFunctionInput &data_p,
     auto actual_result = new_conn.Query(data.query);
     auto sub_relation = SubstraitPlanToDuckDBRel(new_conn, serialized);
     auto substrait_result = sub_relation->Execute();
-    std::cout << "SUBSTRAIT RESULT" << substrait_result->ToString() << std::endl;
     substrait_result->names = actual_result->names;
     if (!actual_result->Equals(*substrait_result)) {
       query_plan->Print();

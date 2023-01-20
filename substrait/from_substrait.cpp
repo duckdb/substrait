@@ -53,7 +53,9 @@ SubstraitToDuckDB::TransformLiteralExpr(const substrait::Expression &sexpr) {
   case substrait::Expression_Literal::LiteralTypeCase::kFp64:
     dval = Value::DOUBLE(slit.fp64());
     break;
-
+  case substrait::Expression_Literal::LiteralTypeCase::kFp32:
+    dval = Value::FLOAT(slit.fp32());
+    break;
   case substrait::Expression_Literal::LiteralTypeCase::kString:
     dval = Value(slit.string());
     break;
@@ -113,6 +115,27 @@ SubstraitToDuckDB::TransformLiteralExpr(const substrait::Expression &sexpr) {
   case substrait::Expression_Literal::LiteralTypeCase::kDate: {
     date_t date(slit.date());
     dval = Value::DATE(date);
+    break;
+  }
+  case substrait::Expression_Literal::LiteralTypeCase::kTime: {
+    dtime_t time(slit.time());
+    dval = Value::TIME(time);
+    break;
+  }
+  case substrait::Expression_Literal::LiteralTypeCase::kIntervalYearToMonth: {
+    interval_t interval;
+    interval.months = slit.interval_year_to_month().months();
+    interval.days = 0;
+    interval.micros = 0;
+    dval = Value::INTERVAL(interval);
+    break;
+  }
+  case substrait::Expression_Literal::LiteralTypeCase::kIntervalDayToSecond: {
+    interval_t interval;
+    interval.months = 0;
+    interval.days = slit.interval_day_to_second().days();
+    interval.micros = slit.interval_day_to_second().microseconds();
+    dval = Value::INTERVAL(interval);
     break;
   }
   default:
