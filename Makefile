@@ -61,7 +61,7 @@ test_debug:
 	./build/debug/duckdb/test/unittest --test-dir . "[sql]"
 
 format:
-	clang-format --sort-includes=0 -style=file -i substrait/from_substrait.cpp substrait/to_substrait.cpp substrait/substrait_extension.cpp
+	clang-format --sort-includes=0 -style=file -i substrait/from_substrait.cpp substrait/to_substrait.cpp substrait/substrait_extension.cpp test/c/test_substrait_c_api.cpp
 	cmake-format -i CMakeLists.txt
 	cmake-format -i substrait/CMakeLists.txt
 

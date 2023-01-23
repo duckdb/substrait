@@ -24,6 +24,8 @@ else()
   set(EXTERNAL_EXTENSION_DIRECTORIES ../${TARGET_NAME})
 
   add_subdirectory(duckdb)
+  add_subdirectory(test/c/)
 
-  target_link_libraries(unittest ${TARGET_NAME}_extension)
+  target_link_libraries(unittest test_substrait ${TARGET_NAME}_extension)
+
 endif()
