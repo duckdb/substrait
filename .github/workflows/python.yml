@@ -23,14 +23,6 @@ jobs:
       with:
         python-version: '3.9'
 
-    - name: Install Python Dependencies
-      shell: bash
-      run: |
-        pip install pytest pandas "ibis-framework[duckdb]==3.2.0" "ibis-substrait==2.10.2" "substrait-validator==0.0.8" 
-        pip uninstall protobuf -y
-        pip install --no-binary protobuf protobuf
-        pip uninstall duckdb -y
-
     - name: Update DuckDB submodule
       run: |
         git config --global --add safe.directory '*'
@@ -38,6 +30,16 @@ jobs:
 
     - name: Build DuckDB (Python)
       run: BUILD_PYTHON=1 make release
+
+    - name: Install Python Dependencies
+      shell: bash
+      run: |
+        pip install pytest pandas "ibis-framework[duckdb]==3.2.0" "ibis-substrait==2.10.2" "substrait-validator==0.0.8" 
+        pip uninstall protobuf -y
+        pip install --no-binary protobuf protobuf
+#        pip uninstall duckdb -y
+
+
 
     - name: Test Python
       run: |
