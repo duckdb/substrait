@@ -1,4 +1,4 @@
-on: [pull_request,repository_dispatch]
+on: [push, pull_request,repository_dispatch]
 
 defaults:
   run:
