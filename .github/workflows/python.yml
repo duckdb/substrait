@@ -47,9 +47,6 @@ jobs:
         pip install pytest pandas "ibis-framework[duckdb]==3.2.0" "ibis-substrait==2.10.2" "substrait-validator==0.0.8" 
         pip uninstall protobuf -y
         pip install --no-binary protobuf protobuf
-#        pip uninstall duckdb -y
-
-
 
     - name: Test Python
       run: |
