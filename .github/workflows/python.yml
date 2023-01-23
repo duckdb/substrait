@@ -1,4 +1,4 @@
-on: [push, pull_request,repository_dispatch]
+on: [push]
 
 defaults:
   run:
@@ -29,7 +29,12 @@ jobs:
         make pull
 
     - name: Build DuckDB (Python)
-      run: BUILD_PYTHON=1 make release
+      run: |
+        cd duckdb/tools/pythonpkg
+        python setup.py install
+
+    - name: Build Substrait
+      run: make release
 
     - name: Install Python Dependencies
       shell: bash
