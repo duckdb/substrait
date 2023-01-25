@@ -5,6 +5,8 @@
 statement ok
 PRAGMA enable_verification
 
+require json
+
 statement ok
 CREATE TYPE color AS ENUM ('red', 'black');
 

@@ -267,7 +267,7 @@ void DuckDBToSubstrait::TransformConstant(Value &dval,
     TransformInterval(dval, sexpr);
     break;
   case LogicalTypeId::VARCHAR:
-  case LogicalTypeId::JSON:
+  // case LogicalTypeId::JSON:
   case LogicalTypeId::BLOB:
     TransformVarchar(dval, sexpr);
     break;
@@ -963,7 +963,7 @@ DuckDBToSubstrait::TransformAggregateGroup(LogicalOperator &dop) {
     s_type.set_allocated_decimal(decimal_type);
     return s_type;
   }
-  case LogicalTypeId::JSON:
+  // case LogicalTypeId::JSON:
   case LogicalTypeId::VARCHAR: {
     auto varchar_type = new substrait::Type_VarChar;
     varchar_type->set_nullability(type_nullability);
