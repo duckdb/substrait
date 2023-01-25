@@ -18,6 +18,22 @@
 #include "duckdb/execution/index/art/art_key.hpp"
 
 namespace duckdb {
+const std::unordered_map<std::string, std::string>
+    DuckDBToSubstrait::function_names_remap = {
+        {"mod", "modulus"},        {"stddev", "std_dev"},
+        {"prefix", "starts_with"}, {"suffix", "ends_with"},
+        {"substr", "substring"},   {"length", "char_length"},
+        {"isnan", "is_nan"},       {"isfinite", "is_finite"},
+        {"isinf", "is_infinite"},  {"sum_no_overflow", "sum"},
+        {"count_star", "count"},   {"~~", "like"}};
+
+std::string &DuckDBToSubstrait::RemapFunctionName(std::string &function_name) {
+  auto it = function_names_remap.find(function_name);
+  if (it != function_names_remap.end()) {
+    function_name = it->second;
+  }
+  return function_name;
+}
 
 string DuckDBToSubstrait::SerializeToString() {
   string serialized;
@@ -292,7 +308,9 @@ void DuckDBToSubstrait::TransformFunctionExpression(
     Expression &dexpr, substrait::Expression &sexpr, uint64_t col_offset) {
   auto &dfun = (BoundFunctionExpression &)dexpr;
   auto sfun = sexpr.mutable_scalar_function();
-  sfun->set_function_reference(RegisterFunction(dfun.function.name));
+
+  sfun->set_function_reference(
+      RegisterFunction(RemapFunctionName(dfun.function.name)));
 
   for (auto &darg : dfun.children) {
     auto sarg = sfun->add_arguments();
@@ -818,7 +836,9 @@ DuckDBToSubstrait::TransformAggregateGroup(LogicalOperator &dop) {
       throw InternalException("No non-aggregate expressions in measures yet");
     }
     auto &daexpr = (BoundAggregateExpression &)*dmeas;
-    smeas->set_function_reference(RegisterFunction(daexpr.function.name));
+
+    smeas->set_function_reference(
+        RegisterFunction(RemapFunctionName(daexpr.function.name)));
 
     *smeas->mutable_output_type() = DuckToSubstraitType(daexpr.return_type);
     for (auto &darg : daexpr.children) {

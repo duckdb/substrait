@@ -103,6 +103,7 @@ private:
 	void TransformOrder(duckdb::BoundOrderByNode &dordf, substrait::SortField &sordf);
 
 	void AllocateFunctionArgument(substrait::Expression_ScalarFunction *scalar_fun, substrait::Expression *value);
+	std::string &RemapFunctionName(std::string &function_name);
 
 	//! Creates a Conjuction
 	template <typename T, typename FUNC>
@@ -128,6 +129,8 @@ private:
 
 	//! Variables used to register functions
 	std::unordered_map<std::string, uint64_t> functions_map;
+	//! Remapped DuckDB functions names to Substrait compatible function names
+	static const unordered_map<std::string, std::string> function_names_remap; 
 	uint64_t last_function_id = 1;
 
 	//! The substrait Plan
