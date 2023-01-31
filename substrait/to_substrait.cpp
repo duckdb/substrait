@@ -11,6 +11,7 @@
 #include "duckdb/planner/operator/list.hpp"
 #include "duckdb/planner/table_filter.hpp"
 #include "duckdb/storage/statistics/string_statistics.hpp"
+#include "duckdb/catalog/catalog_entry/duck_table_entry.hpp"
 #include "google/protobuf/util/json_util.h"
 #include "substrait/algebra.pb.h"
 #include "substrait/plan.pb.h"
@@ -897,7 +898,7 @@ DuckDBToSubstrait::TransformAggregateGroup(LogicalOperator &dop) {
 
 set<idx_t> GetNotNullConstraintCol(TableCatalogEntry &tbl) {
   set<idx_t> not_null;
-  for (auto &constraint : tbl.constraints) {
+  for (auto &constraint : tbl.GetConstraints()) {
     if (constraint->type == ConstraintType::NOT_NULL) {
       not_null.insert(((NotNullConstraint *)constraint.get())->index.index);
     }
