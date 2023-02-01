@@ -947,8 +947,6 @@ void DuckDBToSubstrait::TransformParquetScanToSubstrait(
   *path = files_path[0];
   parquet_item->set_allocated_uri_file(path);
 
-  auto parquet_options = parquet_item->mutable_parquet();
-
   auto base_schema = new ::substrait::NamedStruct();
   auto type_info = new substrait::Type_Struct();
   type_info->set_nullability(substrait::Type_Nullability_NULLABILITY_REQUIRED);
