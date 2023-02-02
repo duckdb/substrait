@@ -21,13 +21,17 @@ struct ToSubstraitFunctionData : public TableFunctionData {
   bool finished = false;
 };
 
-static unique_ptr<FunctionData>
-ToSubstraitBind(ClientContext &context, TableFunctionBindInput &input,
-                vector<LogicalType> &return_types, vector<string> &names) {
+static unique_ptr<FunctionData> ToSubstraitBind(ClientContext &context,
+                                                TableFunctionBindInput &input,
+                                                vector<LogicalType> &return_types,
+                                                vector<string> &names) {
   auto result = make_unique<ToSubstraitFunctionData>();
   result->query = input.inputs[0].ToString();
-  if (input.inputs.size() > 1) {
-      result->enable_optimizer = input.inputs[1].GetValue<bool>();
+  if (input.named_parameters.size() == 1) {
+    auto loption = StringUtil::Lower(input.named_parameters.begin()->first);
+    if (loption == "enable_optimizer") {
+      result->enable_optimizer = BooleanValue::Get(input.named_parameters.begin()->second);
+    }
   }
   return_types.emplace_back(LogicalType::BLOB);
   names.emplace_back("Plan Blob");
@@ -40,6 +44,12 @@ static unique_ptr<FunctionData> ToJsonBind(ClientContext &context,
                                            vector<string> &names) {
   auto result = make_unique<ToSubstraitFunctionData>();
   result->query = input.inputs[0].ToString();
+  if (input.named_parameters.size() == 1) {
+    auto loption = StringUtil::Lower(input.named_parameters.begin()->first);
+    if (loption == "enable_optimizer") {
+        result->enable_optimizer = BooleanValue::Get(input.named_parameters.begin()->second);
+    }
+  }
   return_types.emplace_back(LogicalType::VARCHAR);
   names.emplace_back("Json");
   return move(result);
@@ -92,7 +102,7 @@ static void ToJsonFunction(ClientContext &context, TableFunctionInput &data_p,
   output.SetCardinality(1);
   auto new_conn = Connection(*context.db);
   // We might want to disable the optimizer of our new connection
-  new_conn.context->config.enable_optimizer = context.config.enable_optimizer;
+  new_conn.context->config.enable_optimizer = data.enable_optimizer;
   auto query_plan = new_conn.context->ExtractPlan(data.query);
   DuckDBToSubstrait transformer_d2s(context, *query_plan);
   auto serialized = transformer_d2s.SerializeToJson();
@@ -132,8 +142,7 @@ FromSubstraitBind(ClientContext &context, TableFunctionBindInput &input,
 
 static unique_ptr<FunctionData>
 FromSubstraitBindJSON(ClientContext &context, TableFunctionBindInput &input,
-                      vector<LogicalType> &return_types,
-                      vector<string> &names) {
+                      vector<LogicalType> &return_types, vector<string> &names) {
   return SubstraitBind(context, input, return_types, names, true);
 }
 
@@ -160,10 +169,8 @@ void SubstraitExtension::Load(DuckDB &db) {
   // binary from a valid SQL Query
   TableFunction to_sub_func("get_substrait", {LogicalType::VARCHAR},
                             ToSubFunction, ToSubstraitBind);
-  TableFunction to_sub_func_optimize("get_substrait", {LogicalType::VARCHAR, LogicalType::BOOLEAN},
-                              ToSubFunction, ToSubstraitBind);
+  to_sub_func.named_parameters["enable_optimizer"] = LogicalType::BOOLEAN;
   CreateTableFunctionInfo to_sub_info(to_sub_func);
-  to_sub_info.functions.AddFunction(to_sub_func_optimize);
   catalog.CreateTableFunction(*con.context, &to_sub_info);
 
   // create the from_substrait table function that allows us to get a query
@@ -181,11 +188,15 @@ void SubstraitExtension::Load(DuckDB &db) {
   CreateTableFunctionInfo from_sub_info_json(from_sub_func_json);
   catalog.CreateTableFunction(*con.context, &from_sub_info_json);
 
-  // create the from_substrait table function that allows us to get a query
-  // result from a substrait plan
+  // create the get_substrait table function that allows us to get a substrait
+  // JSON from a valid SQL Query
   TableFunction get_substrait_json("get_substrait_json", {LogicalType::VARCHAR},
                                    ToJsonFunction, ToJsonBind);
+//  TableFunction get_substrait_json_optimize("get_substrait_json", {LogicalType::VARCHAR, LogicalType::BOOLEAN},
+//                            ToJsonFunction, ToJsonBind);
+  get_substrait_json.named_parameters["enable_optimizer"] = LogicalType::BOOLEAN;
   CreateTableFunctionInfo get_substrait_json_info(get_substrait_json);
+//  get_substrait_json_info.functions.AddFunction(get_substrait_json_optimize);
   catalog.CreateTableFunction(*con.context, &get_substrait_json_info);
 
   con.Commit();
