@@ -276,6 +276,23 @@ true
 true
 true
 
+#-------------------------------------------------------------------------------------
+
+query I
+CALL get_substrait_json('SELECT * FROM varchars WHERE v LIKE ''Q%a%''');
+----
+{"extensions":[{"extensionFunction":{"functionAnchor":1,"name":"gte"}},{"extensionFunction":{"functionAnchor":2,"name":"lt"}},{"extensionFunction":{"functionAnchor":3,"name":"and"}},{"extensionFunction":{"functionAnchor":4,"name":"is_not_null"}},{"extensionFunction":{"functionAnchor":5,"name":"like"}}],"relations":[{"root":{"input":{"project":{"input":{"filter":{"input":{"read":{"baseSchema":{"names":["v"],"struct":{"types":[{"varchar":{"length":5,"nullability":"NULLABILITY_NULLABLE"}}],"nullability":"NULLABILITY_REQUIRED"}},"filter":{"scalarFunction":{"functionReference":3,"outputType":{"bool":{"nullability":"NULLABILITY_NULLABLE"}},"arguments":[{"value":{"scalarFunction":{"functionReference":3,"outputType":{"bool":{"nullability":"NULLABILITY_NULLABLE"}},"arguments":[{"value":{"scalarFunction":{"functionReference":1,"outputType":{"varchar":{"length":1,"nullability":"NULLABILITY_NULLABLE"}},"arguments":[{"value":{"selection":{"directReference":{"structField":{}},"rootReference":{}}}},{"value":{"literal":{"string":"Q"}}}]}}},{"value":{"scalarFunction":{"functionReference":2,"outputType":{"varchar":{"length":1,"nullability":"NULLABILITY_NULLABLE"}},"arguments":[{"value":{"selection":{"directReference":{"structField":{}},"rootReference":{}}}},{"value":{"literal":{"string":"R"}}}]}}}]}}},{"value":{"scalarFunction":{"functionReference":4,"outputType":{"varchar":{"length":1,"nullability":"NULLABILITY_NULLABLE"}},"arguments":[{"value":{"selection":{"directReference":{"structField":{}},"rootReference":{}}}}]}}}]}},"projection":{"select":{"structItems":[{}]},"maintainSingularStruct":true},"namedTable":{"names":["varchars"]}}},"condition":{"scalarFunction":{"functionReference":5,"outputType":{"bool":{"nullability":"NULLABILITY_NULLABLE"}},"arguments":[{"value":{"selection":{"directReference":{"structField":{}},"rootReference":{}}}},{"value":{"literal":{"string":"Q%a%"}}}]}}}},"expressions":[{"selection":{"directReference":{"structField":{}},"rootReference":{}}}]}},"names":["v"]}}]}
+
+query I
+CALL from_substrait_json('{"extensions":[{"extensionFunction":{"functionAnchor":1,"name":"gte"}},{"extensionFunction":{"functionAnchor":2,"name":"lt"}},{"extensionFunction":{"functionAnchor":3,"name":"and"}},{"extensionFunction":{"functionAnchor":4,"name":"is_not_null"}},{"extensionFunction":{"functionAnchor":5,"name":"like"}}],"relations":[{"root":{"input":{"project":{"input":{"filter":{"input":{"read":{"baseSchema":{"names":["v"],"struct":{"types":[{"varchar":{"length":5,"nullability":"NULLABILITY_NULLABLE"}}],"nullability":"NULLABILITY_REQUIRED"}},"filter":{"scalarFunction":{"functionReference":3,"outputType":{"bool":{"nullability":"NULLABILITY_NULLABLE"}},"arguments":[{"value":{"scalarFunction":{"functionReference":3,"outputType":{"bool":{"nullability":"NULLABILITY_NULLABLE"}},"arguments":[{"value":{"scalarFunction":{"functionReference":1,"outputType":{"varchar":{"length":1,"nullability":"NULLABILITY_NULLABLE"}},"arguments":[{"value":{"selection":{"directReference":{"structField":{}},"rootReference":{}}}},{"value":{"literal":{"string":"Q"}}}]}}},{"value":{"scalarFunction":{"functionReference":2,"outputType":{"varchar":{"length":1,"nullability":"NULLABILITY_NULLABLE"}},"arguments":[{"value":{"selection":{"directReference":{"structField":{}},"rootReference":{}}}},{"value":{"literal":{"string":"R"}}}]}}}]}}},{"value":{"scalarFunction":{"functionReference":4,"outputType":{"varchar":{"length":1,"nullability":"NULLABILITY_NULLABLE"}},"arguments":[{"value":{"selection":{"directReference":{"structField":{}},"rootReference":{}}}}]}}}]}},"projection":{"select":{"structItems":[{}]},"maintainSingularStruct":true},"namedTable":{"names":["varchars"]}}},"condition":{"scalarFunction":{"functionReference":5,"outputType":{"bool":{"nullability":"NULLABILITY_NULLABLE"}},"arguments":[{"value":{"selection":{"directReference":{"structField":{}},"rootReference":{}}}},{"value":{"literal":{"string":"Q%a%"}}}]}}}},"expressions":[{"selection":{"directReference":{"structField":{}},"rootReference":{}}}]}},"names":["v"]}}]}');
+----
+Quack
+
+query I 
+SELECT * FROM varchars WHERE v LIKE 'Q%a%k'
+----
+Quack
+
 # -------------------------------------------------------------------------------------
 
 # TODO extract (extract) - extract using year SELECT COL, extract('year' FROM COL). the function name in the substrait plan is year

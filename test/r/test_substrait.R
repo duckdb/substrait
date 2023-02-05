@@ -32,10 +32,6 @@ test_that("substrait extension json test", {
 })
 
 test_that("substrait optimizer test", {
-  con <- load_extension()
-  on.exit(dbDisconnect(con, shutdown = TRUE))
-  dbExecute(con, "CREATE TABLE integers (i INTEGER)")
-  dbExecute(con, "INSERT INTO integers VALUES (42)")
   optimized_plan <- duckdb::duckdb_get_substrait(con, "select abs(i) from integers limit 5", enable_optimizer=TRUE)
   unoptimized_plan <- duckdb::duckdb_get_substrait(con, "select abs(i) from integers limit 5", enable_optimizer=FALSE)
 
@@ -54,3 +50,16 @@ test_that("substrait optimizer test - json extension", {
     result <- isTRUE(all.equal(optimized_plan, unoptimized_plan))
     expect_equal(result, FALSE)
 })
+
+test_that("substrait extension from json test", {
+  con <- load_extension()
+  on.exit(dbDisconnect(con, shutdown = TRUE))
+  dbExecute(con, "CREATE TABLE integers (i INTEGER)")
+  dbExecute(con, "INSERT INTO integers VALUES (42)")
+  json <- "{\"relations\":[{\"root\":{\"input\":{\"fetch\":{\"input\":{\"project\":{\"input\":{\"read\":{\"baseSchema\":{\"names\":[\"i\"],\"struct\":{\"types\":[{\"i32\":{\"nullability\":\"NULLABILITY_NULLABLE\"}}],\"nullability\":\"NULLABILITY_REQUIRED\"}},\"projection\":{\"select\":{\"structItems\":[{}]},\"maintainSingularStruct\":true},\"namedTable\":{\"names\":[\"integers\"]}}},\"expressions\":[{\"selection\":{\"directReference\":{\"structField\":{}},\"rootReference\":{}}}]}},\"count\":\"5\"}},\"names\":[\"i\"]}}]}"
+  
+  result <- duckdb::duckdb_prepare_substrait_json(con, json)
+  df <- dbFetch(result)
+  expect_equal(df$i, 42L)
+})
+

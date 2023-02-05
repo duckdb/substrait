@@ -11,6 +11,7 @@
 #include "duckdb/planner/operator/list.hpp"
 #include "duckdb/planner/table_filter.hpp"
 #include "duckdb/storage/statistics/string_statistics.hpp"
+#include "duckdb/catalog/catalog_entry/duck_table_entry.hpp"
 #include "google/protobuf/util/json_util.h"
 #include "substrait/algebra.pb.h"
 #include "substrait/plan.pb.h"
@@ -18,22 +19,16 @@
 #include "duckdb/execution/index/art/art_key.hpp"
 
 namespace duckdb {
-const std::unordered_map<std::string, std::string> DuckDBToSubstrait::function_names_remap = { 
-  {"mod", "modulus"},
-  {"stddev", "std_dev"},
-  {"prefix", "starts_with"},
-  {"suffix", "ends_with"}, 
-  {"substr", "substring"},
-  {"length", "char_length"},
-  {"isnan", "is_nan"},
-  {"isfinite", "is_finite"},
-  {"isinf", "is_infinite"},
-  {"sum_no_overflow", "sum"},
-  {"count_star", "count"}, 
-  {"~~", "like"}
-};
+const std::unordered_map<std::string, std::string>
+    DuckDBToSubstrait::function_names_remap = {
+        {"mod", "modulus"},        {"stddev", "std_dev"},
+        {"prefix", "starts_with"}, {"suffix", "ends_with"},
+        {"substr", "substring"},   {"length", "char_length"},
+        {"isnan", "is_nan"},       {"isfinite", "is_finite"},
+        {"isinf", "is_infinite"},  {"sum_no_overflow", "sum"},
+        {"count_star", "count"},   {"~~", "like"}};
 
-std::string &DuckDBToSubstrait::RemapFunctionName(std::string &function_name){
+std::string &DuckDBToSubstrait::RemapFunctionName(std::string &function_name) {
   auto it = function_names_remap.find(function_name);
   if (it != function_names_remap.end()) {
     function_name = it->second;
@@ -240,7 +235,8 @@ void DuckDBToSubstrait::TransformFunctionExpression(
   auto &dfun = (BoundFunctionExpression &)dexpr;
   auto sfun = sexpr.mutable_scalar_function();
 
-  sfun->set_function_reference(RegisterFunction(RemapFunctionName(dfun.function.name)));
+  sfun->set_function_reference(
+      RegisterFunction(RemapFunctionName(dfun.function.name)));
 
   for (auto &darg : dfun.children) {
     auto sarg = sfun->add_arguments();
@@ -767,8 +763,9 @@ DuckDBToSubstrait::TransformAggregateGroup(LogicalOperator &dop) {
     }
     auto &daexpr = (BoundAggregateExpression &)*dmeas;
 
-    smeas->set_function_reference(RegisterFunction(RemapFunctionName(daexpr.function.name)));
-    
+    smeas->set_function_reference(
+        RegisterFunction(RemapFunctionName(daexpr.function.name)));
+
     *smeas->mutable_output_type() = DuckToSubstraitType(daexpr.return_type);
     for (auto &darg : daexpr.children) {
       auto s_arg = smeas->add_arguments();
@@ -901,7 +898,7 @@ DuckDBToSubstrait::TransformAggregateGroup(LogicalOperator &dop) {
 
 set<idx_t> GetNotNullConstraintCol(TableCatalogEntry &tbl) {
   set<idx_t> not_null;
-  for (auto &constraint : tbl.constraints) {
+  for (auto &constraint : tbl.GetConstraints()) {
     if (constraint->type == ConstraintType::NOT_NULL) {
       not_null.insert(((NotNullConstraint *)constraint.get())->index.index);
     }
@@ -949,8 +946,6 @@ void DuckDBToSubstrait::TransformParquetScanToSubstrait(
   auto *path = new string();
   *path = files_path[0];
   parquet_item->set_allocated_uri_file(path);
-
-  auto parquet_options = parquet_item->mutable_parquet();
 
   auto base_schema = new ::substrait::NamedStruct();
   auto type_info = new substrait::Type_Struct();
