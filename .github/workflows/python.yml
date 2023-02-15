@@ -28,11 +28,6 @@ jobs:
         git config --global --add safe.directory '*'
         make pull
 
-#    - name: Install Python Dependencies
-#      shell: bash
-#      run: |
-#        pip install cibuildwheel twine
-
     - name: Build DuckDB (Python)
       run: |
         cd duckdb/tools/pythonpkg

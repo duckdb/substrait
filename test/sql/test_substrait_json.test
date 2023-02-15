@@ -2,6 +2,9 @@
 # description: Test get_substrait_json and from_substrait_json basic functionality
 # group: [substrait]
 
+require substrait
+
+
 statement ok
 PRAGMA enable_verification
 
