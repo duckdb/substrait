@@ -158,8 +158,7 @@ static void FromSubFunction(ClientContext &context, TableFunctionInput &data_p,
   if (!result_chunk) {
     return;
   }
-  // Move should work here, no?
-  result_chunk->Copy(output);
+  output.Move(*result_chunk);
 }
 
 void SubstraitExtension::Load(DuckDB &db) {
@@ -194,11 +193,9 @@ void SubstraitExtension::Load(DuckDB &db) {
   // JSON from a valid SQL Query
   TableFunction get_substrait_json("get_substrait_json", {LogicalType::VARCHAR},
                                    ToJsonFunction, ToJsonBind);
-//  TableFunction get_substrait_json_optimize("get_substrait_json", {LogicalType::VARCHAR, LogicalType::BOOLEAN},
-//                            ToJsonFunction, ToJsonBind);
+
   get_substrait_json.named_parameters["enable_optimizer"] = LogicalType::BOOLEAN;
   CreateTableFunctionInfo get_substrait_json_info(get_substrait_json);
-//  get_substrait_json_info.functions.AddFunction(get_substrait_json_optimize);
   catalog.CreateTableFunction(*con.context, &get_substrait_json_info);
 
   con.Commit();
