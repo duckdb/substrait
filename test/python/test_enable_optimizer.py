@@ -1,5 +1,6 @@
 import pandas as pd
 import duckdb
+import pytest
 
 @pytest.mark.skip(reason="needs to be merged in DuckDB repo first")
 def test_optimizer_defaults_to_true(require):
