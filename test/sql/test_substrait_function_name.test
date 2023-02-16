@@ -2,6 +2,9 @@
 # description: Test conversion of DuckDB built-in function names to Substrait function names
 # group: [sql]
 
+require substrait
+
+
 statement ok
 PRAGMA enable_verification
 

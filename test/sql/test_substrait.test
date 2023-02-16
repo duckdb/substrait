@@ -2,6 +2,8 @@
 # description: Test get_substrait and from_substrait basic functionality
 # group: [substrait]
 
+require substrait
+
 statement ok
 PRAGMA enable_verification
 

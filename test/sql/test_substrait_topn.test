@@ -2,6 +2,9 @@
 # description: Test get_substrait with top-n queries
 # group: [sql]
 
+require substrait
+
+
 statement ok
 PRAGMA enable_verification
 
