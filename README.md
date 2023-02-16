@@ -121,3 +121,11 @@ dbExecute(con, "INSTALL('substrait')"))
       result <- duckdb::duckdb_prepare_substrait(con, proto_bytes)
       df <- dbFetch(result)
     ```
+
+## Setting up CLion 
+Configuring CLion with the extension template requires a little work. Firstly, make sure that the DuckDB submodule is available. 
+Then make sure to open `./duckdb/CMakeLists.txt` (so not the top level `CMakeLists.txt` file from this repo) as a project in CLion.
+Now to fix your project path go to `tools->CMake->Change Project Root`([docs](https://www.jetbrains.com/help/clion/change-project-root-directory.html)) to set the project root to the root dir of this repo.
+
+Now to configure the build targets, copy the CMake variables specified in the Makefile and ensure
+the build directory is set to `../build/<build_mode>`.
