@@ -42,3 +42,25 @@ test_that("substrait extension from json test", {
   df <- dbFetch(result)
   expect_equal(df$i, 42L)
 })
+
+# test_that("substrait optimizer test", {
+#   optimized_plan <- duckdb::duckdb_get_substrait(con, "select abs(i) from integers limit 5", enable_optimizer=TRUE)
+#   unoptimized_plan <- duckdb::duckdb_get_substrait(con, "select abs(i) from integers limit 5", enable_optimizer=FALSE)
+
+#     result <- isTRUE(all.equal(optimized_plan, unoptimized_plan))
+#     expect_equal(result, FALSE)
+# })
+
+# test_that("substrait optimizer test - json extension", {
+#   con <- load_extension()
+#   on.exit(dbDisconnect(con, shutdown = TRUE))
+#   dbExecute(con, "CREATE TABLE integers (i INTEGER)")
+#   dbExecute(con, "INSERT INTO integers VALUES (42)")
+#   optimized_plan <- duckdb::duckdb_get_substrait_json(con, "select abs(i) from integers limit 5", enable_optimizer=TRUE)
+#   unoptimized_plan <- duckdb::duckdb_get_substrait_json(con, "select abs(i) from integers limit 5", enable_optimizer=FALSE)
+
+#     result <- isTRUE(all.equal(optimized_plan, unoptimized_plan))
+#     expect_equal(result, FALSE)
+# })
+
+

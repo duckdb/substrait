@@ -62,7 +62,7 @@ release_r: CLIENT_FLAGS=-DBUILD_R=1
 release_r: release
 
 release_python: CLIENT_FLAGS=-DBUILD_PYTHON=1 -DBUILD_JSON_EXTENSION=1 -DBUILD_FTS_EXTENSION=1 -DBUILD_TPCH_EXTENSION=1 -DBUILD_VISUALIZER_EXTENSION=1 -DBUILD_TPCDS_EXTENSION=1
-release_python: debug
+release_python: release
 
 # Main tests
 test: test_release
@@ -87,6 +87,9 @@ test_debug_python: debug_python
 
 test_release_python: release_python
 	cd test/python && python3 -m pytest
+
+test_release_r: release_r
+	cd test/r && R -f test_substrait.R
 
 format:
 	find src/ -iname *.hpp -o -iname *.cpp | xargs clang-format --sort-includes=0 -style=file -i
