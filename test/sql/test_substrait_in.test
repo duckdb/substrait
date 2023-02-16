@@ -9,13 +9,10 @@ statement ok
 PRAGMA enable_verification
 
 statement ok
-PRAGMA disable_optimizer
-
-statement ok
 CREATE TABLE test (a int);
 
 statement ok
 insert into test values (1), (2), (3), (100)
 
 statement ok
-CALL get_substrait('select * from test where a in (1, 7, 10,50,100);')
+CALL get_substrait('select * from test where a in (1, 7, 10,50,100);', enable_optimizer=false)

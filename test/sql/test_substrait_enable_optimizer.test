@@ -1,4 +1,4 @@
-# name: test/sql/test_substrait_disable_optimizer.test
+# name: test/sql/test_substrait_enable_optimizer.test
 # description: Test conversion of DuckDB built-in function names to Substrait function names
 # group: [sql]
 
