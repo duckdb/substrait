@@ -68,6 +68,12 @@ private:
   void TransformBoolean(duckdb::Value &dval, substrait::Expression &sexpr);
   void TransformDecimal(duckdb::Value &dval, substrait::Expression &sexpr);
   void TransformHugeInt(Value &dval, substrait::Expression &sexpr);
+  void TransformSmallInt(duckdb::Value &dval, substrait::Expression &sexpr);
+	void TransformFloat(Value &dval, substrait::Expression &sexpr);
+  void TransformTime(Value &dval, substrait::Expression &sexpr);
+	void TransformInterval(Value &dval, substrait::Expression &sexpr);
+  void TransformTimestamp(Value &dval, substrait::Expression &sexpr);
+  void TransformEnum(duckdb::Value &dval, substrait::Expression &sexpr);
 
   //! Methods to transform a DuckDB Expression to a Substrait Expression
   void TransformExpr(duckdb::Expression &dexpr, substrait::Expression &sexpr,
@@ -98,7 +104,7 @@ private:
 
   //! Transforms a DuckDB Logical Type into a Substrait Type
   ::substrait::Type
-  DuckToSubstraitType(LogicalType &type,
+  DuckToSubstraitType(const LogicalType &type,
                       BaseStatistics *column_statistics = nullptr,
                       bool not_null = false);
 

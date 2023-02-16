@@ -14,7 +14,7 @@ statement ok
 CREATE TABLE integers (i integer)
 
 statement ok
-insert into crossfit values ('Push Ups', 3), ('Pull Ups', 5) , (' Push Jerk', 7), ('Bar Muscle Up', 10);
+insert into crossfit values ('Push Ups', 3), ('Pull Ups', 5) , ('Push Jerk', 7), ('Bar Muscle Up', 10);
 
 query I
 CALL get_substrait('select count(exercise) as exercise from crossfit where dificulty_level <=5')
@@ -38,7 +38,7 @@ CALL from_substrait('\x1Av\x12t\x0AW:U\x12A:?\x12+\x0A)\x12\x1B\x0A\x08exercise\
 ----
 Push Ups	3
 Pull Ups	5
- Push Jerk	7
+Push Jerk	7
 Bar Muscle Up	10
 
 
