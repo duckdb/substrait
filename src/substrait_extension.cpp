@@ -21,16 +21,16 @@ struct ToSubstraitFunctionData : public TableFunctionData {
   bool finished = false;
 };
 
-static unique_ptr<FunctionData> ToSubstraitBind(ClientContext &context,
-                                                TableFunctionBindInput &input,
-                                                vector<LogicalType> &return_types,
-                                                vector<string> &names) {
+static unique_ptr<FunctionData>
+ToSubstraitBind(ClientContext &context, TableFunctionBindInput &input,
+                vector<LogicalType> &return_types, vector<string> &names) {
   auto result = make_unique<ToSubstraitFunctionData>();
   result->query = input.inputs[0].ToString();
   if (input.named_parameters.size() == 1) {
     auto loption = StringUtil::Lower(input.named_parameters.begin()->first);
     if (loption == "enable_optimizer") {
-      result->enable_optimizer = BooleanValue::Get(input.named_parameters.begin()->second);
+      result->enable_optimizer =
+          BooleanValue::Get(input.named_parameters.begin()->second);
     }
   }
   return_types.emplace_back(LogicalType::BLOB);
@@ -47,7 +47,8 @@ static unique_ptr<FunctionData> ToJsonBind(ClientContext &context,
   if (input.named_parameters.size() == 1) {
     auto loption = StringUtil::Lower(input.named_parameters.begin()->first);
     if (loption == "enable_optimizer") {
-        result->enable_optimizer = BooleanValue::Get(input.named_parameters.begin()->second);
+      result->enable_optimizer =
+          BooleanValue::Get(input.named_parameters.begin()->second);
     }
   }
   return_types.emplace_back(LogicalType::VARCHAR);
@@ -144,7 +145,8 @@ FromSubstraitBind(ClientContext &context, TableFunctionBindInput &input,
 
 static unique_ptr<FunctionData>
 FromSubstraitBindJSON(ClientContext &context, TableFunctionBindInput &input,
-                      vector<LogicalType> &return_types, vector<string> &names) {
+                      vector<LogicalType> &return_types,
+                      vector<string> &names) {
   return SubstraitBind(context, input, return_types, names, true);
 }
 
@@ -194,7 +196,8 @@ void SubstraitExtension::Load(DuckDB &db) {
   TableFunction get_substrait_json("get_substrait_json", {LogicalType::VARCHAR},
                                    ToJsonFunction, ToJsonBind);
 
-  get_substrait_json.named_parameters["enable_optimizer"] = LogicalType::BOOLEAN;
+  get_substrait_json.named_parameters["enable_optimizer"] =
+      LogicalType::BOOLEAN;
   CreateTableFunctionInfo get_substrait_json_info(get_substrait_json);
   catalog.CreateTableFunction(*con.context, &get_substrait_json_info);
 

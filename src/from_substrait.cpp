@@ -466,7 +466,12 @@ SubstraitToDuckDB::TransformReadOp(const substrait::Rel &sop) {
   auto &sget = sop.read();
   shared_ptr<Relation> scan;
   if (sget.has_named_table()) {
-    scan = con.Table(sget.named_table().names(0));
+    // If we can't find a table with that name, let's try a view.
+    try {
+      scan = con.Table(sget.named_table().names(0));
+    } catch (...) {
+      scan = con.View(sget.named_table().names(0));
+    }
   } else if (sget.has_local_files()) {
     auto local_file_items = sget.local_files().items();
     if (local_file_items.size() > 1) {
