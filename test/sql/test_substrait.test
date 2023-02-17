@@ -74,3 +74,7 @@ CALL get_substrait_json(select bla from t)
 #Shoud fail with invalid binary
 statement error
 CALL from_substrait(ongezoutennoten)
+
+# Should fail on empty plan
+statement error
+CALL from_substrait(''::BLOB);
