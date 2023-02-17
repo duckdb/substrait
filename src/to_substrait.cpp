@@ -235,6 +235,11 @@ void DuckDBToSubstrait::TransformEnum(Value &dval,
 
 void DuckDBToSubstrait::TransformConstant(Value &dval,
                                           substrait::Expression &sexpr) {
+  if (dval.IsNull()) {
+    auto &sval = *sexpr.mutable_literal();
+    sval.set_nullable(true);
+    return;
+  }
   auto &duckdb_type = dval.type();
   switch (duckdb_type.id()) {
   case LogicalTypeId::DECIMAL:
@@ -350,6 +355,9 @@ void DuckDBToSubstrait::TransformComparisonExpression(
   case ExpressionType::COMPARE_NOTEQUAL:
     fname = "not_equal";
     break;
+  case ExpressionType::COMPARE_NOT_DISTINCT_FROM:
+    fname = "is_not_distinct_from";
+    break;
   default:
     throw InternalException(ExpressionTypeToString(dexpr.type));
   }
@@ -440,6 +448,28 @@ void DuckDBToSubstrait::TransformInExpression(Expression &dexpr,
   }
 }
 
+void DuckDBToSubstrait::TransformIsNullExpression(Expression &dexpr,
+                                                  substrait::Expression &sexpr,
+                                                  uint64_t col_offset) {
+  auto &dop = (BoundOperatorExpression &)dexpr;
+  auto scalar_fun = sexpr.mutable_scalar_function();
+  scalar_fun->set_function_reference(RegisterFunction("is_null"));
+  auto s_arg = scalar_fun->add_arguments();
+  TransformExpr(*dop.children[0], *s_arg->mutable_value(), col_offset);
+  *scalar_fun->mutable_output_type() = DuckToSubstraitType(dop.return_type);
+}
+
+void DuckDBToSubstrait::TransformNotExpression(Expression &dexpr,
+                                               substrait::Expression &sexpr,
+                                               uint64_t col_offset) {
+  auto &dop = (BoundOperatorExpression &)dexpr;
+  auto scalar_fun = sexpr.mutable_scalar_function();
+  scalar_fun->set_function_reference(RegisterFunction("not"));
+  auto s_arg = scalar_fun->add_arguments();
+  TransformExpr(*dop.children[0], *s_arg->mutable_value(), col_offset);
+  *scalar_fun->mutable_output_type() = DuckToSubstraitType(dop.return_type);
+}
+
 void DuckDBToSubstrait::TransformExpr(Expression &dexpr,
                                       substrait::Expression &sexpr,
                                       uint64_t col_offset) {
@@ -462,6 +492,7 @@ void DuckDBToSubstrait::TransformExpr(Expression &dexpr,
   case ExpressionType::COMPARE_GREATERTHAN:
   case ExpressionType::COMPARE_GREATERTHANOREQUALTO:
   case ExpressionType::COMPARE_NOTEQUAL:
+  case ExpressionType::COMPARE_NOT_DISTINCT_FROM:
     TransformComparisonExpression(dexpr, sexpr);
     break;
   case ExpressionType::CONJUNCTION_AND:
@@ -476,6 +507,12 @@ void DuckDBToSubstrait::TransformExpr(Expression &dexpr,
     break;
   case ExpressionType::COMPARE_IN:
     TransformInExpression(dexpr, sexpr);
+    break;
+  case ExpressionType::OPERATOR_IS_NULL:
+    TransformIsNullExpression(dexpr, sexpr, col_offset);
+    break;
+  case ExpressionType::OPERATOR_NOT:
+    TransformNotExpression(dexpr, sexpr, col_offset);
     break;
   default:
     throw InternalException(ExpressionTypeToString(dexpr.type));

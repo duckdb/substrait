@@ -1,0 +1,44 @@
+# name: test/sql/test_substrait_issue_01.test
+# description: Test get_substrait on issue#1
+# group: [sql]
+
+require substrait
+
+statement ok
+PRAGMA enable_verification
+
+statement ok
+create table t (a int)
+
+statement ok
+INSERT INTO t VALUES (1), (2), (3), (NULL);
+
+# is null (is_null)
+statement ok
+CALL get_substrait('select a from t WHERE a IS NULL')
+
+
+# not (not)
+statement ok
+CALL get_substrait('select a from t WHERE NOT a=1')
+
+# is not distinct from (is_not_distinct_from)
+statement ok
+CALL get_substrait('select a from t WHERE NOT a IS NOT DISTINCT FROM NULL')
+
+statement ok
+DROP TABLE t
+
+statement ok
+create table t (a DATE)
+
+statement ok
+INSERT INTO t VALUES ('1992-07-30'), (NULL);
+
+# interval (add) - Trying to add/substract an interval causes the error: SELECT L_SHIPDATE, L_SHIPDATE + INTERVAL 5 DAY
+statement ok
+CALL get_substrait('select a + INTERVAL 5 DAY from t')
+
+statement ok
+CALL get_substrait('select a - INTERVAL 5 DAY from t')
+

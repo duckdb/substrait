@@ -97,6 +97,12 @@ private:
   void TransformNotNullExpression(duckdb::Expression &dexpr,
                                   substrait::Expression &sexpr,
                                   uint64_t col_offset);
+  void TransformIsNullExpression(duckdb::Expression &dexpr,
+                                 substrait::Expression &sexpr,
+                                 uint64_t col_offset);
+  void TransformNotExpression(duckdb::Expression &dexpr,
+                              substrait::Expression &sexpr,
+                              uint64_t col_offset);
   void TransformCaseExpression(duckdb::Expression &dexpr,
                                substrait::Expression &sexpr);
   void TransformInExpression(duckdb::Expression &dexpr,
