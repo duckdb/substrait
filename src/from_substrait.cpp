@@ -565,7 +565,10 @@ SubstraitToDuckDB::TransformRootOp(const substrait::RelRoot &sop) {
 }
 
 shared_ptr<Relation> SubstraitToDuckDB::TransformPlan() {
-  D_ASSERT(!plan.relations().empty());
+  if (plan.relations().empty()) {
+    throw InvalidInputException(
+        "Substrait Plan does not have a SELECT statement");
+  }
   auto d_plan = TransformRootOp(plan.relations(0).root());
   return d_plan;
 }

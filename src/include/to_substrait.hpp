@@ -69,9 +69,9 @@ private:
   void TransformDecimal(duckdb::Value &dval, substrait::Expression &sexpr);
   void TransformHugeInt(Value &dval, substrait::Expression &sexpr);
   void TransformSmallInt(duckdb::Value &dval, substrait::Expression &sexpr);
-	void TransformFloat(Value &dval, substrait::Expression &sexpr);
+  void TransformFloat(Value &dval, substrait::Expression &sexpr);
   void TransformTime(Value &dval, substrait::Expression &sexpr);
-	void TransformInterval(Value &dval, substrait::Expression &sexpr);
+  void TransformInterval(Value &dval, substrait::Expression &sexpr);
   void TransformTimestamp(Value &dval, substrait::Expression &sexpr);
   void TransformEnum(duckdb::Value &dval, substrait::Expression &sexpr);
 
