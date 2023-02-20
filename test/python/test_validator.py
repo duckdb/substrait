@@ -17,6 +17,8 @@ def run_substrait_validator(con, query):
     c.override_diagnostic_level(3001, "error", "info")
     # too few field names
     c.override_diagnostic_level(4003, "error", "info")
+    # Validator being of a different version than substrait
+    c.override_diagnostic_level(7, "warning", "info")
     try:
         proto = con.get_substrait(query).fetchone()[0]
     except Exception as err:

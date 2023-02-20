@@ -1242,5 +1242,12 @@ substrait::RelRoot *DuckDBToSubstrait::TransformRootOp(LogicalOperator &dop) {
 
 void DuckDBToSubstrait::TransformPlan(LogicalOperator &dop) {
   plan.add_relations()->set_allocated_root(TransformRootOp(dop));
+  auto version = plan.mutable_version();
+  version->set_major_number(0);
+  version->set_minor_number(22);
+  version->set_patch_number(0);
+  auto *producer_name = new string();
+  *producer_name = "DuckDB";
+  version->set_allocated_producer(producer_name);
 }
 } // namespace duckdb
