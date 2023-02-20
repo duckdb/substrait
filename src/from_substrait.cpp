@@ -65,6 +65,10 @@ unique_ptr<ParsedExpression>
 SubstraitToDuckDB::TransformLiteralExpr(const substrait::Expression &sexpr) {
   const auto &slit = sexpr.literal();
   Value dval;
+  if (slit.has_null()) {
+    dval = Value(LogicalType::SQLNULL);
+    return make_unique<ConstantExpression>(dval);
+  }
   switch (slit.literal_type_case()) {
   case substrait::Expression_Literal::LiteralTypeCase::kFp64:
     dval = Value::DOUBLE(slit.fp64());
@@ -217,6 +221,14 @@ unique_ptr<ParsedExpression> SubstraitToDuckDB::TransformScalarFunctionExpr(
   } else if (function_name == "is_not_null") {
     D_ASSERT(children.size() == 1);
     return make_unique<OperatorExpression>(ExpressionType::OPERATOR_IS_NOT_NULL,
+                                           move(children[0]));
+  } else if (function_name == "is_null") {
+    D_ASSERT(children.size() == 1);
+    return make_unique<OperatorExpression>(ExpressionType::OPERATOR_IS_NULL,
+                                           move(children[0]));
+  } else if (function_name == "not") {
+    D_ASSERT(children.size() == 1);
+    return make_unique<OperatorExpression>(ExpressionType::OPERATOR_NOT,
                                            move(children[0]));
   } else if (function_name == "is_not_distinct_from") {
     D_ASSERT(children.size() == 2);
