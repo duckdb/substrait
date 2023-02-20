@@ -5,481 +5,367 @@
 
 #include <algorithm>
 
-#include <google/protobuf/stubs/common.h>
-#include <google/protobuf/stubs/port.h>
 #include <google/protobuf/io/coded_stream.h>
-#include <google/protobuf/wire_format_lite_inl.h>
+#include <google/protobuf/extension_set.h>
+#include <google/protobuf/wire_format_lite.h>
 #include <google/protobuf/descriptor.h>
 #include <google/protobuf/generated_message_reflection.h>
 #include <google/protobuf/reflection_ops.h>
 #include <google/protobuf/wire_format.h>
-// This is a temporary google only hack
-#ifdef GOOGLE_PROTOBUF_ENFORCE_UNIQUENESS
-#include "third_party/protobuf/version.h"
-#endif
 // @@protoc_insertion_point(includes)
+#include <google/protobuf/port_def.inc>
 
-namespace protobuf_google_2fprotobuf_2fany_2eproto {
-extern PROTOBUF_INTERNAL_EXPORT_protobuf_google_2fprotobuf_2fany_2eproto ::google::protobuf::internal::SCCInfo<0> scc_info_Any;
-}  // namespace protobuf_google_2fprotobuf_2fany_2eproto
-namespace protobuf_substrait_2fextensions_2fextensions_2eproto {
-extern PROTOBUF_INTERNAL_EXPORT_protobuf_substrait_2fextensions_2fextensions_2eproto ::google::protobuf::internal::SCCInfo<0> scc_info_SimpleExtensionDeclaration_ExtensionFunction;
-extern PROTOBUF_INTERNAL_EXPORT_protobuf_substrait_2fextensions_2fextensions_2eproto ::google::protobuf::internal::SCCInfo<0> scc_info_SimpleExtensionDeclaration_ExtensionType;
-extern PROTOBUF_INTERNAL_EXPORT_protobuf_substrait_2fextensions_2fextensions_2eproto ::google::protobuf::internal::SCCInfo<0> scc_info_SimpleExtensionDeclaration_ExtensionTypeVariation;
-}  // namespace protobuf_substrait_2fextensions_2fextensions_2eproto
+PROTOBUF_PRAGMA_INIT_SEG
 namespace substrait {
 namespace extensions {
-class SimpleExtensionURIDefaultTypeInternal {
- public:
-  ::google::protobuf::internal::ExplicitlyConstructed<SimpleExtensionURI>
-      _instance;
-} _SimpleExtensionURI_default_instance_;
-class SimpleExtensionDeclaration_ExtensionTypeDefaultTypeInternal {
- public:
-  ::google::protobuf::internal::ExplicitlyConstructed<SimpleExtensionDeclaration_ExtensionType>
-      _instance;
-} _SimpleExtensionDeclaration_ExtensionType_default_instance_;
-class SimpleExtensionDeclaration_ExtensionTypeVariationDefaultTypeInternal {
- public:
-  ::google::protobuf::internal::ExplicitlyConstructed<SimpleExtensionDeclaration_ExtensionTypeVariation>
-      _instance;
-} _SimpleExtensionDeclaration_ExtensionTypeVariation_default_instance_;
-class SimpleExtensionDeclaration_ExtensionFunctionDefaultTypeInternal {
- public:
-  ::google::protobuf::internal::ExplicitlyConstructed<SimpleExtensionDeclaration_ExtensionFunction>
-      _instance;
-} _SimpleExtensionDeclaration_ExtensionFunction_default_instance_;
-class SimpleExtensionDeclarationDefaultTypeInternal {
- public:
-  ::google::protobuf::internal::ExplicitlyConstructed<SimpleExtensionDeclaration>
-      _instance;
-  const ::substrait::extensions::SimpleExtensionDeclaration_ExtensionType* extension_type_;
-  const ::substrait::extensions::SimpleExtensionDeclaration_ExtensionTypeVariation* extension_type_variation_;
-  const ::substrait::extensions::SimpleExtensionDeclaration_ExtensionFunction* extension_function_;
-} _SimpleExtensionDeclaration_default_instance_;
-class AdvancedExtensionDefaultTypeInternal {
- public:
-  ::google::protobuf::internal::ExplicitlyConstructed<AdvancedExtension>
-      _instance;
-} _AdvancedExtension_default_instance_;
+constexpr SimpleExtensionURI::SimpleExtensionURI(
+  ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized)
+  : uri_(&::PROTOBUF_NAMESPACE_ID::internal::fixed_address_empty_string)
+  , extension_uri_anchor_(0u){}
+struct SimpleExtensionURIDefaultTypeInternal {
+  constexpr SimpleExtensionURIDefaultTypeInternal()
+    : _instance(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized{}) {}
+  ~SimpleExtensionURIDefaultTypeInternal() {}
+  union {
+    SimpleExtensionURI _instance;
+  };
+};
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT SimpleExtensionURIDefaultTypeInternal _SimpleExtensionURI_default_instance_;
+constexpr SimpleExtensionDeclaration_ExtensionType::SimpleExtensionDeclaration_ExtensionType(
+  ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized)
+  : name_(&::PROTOBUF_NAMESPACE_ID::internal::fixed_address_empty_string)
+  , extension_uri_reference_(0u)
+  , type_anchor_(0u){}
+struct SimpleExtensionDeclaration_ExtensionTypeDefaultTypeInternal {
+  constexpr SimpleExtensionDeclaration_ExtensionTypeDefaultTypeInternal()
+    : _instance(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized{}) {}
+  ~SimpleExtensionDeclaration_ExtensionTypeDefaultTypeInternal() {}
+  union {
+    SimpleExtensionDeclaration_ExtensionType _instance;
+  };
+};
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT SimpleExtensionDeclaration_ExtensionTypeDefaultTypeInternal _SimpleExtensionDeclaration_ExtensionType_default_instance_;
+constexpr SimpleExtensionDeclaration_ExtensionTypeVariation::SimpleExtensionDeclaration_ExtensionTypeVariation(
+  ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized)
+  : name_(&::PROTOBUF_NAMESPACE_ID::internal::fixed_address_empty_string)
+  , extension_uri_reference_(0u)
+  , type_variation_anchor_(0u){}
+struct SimpleExtensionDeclaration_ExtensionTypeVariationDefaultTypeInternal {
+  constexpr SimpleExtensionDeclaration_ExtensionTypeVariationDefaultTypeInternal()
+    : _instance(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized{}) {}
+  ~SimpleExtensionDeclaration_ExtensionTypeVariationDefaultTypeInternal() {}
+  union {
+    SimpleExtensionDeclaration_ExtensionTypeVariation _instance;
+  };
+};
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT SimpleExtensionDeclaration_ExtensionTypeVariationDefaultTypeInternal _SimpleExtensionDeclaration_ExtensionTypeVariation_default_instance_;
+constexpr SimpleExtensionDeclaration_ExtensionFunction::SimpleExtensionDeclaration_ExtensionFunction(
+  ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized)
+  : name_(&::PROTOBUF_NAMESPACE_ID::internal::fixed_address_empty_string)
+  , extension_uri_reference_(0u)
+  , function_anchor_(0u){}
+struct SimpleExtensionDeclaration_ExtensionFunctionDefaultTypeInternal {
+  constexpr SimpleExtensionDeclaration_ExtensionFunctionDefaultTypeInternal()
+    : _instance(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized{}) {}
+  ~SimpleExtensionDeclaration_ExtensionFunctionDefaultTypeInternal() {}
+  union {
+    SimpleExtensionDeclaration_ExtensionFunction _instance;
+  };
+};
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT SimpleExtensionDeclaration_ExtensionFunctionDefaultTypeInternal _SimpleExtensionDeclaration_ExtensionFunction_default_instance_;
+constexpr SimpleExtensionDeclaration::SimpleExtensionDeclaration(
+  ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized)
+  : _oneof_case_{}{}
+struct SimpleExtensionDeclarationDefaultTypeInternal {
+  constexpr SimpleExtensionDeclarationDefaultTypeInternal()
+    : _instance(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized{}) {}
+  ~SimpleExtensionDeclarationDefaultTypeInternal() {}
+  union {
+    SimpleExtensionDeclaration _instance;
+  };
+};
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT SimpleExtensionDeclarationDefaultTypeInternal _SimpleExtensionDeclaration_default_instance_;
+constexpr AdvancedExtension::AdvancedExtension(
+  ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized)
+  : optimization_(nullptr)
+  , enhancement_(nullptr){}
+struct AdvancedExtensionDefaultTypeInternal {
+  constexpr AdvancedExtensionDefaultTypeInternal()
+    : _instance(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized{}) {}
+  ~AdvancedExtensionDefaultTypeInternal() {}
+  union {
+    AdvancedExtension _instance;
+  };
+};
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT AdvancedExtensionDefaultTypeInternal _AdvancedExtension_default_instance_;
 }  // namespace extensions
 }  // namespace substrait
-namespace protobuf_substrait_2fextensions_2fextensions_2eproto {
-static void InitDefaultsSimpleExtensionURI() {
-  GOOGLE_PROTOBUF_VERIFY_VERSION;
+static ::PROTOBUF_NAMESPACE_ID::Metadata file_level_metadata_substrait_2fextensions_2fextensions_2eproto[6];
+static constexpr ::PROTOBUF_NAMESPACE_ID::EnumDescriptor const** file_level_enum_descriptors_substrait_2fextensions_2fextensions_2eproto = nullptr;
+static constexpr ::PROTOBUF_NAMESPACE_ID::ServiceDescriptor const** file_level_service_descriptors_substrait_2fextensions_2fextensions_2eproto = nullptr;
 
-  {
-    void* ptr = &::substrait::extensions::_SimpleExtensionURI_default_instance_;
-    new (ptr) ::substrait::extensions::SimpleExtensionURI();
-    ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
-  }
-  ::substrait::extensions::SimpleExtensionURI::InitAsDefaultInstance();
-}
-
-::google::protobuf::internal::SCCInfo<0> scc_info_SimpleExtensionURI =
-    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsSimpleExtensionURI}, {}};
-
-static void InitDefaultsSimpleExtensionDeclaration_ExtensionType() {
-  GOOGLE_PROTOBUF_VERIFY_VERSION;
-
-  {
-    void* ptr = &::substrait::extensions::_SimpleExtensionDeclaration_ExtensionType_default_instance_;
-    new (ptr) ::substrait::extensions::SimpleExtensionDeclaration_ExtensionType();
-    ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
-  }
-  ::substrait::extensions::SimpleExtensionDeclaration_ExtensionType::InitAsDefaultInstance();
-}
-
-::google::protobuf::internal::SCCInfo<0> scc_info_SimpleExtensionDeclaration_ExtensionType =
-    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsSimpleExtensionDeclaration_ExtensionType}, {}};
-
-static void InitDefaultsSimpleExtensionDeclaration_ExtensionTypeVariation() {
-  GOOGLE_PROTOBUF_VERIFY_VERSION;
-
-  {
-    void* ptr = &::substrait::extensions::_SimpleExtensionDeclaration_ExtensionTypeVariation_default_instance_;
-    new (ptr) ::substrait::extensions::SimpleExtensionDeclaration_ExtensionTypeVariation();
-    ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
-  }
-  ::substrait::extensions::SimpleExtensionDeclaration_ExtensionTypeVariation::InitAsDefaultInstance();
-}
-
-::google::protobuf::internal::SCCInfo<0> scc_info_SimpleExtensionDeclaration_ExtensionTypeVariation =
-    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsSimpleExtensionDeclaration_ExtensionTypeVariation}, {}};
-
-static void InitDefaultsSimpleExtensionDeclaration_ExtensionFunction() {
-  GOOGLE_PROTOBUF_VERIFY_VERSION;
-
-  {
-    void* ptr = &::substrait::extensions::_SimpleExtensionDeclaration_ExtensionFunction_default_instance_;
-    new (ptr) ::substrait::extensions::SimpleExtensionDeclaration_ExtensionFunction();
-    ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
-  }
-  ::substrait::extensions::SimpleExtensionDeclaration_ExtensionFunction::InitAsDefaultInstance();
-}
-
-::google::protobuf::internal::SCCInfo<0> scc_info_SimpleExtensionDeclaration_ExtensionFunction =
-    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsSimpleExtensionDeclaration_ExtensionFunction}, {}};
-
-static void InitDefaultsSimpleExtensionDeclaration() {
-  GOOGLE_PROTOBUF_VERIFY_VERSION;
-
-  {
-    void* ptr = &::substrait::extensions::_SimpleExtensionDeclaration_default_instance_;
-    new (ptr) ::substrait::extensions::SimpleExtensionDeclaration();
-    ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
-  }
-  ::substrait::extensions::SimpleExtensionDeclaration::InitAsDefaultInstance();
-}
-
-::google::protobuf::internal::SCCInfo<3> scc_info_SimpleExtensionDeclaration =
-    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 3, InitDefaultsSimpleExtensionDeclaration}, {
-      &protobuf_substrait_2fextensions_2fextensions_2eproto::scc_info_SimpleExtensionDeclaration_ExtensionType.base,
-      &protobuf_substrait_2fextensions_2fextensions_2eproto::scc_info_SimpleExtensionDeclaration_ExtensionTypeVariation.base,
-      &protobuf_substrait_2fextensions_2fextensions_2eproto::scc_info_SimpleExtensionDeclaration_ExtensionFunction.base,}};
-
-static void InitDefaultsAdvancedExtension() {
-  GOOGLE_PROTOBUF_VERIFY_VERSION;
-
-  {
-    void* ptr = &::substrait::extensions::_AdvancedExtension_default_instance_;
-    new (ptr) ::substrait::extensions::AdvancedExtension();
-    ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
-  }
-  ::substrait::extensions::AdvancedExtension::InitAsDefaultInstance();
-}
-
-::google::protobuf::internal::SCCInfo<1> scc_info_AdvancedExtension =
-    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 1, InitDefaultsAdvancedExtension}, {
-      &protobuf_google_2fprotobuf_2fany_2eproto::scc_info_Any.base,}};
-
-void InitDefaults() {
-  ::google::protobuf::internal::InitSCC(&scc_info_SimpleExtensionURI.base);
-  ::google::protobuf::internal::InitSCC(&scc_info_SimpleExtensionDeclaration_ExtensionType.base);
-  ::google::protobuf::internal::InitSCC(&scc_info_SimpleExtensionDeclaration_ExtensionTypeVariation.base);
-  ::google::protobuf::internal::InitSCC(&scc_info_SimpleExtensionDeclaration_ExtensionFunction.base);
-  ::google::protobuf::internal::InitSCC(&scc_info_SimpleExtensionDeclaration.base);
-  ::google::protobuf::internal::InitSCC(&scc_info_AdvancedExtension.base);
-}
-
-::google::protobuf::Metadata file_level_metadata[6];
-
-const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
+const uint32_t TableStruct_substrait_2fextensions_2fextensions_2eproto::offsets[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
   ~0u,  // no _has_bits_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::substrait::extensions::SimpleExtensionURI, _internal_metadata_),
+  PROTOBUF_FIELD_OFFSET(::substrait::extensions::SimpleExtensionURI, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::substrait::extensions::SimpleExtensionURI, extension_uri_anchor_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::substrait::extensions::SimpleExtensionURI, uri_),
+  ~0u,  // no _inlined_string_donated_
+  PROTOBUF_FIELD_OFFSET(::substrait::extensions::SimpleExtensionURI, extension_uri_anchor_),
+  PROTOBUF_FIELD_OFFSET(::substrait::extensions::SimpleExtensionURI, uri_),
   ~0u,  // no _has_bits_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::substrait::extensions::SimpleExtensionDeclaration_ExtensionType, _internal_metadata_),
+  PROTOBUF_FIELD_OFFSET(::substrait::extensions::SimpleExtensionDeclaration_ExtensionType, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::substrait::extensions::SimpleExtensionDeclaration_ExtensionType, extension_uri_reference_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::substrait::extensions::SimpleExtensionDeclaration_ExtensionType, type_anchor_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::substrait::extensions::SimpleExtensionDeclaration_ExtensionType, name_),
+  ~0u,  // no _inlined_string_donated_
+  PROTOBUF_FIELD_OFFSET(::substrait::extensions::SimpleExtensionDeclaration_ExtensionType, extension_uri_reference_),
+  PROTOBUF_FIELD_OFFSET(::substrait::extensions::SimpleExtensionDeclaration_ExtensionType, type_anchor_),
+  PROTOBUF_FIELD_OFFSET(::substrait::extensions::SimpleExtensionDeclaration_ExtensionType, name_),
   ~0u,  // no _has_bits_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::substrait::extensions::SimpleExtensionDeclaration_ExtensionTypeVariation, _internal_metadata_),
+  PROTOBUF_FIELD_OFFSET(::substrait::extensions::SimpleExtensionDeclaration_ExtensionTypeVariation, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::substrait::extensions::SimpleExtensionDeclaration_ExtensionTypeVariation, extension_uri_reference_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::substrait::extensions::SimpleExtensionDeclaration_ExtensionTypeVariation, type_variation_anchor_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::substrait::extensions::SimpleExtensionDeclaration_ExtensionTypeVariation, name_),
+  ~0u,  // no _inlined_string_donated_
+  PROTOBUF_FIELD_OFFSET(::substrait::extensions::SimpleExtensionDeclaration_ExtensionTypeVariation, extension_uri_reference_),
+  PROTOBUF_FIELD_OFFSET(::substrait::extensions::SimpleExtensionDeclaration_ExtensionTypeVariation, type_variation_anchor_),
+  PROTOBUF_FIELD_OFFSET(::substrait::extensions::SimpleExtensionDeclaration_ExtensionTypeVariation, name_),
   ~0u,  // no _has_bits_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::substrait::extensions::SimpleExtensionDeclaration_ExtensionFunction, _internal_metadata_),
+  PROTOBUF_FIELD_OFFSET(::substrait::extensions::SimpleExtensionDeclaration_ExtensionFunction, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::substrait::extensions::SimpleExtensionDeclaration_ExtensionFunction, extension_uri_reference_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::substrait::extensions::SimpleExtensionDeclaration_ExtensionFunction, function_anchor_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::substrait::extensions::SimpleExtensionDeclaration_ExtensionFunction, name_),
+  ~0u,  // no _inlined_string_donated_
+  PROTOBUF_FIELD_OFFSET(::substrait::extensions::SimpleExtensionDeclaration_ExtensionFunction, extension_uri_reference_),
+  PROTOBUF_FIELD_OFFSET(::substrait::extensions::SimpleExtensionDeclaration_ExtensionFunction, function_anchor_),
+  PROTOBUF_FIELD_OFFSET(::substrait::extensions::SimpleExtensionDeclaration_ExtensionFunction, name_),
   ~0u,  // no _has_bits_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::substrait::extensions::SimpleExtensionDeclaration, _internal_metadata_),
+  PROTOBUF_FIELD_OFFSET(::substrait::extensions::SimpleExtensionDeclaration, _internal_metadata_),
   ~0u,  // no _extensions_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::substrait::extensions::SimpleExtensionDeclaration, _oneof_case_[0]),
+  PROTOBUF_FIELD_OFFSET(::substrait::extensions::SimpleExtensionDeclaration, _oneof_case_[0]),
   ~0u,  // no _weak_field_map_
-  offsetof(::substrait::extensions::SimpleExtensionDeclarationDefaultTypeInternal, extension_type_),
-  offsetof(::substrait::extensions::SimpleExtensionDeclarationDefaultTypeInternal, extension_type_variation_),
-  offsetof(::substrait::extensions::SimpleExtensionDeclarationDefaultTypeInternal, extension_function_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::substrait::extensions::SimpleExtensionDeclaration, mapping_type_),
+  ~0u,  // no _inlined_string_donated_
+  ::PROTOBUF_NAMESPACE_ID::internal::kInvalidFieldOffsetTag,
+  ::PROTOBUF_NAMESPACE_ID::internal::kInvalidFieldOffsetTag,
+  ::PROTOBUF_NAMESPACE_ID::internal::kInvalidFieldOffsetTag,
+  PROTOBUF_FIELD_OFFSET(::substrait::extensions::SimpleExtensionDeclaration, mapping_type_),
   ~0u,  // no _has_bits_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::substrait::extensions::AdvancedExtension, _internal_metadata_),
+  PROTOBUF_FIELD_OFFSET(::substrait::extensions::AdvancedExtension, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::substrait::extensions::AdvancedExtension, optimization_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::substrait::extensions::AdvancedExtension, enhancement_),
+  ~0u,  // no _inlined_string_donated_
+  PROTOBUF_FIELD_OFFSET(::substrait::extensions::AdvancedExtension, optimization_),
+  PROTOBUF_FIELD_OFFSET(::substrait::extensions::AdvancedExtension, enhancement_),
 };
-static const ::google::protobuf::internal::MigrationSchema schemas[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
-  { 0, -1, sizeof(::substrait::extensions::SimpleExtensionURI)},
-  { 7, -1, sizeof(::substrait::extensions::SimpleExtensionDeclaration_ExtensionType)},
-  { 15, -1, sizeof(::substrait::extensions::SimpleExtensionDeclaration_ExtensionTypeVariation)},
-  { 23, -1, sizeof(::substrait::extensions::SimpleExtensionDeclaration_ExtensionFunction)},
-  { 31, -1, sizeof(::substrait::extensions::SimpleExtensionDeclaration)},
-  { 40, -1, sizeof(::substrait::extensions::AdvancedExtension)},
+static const ::PROTOBUF_NAMESPACE_ID::internal::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
+  { 0, -1, -1, sizeof(::substrait::extensions::SimpleExtensionURI)},
+  { 8, -1, -1, sizeof(::substrait::extensions::SimpleExtensionDeclaration_ExtensionType)},
+  { 17, -1, -1, sizeof(::substrait::extensions::SimpleExtensionDeclaration_ExtensionTypeVariation)},
+  { 26, -1, -1, sizeof(::substrait::extensions::SimpleExtensionDeclaration_ExtensionFunction)},
+  { 35, -1, -1, sizeof(::substrait::extensions::SimpleExtensionDeclaration)},
+  { 45, -1, -1, sizeof(::substrait::extensions::AdvancedExtension)},
 };
 
-static ::google::protobuf::Message const * const file_default_instances[] = {
-  reinterpret_cast<const ::google::protobuf::Message*>(&::substrait::extensions::_SimpleExtensionURI_default_instance_),
-  reinterpret_cast<const ::google::protobuf::Message*>(&::substrait::extensions::_SimpleExtensionDeclaration_ExtensionType_default_instance_),
-  reinterpret_cast<const ::google::protobuf::Message*>(&::substrait::extensions::_SimpleExtensionDeclaration_ExtensionTypeVariation_default_instance_),
-  reinterpret_cast<const ::google::protobuf::Message*>(&::substrait::extensions::_SimpleExtensionDeclaration_ExtensionFunction_default_instance_),
-  reinterpret_cast<const ::google::protobuf::Message*>(&::substrait::extensions::_SimpleExtensionDeclaration_default_instance_),
-  reinterpret_cast<const ::google::protobuf::Message*>(&::substrait::extensions::_AdvancedExtension_default_instance_),
+static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] = {
+  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::substrait::extensions::_SimpleExtensionURI_default_instance_),
+  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::substrait::extensions::_SimpleExtensionDeclaration_ExtensionType_default_instance_),
+  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::substrait::extensions::_SimpleExtensionDeclaration_ExtensionTypeVariation_default_instance_),
+  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::substrait::extensions::_SimpleExtensionDeclaration_ExtensionFunction_default_instance_),
+  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::substrait::extensions::_SimpleExtensionDeclaration_default_instance_),
+  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::substrait::extensions::_AdvancedExtension_default_instance_),
 };
 
-void protobuf_AssignDescriptors() {
-  AddDescriptors();
-  AssignDescriptors(
-      "substrait/extensions/extensions.proto", schemas, file_default_instances, TableStruct::offsets,
-      file_level_metadata, NULL, NULL);
+const char descriptor_table_protodef_substrait_2fextensions_2fextensions_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) =
+  "\n%substrait/extensions/extensions.proto\022"
+  "\024substrait.extensions\032\031google/protobuf/a"
+  "ny.proto\"\?\n\022SimpleExtensionURI\022\034\n\024extens"
+  "ion_uri_anchor\030\001 \001(\r\022\013\n\003uri\030\002 \001(\t\"\357\004\n\032Si"
+  "mpleExtensionDeclaration\022X\n\016extension_ty"
+  "pe\030\001 \001(\0132>.substrait.extensions.SimpleEx"
+  "tensionDeclaration.ExtensionTypeH\000\022k\n\030ex"
+  "tension_type_variation\030\002 \001(\0132G.substrait"
+  ".extensions.SimpleExtensionDeclaration.E"
+  "xtensionTypeVariationH\000\022`\n\022extension_fun"
+  "ction\030\003 \001(\0132B.substrait.extensions.Simpl"
+  "eExtensionDeclaration.ExtensionFunctionH"
+  "\000\032S\n\rExtensionType\022\037\n\027extension_uri_refe"
+  "rence\030\001 \001(\r\022\023\n\013type_anchor\030\002 \001(\r\022\014\n\004name"
+  "\030\003 \001(\t\032f\n\026ExtensionTypeVariation\022\037\n\027exte"
+  "nsion_uri_reference\030\001 \001(\r\022\035\n\025type_variat"
+  "ion_anchor\030\002 \001(\r\022\014\n\004name\030\003 \001(\t\032[\n\021Extens"
+  "ionFunction\022\037\n\027extension_uri_reference\030\001"
+  " \001(\r\022\027\n\017function_anchor\030\002 \001(\r\022\014\n\004name\030\003 "
+  "\001(\tB\016\n\014mapping_type\"j\n\021AdvancedExtension"
+  "\022*\n\014optimization\030\001 \001(\0132\024.google.protobuf"
+  ".Any\022)\n\013enhancement\030\002 \001(\0132\024.google.proto"
+  "buf.AnyBb\n\022io.substrait.protoP\001Z5github."
+  "com/substrait-io/substrait-go/proto/exte"
+  "nsions\252\002\022Substrait.Protobufb\006proto3"
+  ;
+static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor_table_substrait_2fextensions_2fextensions_2eproto_deps[1] = {
+  &::descriptor_table_google_2fprotobuf_2fany_2eproto,
+};
+static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_substrait_2fextensions_2fextensions_2eproto_once;
+const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_substrait_2fextensions_2fextensions_2eproto = {
+  false, false, 995, descriptor_table_protodef_substrait_2fextensions_2fextensions_2eproto, "substrait/extensions/extensions.proto", 
+  &descriptor_table_substrait_2fextensions_2fextensions_2eproto_once, descriptor_table_substrait_2fextensions_2fextensions_2eproto_deps, 1, 6,
+  schemas, file_default_instances, TableStruct_substrait_2fextensions_2fextensions_2eproto::offsets,
+  file_level_metadata_substrait_2fextensions_2fextensions_2eproto, file_level_enum_descriptors_substrait_2fextensions_2fextensions_2eproto, file_level_service_descriptors_substrait_2fextensions_2fextensions_2eproto,
+};
+PROTOBUF_ATTRIBUTE_WEAK const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable* descriptor_table_substrait_2fextensions_2fextensions_2eproto_getter() {
+  return &descriptor_table_substrait_2fextensions_2fextensions_2eproto;
 }
 
-void protobuf_AssignDescriptorsOnce() {
-  static ::google::protobuf::internal::once_flag once;
-  ::google::protobuf::internal::call_once(once, protobuf_AssignDescriptors);
-}
-
-void protobuf_RegisterTypes(const ::std::string&) GOOGLE_PROTOBUF_ATTRIBUTE_COLD;
-void protobuf_RegisterTypes(const ::std::string&) {
-  protobuf_AssignDescriptorsOnce();
-  ::google::protobuf::internal::RegisterAllTypes(file_level_metadata, 6);
-}
-
-void AddDescriptorsImpl() {
-  InitDefaults();
-  static const char descriptor[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
-      "\n%substrait/extensions/extensions.proto\022"
-      "\024substrait.extensions\032\031google/protobuf/a"
-      "ny.proto\"\?\n\022SimpleExtensionURI\022\034\n\024extens"
-      "ion_uri_anchor\030\001 \001(\r\022\013\n\003uri\030\002 \001(\t\"\357\004\n\032Si"
-      "mpleExtensionDeclaration\022X\n\016extension_ty"
-      "pe\030\001 \001(\0132>.substrait.extensions.SimpleEx"
-      "tensionDeclaration.ExtensionTypeH\000\022k\n\030ex"
-      "tension_type_variation\030\002 \001(\0132G.substrait"
-      ".extensions.SimpleExtensionDeclaration.E"
-      "xtensionTypeVariationH\000\022`\n\022extension_fun"
-      "ction\030\003 \001(\0132B.substrait.extensions.Simpl"
-      "eExtensionDeclaration.ExtensionFunctionH"
-      "\000\032S\n\rExtensionType\022\037\n\027extension_uri_refe"
-      "rence\030\001 \001(\r\022\023\n\013type_anchor\030\002 \001(\r\022\014\n\004name"
-      "\030\003 \001(\t\032f\n\026ExtensionTypeVariation\022\037\n\027exte"
-      "nsion_uri_reference\030\001 \001(\r\022\035\n\025type_variat"
-      "ion_anchor\030\002 \001(\r\022\014\n\004name\030\003 \001(\t\032[\n\021Extens"
-      "ionFunction\022\037\n\027extension_uri_reference\030\001"
-      " \001(\r\022\027\n\017function_anchor\030\002 \001(\r\022\014\n\004name\030\003 "
-      "\001(\tB\016\n\014mapping_type\"j\n\021AdvancedExtension"
-      "\022*\n\014optimization\030\001 \001(\0132\024.google.protobuf"
-      ".Any\022)\n\013enhancement\030\002 \001(\0132\024.google.proto"
-      "buf.AnyBb\n\022io.substrait.protoP\001Z5github."
-      "com/substrait-io/substrait-go/proto/exte"
-      "nsions\252\002\022Substrait.Protobufb\006proto3"
-  };
-  ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-      descriptor, 995);
-  ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
-    "substrait/extensions/extensions.proto", &protobuf_RegisterTypes);
-  ::protobuf_google_2fprotobuf_2fany_2eproto::AddDescriptors();
-}
-
-void AddDescriptors() {
-  static ::google::protobuf::internal::once_flag once;
-  ::google::protobuf::internal::call_once(once, AddDescriptorsImpl);
-}
-// Force AddDescriptors() to be called at dynamic initialization time.
-struct StaticDescriptorInitializer {
-  StaticDescriptorInitializer() {
-    AddDescriptors();
-  }
-} static_descriptor_initializer;
-}  // namespace protobuf_substrait_2fextensions_2fextensions_2eproto
+// Force running AddDescriptors() at dynamic initialization time.
+PROTOBUF_ATTRIBUTE_INIT_PRIORITY static ::PROTOBUF_NAMESPACE_ID::internal::AddDescriptorsRunner dynamic_init_dummy_substrait_2fextensions_2fextensions_2eproto(&descriptor_table_substrait_2fextensions_2fextensions_2eproto);
 namespace substrait {
 namespace extensions {
 
 // ===================================================================
 
-void SimpleExtensionURI::InitAsDefaultInstance() {
-}
-#if !defined(_MSC_VER) || _MSC_VER >= 1900
-const int SimpleExtensionURI::kExtensionUriAnchorFieldNumber;
-const int SimpleExtensionURI::kUriFieldNumber;
-#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
+class SimpleExtensionURI::_Internal {
+ public:
+};
 
-SimpleExtensionURI::SimpleExtensionURI()
-  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
-  ::google::protobuf::internal::InitSCC(
-      &protobuf_substrait_2fextensions_2fextensions_2eproto::scc_info_SimpleExtensionURI.base);
+SimpleExtensionURI::SimpleExtensionURI(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                         bool is_message_owned)
+  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
   SharedCtor();
-  // @@protoc_insertion_point(constructor:substrait.extensions.SimpleExtensionURI)
+  if (!is_message_owned) {
+    RegisterArenaDtor(arena);
+  }
+  // @@protoc_insertion_point(arena_constructor:substrait.extensions.SimpleExtensionURI)
 }
 SimpleExtensionURI::SimpleExtensionURI(const SimpleExtensionURI& from)
-  : ::google::protobuf::Message(),
-      _internal_metadata_(NULL) {
-  _internal_metadata_.MergeFrom(from._internal_metadata_);
-  uri_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  if (from.uri().size() > 0) {
-    uri_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.uri_);
+  : ::PROTOBUF_NAMESPACE_ID::Message() {
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  uri_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    uri_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), "", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  if (!from._internal_uri().empty()) {
+    uri_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, from._internal_uri(), 
+      GetArenaForAllocation());
   }
   extension_uri_anchor_ = from.extension_uri_anchor_;
   // @@protoc_insertion_point(copy_constructor:substrait.extensions.SimpleExtensionURI)
 }
 
-void SimpleExtensionURI::SharedCtor() {
-  uri_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  extension_uri_anchor_ = 0u;
+inline void SimpleExtensionURI::SharedCtor() {
+uri_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  uri_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), "", GetArenaForAllocation());
+#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+extension_uri_anchor_ = 0u;
 }
 
 SimpleExtensionURI::~SimpleExtensionURI() {
   // @@protoc_insertion_point(destructor:substrait.extensions.SimpleExtensionURI)
+  if (GetArenaForAllocation() != nullptr) return;
   SharedDtor();
+  _internal_metadata_.Delete<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
-void SimpleExtensionURI::SharedDtor() {
-  uri_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+inline void SimpleExtensionURI::SharedDtor() {
+  GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
+  uri_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
 
+void SimpleExtensionURI::ArenaDtor(void* object) {
+  SimpleExtensionURI* _this = reinterpret_cast< SimpleExtensionURI* >(object);
+  (void)_this;
+}
+void SimpleExtensionURI::RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena*) {
+}
 void SimpleExtensionURI::SetCachedSize(int size) const {
   _cached_size_.Set(size);
 }
-const ::google::protobuf::Descriptor* SimpleExtensionURI::descriptor() {
-  ::protobuf_substrait_2fextensions_2fextensions_2eproto::protobuf_AssignDescriptorsOnce();
-  return ::protobuf_substrait_2fextensions_2fextensions_2eproto::file_level_metadata[kIndexInFileMessages].descriptor;
-}
-
-const SimpleExtensionURI& SimpleExtensionURI::default_instance() {
-  ::google::protobuf::internal::InitSCC(&protobuf_substrait_2fextensions_2fextensions_2eproto::scc_info_SimpleExtensionURI.base);
-  return *internal_default_instance();
-}
-
 
 void SimpleExtensionURI::Clear() {
 // @@protoc_insertion_point(message_clear_start:substrait.extensions.SimpleExtensionURI)
-  ::google::protobuf::uint32 cached_has_bits = 0;
+  uint32_t cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  uri_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  uri_.ClearToEmpty();
   extension_uri_anchor_ = 0u;
-  _internal_metadata_.Clear();
+  _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
-bool SimpleExtensionURI::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:substrait.extensions.SimpleExtensionURI)
-  for (;;) {
-    ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+const char* SimpleExtensionURI::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
+#define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
+  while (!ctx->Done(&ptr)) {
+    uint32_t tag;
+    ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
+    switch (tag >> 3) {
       // uint32 extension_uri_anchor = 1;
-      case 1: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(8u /* 8 & 0xFF */)) {
-
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
-                 input, &extension_uri_anchor_)));
-        } else {
+      case 1:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 8)) {
+          extension_uri_anchor_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+          CHK_(ptr);
+        } else
           goto handle_unusual;
-        }
-        break;
-      }
-
+        continue;
       // string uri = 2;
-      case 2: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(18u /* 18 & 0xFF */)) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_uri()));
-          DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-            this->uri().data(), static_cast<int>(this->uri().length()),
-            ::google::protobuf::internal::WireFormatLite::PARSE,
-            "substrait.extensions.SimpleExtensionURI.uri"));
-        } else {
+      case 2:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 18)) {
+          auto str = _internal_mutable_uri();
+          ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
+          CHK_(::PROTOBUF_NAMESPACE_ID::internal::VerifyUTF8(str, "substrait.extensions.SimpleExtensionURI.uri"));
+          CHK_(ptr);
+        } else
           goto handle_unusual;
-        }
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, _internal_metadata_.mutable_unknown_fields()));
-        break;
-      }
+        continue;
+      default:
+        goto handle_unusual;
+    }  // switch
+  handle_unusual:
+    if ((tag == 0) || ((tag & 7) == 4)) {
+      CHK_(ptr);
+      ctx->SetLastTag(tag);
+      goto message_done;
     }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:substrait.extensions.SimpleExtensionURI)
-  return true;
+    ptr = UnknownFieldParse(
+        tag,
+        _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
+        ptr, ctx);
+    CHK_(ptr != nullptr);
+  }  // while
+message_done:
+  return ptr;
 failure:
-  // @@protoc_insertion_point(parse_failure:substrait.extensions.SimpleExtensionURI)
-  return false;
-#undef DO_
+  ptr = nullptr;
+  goto message_done;
+#undef CHK_
 }
 
-void SimpleExtensionURI::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:substrait.extensions.SimpleExtensionURI)
-  ::google::protobuf::uint32 cached_has_bits = 0;
-  (void) cached_has_bits;
-
-  // uint32 extension_uri_anchor = 1;
-  if (this->extension_uri_anchor() != 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt32(1, this->extension_uri_anchor(), output);
-  }
-
-  // string uri = 2;
-  if (this->uri().size() > 0) {
-    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-      this->uri().data(), static_cast<int>(this->uri().length()),
-      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
-      "substrait.extensions.SimpleExtensionURI.uri");
-    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
-      2, this->uri(), output);
-  }
-
-  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), output);
-  }
-  // @@protoc_insertion_point(serialize_end:substrait.extensions.SimpleExtensionURI)
-}
-
-::google::protobuf::uint8* SimpleExtensionURI::InternalSerializeWithCachedSizesToArray(
-    bool deterministic, ::google::protobuf::uint8* target) const {
-  (void)deterministic; // Unused
+uint8_t* SimpleExtensionURI::_InternalSerialize(
+    uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
   // @@protoc_insertion_point(serialize_to_array_start:substrait.extensions.SimpleExtensionURI)
-  ::google::protobuf::uint32 cached_has_bits = 0;
+  uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
   // uint32 extension_uri_anchor = 1;
-  if (this->extension_uri_anchor() != 0) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(1, this->extension_uri_anchor(), target);
+  if (this->_internal_extension_uri_anchor() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteUInt32ToArray(1, this->_internal_extension_uri_anchor(), target);
   }
 
   // string uri = 2;
-  if (this->uri().size() > 0) {
-    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-      this->uri().data(), static_cast<int>(this->uri().length()),
-      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+  if (!this->_internal_uri().empty()) {
+    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
+      this->_internal_uri().data(), static_cast<int>(this->_internal_uri().length()),
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
       "substrait.extensions.SimpleExtensionURI.uri");
-    target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        2, this->uri(), target);
+    target = stream->WriteStringMaybeAliased(
+        2, this->_internal_uri(), target);
   }
 
-  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), target);
+  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
+        _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
   }
   // @@protoc_insertion_point(serialize_to_array_end:substrait.extensions.SimpleExtensionURI)
   return target;
@@ -489,66 +375,51 @@ size_t SimpleExtensionURI::ByteSizeLong() const {
 // @@protoc_insertion_point(message_byte_size_start:substrait.extensions.SimpleExtensionURI)
   size_t total_size = 0;
 
-  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()));
-  }
+  uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
   // string uri = 2;
-  if (this->uri().size() > 0) {
+  if (!this->_internal_uri().empty()) {
     total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::StringSize(
-        this->uri());
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
+        this->_internal_uri());
   }
 
   // uint32 extension_uri_anchor = 1;
-  if (this->extension_uri_anchor() != 0) {
-    total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::UInt32Size(
-        this->extension_uri_anchor());
+  if (this->_internal_extension_uri_anchor() != 0) {
+    total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::UInt32SizePlusOne(this->_internal_extension_uri_anchor());
   }
 
-  int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
-  SetCachedSize(cached_size);
-  return total_size;
+  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
 }
 
-void SimpleExtensionURI::MergeFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:substrait.extensions.SimpleExtensionURI)
-  GOOGLE_DCHECK_NE(&from, this);
-  const SimpleExtensionURI* source =
-      ::google::protobuf::internal::DynamicCastToGenerated<const SimpleExtensionURI>(
-          &from);
-  if (source == NULL) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:substrait.extensions.SimpleExtensionURI)
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:substrait.extensions.SimpleExtensionURI)
-    MergeFrom(*source);
-  }
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData SimpleExtensionURI::_class_data_ = {
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    SimpleExtensionURI::MergeImpl
+};
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*SimpleExtensionURI::GetClassData() const { return &_class_data_; }
+
+void SimpleExtensionURI::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
+                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
+  static_cast<SimpleExtensionURI *>(to)->MergeFrom(
+      static_cast<const SimpleExtensionURI &>(from));
 }
+
 
 void SimpleExtensionURI::MergeFrom(const SimpleExtensionURI& from) {
 // @@protoc_insertion_point(class_specific_merge_from_start:substrait.extensions.SimpleExtensionURI)
   GOOGLE_DCHECK_NE(&from, this);
-  _internal_metadata_.MergeFrom(from._internal_metadata_);
-  ::google::protobuf::uint32 cached_has_bits = 0;
+  uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
-  if (from.uri().size() > 0) {
-
-    uri_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.uri_);
+  if (!from._internal_uri().empty()) {
+    _internal_set_uri(from._internal_uri());
   }
-  if (from.extension_uri_anchor() != 0) {
-    set_extension_uri_anchor(from.extension_uri_anchor());
+  if (from._internal_extension_uri_anchor() != 0) {
+    _internal_set_extension_uri_anchor(from._internal_extension_uri_anchor());
   }
-}
-
-void SimpleExtensionURI::CopyFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:substrait.extensions.SimpleExtensionURI)
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void SimpleExtensionURI::CopyFrom(const SimpleExtensionURI& from) {
@@ -562,48 +433,50 @@ bool SimpleExtensionURI::IsInitialized() const {
   return true;
 }
 
-void SimpleExtensionURI::Swap(SimpleExtensionURI* other) {
-  if (other == this) return;
-  InternalSwap(other);
-}
 void SimpleExtensionURI::InternalSwap(SimpleExtensionURI* other) {
   using std::swap;
-  uri_.Swap(&other->uri_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
-    GetArenaNoVirtual());
+  auto* lhs_arena = GetArenaForAllocation();
+  auto* rhs_arena = other->GetArenaForAllocation();
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
+      &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
+      &uri_, lhs_arena,
+      &other->uri_, rhs_arena
+  );
   swap(extension_uri_anchor_, other->extension_uri_anchor_);
-  _internal_metadata_.Swap(&other->_internal_metadata_);
 }
 
-::google::protobuf::Metadata SimpleExtensionURI::GetMetadata() const {
-  protobuf_substrait_2fextensions_2fextensions_2eproto::protobuf_AssignDescriptorsOnce();
-  return ::protobuf_substrait_2fextensions_2fextensions_2eproto::file_level_metadata[kIndexInFileMessages];
+::PROTOBUF_NAMESPACE_ID::Metadata SimpleExtensionURI::GetMetadata() const {
+  return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
+      &descriptor_table_substrait_2fextensions_2fextensions_2eproto_getter, &descriptor_table_substrait_2fextensions_2fextensions_2eproto_once,
+      file_level_metadata_substrait_2fextensions_2fextensions_2eproto[0]);
 }
-
 
 // ===================================================================
 
-void SimpleExtensionDeclaration_ExtensionType::InitAsDefaultInstance() {
-}
-#if !defined(_MSC_VER) || _MSC_VER >= 1900
-const int SimpleExtensionDeclaration_ExtensionType::kExtensionUriReferenceFieldNumber;
-const int SimpleExtensionDeclaration_ExtensionType::kTypeAnchorFieldNumber;
-const int SimpleExtensionDeclaration_ExtensionType::kNameFieldNumber;
-#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
+class SimpleExtensionDeclaration_ExtensionType::_Internal {
+ public:
+};
 
-SimpleExtensionDeclaration_ExtensionType::SimpleExtensionDeclaration_ExtensionType()
-  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
-  ::google::protobuf::internal::InitSCC(
-      &protobuf_substrait_2fextensions_2fextensions_2eproto::scc_info_SimpleExtensionDeclaration_ExtensionType.base);
+SimpleExtensionDeclaration_ExtensionType::SimpleExtensionDeclaration_ExtensionType(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                         bool is_message_owned)
+  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
   SharedCtor();
-  // @@protoc_insertion_point(constructor:substrait.extensions.SimpleExtensionDeclaration.ExtensionType)
+  if (!is_message_owned) {
+    RegisterArenaDtor(arena);
+  }
+  // @@protoc_insertion_point(arena_constructor:substrait.extensions.SimpleExtensionDeclaration.ExtensionType)
 }
 SimpleExtensionDeclaration_ExtensionType::SimpleExtensionDeclaration_ExtensionType(const SimpleExtensionDeclaration_ExtensionType& from)
-  : ::google::protobuf::Message(),
-      _internal_metadata_(NULL) {
-  _internal_metadata_.MergeFrom(from._internal_metadata_);
-  name_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  if (from.name().size() > 0) {
-    name_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.name_);
+  : ::PROTOBUF_NAMESPACE_ID::Message() {
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  name_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    name_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), "", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  if (!from._internal_name().empty()) {
+    name_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, from._internal_name(), 
+      GetArenaForAllocation());
   }
   ::memcpy(&extension_uri_reference_, &from.extension_uri_reference_,
     static_cast<size_t>(reinterpret_cast<char*>(&type_anchor_) -
@@ -611,187 +484,138 @@ SimpleExtensionDeclaration_ExtensionType::SimpleExtensionDeclaration_ExtensionTy
   // @@protoc_insertion_point(copy_constructor:substrait.extensions.SimpleExtensionDeclaration.ExtensionType)
 }
 
-void SimpleExtensionDeclaration_ExtensionType::SharedCtor() {
-  name_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  ::memset(&extension_uri_reference_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&type_anchor_) -
-      reinterpret_cast<char*>(&extension_uri_reference_)) + sizeof(type_anchor_));
+inline void SimpleExtensionDeclaration_ExtensionType::SharedCtor() {
+name_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  name_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), "", GetArenaForAllocation());
+#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
+    reinterpret_cast<char*>(&extension_uri_reference_) - reinterpret_cast<char*>(this)),
+    0, static_cast<size_t>(reinterpret_cast<char*>(&type_anchor_) -
+    reinterpret_cast<char*>(&extension_uri_reference_)) + sizeof(type_anchor_));
 }
 
 SimpleExtensionDeclaration_ExtensionType::~SimpleExtensionDeclaration_ExtensionType() {
   // @@protoc_insertion_point(destructor:substrait.extensions.SimpleExtensionDeclaration.ExtensionType)
+  if (GetArenaForAllocation() != nullptr) return;
   SharedDtor();
+  _internal_metadata_.Delete<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
-void SimpleExtensionDeclaration_ExtensionType::SharedDtor() {
-  name_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+inline void SimpleExtensionDeclaration_ExtensionType::SharedDtor() {
+  GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
+  name_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
 
+void SimpleExtensionDeclaration_ExtensionType::ArenaDtor(void* object) {
+  SimpleExtensionDeclaration_ExtensionType* _this = reinterpret_cast< SimpleExtensionDeclaration_ExtensionType* >(object);
+  (void)_this;
+}
+void SimpleExtensionDeclaration_ExtensionType::RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena*) {
+}
 void SimpleExtensionDeclaration_ExtensionType::SetCachedSize(int size) const {
   _cached_size_.Set(size);
 }
-const ::google::protobuf::Descriptor* SimpleExtensionDeclaration_ExtensionType::descriptor() {
-  ::protobuf_substrait_2fextensions_2fextensions_2eproto::protobuf_AssignDescriptorsOnce();
-  return ::protobuf_substrait_2fextensions_2fextensions_2eproto::file_level_metadata[kIndexInFileMessages].descriptor;
-}
-
-const SimpleExtensionDeclaration_ExtensionType& SimpleExtensionDeclaration_ExtensionType::default_instance() {
-  ::google::protobuf::internal::InitSCC(&protobuf_substrait_2fextensions_2fextensions_2eproto::scc_info_SimpleExtensionDeclaration_ExtensionType.base);
-  return *internal_default_instance();
-}
-
 
 void SimpleExtensionDeclaration_ExtensionType::Clear() {
 // @@protoc_insertion_point(message_clear_start:substrait.extensions.SimpleExtensionDeclaration.ExtensionType)
-  ::google::protobuf::uint32 cached_has_bits = 0;
+  uint32_t cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  name_.ClearToEmpty();
   ::memset(&extension_uri_reference_, 0, static_cast<size_t>(
       reinterpret_cast<char*>(&type_anchor_) -
       reinterpret_cast<char*>(&extension_uri_reference_)) + sizeof(type_anchor_));
-  _internal_metadata_.Clear();
+  _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
-bool SimpleExtensionDeclaration_ExtensionType::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:substrait.extensions.SimpleExtensionDeclaration.ExtensionType)
-  for (;;) {
-    ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+const char* SimpleExtensionDeclaration_ExtensionType::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
+#define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
+  while (!ctx->Done(&ptr)) {
+    uint32_t tag;
+    ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
+    switch (tag >> 3) {
       // uint32 extension_uri_reference = 1;
-      case 1: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(8u /* 8 & 0xFF */)) {
-
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
-                 input, &extension_uri_reference_)));
-        } else {
+      case 1:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 8)) {
+          extension_uri_reference_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+          CHK_(ptr);
+        } else
           goto handle_unusual;
-        }
-        break;
-      }
-
+        continue;
       // uint32 type_anchor = 2;
-      case 2: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(16u /* 16 & 0xFF */)) {
-
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
-                 input, &type_anchor_)));
-        } else {
+      case 2:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 16)) {
+          type_anchor_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+          CHK_(ptr);
+        } else
           goto handle_unusual;
-        }
-        break;
-      }
-
+        continue;
       // string name = 3;
-      case 3: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(26u /* 26 & 0xFF */)) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_name()));
-          DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-            this->name().data(), static_cast<int>(this->name().length()),
-            ::google::protobuf::internal::WireFormatLite::PARSE,
-            "substrait.extensions.SimpleExtensionDeclaration.ExtensionType.name"));
-        } else {
+      case 3:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 26)) {
+          auto str = _internal_mutable_name();
+          ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
+          CHK_(::PROTOBUF_NAMESPACE_ID::internal::VerifyUTF8(str, "substrait.extensions.SimpleExtensionDeclaration.ExtensionType.name"));
+          CHK_(ptr);
+        } else
           goto handle_unusual;
-        }
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, _internal_metadata_.mutable_unknown_fields()));
-        break;
-      }
+        continue;
+      default:
+        goto handle_unusual;
+    }  // switch
+  handle_unusual:
+    if ((tag == 0) || ((tag & 7) == 4)) {
+      CHK_(ptr);
+      ctx->SetLastTag(tag);
+      goto message_done;
     }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:substrait.extensions.SimpleExtensionDeclaration.ExtensionType)
-  return true;
+    ptr = UnknownFieldParse(
+        tag,
+        _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
+        ptr, ctx);
+    CHK_(ptr != nullptr);
+  }  // while
+message_done:
+  return ptr;
 failure:
-  // @@protoc_insertion_point(parse_failure:substrait.extensions.SimpleExtensionDeclaration.ExtensionType)
-  return false;
-#undef DO_
+  ptr = nullptr;
+  goto message_done;
+#undef CHK_
 }
 
-void SimpleExtensionDeclaration_ExtensionType::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:substrait.extensions.SimpleExtensionDeclaration.ExtensionType)
-  ::google::protobuf::uint32 cached_has_bits = 0;
-  (void) cached_has_bits;
-
-  // uint32 extension_uri_reference = 1;
-  if (this->extension_uri_reference() != 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt32(1, this->extension_uri_reference(), output);
-  }
-
-  // uint32 type_anchor = 2;
-  if (this->type_anchor() != 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt32(2, this->type_anchor(), output);
-  }
-
-  // string name = 3;
-  if (this->name().size() > 0) {
-    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-      this->name().data(), static_cast<int>(this->name().length()),
-      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
-      "substrait.extensions.SimpleExtensionDeclaration.ExtensionType.name");
-    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
-      3, this->name(), output);
-  }
-
-  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), output);
-  }
-  // @@protoc_insertion_point(serialize_end:substrait.extensions.SimpleExtensionDeclaration.ExtensionType)
-}
-
-::google::protobuf::uint8* SimpleExtensionDeclaration_ExtensionType::InternalSerializeWithCachedSizesToArray(
-    bool deterministic, ::google::protobuf::uint8* target) const {
-  (void)deterministic; // Unused
+uint8_t* SimpleExtensionDeclaration_ExtensionType::_InternalSerialize(
+    uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
   // @@protoc_insertion_point(serialize_to_array_start:substrait.extensions.SimpleExtensionDeclaration.ExtensionType)
-  ::google::protobuf::uint32 cached_has_bits = 0;
+  uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
   // uint32 extension_uri_reference = 1;
-  if (this->extension_uri_reference() != 0) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(1, this->extension_uri_reference(), target);
+  if (this->_internal_extension_uri_reference() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteUInt32ToArray(1, this->_internal_extension_uri_reference(), target);
   }
 
   // uint32 type_anchor = 2;
-  if (this->type_anchor() != 0) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(2, this->type_anchor(), target);
+  if (this->_internal_type_anchor() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteUInt32ToArray(2, this->_internal_type_anchor(), target);
   }
 
   // string name = 3;
-  if (this->name().size() > 0) {
-    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-      this->name().data(), static_cast<int>(this->name().length()),
-      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+  if (!this->_internal_name().empty()) {
+    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
+      this->_internal_name().data(), static_cast<int>(this->_internal_name().length()),
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
       "substrait.extensions.SimpleExtensionDeclaration.ExtensionType.name");
-    target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        3, this->name(), target);
+    target = stream->WriteStringMaybeAliased(
+        3, this->_internal_name(), target);
   }
 
-  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), target);
+  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
+        _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
   }
   // @@protoc_insertion_point(serialize_to_array_end:substrait.extensions.SimpleExtensionDeclaration.ExtensionType)
   return target;
@@ -801,76 +625,59 @@ size_t SimpleExtensionDeclaration_ExtensionType::ByteSizeLong() const {
 // @@protoc_insertion_point(message_byte_size_start:substrait.extensions.SimpleExtensionDeclaration.ExtensionType)
   size_t total_size = 0;
 
-  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()));
-  }
+  uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
   // string name = 3;
-  if (this->name().size() > 0) {
+  if (!this->_internal_name().empty()) {
     total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::StringSize(
-        this->name());
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
+        this->_internal_name());
   }
 
   // uint32 extension_uri_reference = 1;
-  if (this->extension_uri_reference() != 0) {
-    total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::UInt32Size(
-        this->extension_uri_reference());
+  if (this->_internal_extension_uri_reference() != 0) {
+    total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::UInt32SizePlusOne(this->_internal_extension_uri_reference());
   }
 
   // uint32 type_anchor = 2;
-  if (this->type_anchor() != 0) {
-    total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::UInt32Size(
-        this->type_anchor());
+  if (this->_internal_type_anchor() != 0) {
+    total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::UInt32SizePlusOne(this->_internal_type_anchor());
   }
 
-  int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
-  SetCachedSize(cached_size);
-  return total_size;
+  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
 }
 
-void SimpleExtensionDeclaration_ExtensionType::MergeFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:substrait.extensions.SimpleExtensionDeclaration.ExtensionType)
-  GOOGLE_DCHECK_NE(&from, this);
-  const SimpleExtensionDeclaration_ExtensionType* source =
-      ::google::protobuf::internal::DynamicCastToGenerated<const SimpleExtensionDeclaration_ExtensionType>(
-          &from);
-  if (source == NULL) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:substrait.extensions.SimpleExtensionDeclaration.ExtensionType)
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:substrait.extensions.SimpleExtensionDeclaration.ExtensionType)
-    MergeFrom(*source);
-  }
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData SimpleExtensionDeclaration_ExtensionType::_class_data_ = {
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    SimpleExtensionDeclaration_ExtensionType::MergeImpl
+};
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*SimpleExtensionDeclaration_ExtensionType::GetClassData() const { return &_class_data_; }
+
+void SimpleExtensionDeclaration_ExtensionType::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
+                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
+  static_cast<SimpleExtensionDeclaration_ExtensionType *>(to)->MergeFrom(
+      static_cast<const SimpleExtensionDeclaration_ExtensionType &>(from));
 }
+
 
 void SimpleExtensionDeclaration_ExtensionType::MergeFrom(const SimpleExtensionDeclaration_ExtensionType& from) {
 // @@protoc_insertion_point(class_specific_merge_from_start:substrait.extensions.SimpleExtensionDeclaration.ExtensionType)
   GOOGLE_DCHECK_NE(&from, this);
-  _internal_metadata_.MergeFrom(from._internal_metadata_);
-  ::google::protobuf::uint32 cached_has_bits = 0;
+  uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
-  if (from.name().size() > 0) {
-
-    name_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.name_);
+  if (!from._internal_name().empty()) {
+    _internal_set_name(from._internal_name());
   }
-  if (from.extension_uri_reference() != 0) {
-    set_extension_uri_reference(from.extension_uri_reference());
+  if (from._internal_extension_uri_reference() != 0) {
+    _internal_set_extension_uri_reference(from._internal_extension_uri_reference());
   }
-  if (from.type_anchor() != 0) {
-    set_type_anchor(from.type_anchor());
+  if (from._internal_type_anchor() != 0) {
+    _internal_set_type_anchor(from._internal_type_anchor());
   }
-}
-
-void SimpleExtensionDeclaration_ExtensionType::CopyFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:substrait.extensions.SimpleExtensionDeclaration.ExtensionType)
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void SimpleExtensionDeclaration_ExtensionType::CopyFrom(const SimpleExtensionDeclaration_ExtensionType& from) {
@@ -884,49 +691,55 @@ bool SimpleExtensionDeclaration_ExtensionType::IsInitialized() const {
   return true;
 }
 
-void SimpleExtensionDeclaration_ExtensionType::Swap(SimpleExtensionDeclaration_ExtensionType* other) {
-  if (other == this) return;
-  InternalSwap(other);
-}
 void SimpleExtensionDeclaration_ExtensionType::InternalSwap(SimpleExtensionDeclaration_ExtensionType* other) {
   using std::swap;
-  name_.Swap(&other->name_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
-    GetArenaNoVirtual());
-  swap(extension_uri_reference_, other->extension_uri_reference_);
-  swap(type_anchor_, other->type_anchor_);
-  _internal_metadata_.Swap(&other->_internal_metadata_);
+  auto* lhs_arena = GetArenaForAllocation();
+  auto* rhs_arena = other->GetArenaForAllocation();
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
+      &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
+      &name_, lhs_arena,
+      &other->name_, rhs_arena
+  );
+  ::PROTOBUF_NAMESPACE_ID::internal::memswap<
+      PROTOBUF_FIELD_OFFSET(SimpleExtensionDeclaration_ExtensionType, type_anchor_)
+      + sizeof(SimpleExtensionDeclaration_ExtensionType::type_anchor_)
+      - PROTOBUF_FIELD_OFFSET(SimpleExtensionDeclaration_ExtensionType, extension_uri_reference_)>(
+          reinterpret_cast<char*>(&extension_uri_reference_),
+          reinterpret_cast<char*>(&other->extension_uri_reference_));
 }
 
-::google::protobuf::Metadata SimpleExtensionDeclaration_ExtensionType::GetMetadata() const {
-  protobuf_substrait_2fextensions_2fextensions_2eproto::protobuf_AssignDescriptorsOnce();
-  return ::protobuf_substrait_2fextensions_2fextensions_2eproto::file_level_metadata[kIndexInFileMessages];
+::PROTOBUF_NAMESPACE_ID::Metadata SimpleExtensionDeclaration_ExtensionType::GetMetadata() const {
+  return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
+      &descriptor_table_substrait_2fextensions_2fextensions_2eproto_getter, &descriptor_table_substrait_2fextensions_2fextensions_2eproto_once,
+      file_level_metadata_substrait_2fextensions_2fextensions_2eproto[1]);
 }
-
 
 // ===================================================================
 
-void SimpleExtensionDeclaration_ExtensionTypeVariation::InitAsDefaultInstance() {
-}
-#if !defined(_MSC_VER) || _MSC_VER >= 1900
-const int SimpleExtensionDeclaration_ExtensionTypeVariation::kExtensionUriReferenceFieldNumber;
-const int SimpleExtensionDeclaration_ExtensionTypeVariation::kTypeVariationAnchorFieldNumber;
-const int SimpleExtensionDeclaration_ExtensionTypeVariation::kNameFieldNumber;
-#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
+class SimpleExtensionDeclaration_ExtensionTypeVariation::_Internal {
+ public:
+};
 
-SimpleExtensionDeclaration_ExtensionTypeVariation::SimpleExtensionDeclaration_ExtensionTypeVariation()
-  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
-  ::google::protobuf::internal::InitSCC(
-      &protobuf_substrait_2fextensions_2fextensions_2eproto::scc_info_SimpleExtensionDeclaration_ExtensionTypeVariation.base);
+SimpleExtensionDeclaration_ExtensionTypeVariation::SimpleExtensionDeclaration_ExtensionTypeVariation(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                         bool is_message_owned)
+  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
   SharedCtor();
-  // @@protoc_insertion_point(constructor:substrait.extensions.SimpleExtensionDeclaration.ExtensionTypeVariation)
+  if (!is_message_owned) {
+    RegisterArenaDtor(arena);
+  }
+  // @@protoc_insertion_point(arena_constructor:substrait.extensions.SimpleExtensionDeclaration.ExtensionTypeVariation)
 }
 SimpleExtensionDeclaration_ExtensionTypeVariation::SimpleExtensionDeclaration_ExtensionTypeVariation(const SimpleExtensionDeclaration_ExtensionTypeVariation& from)
-  : ::google::protobuf::Message(),
-      _internal_metadata_(NULL) {
-  _internal_metadata_.MergeFrom(from._internal_metadata_);
-  name_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  if (from.name().size() > 0) {
-    name_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.name_);
+  : ::PROTOBUF_NAMESPACE_ID::Message() {
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  name_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    name_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), "", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  if (!from._internal_name().empty()) {
+    name_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, from._internal_name(), 
+      GetArenaForAllocation());
   }
   ::memcpy(&extension_uri_reference_, &from.extension_uri_reference_,
     static_cast<size_t>(reinterpret_cast<char*>(&type_variation_anchor_) -
@@ -934,187 +747,138 @@ SimpleExtensionDeclaration_ExtensionTypeVariation::SimpleExtensionDeclaration_Ex
   // @@protoc_insertion_point(copy_constructor:substrait.extensions.SimpleExtensionDeclaration.ExtensionTypeVariation)
 }
 
-void SimpleExtensionDeclaration_ExtensionTypeVariation::SharedCtor() {
-  name_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  ::memset(&extension_uri_reference_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&type_variation_anchor_) -
-      reinterpret_cast<char*>(&extension_uri_reference_)) + sizeof(type_variation_anchor_));
+inline void SimpleExtensionDeclaration_ExtensionTypeVariation::SharedCtor() {
+name_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  name_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), "", GetArenaForAllocation());
+#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
+    reinterpret_cast<char*>(&extension_uri_reference_) - reinterpret_cast<char*>(this)),
+    0, static_cast<size_t>(reinterpret_cast<char*>(&type_variation_anchor_) -
+    reinterpret_cast<char*>(&extension_uri_reference_)) + sizeof(type_variation_anchor_));
 }
 
 SimpleExtensionDeclaration_ExtensionTypeVariation::~SimpleExtensionDeclaration_ExtensionTypeVariation() {
   // @@protoc_insertion_point(destructor:substrait.extensions.SimpleExtensionDeclaration.ExtensionTypeVariation)
+  if (GetArenaForAllocation() != nullptr) return;
   SharedDtor();
+  _internal_metadata_.Delete<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
-void SimpleExtensionDeclaration_ExtensionTypeVariation::SharedDtor() {
-  name_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+inline void SimpleExtensionDeclaration_ExtensionTypeVariation::SharedDtor() {
+  GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
+  name_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
 
+void SimpleExtensionDeclaration_ExtensionTypeVariation::ArenaDtor(void* object) {
+  SimpleExtensionDeclaration_ExtensionTypeVariation* _this = reinterpret_cast< SimpleExtensionDeclaration_ExtensionTypeVariation* >(object);
+  (void)_this;
+}
+void SimpleExtensionDeclaration_ExtensionTypeVariation::RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena*) {
+}
 void SimpleExtensionDeclaration_ExtensionTypeVariation::SetCachedSize(int size) const {
   _cached_size_.Set(size);
 }
-const ::google::protobuf::Descriptor* SimpleExtensionDeclaration_ExtensionTypeVariation::descriptor() {
-  ::protobuf_substrait_2fextensions_2fextensions_2eproto::protobuf_AssignDescriptorsOnce();
-  return ::protobuf_substrait_2fextensions_2fextensions_2eproto::file_level_metadata[kIndexInFileMessages].descriptor;
-}
-
-const SimpleExtensionDeclaration_ExtensionTypeVariation& SimpleExtensionDeclaration_ExtensionTypeVariation::default_instance() {
-  ::google::protobuf::internal::InitSCC(&protobuf_substrait_2fextensions_2fextensions_2eproto::scc_info_SimpleExtensionDeclaration_ExtensionTypeVariation.base);
-  return *internal_default_instance();
-}
-
 
 void SimpleExtensionDeclaration_ExtensionTypeVariation::Clear() {
 // @@protoc_insertion_point(message_clear_start:substrait.extensions.SimpleExtensionDeclaration.ExtensionTypeVariation)
-  ::google::protobuf::uint32 cached_has_bits = 0;
+  uint32_t cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  name_.ClearToEmpty();
   ::memset(&extension_uri_reference_, 0, static_cast<size_t>(
       reinterpret_cast<char*>(&type_variation_anchor_) -
       reinterpret_cast<char*>(&extension_uri_reference_)) + sizeof(type_variation_anchor_));
-  _internal_metadata_.Clear();
+  _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
-bool SimpleExtensionDeclaration_ExtensionTypeVariation::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:substrait.extensions.SimpleExtensionDeclaration.ExtensionTypeVariation)
-  for (;;) {
-    ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+const char* SimpleExtensionDeclaration_ExtensionTypeVariation::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
+#define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
+  while (!ctx->Done(&ptr)) {
+    uint32_t tag;
+    ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
+    switch (tag >> 3) {
       // uint32 extension_uri_reference = 1;
-      case 1: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(8u /* 8 & 0xFF */)) {
-
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
-                 input, &extension_uri_reference_)));
-        } else {
+      case 1:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 8)) {
+          extension_uri_reference_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+          CHK_(ptr);
+        } else
           goto handle_unusual;
-        }
-        break;
-      }
-
+        continue;
       // uint32 type_variation_anchor = 2;
-      case 2: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(16u /* 16 & 0xFF */)) {
-
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
-                 input, &type_variation_anchor_)));
-        } else {
+      case 2:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 16)) {
+          type_variation_anchor_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+          CHK_(ptr);
+        } else
           goto handle_unusual;
-        }
-        break;
-      }
-
+        continue;
       // string name = 3;
-      case 3: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(26u /* 26 & 0xFF */)) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_name()));
-          DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-            this->name().data(), static_cast<int>(this->name().length()),
-            ::google::protobuf::internal::WireFormatLite::PARSE,
-            "substrait.extensions.SimpleExtensionDeclaration.ExtensionTypeVariation.name"));
-        } else {
+      case 3:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 26)) {
+          auto str = _internal_mutable_name();
+          ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
+          CHK_(::PROTOBUF_NAMESPACE_ID::internal::VerifyUTF8(str, "substrait.extensions.SimpleExtensionDeclaration.ExtensionTypeVariation.name"));
+          CHK_(ptr);
+        } else
           goto handle_unusual;
-        }
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, _internal_metadata_.mutable_unknown_fields()));
-        break;
-      }
+        continue;
+      default:
+        goto handle_unusual;
+    }  // switch
+  handle_unusual:
+    if ((tag == 0) || ((tag & 7) == 4)) {
+      CHK_(ptr);
+      ctx->SetLastTag(tag);
+      goto message_done;
     }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:substrait.extensions.SimpleExtensionDeclaration.ExtensionTypeVariation)
-  return true;
+    ptr = UnknownFieldParse(
+        tag,
+        _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
+        ptr, ctx);
+    CHK_(ptr != nullptr);
+  }  // while
+message_done:
+  return ptr;
 failure:
-  // @@protoc_insertion_point(parse_failure:substrait.extensions.SimpleExtensionDeclaration.ExtensionTypeVariation)
-  return false;
-#undef DO_
+  ptr = nullptr;
+  goto message_done;
+#undef CHK_
 }
 
-void SimpleExtensionDeclaration_ExtensionTypeVariation::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:substrait.extensions.SimpleExtensionDeclaration.ExtensionTypeVariation)
-  ::google::protobuf::uint32 cached_has_bits = 0;
-  (void) cached_has_bits;
-
-  // uint32 extension_uri_reference = 1;
-  if (this->extension_uri_reference() != 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt32(1, this->extension_uri_reference(), output);
-  }
-
-  // uint32 type_variation_anchor = 2;
-  if (this->type_variation_anchor() != 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt32(2, this->type_variation_anchor(), output);
-  }
-
-  // string name = 3;
-  if (this->name().size() > 0) {
-    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-      this->name().data(), static_cast<int>(this->name().length()),
-      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
-      "substrait.extensions.SimpleExtensionDeclaration.ExtensionTypeVariation.name");
-    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
-      3, this->name(), output);
-  }
-
-  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), output);
-  }
-  // @@protoc_insertion_point(serialize_end:substrait.extensions.SimpleExtensionDeclaration.ExtensionTypeVariation)
-}
-
-::google::protobuf::uint8* SimpleExtensionDeclaration_ExtensionTypeVariation::InternalSerializeWithCachedSizesToArray(
-    bool deterministic, ::google::protobuf::uint8* target) const {
-  (void)deterministic; // Unused
+uint8_t* SimpleExtensionDeclaration_ExtensionTypeVariation::_InternalSerialize(
+    uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
   // @@protoc_insertion_point(serialize_to_array_start:substrait.extensions.SimpleExtensionDeclaration.ExtensionTypeVariation)
-  ::google::protobuf::uint32 cached_has_bits = 0;
+  uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
   // uint32 extension_uri_reference = 1;
-  if (this->extension_uri_reference() != 0) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(1, this->extension_uri_reference(), target);
+  if (this->_internal_extension_uri_reference() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteUInt32ToArray(1, this->_internal_extension_uri_reference(), target);
   }
 
   // uint32 type_variation_anchor = 2;
-  if (this->type_variation_anchor() != 0) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(2, this->type_variation_anchor(), target);
+  if (this->_internal_type_variation_anchor() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteUInt32ToArray(2, this->_internal_type_variation_anchor(), target);
   }
 
   // string name = 3;
-  if (this->name().size() > 0) {
-    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-      this->name().data(), static_cast<int>(this->name().length()),
-      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+  if (!this->_internal_name().empty()) {
+    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
+      this->_internal_name().data(), static_cast<int>(this->_internal_name().length()),
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
       "substrait.extensions.SimpleExtensionDeclaration.ExtensionTypeVariation.name");
-    target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        3, this->name(), target);
+    target = stream->WriteStringMaybeAliased(
+        3, this->_internal_name(), target);
   }
 
-  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), target);
+  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
+        _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
   }
   // @@protoc_insertion_point(serialize_to_array_end:substrait.extensions.SimpleExtensionDeclaration.ExtensionTypeVariation)
   return target;
@@ -1124,76 +888,59 @@ size_t SimpleExtensionDeclaration_ExtensionTypeVariation::ByteSizeLong() const {
 // @@protoc_insertion_point(message_byte_size_start:substrait.extensions.SimpleExtensionDeclaration.ExtensionTypeVariation)
   size_t total_size = 0;
 
-  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()));
-  }
+  uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
   // string name = 3;
-  if (this->name().size() > 0) {
+  if (!this->_internal_name().empty()) {
     total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::StringSize(
-        this->name());
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
+        this->_internal_name());
   }
 
   // uint32 extension_uri_reference = 1;
-  if (this->extension_uri_reference() != 0) {
-    total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::UInt32Size(
-        this->extension_uri_reference());
+  if (this->_internal_extension_uri_reference() != 0) {
+    total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::UInt32SizePlusOne(this->_internal_extension_uri_reference());
   }
 
   // uint32 type_variation_anchor = 2;
-  if (this->type_variation_anchor() != 0) {
-    total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::UInt32Size(
-        this->type_variation_anchor());
+  if (this->_internal_type_variation_anchor() != 0) {
+    total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::UInt32SizePlusOne(this->_internal_type_variation_anchor());
   }
 
-  int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
-  SetCachedSize(cached_size);
-  return total_size;
+  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
 }
 
-void SimpleExtensionDeclaration_ExtensionTypeVariation::MergeFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:substrait.extensions.SimpleExtensionDeclaration.ExtensionTypeVariation)
-  GOOGLE_DCHECK_NE(&from, this);
-  const SimpleExtensionDeclaration_ExtensionTypeVariation* source =
-      ::google::protobuf::internal::DynamicCastToGenerated<const SimpleExtensionDeclaration_ExtensionTypeVariation>(
-          &from);
-  if (source == NULL) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:substrait.extensions.SimpleExtensionDeclaration.ExtensionTypeVariation)
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:substrait.extensions.SimpleExtensionDeclaration.ExtensionTypeVariation)
-    MergeFrom(*source);
-  }
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData SimpleExtensionDeclaration_ExtensionTypeVariation::_class_data_ = {
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    SimpleExtensionDeclaration_ExtensionTypeVariation::MergeImpl
+};
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*SimpleExtensionDeclaration_ExtensionTypeVariation::GetClassData() const { return &_class_data_; }
+
+void SimpleExtensionDeclaration_ExtensionTypeVariation::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
+                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
+  static_cast<SimpleExtensionDeclaration_ExtensionTypeVariation *>(to)->MergeFrom(
+      static_cast<const SimpleExtensionDeclaration_ExtensionTypeVariation &>(from));
 }
+
 
 void SimpleExtensionDeclaration_ExtensionTypeVariation::MergeFrom(const SimpleExtensionDeclaration_ExtensionTypeVariation& from) {
 // @@protoc_insertion_point(class_specific_merge_from_start:substrait.extensions.SimpleExtensionDeclaration.ExtensionTypeVariation)
   GOOGLE_DCHECK_NE(&from, this);
-  _internal_metadata_.MergeFrom(from._internal_metadata_);
-  ::google::protobuf::uint32 cached_has_bits = 0;
+  uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
-  if (from.name().size() > 0) {
-
-    name_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.name_);
+  if (!from._internal_name().empty()) {
+    _internal_set_name(from._internal_name());
   }
-  if (from.extension_uri_reference() != 0) {
-    set_extension_uri_reference(from.extension_uri_reference());
+  if (from._internal_extension_uri_reference() != 0) {
+    _internal_set_extension_uri_reference(from._internal_extension_uri_reference());
   }
-  if (from.type_variation_anchor() != 0) {
-    set_type_variation_anchor(from.type_variation_anchor());
+  if (from._internal_type_variation_anchor() != 0) {
+    _internal_set_type_variation_anchor(from._internal_type_variation_anchor());
   }
-}
-
-void SimpleExtensionDeclaration_ExtensionTypeVariation::CopyFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:substrait.extensions.SimpleExtensionDeclaration.ExtensionTypeVariation)
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void SimpleExtensionDeclaration_ExtensionTypeVariation::CopyFrom(const SimpleExtensionDeclaration_ExtensionTypeVariation& from) {
@@ -1207,49 +954,55 @@ bool SimpleExtensionDeclaration_ExtensionTypeVariation::IsInitialized() const {
   return true;
 }
 
-void SimpleExtensionDeclaration_ExtensionTypeVariation::Swap(SimpleExtensionDeclaration_ExtensionTypeVariation* other) {
-  if (other == this) return;
-  InternalSwap(other);
-}
 void SimpleExtensionDeclaration_ExtensionTypeVariation::InternalSwap(SimpleExtensionDeclaration_ExtensionTypeVariation* other) {
   using std::swap;
-  name_.Swap(&other->name_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
-    GetArenaNoVirtual());
-  swap(extension_uri_reference_, other->extension_uri_reference_);
-  swap(type_variation_anchor_, other->type_variation_anchor_);
-  _internal_metadata_.Swap(&other->_internal_metadata_);
+  auto* lhs_arena = GetArenaForAllocation();
+  auto* rhs_arena = other->GetArenaForAllocation();
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
+      &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
+      &name_, lhs_arena,
+      &other->name_, rhs_arena
+  );
+  ::PROTOBUF_NAMESPACE_ID::internal::memswap<
+      PROTOBUF_FIELD_OFFSET(SimpleExtensionDeclaration_ExtensionTypeVariation, type_variation_anchor_)
+      + sizeof(SimpleExtensionDeclaration_ExtensionTypeVariation::type_variation_anchor_)
+      - PROTOBUF_FIELD_OFFSET(SimpleExtensionDeclaration_ExtensionTypeVariation, extension_uri_reference_)>(
+          reinterpret_cast<char*>(&extension_uri_reference_),
+          reinterpret_cast<char*>(&other->extension_uri_reference_));
 }
 
-::google::protobuf::Metadata SimpleExtensionDeclaration_ExtensionTypeVariation::GetMetadata() const {
-  protobuf_substrait_2fextensions_2fextensions_2eproto::protobuf_AssignDescriptorsOnce();
-  return ::protobuf_substrait_2fextensions_2fextensions_2eproto::file_level_metadata[kIndexInFileMessages];
+::PROTOBUF_NAMESPACE_ID::Metadata SimpleExtensionDeclaration_ExtensionTypeVariation::GetMetadata() const {
+  return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
+      &descriptor_table_substrait_2fextensions_2fextensions_2eproto_getter, &descriptor_table_substrait_2fextensions_2fextensions_2eproto_once,
+      file_level_metadata_substrait_2fextensions_2fextensions_2eproto[2]);
 }
-
 
 // ===================================================================
 
-void SimpleExtensionDeclaration_ExtensionFunction::InitAsDefaultInstance() {
-}
-#if !defined(_MSC_VER) || _MSC_VER >= 1900
-const int SimpleExtensionDeclaration_ExtensionFunction::kExtensionUriReferenceFieldNumber;
-const int SimpleExtensionDeclaration_ExtensionFunction::kFunctionAnchorFieldNumber;
-const int SimpleExtensionDeclaration_ExtensionFunction::kNameFieldNumber;
-#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
+class SimpleExtensionDeclaration_ExtensionFunction::_Internal {
+ public:
+};
 
-SimpleExtensionDeclaration_ExtensionFunction::SimpleExtensionDeclaration_ExtensionFunction()
-  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
-  ::google::protobuf::internal::InitSCC(
-      &protobuf_substrait_2fextensions_2fextensions_2eproto::scc_info_SimpleExtensionDeclaration_ExtensionFunction.base);
+SimpleExtensionDeclaration_ExtensionFunction::SimpleExtensionDeclaration_ExtensionFunction(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                         bool is_message_owned)
+  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
   SharedCtor();
-  // @@protoc_insertion_point(constructor:substrait.extensions.SimpleExtensionDeclaration.ExtensionFunction)
+  if (!is_message_owned) {
+    RegisterArenaDtor(arena);
+  }
+  // @@protoc_insertion_point(arena_constructor:substrait.extensions.SimpleExtensionDeclaration.ExtensionFunction)
 }
 SimpleExtensionDeclaration_ExtensionFunction::SimpleExtensionDeclaration_ExtensionFunction(const SimpleExtensionDeclaration_ExtensionFunction& from)
-  : ::google::protobuf::Message(),
-      _internal_metadata_(NULL) {
-  _internal_metadata_.MergeFrom(from._internal_metadata_);
-  name_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  if (from.name().size() > 0) {
-    name_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.name_);
+  : ::PROTOBUF_NAMESPACE_ID::Message() {
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  name_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    name_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), "", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  if (!from._internal_name().empty()) {
+    name_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, from._internal_name(), 
+      GetArenaForAllocation());
   }
   ::memcpy(&extension_uri_reference_, &from.extension_uri_reference_,
     static_cast<size_t>(reinterpret_cast<char*>(&function_anchor_) -
@@ -1257,187 +1010,138 @@ SimpleExtensionDeclaration_ExtensionFunction::SimpleExtensionDeclaration_Extensi
   // @@protoc_insertion_point(copy_constructor:substrait.extensions.SimpleExtensionDeclaration.ExtensionFunction)
 }
 
-void SimpleExtensionDeclaration_ExtensionFunction::SharedCtor() {
-  name_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  ::memset(&extension_uri_reference_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&function_anchor_) -
-      reinterpret_cast<char*>(&extension_uri_reference_)) + sizeof(function_anchor_));
+inline void SimpleExtensionDeclaration_ExtensionFunction::SharedCtor() {
+name_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  name_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), "", GetArenaForAllocation());
+#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
+    reinterpret_cast<char*>(&extension_uri_reference_) - reinterpret_cast<char*>(this)),
+    0, static_cast<size_t>(reinterpret_cast<char*>(&function_anchor_) -
+    reinterpret_cast<char*>(&extension_uri_reference_)) + sizeof(function_anchor_));
 }
 
 SimpleExtensionDeclaration_ExtensionFunction::~SimpleExtensionDeclaration_ExtensionFunction() {
   // @@protoc_insertion_point(destructor:substrait.extensions.SimpleExtensionDeclaration.ExtensionFunction)
+  if (GetArenaForAllocation() != nullptr) return;
   SharedDtor();
+  _internal_metadata_.Delete<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
-void SimpleExtensionDeclaration_ExtensionFunction::SharedDtor() {
-  name_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+inline void SimpleExtensionDeclaration_ExtensionFunction::SharedDtor() {
+  GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
+  name_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
 
+void SimpleExtensionDeclaration_ExtensionFunction::ArenaDtor(void* object) {
+  SimpleExtensionDeclaration_ExtensionFunction* _this = reinterpret_cast< SimpleExtensionDeclaration_ExtensionFunction* >(object);
+  (void)_this;
+}
+void SimpleExtensionDeclaration_ExtensionFunction::RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena*) {
+}
 void SimpleExtensionDeclaration_ExtensionFunction::SetCachedSize(int size) const {
   _cached_size_.Set(size);
 }
-const ::google::protobuf::Descriptor* SimpleExtensionDeclaration_ExtensionFunction::descriptor() {
-  ::protobuf_substrait_2fextensions_2fextensions_2eproto::protobuf_AssignDescriptorsOnce();
-  return ::protobuf_substrait_2fextensions_2fextensions_2eproto::file_level_metadata[kIndexInFileMessages].descriptor;
-}
-
-const SimpleExtensionDeclaration_ExtensionFunction& SimpleExtensionDeclaration_ExtensionFunction::default_instance() {
-  ::google::protobuf::internal::InitSCC(&protobuf_substrait_2fextensions_2fextensions_2eproto::scc_info_SimpleExtensionDeclaration_ExtensionFunction.base);
-  return *internal_default_instance();
-}
-
 
 void SimpleExtensionDeclaration_ExtensionFunction::Clear() {
 // @@protoc_insertion_point(message_clear_start:substrait.extensions.SimpleExtensionDeclaration.ExtensionFunction)
-  ::google::protobuf::uint32 cached_has_bits = 0;
+  uint32_t cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  name_.ClearToEmpty();
   ::memset(&extension_uri_reference_, 0, static_cast<size_t>(
       reinterpret_cast<char*>(&function_anchor_) -
       reinterpret_cast<char*>(&extension_uri_reference_)) + sizeof(function_anchor_));
-  _internal_metadata_.Clear();
+  _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
-bool SimpleExtensionDeclaration_ExtensionFunction::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:substrait.extensions.SimpleExtensionDeclaration.ExtensionFunction)
-  for (;;) {
-    ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+const char* SimpleExtensionDeclaration_ExtensionFunction::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
+#define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
+  while (!ctx->Done(&ptr)) {
+    uint32_t tag;
+    ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
+    switch (tag >> 3) {
       // uint32 extension_uri_reference = 1;
-      case 1: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(8u /* 8 & 0xFF */)) {
-
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
-                 input, &extension_uri_reference_)));
-        } else {
+      case 1:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 8)) {
+          extension_uri_reference_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+          CHK_(ptr);
+        } else
           goto handle_unusual;
-        }
-        break;
-      }
-
+        continue;
       // uint32 function_anchor = 2;
-      case 2: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(16u /* 16 & 0xFF */)) {
-
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
-                 input, &function_anchor_)));
-        } else {
+      case 2:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 16)) {
+          function_anchor_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+          CHK_(ptr);
+        } else
           goto handle_unusual;
-        }
-        break;
-      }
-
+        continue;
       // string name = 3;
-      case 3: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(26u /* 26 & 0xFF */)) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_name()));
-          DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-            this->name().data(), static_cast<int>(this->name().length()),
-            ::google::protobuf::internal::WireFormatLite::PARSE,
-            "substrait.extensions.SimpleExtensionDeclaration.ExtensionFunction.name"));
-        } else {
+      case 3:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 26)) {
+          auto str = _internal_mutable_name();
+          ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
+          CHK_(::PROTOBUF_NAMESPACE_ID::internal::VerifyUTF8(str, "substrait.extensions.SimpleExtensionDeclaration.ExtensionFunction.name"));
+          CHK_(ptr);
+        } else
           goto handle_unusual;
-        }
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, _internal_metadata_.mutable_unknown_fields()));
-        break;
-      }
+        continue;
+      default:
+        goto handle_unusual;
+    }  // switch
+  handle_unusual:
+    if ((tag == 0) || ((tag & 7) == 4)) {
+      CHK_(ptr);
+      ctx->SetLastTag(tag);
+      goto message_done;
     }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:substrait.extensions.SimpleExtensionDeclaration.ExtensionFunction)
-  return true;
+    ptr = UnknownFieldParse(
+        tag,
+        _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
+        ptr, ctx);
+    CHK_(ptr != nullptr);
+  }  // while
+message_done:
+  return ptr;
 failure:
-  // @@protoc_insertion_point(parse_failure:substrait.extensions.SimpleExtensionDeclaration.ExtensionFunction)
-  return false;
-#undef DO_
+  ptr = nullptr;
+  goto message_done;
+#undef CHK_
 }
 
-void SimpleExtensionDeclaration_ExtensionFunction::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:substrait.extensions.SimpleExtensionDeclaration.ExtensionFunction)
-  ::google::protobuf::uint32 cached_has_bits = 0;
-  (void) cached_has_bits;
-
-  // uint32 extension_uri_reference = 1;
-  if (this->extension_uri_reference() != 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt32(1, this->extension_uri_reference(), output);
-  }
-
-  // uint32 function_anchor = 2;
-  if (this->function_anchor() != 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt32(2, this->function_anchor(), output);
-  }
-
-  // string name = 3;
-  if (this->name().size() > 0) {
-    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-      this->name().data(), static_cast<int>(this->name().length()),
-      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
-      "substrait.extensions.SimpleExtensionDeclaration.ExtensionFunction.name");
-    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
-      3, this->name(), output);
-  }
-
-  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), output);
-  }
-  // @@protoc_insertion_point(serialize_end:substrait.extensions.SimpleExtensionDeclaration.ExtensionFunction)
-}
-
-::google::protobuf::uint8* SimpleExtensionDeclaration_ExtensionFunction::InternalSerializeWithCachedSizesToArray(
-    bool deterministic, ::google::protobuf::uint8* target) const {
-  (void)deterministic; // Unused
+uint8_t* SimpleExtensionDeclaration_ExtensionFunction::_InternalSerialize(
+    uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
   // @@protoc_insertion_point(serialize_to_array_start:substrait.extensions.SimpleExtensionDeclaration.ExtensionFunction)
-  ::google::protobuf::uint32 cached_has_bits = 0;
+  uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
   // uint32 extension_uri_reference = 1;
-  if (this->extension_uri_reference() != 0) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(1, this->extension_uri_reference(), target);
+  if (this->_internal_extension_uri_reference() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteUInt32ToArray(1, this->_internal_extension_uri_reference(), target);
   }
 
   // uint32 function_anchor = 2;
-  if (this->function_anchor() != 0) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(2, this->function_anchor(), target);
+  if (this->_internal_function_anchor() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteUInt32ToArray(2, this->_internal_function_anchor(), target);
   }
 
   // string name = 3;
-  if (this->name().size() > 0) {
-    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-      this->name().data(), static_cast<int>(this->name().length()),
-      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+  if (!this->_internal_name().empty()) {
+    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
+      this->_internal_name().data(), static_cast<int>(this->_internal_name().length()),
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
       "substrait.extensions.SimpleExtensionDeclaration.ExtensionFunction.name");
-    target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        3, this->name(), target);
+    target = stream->WriteStringMaybeAliased(
+        3, this->_internal_name(), target);
   }
 
-  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), target);
+  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
+        _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
   }
   // @@protoc_insertion_point(serialize_to_array_end:substrait.extensions.SimpleExtensionDeclaration.ExtensionFunction)
   return target;
@@ -1447,76 +1151,59 @@ size_t SimpleExtensionDeclaration_ExtensionFunction::ByteSizeLong() const {
 // @@protoc_insertion_point(message_byte_size_start:substrait.extensions.SimpleExtensionDeclaration.ExtensionFunction)
   size_t total_size = 0;
 
-  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()));
-  }
+  uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
   // string name = 3;
-  if (this->name().size() > 0) {
+  if (!this->_internal_name().empty()) {
     total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::StringSize(
-        this->name());
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
+        this->_internal_name());
   }
 
   // uint32 extension_uri_reference = 1;
-  if (this->extension_uri_reference() != 0) {
-    total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::UInt32Size(
-        this->extension_uri_reference());
+  if (this->_internal_extension_uri_reference() != 0) {
+    total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::UInt32SizePlusOne(this->_internal_extension_uri_reference());
   }
 
   // uint32 function_anchor = 2;
-  if (this->function_anchor() != 0) {
-    total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::UInt32Size(
-        this->function_anchor());
+  if (this->_internal_function_anchor() != 0) {
+    total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::UInt32SizePlusOne(this->_internal_function_anchor());
   }
 
-  int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
-  SetCachedSize(cached_size);
-  return total_size;
+  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
 }
 
-void SimpleExtensionDeclaration_ExtensionFunction::MergeFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:substrait.extensions.SimpleExtensionDeclaration.ExtensionFunction)
-  GOOGLE_DCHECK_NE(&from, this);
-  const SimpleExtensionDeclaration_ExtensionFunction* source =
-      ::google::protobuf::internal::DynamicCastToGenerated<const SimpleExtensionDeclaration_ExtensionFunction>(
-          &from);
-  if (source == NULL) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:substrait.extensions.SimpleExtensionDeclaration.ExtensionFunction)
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:substrait.extensions.SimpleExtensionDeclaration.ExtensionFunction)
-    MergeFrom(*source);
-  }
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData SimpleExtensionDeclaration_ExtensionFunction::_class_data_ = {
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    SimpleExtensionDeclaration_ExtensionFunction::MergeImpl
+};
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*SimpleExtensionDeclaration_ExtensionFunction::GetClassData() const { return &_class_data_; }
+
+void SimpleExtensionDeclaration_ExtensionFunction::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
+                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
+  static_cast<SimpleExtensionDeclaration_ExtensionFunction *>(to)->MergeFrom(
+      static_cast<const SimpleExtensionDeclaration_ExtensionFunction &>(from));
 }
+
 
 void SimpleExtensionDeclaration_ExtensionFunction::MergeFrom(const SimpleExtensionDeclaration_ExtensionFunction& from) {
 // @@protoc_insertion_point(class_specific_merge_from_start:substrait.extensions.SimpleExtensionDeclaration.ExtensionFunction)
   GOOGLE_DCHECK_NE(&from, this);
-  _internal_metadata_.MergeFrom(from._internal_metadata_);
-  ::google::protobuf::uint32 cached_has_bits = 0;
+  uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
-  if (from.name().size() > 0) {
-
-    name_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.name_);
+  if (!from._internal_name().empty()) {
+    _internal_set_name(from._internal_name());
   }
-  if (from.extension_uri_reference() != 0) {
-    set_extension_uri_reference(from.extension_uri_reference());
+  if (from._internal_extension_uri_reference() != 0) {
+    _internal_set_extension_uri_reference(from._internal_extension_uri_reference());
   }
-  if (from.function_anchor() != 0) {
-    set_function_anchor(from.function_anchor());
+  if (from._internal_function_anchor() != 0) {
+    _internal_set_function_anchor(from._internal_function_anchor());
   }
-}
-
-void SimpleExtensionDeclaration_ExtensionFunction::CopyFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:substrait.extensions.SimpleExtensionDeclaration.ExtensionFunction)
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void SimpleExtensionDeclaration_ExtensionFunction::CopyFrom(const SimpleExtensionDeclaration_ExtensionFunction& from) {
@@ -1530,42 +1217,59 @@ bool SimpleExtensionDeclaration_ExtensionFunction::IsInitialized() const {
   return true;
 }
 
-void SimpleExtensionDeclaration_ExtensionFunction::Swap(SimpleExtensionDeclaration_ExtensionFunction* other) {
-  if (other == this) return;
-  InternalSwap(other);
-}
 void SimpleExtensionDeclaration_ExtensionFunction::InternalSwap(SimpleExtensionDeclaration_ExtensionFunction* other) {
   using std::swap;
-  name_.Swap(&other->name_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
-    GetArenaNoVirtual());
-  swap(extension_uri_reference_, other->extension_uri_reference_);
-  swap(function_anchor_, other->function_anchor_);
-  _internal_metadata_.Swap(&other->_internal_metadata_);
+  auto* lhs_arena = GetArenaForAllocation();
+  auto* rhs_arena = other->GetArenaForAllocation();
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
+      &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
+      &name_, lhs_arena,
+      &other->name_, rhs_arena
+  );
+  ::PROTOBUF_NAMESPACE_ID::internal::memswap<
+      PROTOBUF_FIELD_OFFSET(SimpleExtensionDeclaration_ExtensionFunction, function_anchor_)
+      + sizeof(SimpleExtensionDeclaration_ExtensionFunction::function_anchor_)
+      - PROTOBUF_FIELD_OFFSET(SimpleExtensionDeclaration_ExtensionFunction, extension_uri_reference_)>(
+          reinterpret_cast<char*>(&extension_uri_reference_),
+          reinterpret_cast<char*>(&other->extension_uri_reference_));
 }
 
-::google::protobuf::Metadata SimpleExtensionDeclaration_ExtensionFunction::GetMetadata() const {
-  protobuf_substrait_2fextensions_2fextensions_2eproto::protobuf_AssignDescriptorsOnce();
-  return ::protobuf_substrait_2fextensions_2fextensions_2eproto::file_level_metadata[kIndexInFileMessages];
+::PROTOBUF_NAMESPACE_ID::Metadata SimpleExtensionDeclaration_ExtensionFunction::GetMetadata() const {
+  return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
+      &descriptor_table_substrait_2fextensions_2fextensions_2eproto_getter, &descriptor_table_substrait_2fextensions_2fextensions_2eproto_once,
+      file_level_metadata_substrait_2fextensions_2fextensions_2eproto[3]);
 }
-
 
 // ===================================================================
 
-void SimpleExtensionDeclaration::InitAsDefaultInstance() {
-  ::substrait::extensions::_SimpleExtensionDeclaration_default_instance_.extension_type_ = const_cast< ::substrait::extensions::SimpleExtensionDeclaration_ExtensionType*>(
-      ::substrait::extensions::SimpleExtensionDeclaration_ExtensionType::internal_default_instance());
-  ::substrait::extensions::_SimpleExtensionDeclaration_default_instance_.extension_type_variation_ = const_cast< ::substrait::extensions::SimpleExtensionDeclaration_ExtensionTypeVariation*>(
-      ::substrait::extensions::SimpleExtensionDeclaration_ExtensionTypeVariation::internal_default_instance());
-  ::substrait::extensions::_SimpleExtensionDeclaration_default_instance_.extension_function_ = const_cast< ::substrait::extensions::SimpleExtensionDeclaration_ExtensionFunction*>(
-      ::substrait::extensions::SimpleExtensionDeclaration_ExtensionFunction::internal_default_instance());
+class SimpleExtensionDeclaration::_Internal {
+ public:
+  static const ::substrait::extensions::SimpleExtensionDeclaration_ExtensionType& extension_type(const SimpleExtensionDeclaration* msg);
+  static const ::substrait::extensions::SimpleExtensionDeclaration_ExtensionTypeVariation& extension_type_variation(const SimpleExtensionDeclaration* msg);
+  static const ::substrait::extensions::SimpleExtensionDeclaration_ExtensionFunction& extension_function(const SimpleExtensionDeclaration* msg);
+};
+
+const ::substrait::extensions::SimpleExtensionDeclaration_ExtensionType&
+SimpleExtensionDeclaration::_Internal::extension_type(const SimpleExtensionDeclaration* msg) {
+  return *msg->mapping_type_.extension_type_;
+}
+const ::substrait::extensions::SimpleExtensionDeclaration_ExtensionTypeVariation&
+SimpleExtensionDeclaration::_Internal::extension_type_variation(const SimpleExtensionDeclaration* msg) {
+  return *msg->mapping_type_.extension_type_variation_;
+}
+const ::substrait::extensions::SimpleExtensionDeclaration_ExtensionFunction&
+SimpleExtensionDeclaration::_Internal::extension_function(const SimpleExtensionDeclaration* msg) {
+  return *msg->mapping_type_.extension_function_;
 }
 void SimpleExtensionDeclaration::set_allocated_extension_type(::substrait::extensions::SimpleExtensionDeclaration_ExtensionType* extension_type) {
-  ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
   clear_mapping_type();
   if (extension_type) {
-    ::google::protobuf::Arena* submessage_arena = NULL;
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+      ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper<::substrait::extensions::SimpleExtensionDeclaration_ExtensionType>::GetOwningArena(extension_type);
     if (message_arena != submessage_arena) {
-      extension_type = ::google::protobuf::internal::GetOwnedMessage(
+      extension_type = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
           message_arena, extension_type, submessage_arena);
     }
     set_has_extension_type();
@@ -1574,12 +1278,13 @@ void SimpleExtensionDeclaration::set_allocated_extension_type(::substrait::exten
   // @@protoc_insertion_point(field_set_allocated:substrait.extensions.SimpleExtensionDeclaration.extension_type)
 }
 void SimpleExtensionDeclaration::set_allocated_extension_type_variation(::substrait::extensions::SimpleExtensionDeclaration_ExtensionTypeVariation* extension_type_variation) {
-  ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
   clear_mapping_type();
   if (extension_type_variation) {
-    ::google::protobuf::Arena* submessage_arena = NULL;
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+      ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper<::substrait::extensions::SimpleExtensionDeclaration_ExtensionTypeVariation>::GetOwningArena(extension_type_variation);
     if (message_arena != submessage_arena) {
-      extension_type_variation = ::google::protobuf::internal::GetOwnedMessage(
+      extension_type_variation = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
           message_arena, extension_type_variation, submessage_arena);
     }
     set_has_extension_type_variation();
@@ -1588,12 +1293,13 @@ void SimpleExtensionDeclaration::set_allocated_extension_type_variation(::substr
   // @@protoc_insertion_point(field_set_allocated:substrait.extensions.SimpleExtensionDeclaration.extension_type_variation)
 }
 void SimpleExtensionDeclaration::set_allocated_extension_function(::substrait::extensions::SimpleExtensionDeclaration_ExtensionFunction* extension_function) {
-  ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
   clear_mapping_type();
   if (extension_function) {
-    ::google::protobuf::Arena* submessage_arena = NULL;
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+      ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper<::substrait::extensions::SimpleExtensionDeclaration_ExtensionFunction>::GetOwningArena(extension_function);
     if (message_arena != submessage_arena) {
-      extension_function = ::google::protobuf::internal::GetOwnedMessage(
+      extension_function = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
           message_arena, extension_function, submessage_arena);
     }
     set_has_extension_function();
@@ -1601,35 +1307,30 @@ void SimpleExtensionDeclaration::set_allocated_extension_function(::substrait::e
   }
   // @@protoc_insertion_point(field_set_allocated:substrait.extensions.SimpleExtensionDeclaration.extension_function)
 }
-#if !defined(_MSC_VER) || _MSC_VER >= 1900
-const int SimpleExtensionDeclaration::kExtensionTypeFieldNumber;
-const int SimpleExtensionDeclaration::kExtensionTypeVariationFieldNumber;
-const int SimpleExtensionDeclaration::kExtensionFunctionFieldNumber;
-#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
-
-SimpleExtensionDeclaration::SimpleExtensionDeclaration()
-  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
-  ::google::protobuf::internal::InitSCC(
-      &protobuf_substrait_2fextensions_2fextensions_2eproto::scc_info_SimpleExtensionDeclaration.base);
+SimpleExtensionDeclaration::SimpleExtensionDeclaration(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                         bool is_message_owned)
+  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
   SharedCtor();
-  // @@protoc_insertion_point(constructor:substrait.extensions.SimpleExtensionDeclaration)
+  if (!is_message_owned) {
+    RegisterArenaDtor(arena);
+  }
+  // @@protoc_insertion_point(arena_constructor:substrait.extensions.SimpleExtensionDeclaration)
 }
 SimpleExtensionDeclaration::SimpleExtensionDeclaration(const SimpleExtensionDeclaration& from)
-  : ::google::protobuf::Message(),
-      _internal_metadata_(NULL) {
-  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  : ::PROTOBUF_NAMESPACE_ID::Message() {
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
   clear_has_mapping_type();
   switch (from.mapping_type_case()) {
     case kExtensionType: {
-      mutable_extension_type()->::substrait::extensions::SimpleExtensionDeclaration_ExtensionType::MergeFrom(from.extension_type());
+      _internal_mutable_extension_type()->::substrait::extensions::SimpleExtensionDeclaration_ExtensionType::MergeFrom(from._internal_extension_type());
       break;
     }
     case kExtensionTypeVariation: {
-      mutable_extension_type_variation()->::substrait::extensions::SimpleExtensionDeclaration_ExtensionTypeVariation::MergeFrom(from.extension_type_variation());
+      _internal_mutable_extension_type_variation()->::substrait::extensions::SimpleExtensionDeclaration_ExtensionTypeVariation::MergeFrom(from._internal_extension_type_variation());
       break;
     }
     case kExtensionFunction: {
-      mutable_extension_function()->::substrait::extensions::SimpleExtensionDeclaration_ExtensionFunction::MergeFrom(from.extension_function());
+      _internal_mutable_extension_function()->::substrait::extensions::SimpleExtensionDeclaration_ExtensionFunction::MergeFrom(from._internal_extension_function());
       break;
     }
     case MAPPING_TYPE_NOT_SET: {
@@ -1639,48 +1340,53 @@ SimpleExtensionDeclaration::SimpleExtensionDeclaration(const SimpleExtensionDecl
   // @@protoc_insertion_point(copy_constructor:substrait.extensions.SimpleExtensionDeclaration)
 }
 
-void SimpleExtensionDeclaration::SharedCtor() {
-  clear_has_mapping_type();
+inline void SimpleExtensionDeclaration::SharedCtor() {
+clear_has_mapping_type();
 }
 
 SimpleExtensionDeclaration::~SimpleExtensionDeclaration() {
   // @@protoc_insertion_point(destructor:substrait.extensions.SimpleExtensionDeclaration)
+  if (GetArenaForAllocation() != nullptr) return;
   SharedDtor();
+  _internal_metadata_.Delete<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
-void SimpleExtensionDeclaration::SharedDtor() {
+inline void SimpleExtensionDeclaration::SharedDtor() {
+  GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
   if (has_mapping_type()) {
     clear_mapping_type();
   }
 }
 
+void SimpleExtensionDeclaration::ArenaDtor(void* object) {
+  SimpleExtensionDeclaration* _this = reinterpret_cast< SimpleExtensionDeclaration* >(object);
+  (void)_this;
+}
+void SimpleExtensionDeclaration::RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena*) {
+}
 void SimpleExtensionDeclaration::SetCachedSize(int size) const {
   _cached_size_.Set(size);
 }
-const ::google::protobuf::Descriptor* SimpleExtensionDeclaration::descriptor() {
-  ::protobuf_substrait_2fextensions_2fextensions_2eproto::protobuf_AssignDescriptorsOnce();
-  return ::protobuf_substrait_2fextensions_2fextensions_2eproto::file_level_metadata[kIndexInFileMessages].descriptor;
-}
-
-const SimpleExtensionDeclaration& SimpleExtensionDeclaration::default_instance() {
-  ::google::protobuf::internal::InitSCC(&protobuf_substrait_2fextensions_2fextensions_2eproto::scc_info_SimpleExtensionDeclaration.base);
-  return *internal_default_instance();
-}
-
 
 void SimpleExtensionDeclaration::clear_mapping_type() {
 // @@protoc_insertion_point(one_of_clear_start:substrait.extensions.SimpleExtensionDeclaration)
   switch (mapping_type_case()) {
     case kExtensionType: {
-      delete mapping_type_.extension_type_;
+      if (GetArenaForAllocation() == nullptr) {
+        delete mapping_type_.extension_type_;
+      }
       break;
     }
     case kExtensionTypeVariation: {
-      delete mapping_type_.extension_type_variation_;
+      if (GetArenaForAllocation() == nullptr) {
+        delete mapping_type_.extension_type_variation_;
+      }
       break;
     }
     case kExtensionFunction: {
-      delete mapping_type_.extension_function_;
+      if (GetArenaForAllocation() == nullptr) {
+        delete mapping_type_.extension_function_;
+      }
       break;
     }
     case MAPPING_TYPE_NOT_SET: {
@@ -1693,142 +1399,100 @@ void SimpleExtensionDeclaration::clear_mapping_type() {
 
 void SimpleExtensionDeclaration::Clear() {
 // @@protoc_insertion_point(message_clear_start:substrait.extensions.SimpleExtensionDeclaration)
-  ::google::protobuf::uint32 cached_has_bits = 0;
+  uint32_t cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
   clear_mapping_type();
-  _internal_metadata_.Clear();
+  _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
-bool SimpleExtensionDeclaration::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:substrait.extensions.SimpleExtensionDeclaration)
-  for (;;) {
-    ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+const char* SimpleExtensionDeclaration::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
+#define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
+  while (!ctx->Done(&ptr)) {
+    uint32_t tag;
+    ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
+    switch (tag >> 3) {
       // .substrait.extensions.SimpleExtensionDeclaration.ExtensionType extension_type = 1;
-      case 1: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(10u /* 10 & 0xFF */)) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessage(
-               input, mutable_extension_type()));
-        } else {
+      case 1:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 10)) {
+          ptr = ctx->ParseMessage(_internal_mutable_extension_type(), ptr);
+          CHK_(ptr);
+        } else
           goto handle_unusual;
-        }
-        break;
-      }
-
+        continue;
       // .substrait.extensions.SimpleExtensionDeclaration.ExtensionTypeVariation extension_type_variation = 2;
-      case 2: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(18u /* 18 & 0xFF */)) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessage(
-               input, mutable_extension_type_variation()));
-        } else {
+      case 2:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 18)) {
+          ptr = ctx->ParseMessage(_internal_mutable_extension_type_variation(), ptr);
+          CHK_(ptr);
+        } else
           goto handle_unusual;
-        }
-        break;
-      }
-
+        continue;
       // .substrait.extensions.SimpleExtensionDeclaration.ExtensionFunction extension_function = 3;
-      case 3: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(26u /* 26 & 0xFF */)) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessage(
-               input, mutable_extension_function()));
-        } else {
+      case 3:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 26)) {
+          ptr = ctx->ParseMessage(_internal_mutable_extension_function(), ptr);
+          CHK_(ptr);
+        } else
           goto handle_unusual;
-        }
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, _internal_metadata_.mutable_unknown_fields()));
-        break;
-      }
+        continue;
+      default:
+        goto handle_unusual;
+    }  // switch
+  handle_unusual:
+    if ((tag == 0) || ((tag & 7) == 4)) {
+      CHK_(ptr);
+      ctx->SetLastTag(tag);
+      goto message_done;
     }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:substrait.extensions.SimpleExtensionDeclaration)
-  return true;
+    ptr = UnknownFieldParse(
+        tag,
+        _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
+        ptr, ctx);
+    CHK_(ptr != nullptr);
+  }  // while
+message_done:
+  return ptr;
 failure:
-  // @@protoc_insertion_point(parse_failure:substrait.extensions.SimpleExtensionDeclaration)
-  return false;
-#undef DO_
+  ptr = nullptr;
+  goto message_done;
+#undef CHK_
 }
 
-void SimpleExtensionDeclaration::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:substrait.extensions.SimpleExtensionDeclaration)
-  ::google::protobuf::uint32 cached_has_bits = 0;
-  (void) cached_has_bits;
-
-  // .substrait.extensions.SimpleExtensionDeclaration.ExtensionType extension_type = 1;
-  if (has_extension_type()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->_internal_extension_type(), output);
-  }
-
-  // .substrait.extensions.SimpleExtensionDeclaration.ExtensionTypeVariation extension_type_variation = 2;
-  if (has_extension_type_variation()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      2, this->_internal_extension_type_variation(), output);
-  }
-
-  // .substrait.extensions.SimpleExtensionDeclaration.ExtensionFunction extension_function = 3;
-  if (has_extension_function()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      3, this->_internal_extension_function(), output);
-  }
-
-  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), output);
-  }
-  // @@protoc_insertion_point(serialize_end:substrait.extensions.SimpleExtensionDeclaration)
-}
-
-::google::protobuf::uint8* SimpleExtensionDeclaration::InternalSerializeWithCachedSizesToArray(
-    bool deterministic, ::google::protobuf::uint8* target) const {
-  (void)deterministic; // Unused
+uint8_t* SimpleExtensionDeclaration::_InternalSerialize(
+    uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
   // @@protoc_insertion_point(serialize_to_array_start:substrait.extensions.SimpleExtensionDeclaration)
-  ::google::protobuf::uint32 cached_has_bits = 0;
+  uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
   // .substrait.extensions.SimpleExtensionDeclaration.ExtensionType extension_type = 1;
-  if (has_extension_type()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      InternalWriteMessageToArray(
-        1, this->_internal_extension_type(), deterministic, target);
+  if (_internal_has_extension_type()) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+      InternalWriteMessage(
+        1, _Internal::extension_type(this), target, stream);
   }
 
   // .substrait.extensions.SimpleExtensionDeclaration.ExtensionTypeVariation extension_type_variation = 2;
-  if (has_extension_type_variation()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      InternalWriteMessageToArray(
-        2, this->_internal_extension_type_variation(), deterministic, target);
+  if (_internal_has_extension_type_variation()) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+      InternalWriteMessage(
+        2, _Internal::extension_type_variation(this), target, stream);
   }
 
   // .substrait.extensions.SimpleExtensionDeclaration.ExtensionFunction extension_function = 3;
-  if (has_extension_function()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      InternalWriteMessageToArray(
-        3, this->_internal_extension_function(), deterministic, target);
+  if (_internal_has_extension_function()) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+      InternalWriteMessage(
+        3, _Internal::extension_function(this), target, stream);
   }
 
-  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), target);
+  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
+        _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
   }
   // @@protoc_insertion_point(serialize_to_array_end:substrait.extensions.SimpleExtensionDeclaration)
   return target;
@@ -1838,30 +1502,29 @@ size_t SimpleExtensionDeclaration::ByteSizeLong() const {
 // @@protoc_insertion_point(message_byte_size_start:substrait.extensions.SimpleExtensionDeclaration)
   size_t total_size = 0;
 
-  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()));
-  }
+  uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
   switch (mapping_type_case()) {
     // .substrait.extensions.SimpleExtensionDeclaration.ExtensionType extension_type = 1;
     case kExtensionType: {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSize(
+        ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
           *mapping_type_.extension_type_);
       break;
     }
     // .substrait.extensions.SimpleExtensionDeclaration.ExtensionTypeVariation extension_type_variation = 2;
     case kExtensionTypeVariation: {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSize(
+        ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
           *mapping_type_.extension_type_variation_);
       break;
     }
     // .substrait.extensions.SimpleExtensionDeclaration.ExtensionFunction extension_function = 3;
     case kExtensionFunction: {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSize(
+        ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
           *mapping_type_.extension_function_);
       break;
     }
@@ -1869,57 +1532,46 @@ size_t SimpleExtensionDeclaration::ByteSizeLong() const {
       break;
     }
   }
-  int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
-  SetCachedSize(cached_size);
-  return total_size;
+  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
 }
 
-void SimpleExtensionDeclaration::MergeFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:substrait.extensions.SimpleExtensionDeclaration)
-  GOOGLE_DCHECK_NE(&from, this);
-  const SimpleExtensionDeclaration* source =
-      ::google::protobuf::internal::DynamicCastToGenerated<const SimpleExtensionDeclaration>(
-          &from);
-  if (source == NULL) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:substrait.extensions.SimpleExtensionDeclaration)
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:substrait.extensions.SimpleExtensionDeclaration)
-    MergeFrom(*source);
-  }
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData SimpleExtensionDeclaration::_class_data_ = {
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    SimpleExtensionDeclaration::MergeImpl
+};
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*SimpleExtensionDeclaration::GetClassData() const { return &_class_data_; }
+
+void SimpleExtensionDeclaration::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
+                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
+  static_cast<SimpleExtensionDeclaration *>(to)->MergeFrom(
+      static_cast<const SimpleExtensionDeclaration &>(from));
 }
+
 
 void SimpleExtensionDeclaration::MergeFrom(const SimpleExtensionDeclaration& from) {
 // @@protoc_insertion_point(class_specific_merge_from_start:substrait.extensions.SimpleExtensionDeclaration)
   GOOGLE_DCHECK_NE(&from, this);
-  _internal_metadata_.MergeFrom(from._internal_metadata_);
-  ::google::protobuf::uint32 cached_has_bits = 0;
+  uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
   switch (from.mapping_type_case()) {
     case kExtensionType: {
-      mutable_extension_type()->::substrait::extensions::SimpleExtensionDeclaration_ExtensionType::MergeFrom(from.extension_type());
+      _internal_mutable_extension_type()->::substrait::extensions::SimpleExtensionDeclaration_ExtensionType::MergeFrom(from._internal_extension_type());
       break;
     }
     case kExtensionTypeVariation: {
-      mutable_extension_type_variation()->::substrait::extensions::SimpleExtensionDeclaration_ExtensionTypeVariation::MergeFrom(from.extension_type_variation());
+      _internal_mutable_extension_type_variation()->::substrait::extensions::SimpleExtensionDeclaration_ExtensionTypeVariation::MergeFrom(from._internal_extension_type_variation());
       break;
     }
     case kExtensionFunction: {
-      mutable_extension_function()->::substrait::extensions::SimpleExtensionDeclaration_ExtensionFunction::MergeFrom(from.extension_function());
+      _internal_mutable_extension_function()->::substrait::extensions::SimpleExtensionDeclaration_ExtensionFunction::MergeFrom(from._internal_extension_function());
       break;
     }
     case MAPPING_TYPE_NOT_SET: {
       break;
     }
   }
-}
-
-void SimpleExtensionDeclaration::CopyFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:substrait.extensions.SimpleExtensionDeclaration)
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void SimpleExtensionDeclaration::CopyFrom(const SimpleExtensionDeclaration& from) {
@@ -1933,222 +1585,189 @@ bool SimpleExtensionDeclaration::IsInitialized() const {
   return true;
 }
 
-void SimpleExtensionDeclaration::Swap(SimpleExtensionDeclaration* other) {
-  if (other == this) return;
-  InternalSwap(other);
-}
 void SimpleExtensionDeclaration::InternalSwap(SimpleExtensionDeclaration* other) {
   using std::swap;
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   swap(mapping_type_, other->mapping_type_);
   swap(_oneof_case_[0], other->_oneof_case_[0]);
-  _internal_metadata_.Swap(&other->_internal_metadata_);
 }
 
-::google::protobuf::Metadata SimpleExtensionDeclaration::GetMetadata() const {
-  protobuf_substrait_2fextensions_2fextensions_2eproto::protobuf_AssignDescriptorsOnce();
-  return ::protobuf_substrait_2fextensions_2fextensions_2eproto::file_level_metadata[kIndexInFileMessages];
+::PROTOBUF_NAMESPACE_ID::Metadata SimpleExtensionDeclaration::GetMetadata() const {
+  return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
+      &descriptor_table_substrait_2fextensions_2fextensions_2eproto_getter, &descriptor_table_substrait_2fextensions_2fextensions_2eproto_once,
+      file_level_metadata_substrait_2fextensions_2fextensions_2eproto[4]);
 }
-
 
 // ===================================================================
 
-void AdvancedExtension::InitAsDefaultInstance() {
-  ::substrait::extensions::_AdvancedExtension_default_instance_._instance.get_mutable()->optimization_ = const_cast< ::google::protobuf::Any*>(
-      ::google::protobuf::Any::internal_default_instance());
-  ::substrait::extensions::_AdvancedExtension_default_instance_._instance.get_mutable()->enhancement_ = const_cast< ::google::protobuf::Any*>(
-      ::google::protobuf::Any::internal_default_instance());
+class AdvancedExtension::_Internal {
+ public:
+  static const ::PROTOBUF_NAMESPACE_ID::Any& optimization(const AdvancedExtension* msg);
+  static const ::PROTOBUF_NAMESPACE_ID::Any& enhancement(const AdvancedExtension* msg);
+};
+
+const ::PROTOBUF_NAMESPACE_ID::Any&
+AdvancedExtension::_Internal::optimization(const AdvancedExtension* msg) {
+  return *msg->optimization_;
+}
+const ::PROTOBUF_NAMESPACE_ID::Any&
+AdvancedExtension::_Internal::enhancement(const AdvancedExtension* msg) {
+  return *msg->enhancement_;
 }
 void AdvancedExtension::clear_optimization() {
-  if (GetArenaNoVirtual() == NULL && optimization_ != NULL) {
+  if (GetArenaForAllocation() == nullptr && optimization_ != nullptr) {
     delete optimization_;
   }
-  optimization_ = NULL;
+  optimization_ = nullptr;
 }
 void AdvancedExtension::clear_enhancement() {
-  if (GetArenaNoVirtual() == NULL && enhancement_ != NULL) {
+  if (GetArenaForAllocation() == nullptr && enhancement_ != nullptr) {
     delete enhancement_;
   }
-  enhancement_ = NULL;
+  enhancement_ = nullptr;
 }
-#if !defined(_MSC_VER) || _MSC_VER >= 1900
-const int AdvancedExtension::kOptimizationFieldNumber;
-const int AdvancedExtension::kEnhancementFieldNumber;
-#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
-
-AdvancedExtension::AdvancedExtension()
-  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
-  ::google::protobuf::internal::InitSCC(
-      &protobuf_substrait_2fextensions_2fextensions_2eproto::scc_info_AdvancedExtension.base);
+AdvancedExtension::AdvancedExtension(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                         bool is_message_owned)
+  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
   SharedCtor();
-  // @@protoc_insertion_point(constructor:substrait.extensions.AdvancedExtension)
+  if (!is_message_owned) {
+    RegisterArenaDtor(arena);
+  }
+  // @@protoc_insertion_point(arena_constructor:substrait.extensions.AdvancedExtension)
 }
 AdvancedExtension::AdvancedExtension(const AdvancedExtension& from)
-  : ::google::protobuf::Message(),
-      _internal_metadata_(NULL) {
-  _internal_metadata_.MergeFrom(from._internal_metadata_);
-  if (from.has_optimization()) {
-    optimization_ = new ::google::protobuf::Any(*from.optimization_);
+  : ::PROTOBUF_NAMESPACE_ID::Message() {
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  if (from._internal_has_optimization()) {
+    optimization_ = new ::PROTOBUF_NAMESPACE_ID::Any(*from.optimization_);
   } else {
-    optimization_ = NULL;
+    optimization_ = nullptr;
   }
-  if (from.has_enhancement()) {
-    enhancement_ = new ::google::protobuf::Any(*from.enhancement_);
+  if (from._internal_has_enhancement()) {
+    enhancement_ = new ::PROTOBUF_NAMESPACE_ID::Any(*from.enhancement_);
   } else {
-    enhancement_ = NULL;
+    enhancement_ = nullptr;
   }
   // @@protoc_insertion_point(copy_constructor:substrait.extensions.AdvancedExtension)
 }
 
-void AdvancedExtension::SharedCtor() {
-  ::memset(&optimization_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&enhancement_) -
-      reinterpret_cast<char*>(&optimization_)) + sizeof(enhancement_));
+inline void AdvancedExtension::SharedCtor() {
+::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
+    reinterpret_cast<char*>(&optimization_) - reinterpret_cast<char*>(this)),
+    0, static_cast<size_t>(reinterpret_cast<char*>(&enhancement_) -
+    reinterpret_cast<char*>(&optimization_)) + sizeof(enhancement_));
 }
 
 AdvancedExtension::~AdvancedExtension() {
   // @@protoc_insertion_point(destructor:substrait.extensions.AdvancedExtension)
+  if (GetArenaForAllocation() != nullptr) return;
   SharedDtor();
+  _internal_metadata_.Delete<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
-void AdvancedExtension::SharedDtor() {
+inline void AdvancedExtension::SharedDtor() {
+  GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
   if (this != internal_default_instance()) delete optimization_;
   if (this != internal_default_instance()) delete enhancement_;
 }
 
+void AdvancedExtension::ArenaDtor(void* object) {
+  AdvancedExtension* _this = reinterpret_cast< AdvancedExtension* >(object);
+  (void)_this;
+}
+void AdvancedExtension::RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena*) {
+}
 void AdvancedExtension::SetCachedSize(int size) const {
   _cached_size_.Set(size);
 }
-const ::google::protobuf::Descriptor* AdvancedExtension::descriptor() {
-  ::protobuf_substrait_2fextensions_2fextensions_2eproto::protobuf_AssignDescriptorsOnce();
-  return ::protobuf_substrait_2fextensions_2fextensions_2eproto::file_level_metadata[kIndexInFileMessages].descriptor;
-}
-
-const AdvancedExtension& AdvancedExtension::default_instance() {
-  ::google::protobuf::internal::InitSCC(&protobuf_substrait_2fextensions_2fextensions_2eproto::scc_info_AdvancedExtension.base);
-  return *internal_default_instance();
-}
-
 
 void AdvancedExtension::Clear() {
 // @@protoc_insertion_point(message_clear_start:substrait.extensions.AdvancedExtension)
-  ::google::protobuf::uint32 cached_has_bits = 0;
+  uint32_t cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  if (GetArenaNoVirtual() == NULL && optimization_ != NULL) {
+  if (GetArenaForAllocation() == nullptr && optimization_ != nullptr) {
     delete optimization_;
   }
-  optimization_ = NULL;
-  if (GetArenaNoVirtual() == NULL && enhancement_ != NULL) {
+  optimization_ = nullptr;
+  if (GetArenaForAllocation() == nullptr && enhancement_ != nullptr) {
     delete enhancement_;
   }
-  enhancement_ = NULL;
-  _internal_metadata_.Clear();
+  enhancement_ = nullptr;
+  _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
-bool AdvancedExtension::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:substrait.extensions.AdvancedExtension)
-  for (;;) {
-    ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+const char* AdvancedExtension::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
+#define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
+  while (!ctx->Done(&ptr)) {
+    uint32_t tag;
+    ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
+    switch (tag >> 3) {
       // .google.protobuf.Any optimization = 1;
-      case 1: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(10u /* 10 & 0xFF */)) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessage(
-               input, mutable_optimization()));
-        } else {
+      case 1:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 10)) {
+          ptr = ctx->ParseMessage(_internal_mutable_optimization(), ptr);
+          CHK_(ptr);
+        } else
           goto handle_unusual;
-        }
-        break;
-      }
-
+        continue;
       // .google.protobuf.Any enhancement = 2;
-      case 2: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(18u /* 18 & 0xFF */)) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessage(
-               input, mutable_enhancement()));
-        } else {
+      case 2:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 18)) {
+          ptr = ctx->ParseMessage(_internal_mutable_enhancement(), ptr);
+          CHK_(ptr);
+        } else
           goto handle_unusual;
-        }
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, _internal_metadata_.mutable_unknown_fields()));
-        break;
-      }
+        continue;
+      default:
+        goto handle_unusual;
+    }  // switch
+  handle_unusual:
+    if ((tag == 0) || ((tag & 7) == 4)) {
+      CHK_(ptr);
+      ctx->SetLastTag(tag);
+      goto message_done;
     }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:substrait.extensions.AdvancedExtension)
-  return true;
+    ptr = UnknownFieldParse(
+        tag,
+        _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
+        ptr, ctx);
+    CHK_(ptr != nullptr);
+  }  // while
+message_done:
+  return ptr;
 failure:
-  // @@protoc_insertion_point(parse_failure:substrait.extensions.AdvancedExtension)
-  return false;
-#undef DO_
+  ptr = nullptr;
+  goto message_done;
+#undef CHK_
 }
 
-void AdvancedExtension::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:substrait.extensions.AdvancedExtension)
-  ::google::protobuf::uint32 cached_has_bits = 0;
-  (void) cached_has_bits;
-
-  // .google.protobuf.Any optimization = 1;
-  if (this->has_optimization()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->_internal_optimization(), output);
-  }
-
-  // .google.protobuf.Any enhancement = 2;
-  if (this->has_enhancement()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      2, this->_internal_enhancement(), output);
-  }
-
-  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), output);
-  }
-  // @@protoc_insertion_point(serialize_end:substrait.extensions.AdvancedExtension)
-}
-
-::google::protobuf::uint8* AdvancedExtension::InternalSerializeWithCachedSizesToArray(
-    bool deterministic, ::google::protobuf::uint8* target) const {
-  (void)deterministic; // Unused
+uint8_t* AdvancedExtension::_InternalSerialize(
+    uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
   // @@protoc_insertion_point(serialize_to_array_start:substrait.extensions.AdvancedExtension)
-  ::google::protobuf::uint32 cached_has_bits = 0;
+  uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
   // .google.protobuf.Any optimization = 1;
-  if (this->has_optimization()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      InternalWriteMessageToArray(
-        1, this->_internal_optimization(), deterministic, target);
+  if (this->_internal_has_optimization()) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+      InternalWriteMessage(
+        1, _Internal::optimization(this), target, stream);
   }
 
   // .google.protobuf.Any enhancement = 2;
-  if (this->has_enhancement()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      InternalWriteMessageToArray(
-        2, this->_internal_enhancement(), deterministic, target);
+  if (this->_internal_has_enhancement()) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+      InternalWriteMessage(
+        2, _Internal::enhancement(this), target, stream);
   }
 
-  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), target);
+  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
+        _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
   }
   // @@protoc_insertion_point(serialize_to_array_end:substrait.extensions.AdvancedExtension)
   return target;
@@ -2158,65 +1777,53 @@ size_t AdvancedExtension::ByteSizeLong() const {
 // @@protoc_insertion_point(message_byte_size_start:substrait.extensions.AdvancedExtension)
   size_t total_size = 0;
 
-  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()));
-  }
+  uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
   // .google.protobuf.Any optimization = 1;
-  if (this->has_optimization()) {
+  if (this->_internal_has_optimization()) {
     total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::MessageSize(
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
         *optimization_);
   }
 
   // .google.protobuf.Any enhancement = 2;
-  if (this->has_enhancement()) {
+  if (this->_internal_has_enhancement()) {
     total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::MessageSize(
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
         *enhancement_);
   }
 
-  int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
-  SetCachedSize(cached_size);
-  return total_size;
+  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
 }
 
-void AdvancedExtension::MergeFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:substrait.extensions.AdvancedExtension)
-  GOOGLE_DCHECK_NE(&from, this);
-  const AdvancedExtension* source =
-      ::google::protobuf::internal::DynamicCastToGenerated<const AdvancedExtension>(
-          &from);
-  if (source == NULL) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:substrait.extensions.AdvancedExtension)
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:substrait.extensions.AdvancedExtension)
-    MergeFrom(*source);
-  }
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData AdvancedExtension::_class_data_ = {
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    AdvancedExtension::MergeImpl
+};
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*AdvancedExtension::GetClassData() const { return &_class_data_; }
+
+void AdvancedExtension::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
+                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
+  static_cast<AdvancedExtension *>(to)->MergeFrom(
+      static_cast<const AdvancedExtension &>(from));
 }
+
 
 void AdvancedExtension::MergeFrom(const AdvancedExtension& from) {
 // @@protoc_insertion_point(class_specific_merge_from_start:substrait.extensions.AdvancedExtension)
   GOOGLE_DCHECK_NE(&from, this);
-  _internal_metadata_.MergeFrom(from._internal_metadata_);
-  ::google::protobuf::uint32 cached_has_bits = 0;
+  uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
-  if (from.has_optimization()) {
-    mutable_optimization()->::google::protobuf::Any::MergeFrom(from.optimization());
+  if (from._internal_has_optimization()) {
+    _internal_mutable_optimization()->::PROTOBUF_NAMESPACE_ID::Any::MergeFrom(from._internal_optimization());
   }
-  if (from.has_enhancement()) {
-    mutable_enhancement()->::google::protobuf::Any::MergeFrom(from.enhancement());
+  if (from._internal_has_enhancement()) {
+    _internal_mutable_enhancement()->::PROTOBUF_NAMESPACE_ID::Any::MergeFrom(from._internal_enhancement());
   }
-}
-
-void AdvancedExtension::CopyFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:substrait.extensions.AdvancedExtension)
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void AdvancedExtension::CopyFrom(const AdvancedExtension& from) {
@@ -2230,47 +1837,46 @@ bool AdvancedExtension::IsInitialized() const {
   return true;
 }
 
-void AdvancedExtension::Swap(AdvancedExtension* other) {
-  if (other == this) return;
-  InternalSwap(other);
-}
 void AdvancedExtension::InternalSwap(AdvancedExtension* other) {
   using std::swap;
-  swap(optimization_, other->optimization_);
-  swap(enhancement_, other->enhancement_);
-  _internal_metadata_.Swap(&other->_internal_metadata_);
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  ::PROTOBUF_NAMESPACE_ID::internal::memswap<
+      PROTOBUF_FIELD_OFFSET(AdvancedExtension, enhancement_)
+      + sizeof(AdvancedExtension::enhancement_)
+      - PROTOBUF_FIELD_OFFSET(AdvancedExtension, optimization_)>(
+          reinterpret_cast<char*>(&optimization_),
+          reinterpret_cast<char*>(&other->optimization_));
 }
 
-::google::protobuf::Metadata AdvancedExtension::GetMetadata() const {
-  protobuf_substrait_2fextensions_2fextensions_2eproto::protobuf_AssignDescriptorsOnce();
-  return ::protobuf_substrait_2fextensions_2fextensions_2eproto::file_level_metadata[kIndexInFileMessages];
+::PROTOBUF_NAMESPACE_ID::Metadata AdvancedExtension::GetMetadata() const {
+  return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
+      &descriptor_table_substrait_2fextensions_2fextensions_2eproto_getter, &descriptor_table_substrait_2fextensions_2fextensions_2eproto_once,
+      file_level_metadata_substrait_2fextensions_2fextensions_2eproto[5]);
 }
-
 
 // @@protoc_insertion_point(namespace_scope)
 }  // namespace extensions
 }  // namespace substrait
-namespace google {
-namespace protobuf {
-template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::substrait::extensions::SimpleExtensionURI* Arena::CreateMaybeMessage< ::substrait::extensions::SimpleExtensionURI >(Arena* arena) {
-  return Arena::CreateInternal< ::substrait::extensions::SimpleExtensionURI >(arena);
+PROTOBUF_NAMESPACE_OPEN
+template<> PROTOBUF_NOINLINE ::substrait::extensions::SimpleExtensionURI* Arena::CreateMaybeMessage< ::substrait::extensions::SimpleExtensionURI >(Arena* arena) {
+  return Arena::CreateMessageInternal< ::substrait::extensions::SimpleExtensionURI >(arena);
 }
-template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::substrait::extensions::SimpleExtensionDeclaration_ExtensionType* Arena::CreateMaybeMessage< ::substrait::extensions::SimpleExtensionDeclaration_ExtensionType >(Arena* arena) {
-  return Arena::CreateInternal< ::substrait::extensions::SimpleExtensionDeclaration_ExtensionType >(arena);
+template<> PROTOBUF_NOINLINE ::substrait::extensions::SimpleExtensionDeclaration_ExtensionType* Arena::CreateMaybeMessage< ::substrait::extensions::SimpleExtensionDeclaration_ExtensionType >(Arena* arena) {
+  return Arena::CreateMessageInternal< ::substrait::extensions::SimpleExtensionDeclaration_ExtensionType >(arena);
 }
-template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::substrait::extensions::SimpleExtensionDeclaration_ExtensionTypeVariation* Arena::CreateMaybeMessage< ::substrait::extensions::SimpleExtensionDeclaration_ExtensionTypeVariation >(Arena* arena) {
-  return Arena::CreateInternal< ::substrait::extensions::SimpleExtensionDeclaration_ExtensionTypeVariation >(arena);
+template<> PROTOBUF_NOINLINE ::substrait::extensions::SimpleExtensionDeclaration_ExtensionTypeVariation* Arena::CreateMaybeMessage< ::substrait::extensions::SimpleExtensionDeclaration_ExtensionTypeVariation >(Arena* arena) {
+  return Arena::CreateMessageInternal< ::substrait::extensions::SimpleExtensionDeclaration_ExtensionTypeVariation >(arena);
 }
-template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::substrait::extensions::SimpleExtensionDeclaration_ExtensionFunction* Arena::CreateMaybeMessage< ::substrait::extensions::SimpleExtensionDeclaration_ExtensionFunction >(Arena* arena) {
-  return Arena::CreateInternal< ::substrait::extensions::SimpleExtensionDeclaration_ExtensionFunction >(arena);
+template<> PROTOBUF_NOINLINE ::substrait::extensions::SimpleExtensionDeclaration_ExtensionFunction* Arena::CreateMaybeMessage< ::substrait::extensions::SimpleExtensionDeclaration_ExtensionFunction >(Arena* arena) {
+  return Arena::CreateMessageInternal< ::substrait::extensions::SimpleExtensionDeclaration_ExtensionFunction >(arena);
 }
-template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::substrait::extensions::SimpleExtensionDeclaration* Arena::CreateMaybeMessage< ::substrait::extensions::SimpleExtensionDeclaration >(Arena* arena) {
-  return Arena::CreateInternal< ::substrait::extensions::SimpleExtensionDeclaration >(arena);
+template<> PROTOBUF_NOINLINE ::substrait::extensions::SimpleExtensionDeclaration* Arena::CreateMaybeMessage< ::substrait::extensions::SimpleExtensionDeclaration >(Arena* arena) {
+  return Arena::CreateMessageInternal< ::substrait::extensions::SimpleExtensionDeclaration >(arena);
 }
-template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::substrait::extensions::AdvancedExtension* Arena::CreateMaybeMessage< ::substrait::extensions::AdvancedExtension >(Arena* arena) {
-  return Arena::CreateInternal< ::substrait::extensions::AdvancedExtension >(arena);
+template<> PROTOBUF_NOINLINE ::substrait::extensions::AdvancedExtension* Arena::CreateMaybeMessage< ::substrait::extensions::AdvancedExtension >(Arena* arena) {
+  return Arena::CreateMessageInternal< ::substrait::extensions::AdvancedExtension >(arena);
 }
-}  // namespace protobuf
-}  // namespace google
+PROTOBUF_NAMESPACE_CLOSE
 
 // @@protoc_insertion_point(global_scope)
+#include <google/protobuf/port_undef.inc>

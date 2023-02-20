@@ -5,260 +5,202 @@
 
 #include <algorithm>
 
-#include <google/protobuf/stubs/common.h>
-#include <google/protobuf/stubs/port.h>
 #include <google/protobuf/io/coded_stream.h>
-#include <google/protobuf/wire_format_lite_inl.h>
+#include <google/protobuf/extension_set.h>
+#include <google/protobuf/wire_format_lite.h>
 #include <google/protobuf/descriptor.h>
 #include <google/protobuf/generated_message_reflection.h>
 #include <google/protobuf/reflection_ops.h>
 #include <google/protobuf/wire_format.h>
-// This is a temporary google only hack
-#ifdef GOOGLE_PROTOBUF_ENFORCE_UNIQUENESS
-#include "third_party/protobuf/version.h"
-#endif
 // @@protoc_insertion_point(includes)
+#include <google/protobuf/port_def.inc>
 
-namespace protobuf_substrait_2falgebra_2eproto {
-extern PROTOBUF_INTERNAL_EXPORT_protobuf_substrait_2falgebra_2eproto ::google::protobuf::internal::SCCInfo<18> scc_info_AggregateFunction;
-extern PROTOBUF_INTERNAL_EXPORT_protobuf_substrait_2falgebra_2eproto ::google::protobuf::internal::SCCInfo<1> scc_info_RelRoot;
-}  // namespace protobuf_substrait_2falgebra_2eproto
-namespace protobuf_substrait_2fextensions_2fextensions_2eproto {
-extern PROTOBUF_INTERNAL_EXPORT_protobuf_substrait_2fextensions_2fextensions_2eproto ::google::protobuf::internal::SCCInfo<0> scc_info_SimpleExtensionURI;
-extern PROTOBUF_INTERNAL_EXPORT_protobuf_substrait_2fextensions_2fextensions_2eproto ::google::protobuf::internal::SCCInfo<1> scc_info_AdvancedExtension;
-extern PROTOBUF_INTERNAL_EXPORT_protobuf_substrait_2fextensions_2fextensions_2eproto ::google::protobuf::internal::SCCInfo<3> scc_info_SimpleExtensionDeclaration;
-}  // namespace protobuf_substrait_2fextensions_2fextensions_2eproto
-namespace protobuf_substrait_2fplan_2eproto {
-extern PROTOBUF_INTERNAL_EXPORT_protobuf_substrait_2fplan_2eproto ::google::protobuf::internal::SCCInfo<0> scc_info_Version;
-extern PROTOBUF_INTERNAL_EXPORT_protobuf_substrait_2fplan_2eproto ::google::protobuf::internal::SCCInfo<2> scc_info_PlanRel;
-}  // namespace protobuf_substrait_2fplan_2eproto
+PROTOBUF_PRAGMA_INIT_SEG
 namespace substrait {
-class PlanRelDefaultTypeInternal {
- public:
-  ::google::protobuf::internal::ExplicitlyConstructed<PlanRel>
-      _instance;
-  const ::substrait::Rel* rel_;
-  const ::substrait::RelRoot* root_;
-} _PlanRel_default_instance_;
-class PlanDefaultTypeInternal {
- public:
-  ::google::protobuf::internal::ExplicitlyConstructed<Plan>
-      _instance;
-} _Plan_default_instance_;
-class PlanVersionDefaultTypeInternal {
- public:
-  ::google::protobuf::internal::ExplicitlyConstructed<PlanVersion>
-      _instance;
-} _PlanVersion_default_instance_;
-class VersionDefaultTypeInternal {
- public:
-  ::google::protobuf::internal::ExplicitlyConstructed<Version>
-      _instance;
-} _Version_default_instance_;
-}  // namespace substrait
-namespace protobuf_substrait_2fplan_2eproto {
-static void InitDefaultsPlanRel() {
-  GOOGLE_PROTOBUF_VERIFY_VERSION;
-
-  {
-    void* ptr = &::substrait::_PlanRel_default_instance_;
-    new (ptr) ::substrait::PlanRel();
-    ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
-  }
-  ::substrait::PlanRel::InitAsDefaultInstance();
-}
-
-::google::protobuf::internal::SCCInfo<2> scc_info_PlanRel =
-    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 2, InitDefaultsPlanRel}, {
-      &protobuf_substrait_2falgebra_2eproto::scc_info_AggregateFunction.base,
-      &protobuf_substrait_2falgebra_2eproto::scc_info_RelRoot.base,}};
-
-static void InitDefaultsPlan() {
-  GOOGLE_PROTOBUF_VERIFY_VERSION;
-
-  {
-    void* ptr = &::substrait::_Plan_default_instance_;
-    new (ptr) ::substrait::Plan();
-    ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
-  }
-  ::substrait::Plan::InitAsDefaultInstance();
-}
-
-::google::protobuf::internal::SCCInfo<5> scc_info_Plan =
-    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 5, InitDefaultsPlan}, {
-      &protobuf_substrait_2fplan_2eproto::scc_info_Version.base,
-      &protobuf_substrait_2fextensions_2fextensions_2eproto::scc_info_SimpleExtensionURI.base,
-      &protobuf_substrait_2fextensions_2fextensions_2eproto::scc_info_SimpleExtensionDeclaration.base,
-      &protobuf_substrait_2fplan_2eproto::scc_info_PlanRel.base,
-      &protobuf_substrait_2fextensions_2fextensions_2eproto::scc_info_AdvancedExtension.base,}};
-
-static void InitDefaultsPlanVersion() {
-  GOOGLE_PROTOBUF_VERIFY_VERSION;
-
-  {
-    void* ptr = &::substrait::_PlanVersion_default_instance_;
-    new (ptr) ::substrait::PlanVersion();
-    ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
-  }
-  ::substrait::PlanVersion::InitAsDefaultInstance();
-}
-
-::google::protobuf::internal::SCCInfo<1> scc_info_PlanVersion =
-    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 1, InitDefaultsPlanVersion}, {
-      &protobuf_substrait_2fplan_2eproto::scc_info_Version.base,}};
-
-static void InitDefaultsVersion() {
-  GOOGLE_PROTOBUF_VERIFY_VERSION;
-
-  {
-    void* ptr = &::substrait::_Version_default_instance_;
-    new (ptr) ::substrait::Version();
-    ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
-  }
-  ::substrait::Version::InitAsDefaultInstance();
-}
-
-::google::protobuf::internal::SCCInfo<0> scc_info_Version =
-    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsVersion}, {}};
-
-void InitDefaults() {
-  ::google::protobuf::internal::InitSCC(&scc_info_PlanRel.base);
-  ::google::protobuf::internal::InitSCC(&scc_info_Plan.base);
-  ::google::protobuf::internal::InitSCC(&scc_info_PlanVersion.base);
-  ::google::protobuf::internal::InitSCC(&scc_info_Version.base);
-}
-
-::google::protobuf::Metadata file_level_metadata[4];
-
-const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
-  ~0u,  // no _has_bits_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::substrait::PlanRel, _internal_metadata_),
-  ~0u,  // no _extensions_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::substrait::PlanRel, _oneof_case_[0]),
-  ~0u,  // no _weak_field_map_
-  offsetof(::substrait::PlanRelDefaultTypeInternal, rel_),
-  offsetof(::substrait::PlanRelDefaultTypeInternal, root_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::substrait::PlanRel, rel_type_),
-  ~0u,  // no _has_bits_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::substrait::Plan, _internal_metadata_),
-  ~0u,  // no _extensions_
-  ~0u,  // no _oneof_case_
-  ~0u,  // no _weak_field_map_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::substrait::Plan, version_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::substrait::Plan, extension_uris_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::substrait::Plan, extensions_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::substrait::Plan, relations_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::substrait::Plan, advanced_extensions_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::substrait::Plan, expected_type_urls_),
-  ~0u,  // no _has_bits_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::substrait::PlanVersion, _internal_metadata_),
-  ~0u,  // no _extensions_
-  ~0u,  // no _oneof_case_
-  ~0u,  // no _weak_field_map_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::substrait::PlanVersion, version_),
-  ~0u,  // no _has_bits_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::substrait::Version, _internal_metadata_),
-  ~0u,  // no _extensions_
-  ~0u,  // no _oneof_case_
-  ~0u,  // no _weak_field_map_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::substrait::Version, major_number_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::substrait::Version, minor_number_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::substrait::Version, patch_number_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::substrait::Version, git_hash_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::substrait::Version, producer_),
-};
-static const ::google::protobuf::internal::MigrationSchema schemas[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
-  { 0, -1, sizeof(::substrait::PlanRel)},
-  { 8, -1, sizeof(::substrait::Plan)},
-  { 19, -1, sizeof(::substrait::PlanVersion)},
-  { 25, -1, sizeof(::substrait::Version)},
-};
-
-static ::google::protobuf::Message const * const file_default_instances[] = {
-  reinterpret_cast<const ::google::protobuf::Message*>(&::substrait::_PlanRel_default_instance_),
-  reinterpret_cast<const ::google::protobuf::Message*>(&::substrait::_Plan_default_instance_),
-  reinterpret_cast<const ::google::protobuf::Message*>(&::substrait::_PlanVersion_default_instance_),
-  reinterpret_cast<const ::google::protobuf::Message*>(&::substrait::_Version_default_instance_),
-};
-
-void protobuf_AssignDescriptors() {
-  AddDescriptors();
-  AssignDescriptors(
-      "substrait/plan.proto", schemas, file_default_instances, TableStruct::offsets,
-      file_level_metadata, NULL, NULL);
-}
-
-void protobuf_AssignDescriptorsOnce() {
-  static ::google::protobuf::internal::once_flag once;
-  ::google::protobuf::internal::call_once(once, protobuf_AssignDescriptors);
-}
-
-void protobuf_RegisterTypes(const ::std::string&) GOOGLE_PROTOBUF_ATTRIBUTE_COLD;
-void protobuf_RegisterTypes(const ::std::string&) {
-  protobuf_AssignDescriptorsOnce();
-  ::google::protobuf::internal::RegisterAllTypes(file_level_metadata, 4);
-}
-
-void AddDescriptorsImpl() {
-  InitDefaults();
-  static const char descriptor[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
-      "\n\024substrait/plan.proto\022\tsubstrait\032\027subst"
-      "rait/algebra.proto\032%substrait/extensions"
-      "/extensions.proto\"X\n\007PlanRel\022\035\n\003rel\030\001 \001("
-      "\0132\016.substrait.RelH\000\022\"\n\004root\030\002 \001(\0132\022.subs"
-      "trait.RelRootH\000B\n\n\010rel_type\"\274\002\n\004Plan\022#\n\007"
-      "version\030\006 \001(\0132\022.substrait.Version\022@\n\016ext"
-      "ension_uris\030\001 \003(\0132(.substrait.extensions"
-      ".SimpleExtensionURI\022D\n\nextensions\030\002 \003(\0132"
-      "0.substrait.extensions.SimpleExtensionDe"
-      "claration\022%\n\trelations\030\003 \003(\0132\022.substrait"
-      ".PlanRel\022D\n\023advanced_extensions\030\004 \001(\0132\'."
-      "substrait.extensions.AdvancedExtension\022\032"
-      "\n\022expected_type_urls\030\005 \003(\t\"2\n\013PlanVersio"
-      "n\022#\n\007version\030\006 \001(\0132\022.substrait.Version\"o"
-      "\n\007Version\022\024\n\014major_number\030\001 \001(\r\022\024\n\014minor"
-      "_number\030\002 \001(\r\022\024\n\014patch_number\030\003 \001(\r\022\020\n\010g"
-      "it_hash\030\004 \001(\t\022\020\n\010producer\030\005 \001(\tBW\n\022io.su"
-      "bstrait.protoP\001Z*github.com/substrait-io"
-      "/substrait-go/proto\252\002\022Substrait.Protobuf"
-      "b\006proto3"
+constexpr PlanRel::PlanRel(
+  ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized)
+  : _oneof_case_{}{}
+struct PlanRelDefaultTypeInternal {
+  constexpr PlanRelDefaultTypeInternal()
+    : _instance(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized{}) {}
+  ~PlanRelDefaultTypeInternal() {}
+  union {
+    PlanRel _instance;
   };
-  ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-      descriptor, 768);
-  ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
-    "substrait/plan.proto", &protobuf_RegisterTypes);
-  ::protobuf_substrait_2falgebra_2eproto::AddDescriptors();
-  ::protobuf_substrait_2fextensions_2fextensions_2eproto::AddDescriptors();
+};
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PlanRelDefaultTypeInternal _PlanRel_default_instance_;
+constexpr Plan::Plan(
+  ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized)
+  : extension_uris_()
+  , extensions_()
+  , relations_()
+  , expected_type_urls_()
+  , advanced_extensions_(nullptr)
+  , version_(nullptr){}
+struct PlanDefaultTypeInternal {
+  constexpr PlanDefaultTypeInternal()
+    : _instance(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized{}) {}
+  ~PlanDefaultTypeInternal() {}
+  union {
+    Plan _instance;
+  };
+};
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PlanDefaultTypeInternal _Plan_default_instance_;
+constexpr PlanVersion::PlanVersion(
+  ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized)
+  : version_(nullptr){}
+struct PlanVersionDefaultTypeInternal {
+  constexpr PlanVersionDefaultTypeInternal()
+    : _instance(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized{}) {}
+  ~PlanVersionDefaultTypeInternal() {}
+  union {
+    PlanVersion _instance;
+  };
+};
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PlanVersionDefaultTypeInternal _PlanVersion_default_instance_;
+constexpr Version::Version(
+  ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized)
+  : git_hash_(&::PROTOBUF_NAMESPACE_ID::internal::fixed_address_empty_string)
+  , producer_(&::PROTOBUF_NAMESPACE_ID::internal::fixed_address_empty_string)
+  , major_number_(0u)
+  , minor_number_(0u)
+  , patch_number_(0u){}
+struct VersionDefaultTypeInternal {
+  constexpr VersionDefaultTypeInternal()
+    : _instance(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized{}) {}
+  ~VersionDefaultTypeInternal() {}
+  union {
+    Version _instance;
+  };
+};
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT VersionDefaultTypeInternal _Version_default_instance_;
+}  // namespace substrait
+static ::PROTOBUF_NAMESPACE_ID::Metadata file_level_metadata_substrait_2fplan_2eproto[4];
+static constexpr ::PROTOBUF_NAMESPACE_ID::EnumDescriptor const** file_level_enum_descriptors_substrait_2fplan_2eproto = nullptr;
+static constexpr ::PROTOBUF_NAMESPACE_ID::ServiceDescriptor const** file_level_service_descriptors_substrait_2fplan_2eproto = nullptr;
+
+const uint32_t TableStruct_substrait_2fplan_2eproto::offsets[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
+  ~0u,  // no _has_bits_
+  PROTOBUF_FIELD_OFFSET(::substrait::PlanRel, _internal_metadata_),
+  ~0u,  // no _extensions_
+  PROTOBUF_FIELD_OFFSET(::substrait::PlanRel, _oneof_case_[0]),
+  ~0u,  // no _weak_field_map_
+  ~0u,  // no _inlined_string_donated_
+  ::PROTOBUF_NAMESPACE_ID::internal::kInvalidFieldOffsetTag,
+  ::PROTOBUF_NAMESPACE_ID::internal::kInvalidFieldOffsetTag,
+  PROTOBUF_FIELD_OFFSET(::substrait::PlanRel, rel_type_),
+  ~0u,  // no _has_bits_
+  PROTOBUF_FIELD_OFFSET(::substrait::Plan, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  ~0u,  // no _inlined_string_donated_
+  PROTOBUF_FIELD_OFFSET(::substrait::Plan, version_),
+  PROTOBUF_FIELD_OFFSET(::substrait::Plan, extension_uris_),
+  PROTOBUF_FIELD_OFFSET(::substrait::Plan, extensions_),
+  PROTOBUF_FIELD_OFFSET(::substrait::Plan, relations_),
+  PROTOBUF_FIELD_OFFSET(::substrait::Plan, advanced_extensions_),
+  PROTOBUF_FIELD_OFFSET(::substrait::Plan, expected_type_urls_),
+  ~0u,  // no _has_bits_
+  PROTOBUF_FIELD_OFFSET(::substrait::PlanVersion, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  ~0u,  // no _inlined_string_donated_
+  PROTOBUF_FIELD_OFFSET(::substrait::PlanVersion, version_),
+  ~0u,  // no _has_bits_
+  PROTOBUF_FIELD_OFFSET(::substrait::Version, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  ~0u,  // no _inlined_string_donated_
+  PROTOBUF_FIELD_OFFSET(::substrait::Version, major_number_),
+  PROTOBUF_FIELD_OFFSET(::substrait::Version, minor_number_),
+  PROTOBUF_FIELD_OFFSET(::substrait::Version, patch_number_),
+  PROTOBUF_FIELD_OFFSET(::substrait::Version, git_hash_),
+  PROTOBUF_FIELD_OFFSET(::substrait::Version, producer_),
+};
+static const ::PROTOBUF_NAMESPACE_ID::internal::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
+  { 0, -1, -1, sizeof(::substrait::PlanRel)},
+  { 9, -1, -1, sizeof(::substrait::Plan)},
+  { 21, -1, -1, sizeof(::substrait::PlanVersion)},
+  { 28, -1, -1, sizeof(::substrait::Version)},
+};
+
+static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] = {
+  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::substrait::_PlanRel_default_instance_),
+  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::substrait::_Plan_default_instance_),
+  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::substrait::_PlanVersion_default_instance_),
+  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::substrait::_Version_default_instance_),
+};
+
+const char descriptor_table_protodef_substrait_2fplan_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) =
+  "\n\024substrait/plan.proto\022\tsubstrait\032\027subst"
+  "rait/algebra.proto\032%substrait/extensions"
+  "/extensions.proto\"X\n\007PlanRel\022\035\n\003rel\030\001 \001("
+  "\0132\016.substrait.RelH\000\022\"\n\004root\030\002 \001(\0132\022.subs"
+  "trait.RelRootH\000B\n\n\010rel_type\"\274\002\n\004Plan\022#\n\007"
+  "version\030\006 \001(\0132\022.substrait.Version\022@\n\016ext"
+  "ension_uris\030\001 \003(\0132(.substrait.extensions"
+  ".SimpleExtensionURI\022D\n\nextensions\030\002 \003(\0132"
+  "0.substrait.extensions.SimpleExtensionDe"
+  "claration\022%\n\trelations\030\003 \003(\0132\022.substrait"
+  ".PlanRel\022D\n\023advanced_extensions\030\004 \001(\0132\'."
+  "substrait.extensions.AdvancedExtension\022\032"
+  "\n\022expected_type_urls\030\005 \003(\t\"2\n\013PlanVersio"
+  "n\022#\n\007version\030\006 \001(\0132\022.substrait.Version\"o"
+  "\n\007Version\022\024\n\014major_number\030\001 \001(\r\022\024\n\014minor"
+  "_number\030\002 \001(\r\022\024\n\014patch_number\030\003 \001(\r\022\020\n\010g"
+  "it_hash\030\004 \001(\t\022\020\n\010producer\030\005 \001(\tBW\n\022io.su"
+  "bstrait.protoP\001Z*github.com/substrait-io"
+  "/substrait-go/proto\252\002\022Substrait.Protobuf"
+  "b\006proto3"
+  ;
+static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor_table_substrait_2fplan_2eproto_deps[2] = {
+  &::descriptor_table_substrait_2falgebra_2eproto,
+  &::descriptor_table_substrait_2fextensions_2fextensions_2eproto,
+};
+static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_substrait_2fplan_2eproto_once;
+const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_substrait_2fplan_2eproto = {
+  false, false, 768, descriptor_table_protodef_substrait_2fplan_2eproto, "substrait/plan.proto", 
+  &descriptor_table_substrait_2fplan_2eproto_once, descriptor_table_substrait_2fplan_2eproto_deps, 2, 4,
+  schemas, file_default_instances, TableStruct_substrait_2fplan_2eproto::offsets,
+  file_level_metadata_substrait_2fplan_2eproto, file_level_enum_descriptors_substrait_2fplan_2eproto, file_level_service_descriptors_substrait_2fplan_2eproto,
+};
+PROTOBUF_ATTRIBUTE_WEAK const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable* descriptor_table_substrait_2fplan_2eproto_getter() {
+  return &descriptor_table_substrait_2fplan_2eproto;
 }
 
-void AddDescriptors() {
-  static ::google::protobuf::internal::once_flag once;
-  ::google::protobuf::internal::call_once(once, AddDescriptorsImpl);
-}
-// Force AddDescriptors() to be called at dynamic initialization time.
-struct StaticDescriptorInitializer {
-  StaticDescriptorInitializer() {
-    AddDescriptors();
-  }
-} static_descriptor_initializer;
-}  // namespace protobuf_substrait_2fplan_2eproto
+// Force running AddDescriptors() at dynamic initialization time.
+PROTOBUF_ATTRIBUTE_INIT_PRIORITY static ::PROTOBUF_NAMESPACE_ID::internal::AddDescriptorsRunner dynamic_init_dummy_substrait_2fplan_2eproto(&descriptor_table_substrait_2fplan_2eproto);
 namespace substrait {
 
 // ===================================================================
 
-void PlanRel::InitAsDefaultInstance() {
-  ::substrait::_PlanRel_default_instance_.rel_ = const_cast< ::substrait::Rel*>(
-      ::substrait::Rel::internal_default_instance());
-  ::substrait::_PlanRel_default_instance_.root_ = const_cast< ::substrait::RelRoot*>(
-      ::substrait::RelRoot::internal_default_instance());
+class PlanRel::_Internal {
+ public:
+  static const ::substrait::Rel& rel(const PlanRel* msg);
+  static const ::substrait::RelRoot& root(const PlanRel* msg);
+};
+
+const ::substrait::Rel&
+PlanRel::_Internal::rel(const PlanRel* msg) {
+  return *msg->rel_type_.rel_;
+}
+const ::substrait::RelRoot&
+PlanRel::_Internal::root(const PlanRel* msg) {
+  return *msg->rel_type_.root_;
 }
 void PlanRel::set_allocated_rel(::substrait::Rel* rel) {
-  ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
   clear_rel_type();
   if (rel) {
-    ::google::protobuf::Arena* submessage_arena = NULL;
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+        ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper<
+            ::PROTOBUF_NAMESPACE_ID::MessageLite>::GetOwningArena(
+                reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(rel));
     if (message_arena != submessage_arena) {
-      rel = ::google::protobuf::internal::GetOwnedMessage(
+      rel = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
           message_arena, rel, submessage_arena);
     }
     set_has_rel();
@@ -267,18 +209,23 @@ void PlanRel::set_allocated_rel(::substrait::Rel* rel) {
   // @@protoc_insertion_point(field_set_allocated:substrait.PlanRel.rel)
 }
 void PlanRel::clear_rel() {
-  if (has_rel()) {
-    delete rel_type_.rel_;
+  if (_internal_has_rel()) {
+    if (GetArenaForAllocation() == nullptr) {
+      delete rel_type_.rel_;
+    }
     clear_has_rel_type();
   }
 }
 void PlanRel::set_allocated_root(::substrait::RelRoot* root) {
-  ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
   clear_rel_type();
   if (root) {
-    ::google::protobuf::Arena* submessage_arena = NULL;
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+        ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper<
+            ::PROTOBUF_NAMESPACE_ID::MessageLite>::GetOwningArena(
+                reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(root));
     if (message_arena != submessage_arena) {
-      root = ::google::protobuf::internal::GetOwnedMessage(
+      root = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
           message_arena, root, submessage_arena);
     }
     set_has_root();
@@ -287,35 +234,33 @@ void PlanRel::set_allocated_root(::substrait::RelRoot* root) {
   // @@protoc_insertion_point(field_set_allocated:substrait.PlanRel.root)
 }
 void PlanRel::clear_root() {
-  if (has_root()) {
-    delete rel_type_.root_;
+  if (_internal_has_root()) {
+    if (GetArenaForAllocation() == nullptr) {
+      delete rel_type_.root_;
+    }
     clear_has_rel_type();
   }
 }
-#if !defined(_MSC_VER) || _MSC_VER >= 1900
-const int PlanRel::kRelFieldNumber;
-const int PlanRel::kRootFieldNumber;
-#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
-
-PlanRel::PlanRel()
-  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
-  ::google::protobuf::internal::InitSCC(
-      &protobuf_substrait_2fplan_2eproto::scc_info_PlanRel.base);
+PlanRel::PlanRel(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                         bool is_message_owned)
+  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
   SharedCtor();
-  // @@protoc_insertion_point(constructor:substrait.PlanRel)
+  if (!is_message_owned) {
+    RegisterArenaDtor(arena);
+  }
+  // @@protoc_insertion_point(arena_constructor:substrait.PlanRel)
 }
 PlanRel::PlanRel(const PlanRel& from)
-  : ::google::protobuf::Message(),
-      _internal_metadata_(NULL) {
-  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  : ::PROTOBUF_NAMESPACE_ID::Message() {
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
   clear_has_rel_type();
   switch (from.rel_type_case()) {
     case kRel: {
-      mutable_rel()->::substrait::Rel::MergeFrom(from.rel());
+      _internal_mutable_rel()->::substrait::Rel::MergeFrom(from._internal_rel());
       break;
     }
     case kRoot: {
-      mutable_root()->::substrait::RelRoot::MergeFrom(from.root());
+      _internal_mutable_root()->::substrait::RelRoot::MergeFrom(from._internal_root());
       break;
     }
     case REL_TYPE_NOT_SET: {
@@ -325,44 +270,47 @@ PlanRel::PlanRel(const PlanRel& from)
   // @@protoc_insertion_point(copy_constructor:substrait.PlanRel)
 }
 
-void PlanRel::SharedCtor() {
-  clear_has_rel_type();
+inline void PlanRel::SharedCtor() {
+clear_has_rel_type();
 }
 
 PlanRel::~PlanRel() {
   // @@protoc_insertion_point(destructor:substrait.PlanRel)
+  if (GetArenaForAllocation() != nullptr) return;
   SharedDtor();
+  _internal_metadata_.Delete<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
-void PlanRel::SharedDtor() {
+inline void PlanRel::SharedDtor() {
+  GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
   if (has_rel_type()) {
     clear_rel_type();
   }
 }
 
+void PlanRel::ArenaDtor(void* object) {
+  PlanRel* _this = reinterpret_cast< PlanRel* >(object);
+  (void)_this;
+}
+void PlanRel::RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena*) {
+}
 void PlanRel::SetCachedSize(int size) const {
   _cached_size_.Set(size);
 }
-const ::google::protobuf::Descriptor* PlanRel::descriptor() {
-  ::protobuf_substrait_2fplan_2eproto::protobuf_AssignDescriptorsOnce();
-  return ::protobuf_substrait_2fplan_2eproto::file_level_metadata[kIndexInFileMessages].descriptor;
-}
-
-const PlanRel& PlanRel::default_instance() {
-  ::google::protobuf::internal::InitSCC(&protobuf_substrait_2fplan_2eproto::scc_info_PlanRel.base);
-  return *internal_default_instance();
-}
-
 
 void PlanRel::clear_rel_type() {
 // @@protoc_insertion_point(one_of_clear_start:substrait.PlanRel)
   switch (rel_type_case()) {
     case kRel: {
-      delete rel_type_.rel_;
+      if (GetArenaForAllocation() == nullptr) {
+        delete rel_type_.rel_;
+      }
       break;
     }
     case kRoot: {
-      delete rel_type_.root_;
+      if (GetArenaForAllocation() == nullptr) {
+        delete rel_type_.root_;
+      }
       break;
     }
     case REL_TYPE_NOT_SET: {
@@ -375,117 +323,84 @@ void PlanRel::clear_rel_type() {
 
 void PlanRel::Clear() {
 // @@protoc_insertion_point(message_clear_start:substrait.PlanRel)
-  ::google::protobuf::uint32 cached_has_bits = 0;
+  uint32_t cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
   clear_rel_type();
-  _internal_metadata_.Clear();
+  _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
-bool PlanRel::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:substrait.PlanRel)
-  for (;;) {
-    ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+const char* PlanRel::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
+#define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
+  while (!ctx->Done(&ptr)) {
+    uint32_t tag;
+    ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
+    switch (tag >> 3) {
       // .substrait.Rel rel = 1;
-      case 1: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(10u /* 10 & 0xFF */)) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessage(
-               input, mutable_rel()));
-        } else {
+      case 1:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 10)) {
+          ptr = ctx->ParseMessage(_internal_mutable_rel(), ptr);
+          CHK_(ptr);
+        } else
           goto handle_unusual;
-        }
-        break;
-      }
-
+        continue;
       // .substrait.RelRoot root = 2;
-      case 2: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(18u /* 18 & 0xFF */)) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessage(
-               input, mutable_root()));
-        } else {
+      case 2:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 18)) {
+          ptr = ctx->ParseMessage(_internal_mutable_root(), ptr);
+          CHK_(ptr);
+        } else
           goto handle_unusual;
-        }
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, _internal_metadata_.mutable_unknown_fields()));
-        break;
-      }
+        continue;
+      default:
+        goto handle_unusual;
+    }  // switch
+  handle_unusual:
+    if ((tag == 0) || ((tag & 7) == 4)) {
+      CHK_(ptr);
+      ctx->SetLastTag(tag);
+      goto message_done;
     }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:substrait.PlanRel)
-  return true;
+    ptr = UnknownFieldParse(
+        tag,
+        _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
+        ptr, ctx);
+    CHK_(ptr != nullptr);
+  }  // while
+message_done:
+  return ptr;
 failure:
-  // @@protoc_insertion_point(parse_failure:substrait.PlanRel)
-  return false;
-#undef DO_
+  ptr = nullptr;
+  goto message_done;
+#undef CHK_
 }
 
-void PlanRel::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:substrait.PlanRel)
-  ::google::protobuf::uint32 cached_has_bits = 0;
-  (void) cached_has_bits;
-
-  // .substrait.Rel rel = 1;
-  if (has_rel()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->_internal_rel(), output);
-  }
-
-  // .substrait.RelRoot root = 2;
-  if (has_root()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      2, this->_internal_root(), output);
-  }
-
-  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), output);
-  }
-  // @@protoc_insertion_point(serialize_end:substrait.PlanRel)
-}
-
-::google::protobuf::uint8* PlanRel::InternalSerializeWithCachedSizesToArray(
-    bool deterministic, ::google::protobuf::uint8* target) const {
-  (void)deterministic; // Unused
+uint8_t* PlanRel::_InternalSerialize(
+    uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
   // @@protoc_insertion_point(serialize_to_array_start:substrait.PlanRel)
-  ::google::protobuf::uint32 cached_has_bits = 0;
+  uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
   // .substrait.Rel rel = 1;
-  if (has_rel()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      InternalWriteMessageToArray(
-        1, this->_internal_rel(), deterministic, target);
+  if (_internal_has_rel()) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+      InternalWriteMessage(
+        1, _Internal::rel(this), target, stream);
   }
 
   // .substrait.RelRoot root = 2;
-  if (has_root()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      InternalWriteMessageToArray(
-        2, this->_internal_root(), deterministic, target);
+  if (_internal_has_root()) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+      InternalWriteMessage(
+        2, _Internal::root(this), target, stream);
   }
 
-  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), target);
+  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
+        _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
   }
   // @@protoc_insertion_point(serialize_to_array_end:substrait.PlanRel)
   return target;
@@ -495,23 +410,22 @@ size_t PlanRel::ByteSizeLong() const {
 // @@protoc_insertion_point(message_byte_size_start:substrait.PlanRel)
   size_t total_size = 0;
 
-  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()));
-  }
+  uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
   switch (rel_type_case()) {
     // .substrait.Rel rel = 1;
     case kRel: {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSize(
+        ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
           *rel_type_.rel_);
       break;
     }
     // .substrait.RelRoot root = 2;
     case kRoot: {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSize(
+        ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
           *rel_type_.root_);
       break;
     }
@@ -519,53 +433,42 @@ size_t PlanRel::ByteSizeLong() const {
       break;
     }
   }
-  int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
-  SetCachedSize(cached_size);
-  return total_size;
+  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
 }
 
-void PlanRel::MergeFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:substrait.PlanRel)
-  GOOGLE_DCHECK_NE(&from, this);
-  const PlanRel* source =
-      ::google::protobuf::internal::DynamicCastToGenerated<const PlanRel>(
-          &from);
-  if (source == NULL) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:substrait.PlanRel)
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:substrait.PlanRel)
-    MergeFrom(*source);
-  }
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData PlanRel::_class_data_ = {
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    PlanRel::MergeImpl
+};
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*PlanRel::GetClassData() const { return &_class_data_; }
+
+void PlanRel::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
+                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
+  static_cast<PlanRel *>(to)->MergeFrom(
+      static_cast<const PlanRel &>(from));
 }
+
 
 void PlanRel::MergeFrom(const PlanRel& from) {
 // @@protoc_insertion_point(class_specific_merge_from_start:substrait.PlanRel)
   GOOGLE_DCHECK_NE(&from, this);
-  _internal_metadata_.MergeFrom(from._internal_metadata_);
-  ::google::protobuf::uint32 cached_has_bits = 0;
+  uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
   switch (from.rel_type_case()) {
     case kRel: {
-      mutable_rel()->::substrait::Rel::MergeFrom(from.rel());
+      _internal_mutable_rel()->::substrait::Rel::MergeFrom(from._internal_rel());
       break;
     }
     case kRoot: {
-      mutable_root()->::substrait::RelRoot::MergeFrom(from.root());
+      _internal_mutable_root()->::substrait::RelRoot::MergeFrom(from._internal_root());
       break;
     }
     case REL_TYPE_NOT_SET: {
       break;
     }
   }
-}
-
-void PlanRel::CopyFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:substrait.PlanRel)
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void PlanRel::CopyFrom(const PlanRel& from) {
@@ -579,30 +482,34 @@ bool PlanRel::IsInitialized() const {
   return true;
 }
 
-void PlanRel::Swap(PlanRel* other) {
-  if (other == this) return;
-  InternalSwap(other);
-}
 void PlanRel::InternalSwap(PlanRel* other) {
   using std::swap;
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   swap(rel_type_, other->rel_type_);
   swap(_oneof_case_[0], other->_oneof_case_[0]);
-  _internal_metadata_.Swap(&other->_internal_metadata_);
 }
 
-::google::protobuf::Metadata PlanRel::GetMetadata() const {
-  protobuf_substrait_2fplan_2eproto::protobuf_AssignDescriptorsOnce();
-  return ::protobuf_substrait_2fplan_2eproto::file_level_metadata[kIndexInFileMessages];
+::PROTOBUF_NAMESPACE_ID::Metadata PlanRel::GetMetadata() const {
+  return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
+      &descriptor_table_substrait_2fplan_2eproto_getter, &descriptor_table_substrait_2fplan_2eproto_once,
+      file_level_metadata_substrait_2fplan_2eproto[0]);
 }
-
 
 // ===================================================================
 
-void Plan::InitAsDefaultInstance() {
-  ::substrait::_Plan_default_instance_._instance.get_mutable()->version_ = const_cast< ::substrait::Version*>(
-      ::substrait::Version::internal_default_instance());
-  ::substrait::_Plan_default_instance_._instance.get_mutable()->advanced_extensions_ = const_cast< ::substrait::extensions::AdvancedExtension*>(
-      ::substrait::extensions::AdvancedExtension::internal_default_instance());
+class Plan::_Internal {
+ public:
+  static const ::substrait::Version& version(const Plan* msg);
+  static const ::substrait::extensions::AdvancedExtension& advanced_extensions(const Plan* msg);
+};
+
+const ::substrait::Version&
+Plan::_Internal::version(const Plan* msg) {
+  return *msg->version_;
+}
+const ::substrait::extensions::AdvancedExtension&
+Plan::_Internal::advanced_extensions(const Plan* msg) {
+  return *msg->advanced_extensions_;
 }
 void Plan::clear_extension_uris() {
   extension_uris_.Clear();
@@ -611,81 +518,77 @@ void Plan::clear_extensions() {
   extensions_.Clear();
 }
 void Plan::clear_advanced_extensions() {
-  if (GetArenaNoVirtual() == NULL && advanced_extensions_ != NULL) {
+  if (GetArenaForAllocation() == nullptr && advanced_extensions_ != nullptr) {
     delete advanced_extensions_;
   }
-  advanced_extensions_ = NULL;
+  advanced_extensions_ = nullptr;
 }
-#if !defined(_MSC_VER) || _MSC_VER >= 1900
-const int Plan::kVersionFieldNumber;
-const int Plan::kExtensionUrisFieldNumber;
-const int Plan::kExtensionsFieldNumber;
-const int Plan::kRelationsFieldNumber;
-const int Plan::kAdvancedExtensionsFieldNumber;
-const int Plan::kExpectedTypeUrlsFieldNumber;
-#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
-
-Plan::Plan()
-  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
-  ::google::protobuf::internal::InitSCC(
-      &protobuf_substrait_2fplan_2eproto::scc_info_Plan.base);
+Plan::Plan(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                         bool is_message_owned)
+  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned),
+  extension_uris_(arena),
+  extensions_(arena),
+  relations_(arena),
+  expected_type_urls_(arena) {
   SharedCtor();
-  // @@protoc_insertion_point(constructor:substrait.Plan)
+  if (!is_message_owned) {
+    RegisterArenaDtor(arena);
+  }
+  // @@protoc_insertion_point(arena_constructor:substrait.Plan)
 }
 Plan::Plan(const Plan& from)
-  : ::google::protobuf::Message(),
-      _internal_metadata_(NULL),
+  : ::PROTOBUF_NAMESPACE_ID::Message(),
       extension_uris_(from.extension_uris_),
       extensions_(from.extensions_),
       relations_(from.relations_),
       expected_type_urls_(from.expected_type_urls_) {
-  _internal_metadata_.MergeFrom(from._internal_metadata_);
-  if (from.has_advanced_extensions()) {
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  if (from._internal_has_advanced_extensions()) {
     advanced_extensions_ = new ::substrait::extensions::AdvancedExtension(*from.advanced_extensions_);
   } else {
-    advanced_extensions_ = NULL;
+    advanced_extensions_ = nullptr;
   }
-  if (from.has_version()) {
+  if (from._internal_has_version()) {
     version_ = new ::substrait::Version(*from.version_);
   } else {
-    version_ = NULL;
+    version_ = nullptr;
   }
   // @@protoc_insertion_point(copy_constructor:substrait.Plan)
 }
 
-void Plan::SharedCtor() {
-  ::memset(&advanced_extensions_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&version_) -
-      reinterpret_cast<char*>(&advanced_extensions_)) + sizeof(version_));
+inline void Plan::SharedCtor() {
+::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
+    reinterpret_cast<char*>(&advanced_extensions_) - reinterpret_cast<char*>(this)),
+    0, static_cast<size_t>(reinterpret_cast<char*>(&version_) -
+    reinterpret_cast<char*>(&advanced_extensions_)) + sizeof(version_));
 }
 
 Plan::~Plan() {
   // @@protoc_insertion_point(destructor:substrait.Plan)
+  if (GetArenaForAllocation() != nullptr) return;
   SharedDtor();
+  _internal_metadata_.Delete<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
-void Plan::SharedDtor() {
+inline void Plan::SharedDtor() {
+  GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
   if (this != internal_default_instance()) delete advanced_extensions_;
   if (this != internal_default_instance()) delete version_;
 }
 
+void Plan::ArenaDtor(void* object) {
+  Plan* _this = reinterpret_cast< Plan* >(object);
+  (void)_this;
+}
+void Plan::RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena*) {
+}
 void Plan::SetCachedSize(int size) const {
   _cached_size_.Set(size);
 }
-const ::google::protobuf::Descriptor* Plan::descriptor() {
-  ::protobuf_substrait_2fplan_2eproto::protobuf_AssignDescriptorsOnce();
-  return ::protobuf_substrait_2fplan_2eproto::file_level_metadata[kIndexInFileMessages].descriptor;
-}
-
-const Plan& Plan::default_instance() {
-  ::google::protobuf::internal::InitSCC(&protobuf_substrait_2fplan_2eproto::scc_info_Plan.base);
-  return *internal_default_instance();
-}
-
 
 void Plan::Clear() {
 // @@protoc_insertion_point(message_clear_start:substrait.Plan)
-  ::google::protobuf::uint32 cached_has_bits = 0;
+  uint32_t cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
@@ -693,244 +596,175 @@ void Plan::Clear() {
   extensions_.Clear();
   relations_.Clear();
   expected_type_urls_.Clear();
-  if (GetArenaNoVirtual() == NULL && advanced_extensions_ != NULL) {
+  if (GetArenaForAllocation() == nullptr && advanced_extensions_ != nullptr) {
     delete advanced_extensions_;
   }
-  advanced_extensions_ = NULL;
-  if (GetArenaNoVirtual() == NULL && version_ != NULL) {
+  advanced_extensions_ = nullptr;
+  if (GetArenaForAllocation() == nullptr && version_ != nullptr) {
     delete version_;
   }
-  version_ = NULL;
-  _internal_metadata_.Clear();
+  version_ = nullptr;
+  _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
-bool Plan::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:substrait.Plan)
-  for (;;) {
-    ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+const char* Plan::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
+#define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
+  while (!ctx->Done(&ptr)) {
+    uint32_t tag;
+    ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
+    switch (tag >> 3) {
       // repeated .substrait.extensions.SimpleExtensionURI extension_uris = 1;
-      case 1: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(10u /* 10 & 0xFF */)) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessage(
-                input, add_extension_uris()));
-        } else {
+      case 1:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 10)) {
+          ptr -= 1;
+          do {
+            ptr += 1;
+            ptr = ctx->ParseMessage(_internal_add_extension_uris(), ptr);
+            CHK_(ptr);
+            if (!ctx->DataAvailable(ptr)) break;
+          } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<10>(ptr));
+        } else
           goto handle_unusual;
-        }
-        break;
-      }
-
+        continue;
       // repeated .substrait.extensions.SimpleExtensionDeclaration extensions = 2;
-      case 2: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(18u /* 18 & 0xFF */)) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessage(
-                input, add_extensions()));
-        } else {
+      case 2:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 18)) {
+          ptr -= 1;
+          do {
+            ptr += 1;
+            ptr = ctx->ParseMessage(_internal_add_extensions(), ptr);
+            CHK_(ptr);
+            if (!ctx->DataAvailable(ptr)) break;
+          } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<18>(ptr));
+        } else
           goto handle_unusual;
-        }
-        break;
-      }
-
+        continue;
       // repeated .substrait.PlanRel relations = 3;
-      case 3: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(26u /* 26 & 0xFF */)) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessage(
-                input, add_relations()));
-        } else {
+      case 3:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 26)) {
+          ptr -= 1;
+          do {
+            ptr += 1;
+            ptr = ctx->ParseMessage(_internal_add_relations(), ptr);
+            CHK_(ptr);
+            if (!ctx->DataAvailable(ptr)) break;
+          } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<26>(ptr));
+        } else
           goto handle_unusual;
-        }
-        break;
-      }
-
+        continue;
       // .substrait.extensions.AdvancedExtension advanced_extensions = 4;
-      case 4: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(34u /* 34 & 0xFF */)) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessage(
-               input, mutable_advanced_extensions()));
-        } else {
+      case 4:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 34)) {
+          ptr = ctx->ParseMessage(_internal_mutable_advanced_extensions(), ptr);
+          CHK_(ptr);
+        } else
           goto handle_unusual;
-        }
-        break;
-      }
-
+        continue;
       // repeated string expected_type_urls = 5;
-      case 5: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(42u /* 42 & 0xFF */)) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->add_expected_type_urls()));
-          DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-            this->expected_type_urls(this->expected_type_urls_size() - 1).data(),
-            static_cast<int>(this->expected_type_urls(this->expected_type_urls_size() - 1).length()),
-            ::google::protobuf::internal::WireFormatLite::PARSE,
-            "substrait.Plan.expected_type_urls"));
-        } else {
+      case 5:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 42)) {
+          ptr -= 1;
+          do {
+            ptr += 1;
+            auto str = _internal_add_expected_type_urls();
+            ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
+            CHK_(::PROTOBUF_NAMESPACE_ID::internal::VerifyUTF8(str, "substrait.Plan.expected_type_urls"));
+            CHK_(ptr);
+            if (!ctx->DataAvailable(ptr)) break;
+          } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<42>(ptr));
+        } else
           goto handle_unusual;
-        }
-        break;
-      }
-
+        continue;
       // .substrait.Version version = 6;
-      case 6: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(50u /* 50 & 0xFF */)) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessage(
-               input, mutable_version()));
-        } else {
+      case 6:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 50)) {
+          ptr = ctx->ParseMessage(_internal_mutable_version(), ptr);
+          CHK_(ptr);
+        } else
           goto handle_unusual;
-        }
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, _internal_metadata_.mutable_unknown_fields()));
-        break;
-      }
+        continue;
+      default:
+        goto handle_unusual;
+    }  // switch
+  handle_unusual:
+    if ((tag == 0) || ((tag & 7) == 4)) {
+      CHK_(ptr);
+      ctx->SetLastTag(tag);
+      goto message_done;
     }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:substrait.Plan)
-  return true;
+    ptr = UnknownFieldParse(
+        tag,
+        _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
+        ptr, ctx);
+    CHK_(ptr != nullptr);
+  }  // while
+message_done:
+  return ptr;
 failure:
-  // @@protoc_insertion_point(parse_failure:substrait.Plan)
-  return false;
-#undef DO_
+  ptr = nullptr;
+  goto message_done;
+#undef CHK_
 }
 
-void Plan::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:substrait.Plan)
-  ::google::protobuf::uint32 cached_has_bits = 0;
-  (void) cached_has_bits;
-
-  // repeated .substrait.extensions.SimpleExtensionURI extension_uris = 1;
-  for (unsigned int i = 0,
-      n = static_cast<unsigned int>(this->extension_uris_size()); i < n; i++) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1,
-      this->extension_uris(static_cast<int>(i)),
-      output);
-  }
-
-  // repeated .substrait.extensions.SimpleExtensionDeclaration extensions = 2;
-  for (unsigned int i = 0,
-      n = static_cast<unsigned int>(this->extensions_size()); i < n; i++) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      2,
-      this->extensions(static_cast<int>(i)),
-      output);
-  }
-
-  // repeated .substrait.PlanRel relations = 3;
-  for (unsigned int i = 0,
-      n = static_cast<unsigned int>(this->relations_size()); i < n; i++) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      3,
-      this->relations(static_cast<int>(i)),
-      output);
-  }
-
-  // .substrait.extensions.AdvancedExtension advanced_extensions = 4;
-  if (this->has_advanced_extensions()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      4, this->_internal_advanced_extensions(), output);
-  }
-
-  // repeated string expected_type_urls = 5;
-  for (int i = 0, n = this->expected_type_urls_size(); i < n; i++) {
-    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-      this->expected_type_urls(i).data(), static_cast<int>(this->expected_type_urls(i).length()),
-      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
-      "substrait.Plan.expected_type_urls");
-    ::google::protobuf::internal::WireFormatLite::WriteString(
-      5, this->expected_type_urls(i), output);
-  }
-
-  // .substrait.Version version = 6;
-  if (this->has_version()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      6, this->_internal_version(), output);
-  }
-
-  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), output);
-  }
-  // @@protoc_insertion_point(serialize_end:substrait.Plan)
-}
-
-::google::protobuf::uint8* Plan::InternalSerializeWithCachedSizesToArray(
-    bool deterministic, ::google::protobuf::uint8* target) const {
-  (void)deterministic; // Unused
+uint8_t* Plan::_InternalSerialize(
+    uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
   // @@protoc_insertion_point(serialize_to_array_start:substrait.Plan)
-  ::google::protobuf::uint32 cached_has_bits = 0;
+  uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
   // repeated .substrait.extensions.SimpleExtensionURI extension_uris = 1;
   for (unsigned int i = 0,
-      n = static_cast<unsigned int>(this->extension_uris_size()); i < n; i++) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      InternalWriteMessageToArray(
-        1, this->extension_uris(static_cast<int>(i)), deterministic, target);
+      n = static_cast<unsigned int>(this->_internal_extension_uris_size()); i < n; i++) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+      InternalWriteMessage(1, this->_internal_extension_uris(i), target, stream);
   }
 
   // repeated .substrait.extensions.SimpleExtensionDeclaration extensions = 2;
   for (unsigned int i = 0,
-      n = static_cast<unsigned int>(this->extensions_size()); i < n; i++) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      InternalWriteMessageToArray(
-        2, this->extensions(static_cast<int>(i)), deterministic, target);
+      n = static_cast<unsigned int>(this->_internal_extensions_size()); i < n; i++) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+      InternalWriteMessage(2, this->_internal_extensions(i), target, stream);
   }
 
   // repeated .substrait.PlanRel relations = 3;
   for (unsigned int i = 0,
-      n = static_cast<unsigned int>(this->relations_size()); i < n; i++) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      InternalWriteMessageToArray(
-        3, this->relations(static_cast<int>(i)), deterministic, target);
+      n = static_cast<unsigned int>(this->_internal_relations_size()); i < n; i++) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+      InternalWriteMessage(3, this->_internal_relations(i), target, stream);
   }
 
   // .substrait.extensions.AdvancedExtension advanced_extensions = 4;
-  if (this->has_advanced_extensions()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      InternalWriteMessageToArray(
-        4, this->_internal_advanced_extensions(), deterministic, target);
+  if (this->_internal_has_advanced_extensions()) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+      InternalWriteMessage(
+        4, _Internal::advanced_extensions(this), target, stream);
   }
 
   // repeated string expected_type_urls = 5;
-  for (int i = 0, n = this->expected_type_urls_size(); i < n; i++) {
-    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-      this->expected_type_urls(i).data(), static_cast<int>(this->expected_type_urls(i).length()),
-      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+  for (int i = 0, n = this->_internal_expected_type_urls_size(); i < n; i++) {
+    const auto& s = this->_internal_expected_type_urls(i);
+    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
+      s.data(), static_cast<int>(s.length()),
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
       "substrait.Plan.expected_type_urls");
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteStringToArray(5, this->expected_type_urls(i), target);
+    target = stream->WriteString(5, s, target);
   }
 
   // .substrait.Version version = 6;
-  if (this->has_version()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      InternalWriteMessageToArray(
-        6, this->_internal_version(), deterministic, target);
+  if (this->_internal_has_version()) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+      InternalWriteMessage(
+        6, _Internal::version(this), target, stream);
   }
 
-  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), target);
+  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
+        _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
   }
   // @@protoc_insertion_point(serialize_to_array_end:substrait.Plan)
   return target;
@@ -940,110 +774,86 @@ size_t Plan::ByteSizeLong() const {
 // @@protoc_insertion_point(message_byte_size_start:substrait.Plan)
   size_t total_size = 0;
 
-  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()));
-  }
+  uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
   // repeated .substrait.extensions.SimpleExtensionURI extension_uris = 1;
-  {
-    unsigned int count = static_cast<unsigned int>(this->extension_uris_size());
-    total_size += 1UL * count;
-    for (unsigned int i = 0; i < count; i++) {
-      total_size +=
-        ::google::protobuf::internal::WireFormatLite::MessageSize(
-          this->extension_uris(static_cast<int>(i)));
-    }
+  total_size += 1UL * this->_internal_extension_uris_size();
+  for (const auto& msg : this->extension_uris_) {
+    total_size +=
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(msg);
   }
 
   // repeated .substrait.extensions.SimpleExtensionDeclaration extensions = 2;
-  {
-    unsigned int count = static_cast<unsigned int>(this->extensions_size());
-    total_size += 1UL * count;
-    for (unsigned int i = 0; i < count; i++) {
-      total_size +=
-        ::google::protobuf::internal::WireFormatLite::MessageSize(
-          this->extensions(static_cast<int>(i)));
-    }
+  total_size += 1UL * this->_internal_extensions_size();
+  for (const auto& msg : this->extensions_) {
+    total_size +=
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(msg);
   }
 
   // repeated .substrait.PlanRel relations = 3;
-  {
-    unsigned int count = static_cast<unsigned int>(this->relations_size());
-    total_size += 1UL * count;
-    for (unsigned int i = 0; i < count; i++) {
-      total_size +=
-        ::google::protobuf::internal::WireFormatLite::MessageSize(
-          this->relations(static_cast<int>(i)));
-    }
+  total_size += 1UL * this->_internal_relations_size();
+  for (const auto& msg : this->relations_) {
+    total_size +=
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(msg);
   }
 
   // repeated string expected_type_urls = 5;
   total_size += 1 *
-      ::google::protobuf::internal::FromIntSize(this->expected_type_urls_size());
-  for (int i = 0, n = this->expected_type_urls_size(); i < n; i++) {
-    total_size += ::google::protobuf::internal::WireFormatLite::StringSize(
-      this->expected_type_urls(i));
+      ::PROTOBUF_NAMESPACE_ID::internal::FromIntSize(expected_type_urls_.size());
+  for (int i = 0, n = expected_type_urls_.size(); i < n; i++) {
+    total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
+      expected_type_urls_.Get(i));
   }
 
   // .substrait.extensions.AdvancedExtension advanced_extensions = 4;
-  if (this->has_advanced_extensions()) {
+  if (this->_internal_has_advanced_extensions()) {
     total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::MessageSize(
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
         *advanced_extensions_);
   }
 
   // .substrait.Version version = 6;
-  if (this->has_version()) {
+  if (this->_internal_has_version()) {
     total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::MessageSize(
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
         *version_);
   }
 
-  int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
-  SetCachedSize(cached_size);
-  return total_size;
+  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
 }
 
-void Plan::MergeFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:substrait.Plan)
-  GOOGLE_DCHECK_NE(&from, this);
-  const Plan* source =
-      ::google::protobuf::internal::DynamicCastToGenerated<const Plan>(
-          &from);
-  if (source == NULL) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:substrait.Plan)
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:substrait.Plan)
-    MergeFrom(*source);
-  }
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData Plan::_class_data_ = {
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    Plan::MergeImpl
+};
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*Plan::GetClassData() const { return &_class_data_; }
+
+void Plan::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
+                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
+  static_cast<Plan *>(to)->MergeFrom(
+      static_cast<const Plan &>(from));
 }
+
 
 void Plan::MergeFrom(const Plan& from) {
 // @@protoc_insertion_point(class_specific_merge_from_start:substrait.Plan)
   GOOGLE_DCHECK_NE(&from, this);
-  _internal_metadata_.MergeFrom(from._internal_metadata_);
-  ::google::protobuf::uint32 cached_has_bits = 0;
+  uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
   extension_uris_.MergeFrom(from.extension_uris_);
   extensions_.MergeFrom(from.extensions_);
   relations_.MergeFrom(from.relations_);
   expected_type_urls_.MergeFrom(from.expected_type_urls_);
-  if (from.has_advanced_extensions()) {
-    mutable_advanced_extensions()->::substrait::extensions::AdvancedExtension::MergeFrom(from.advanced_extensions());
+  if (from._internal_has_advanced_extensions()) {
+    _internal_mutable_advanced_extensions()->::substrait::extensions::AdvancedExtension::MergeFrom(from._internal_advanced_extensions());
   }
-  if (from.has_version()) {
-    mutable_version()->::substrait::Version::MergeFrom(from.version());
+  if (from._internal_has_version()) {
+    _internal_mutable_version()->::substrait::Version::MergeFrom(from._internal_version());
   }
-}
-
-void Plan::CopyFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:substrait.Plan)
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void Plan::CopyFrom(const Plan& from) {
@@ -1057,174 +867,151 @@ bool Plan::IsInitialized() const {
   return true;
 }
 
-void Plan::Swap(Plan* other) {
-  if (other == this) return;
-  InternalSwap(other);
-}
 void Plan::InternalSwap(Plan* other) {
   using std::swap;
-  CastToBase(&extension_uris_)->InternalSwap(CastToBase(&other->extension_uris_));
-  CastToBase(&extensions_)->InternalSwap(CastToBase(&other->extensions_));
-  CastToBase(&relations_)->InternalSwap(CastToBase(&other->relations_));
-  expected_type_urls_.InternalSwap(CastToBase(&other->expected_type_urls_));
-  swap(advanced_extensions_, other->advanced_extensions_);
-  swap(version_, other->version_);
-  _internal_metadata_.Swap(&other->_internal_metadata_);
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  extension_uris_.InternalSwap(&other->extension_uris_);
+  extensions_.InternalSwap(&other->extensions_);
+  relations_.InternalSwap(&other->relations_);
+  expected_type_urls_.InternalSwap(&other->expected_type_urls_);
+  ::PROTOBUF_NAMESPACE_ID::internal::memswap<
+      PROTOBUF_FIELD_OFFSET(Plan, version_)
+      + sizeof(Plan::version_)
+      - PROTOBUF_FIELD_OFFSET(Plan, advanced_extensions_)>(
+          reinterpret_cast<char*>(&advanced_extensions_),
+          reinterpret_cast<char*>(&other->advanced_extensions_));
 }
 
-::google::protobuf::Metadata Plan::GetMetadata() const {
-  protobuf_substrait_2fplan_2eproto::protobuf_AssignDescriptorsOnce();
-  return ::protobuf_substrait_2fplan_2eproto::file_level_metadata[kIndexInFileMessages];
+::PROTOBUF_NAMESPACE_ID::Metadata Plan::GetMetadata() const {
+  return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
+      &descriptor_table_substrait_2fplan_2eproto_getter, &descriptor_table_substrait_2fplan_2eproto_once,
+      file_level_metadata_substrait_2fplan_2eproto[1]);
 }
-
 
 // ===================================================================
 
-void PlanVersion::InitAsDefaultInstance() {
-  ::substrait::_PlanVersion_default_instance_._instance.get_mutable()->version_ = const_cast< ::substrait::Version*>(
-      ::substrait::Version::internal_default_instance());
-}
-#if !defined(_MSC_VER) || _MSC_VER >= 1900
-const int PlanVersion::kVersionFieldNumber;
-#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
+class PlanVersion::_Internal {
+ public:
+  static const ::substrait::Version& version(const PlanVersion* msg);
+};
 
-PlanVersion::PlanVersion()
-  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
-  ::google::protobuf::internal::InitSCC(
-      &protobuf_substrait_2fplan_2eproto::scc_info_PlanVersion.base);
+const ::substrait::Version&
+PlanVersion::_Internal::version(const PlanVersion* msg) {
+  return *msg->version_;
+}
+PlanVersion::PlanVersion(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                         bool is_message_owned)
+  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
   SharedCtor();
-  // @@protoc_insertion_point(constructor:substrait.PlanVersion)
+  if (!is_message_owned) {
+    RegisterArenaDtor(arena);
+  }
+  // @@protoc_insertion_point(arena_constructor:substrait.PlanVersion)
 }
 PlanVersion::PlanVersion(const PlanVersion& from)
-  : ::google::protobuf::Message(),
-      _internal_metadata_(NULL) {
-  _internal_metadata_.MergeFrom(from._internal_metadata_);
-  if (from.has_version()) {
+  : ::PROTOBUF_NAMESPACE_ID::Message() {
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  if (from._internal_has_version()) {
     version_ = new ::substrait::Version(*from.version_);
   } else {
-    version_ = NULL;
+    version_ = nullptr;
   }
   // @@protoc_insertion_point(copy_constructor:substrait.PlanVersion)
 }
 
-void PlanVersion::SharedCtor() {
-  version_ = NULL;
+inline void PlanVersion::SharedCtor() {
+version_ = nullptr;
 }
 
 PlanVersion::~PlanVersion() {
   // @@protoc_insertion_point(destructor:substrait.PlanVersion)
+  if (GetArenaForAllocation() != nullptr) return;
   SharedDtor();
+  _internal_metadata_.Delete<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
-void PlanVersion::SharedDtor() {
+inline void PlanVersion::SharedDtor() {
+  GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
   if (this != internal_default_instance()) delete version_;
 }
 
+void PlanVersion::ArenaDtor(void* object) {
+  PlanVersion* _this = reinterpret_cast< PlanVersion* >(object);
+  (void)_this;
+}
+void PlanVersion::RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena*) {
+}
 void PlanVersion::SetCachedSize(int size) const {
   _cached_size_.Set(size);
 }
-const ::google::protobuf::Descriptor* PlanVersion::descriptor() {
-  ::protobuf_substrait_2fplan_2eproto::protobuf_AssignDescriptorsOnce();
-  return ::protobuf_substrait_2fplan_2eproto::file_level_metadata[kIndexInFileMessages].descriptor;
-}
-
-const PlanVersion& PlanVersion::default_instance() {
-  ::google::protobuf::internal::InitSCC(&protobuf_substrait_2fplan_2eproto::scc_info_PlanVersion.base);
-  return *internal_default_instance();
-}
-
 
 void PlanVersion::Clear() {
 // @@protoc_insertion_point(message_clear_start:substrait.PlanVersion)
-  ::google::protobuf::uint32 cached_has_bits = 0;
+  uint32_t cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  if (GetArenaNoVirtual() == NULL && version_ != NULL) {
+  if (GetArenaForAllocation() == nullptr && version_ != nullptr) {
     delete version_;
   }
-  version_ = NULL;
-  _internal_metadata_.Clear();
+  version_ = nullptr;
+  _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
-bool PlanVersion::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:substrait.PlanVersion)
-  for (;;) {
-    ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+const char* PlanVersion::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
+#define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
+  while (!ctx->Done(&ptr)) {
+    uint32_t tag;
+    ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
+    switch (tag >> 3) {
       // .substrait.Version version = 6;
-      case 6: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(50u /* 50 & 0xFF */)) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessage(
-               input, mutable_version()));
-        } else {
+      case 6:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 50)) {
+          ptr = ctx->ParseMessage(_internal_mutable_version(), ptr);
+          CHK_(ptr);
+        } else
           goto handle_unusual;
-        }
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, _internal_metadata_.mutable_unknown_fields()));
-        break;
-      }
+        continue;
+      default:
+        goto handle_unusual;
+    }  // switch
+  handle_unusual:
+    if ((tag == 0) || ((tag & 7) == 4)) {
+      CHK_(ptr);
+      ctx->SetLastTag(tag);
+      goto message_done;
     }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:substrait.PlanVersion)
-  return true;
+    ptr = UnknownFieldParse(
+        tag,
+        _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
+        ptr, ctx);
+    CHK_(ptr != nullptr);
+  }  // while
+message_done:
+  return ptr;
 failure:
-  // @@protoc_insertion_point(parse_failure:substrait.PlanVersion)
-  return false;
-#undef DO_
+  ptr = nullptr;
+  goto message_done;
+#undef CHK_
 }
 
-void PlanVersion::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:substrait.PlanVersion)
-  ::google::protobuf::uint32 cached_has_bits = 0;
-  (void) cached_has_bits;
-
-  // .substrait.Version version = 6;
-  if (this->has_version()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      6, this->_internal_version(), output);
-  }
-
-  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), output);
-  }
-  // @@protoc_insertion_point(serialize_end:substrait.PlanVersion)
-}
-
-::google::protobuf::uint8* PlanVersion::InternalSerializeWithCachedSizesToArray(
-    bool deterministic, ::google::protobuf::uint8* target) const {
-  (void)deterministic; // Unused
+uint8_t* PlanVersion::_InternalSerialize(
+    uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
   // @@protoc_insertion_point(serialize_to_array_start:substrait.PlanVersion)
-  ::google::protobuf::uint32 cached_has_bits = 0;
+  uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
   // .substrait.Version version = 6;
-  if (this->has_version()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      InternalWriteMessageToArray(
-        6, this->_internal_version(), deterministic, target);
+  if (this->_internal_has_version()) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+      InternalWriteMessage(
+        6, _Internal::version(this), target, stream);
   }
 
-  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), target);
+  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
+        _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
   }
   // @@protoc_insertion_point(serialize_to_array_end:substrait.PlanVersion)
   return target;
@@ -1234,55 +1021,43 @@ size_t PlanVersion::ByteSizeLong() const {
 // @@protoc_insertion_point(message_byte_size_start:substrait.PlanVersion)
   size_t total_size = 0;
 
-  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()));
-  }
+  uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
   // .substrait.Version version = 6;
-  if (this->has_version()) {
+  if (this->_internal_has_version()) {
     total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::MessageSize(
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
         *version_);
   }
 
-  int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
-  SetCachedSize(cached_size);
-  return total_size;
+  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
 }
 
-void PlanVersion::MergeFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:substrait.PlanVersion)
-  GOOGLE_DCHECK_NE(&from, this);
-  const PlanVersion* source =
-      ::google::protobuf::internal::DynamicCastToGenerated<const PlanVersion>(
-          &from);
-  if (source == NULL) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:substrait.PlanVersion)
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:substrait.PlanVersion)
-    MergeFrom(*source);
-  }
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData PlanVersion::_class_data_ = {
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    PlanVersion::MergeImpl
+};
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*PlanVersion::GetClassData() const { return &_class_data_; }
+
+void PlanVersion::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
+                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
+  static_cast<PlanVersion *>(to)->MergeFrom(
+      static_cast<const PlanVersion &>(from));
 }
+
 
 void PlanVersion::MergeFrom(const PlanVersion& from) {
 // @@protoc_insertion_point(class_specific_merge_from_start:substrait.PlanVersion)
   GOOGLE_DCHECK_NE(&from, this);
-  _internal_metadata_.MergeFrom(from._internal_metadata_);
-  ::google::protobuf::uint32 cached_has_bits = 0;
+  uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
-  if (from.has_version()) {
-    mutable_version()->::substrait::Version::MergeFrom(from.version());
+  if (from._internal_has_version()) {
+    _internal_mutable_version()->::substrait::Version::MergeFrom(from._internal_version());
   }
-}
-
-void PlanVersion::CopyFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:substrait.PlanVersion)
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void PlanVersion::CopyFrom(const PlanVersion& from) {
@@ -1296,52 +1071,51 @@ bool PlanVersion::IsInitialized() const {
   return true;
 }
 
-void PlanVersion::Swap(PlanVersion* other) {
-  if (other == this) return;
-  InternalSwap(other);
-}
 void PlanVersion::InternalSwap(PlanVersion* other) {
   using std::swap;
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   swap(version_, other->version_);
-  _internal_metadata_.Swap(&other->_internal_metadata_);
 }
 
-::google::protobuf::Metadata PlanVersion::GetMetadata() const {
-  protobuf_substrait_2fplan_2eproto::protobuf_AssignDescriptorsOnce();
-  return ::protobuf_substrait_2fplan_2eproto::file_level_metadata[kIndexInFileMessages];
+::PROTOBUF_NAMESPACE_ID::Metadata PlanVersion::GetMetadata() const {
+  return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
+      &descriptor_table_substrait_2fplan_2eproto_getter, &descriptor_table_substrait_2fplan_2eproto_once,
+      file_level_metadata_substrait_2fplan_2eproto[2]);
 }
-
 
 // ===================================================================
 
-void Version::InitAsDefaultInstance() {
-}
-#if !defined(_MSC_VER) || _MSC_VER >= 1900
-const int Version::kMajorNumberFieldNumber;
-const int Version::kMinorNumberFieldNumber;
-const int Version::kPatchNumberFieldNumber;
-const int Version::kGitHashFieldNumber;
-const int Version::kProducerFieldNumber;
-#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
+class Version::_Internal {
+ public:
+};
 
-Version::Version()
-  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
-  ::google::protobuf::internal::InitSCC(
-      &protobuf_substrait_2fplan_2eproto::scc_info_Version.base);
+Version::Version(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                         bool is_message_owned)
+  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
   SharedCtor();
-  // @@protoc_insertion_point(constructor:substrait.Version)
+  if (!is_message_owned) {
+    RegisterArenaDtor(arena);
+  }
+  // @@protoc_insertion_point(arena_constructor:substrait.Version)
 }
 Version::Version(const Version& from)
-  : ::google::protobuf::Message(),
-      _internal_metadata_(NULL) {
-  _internal_metadata_.MergeFrom(from._internal_metadata_);
-  git_hash_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  if (from.git_hash().size() > 0) {
-    git_hash_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.git_hash_);
+  : ::PROTOBUF_NAMESPACE_ID::Message() {
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  git_hash_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    git_hash_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), "", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  if (!from._internal_git_hash().empty()) {
+    git_hash_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, from._internal_git_hash(), 
+      GetArenaForAllocation());
   }
-  producer_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  if (from.producer().size() > 0) {
-    producer_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.producer_);
+  producer_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    producer_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), "", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  if (!from._internal_producer().empty()) {
+    producer_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, from._internal_producer(), 
+      GetArenaForAllocation());
   }
   ::memcpy(&major_number_, &from.major_number_,
     static_cast<size_t>(reinterpret_cast<char*>(&patch_number_) -
@@ -1349,251 +1123,178 @@ Version::Version(const Version& from)
   // @@protoc_insertion_point(copy_constructor:substrait.Version)
 }
 
-void Version::SharedCtor() {
-  git_hash_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  producer_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  ::memset(&major_number_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&patch_number_) -
-      reinterpret_cast<char*>(&major_number_)) + sizeof(patch_number_));
+inline void Version::SharedCtor() {
+git_hash_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  git_hash_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), "", GetArenaForAllocation());
+#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+producer_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  producer_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), "", GetArenaForAllocation());
+#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
+    reinterpret_cast<char*>(&major_number_) - reinterpret_cast<char*>(this)),
+    0, static_cast<size_t>(reinterpret_cast<char*>(&patch_number_) -
+    reinterpret_cast<char*>(&major_number_)) + sizeof(patch_number_));
 }
 
 Version::~Version() {
   // @@protoc_insertion_point(destructor:substrait.Version)
+  if (GetArenaForAllocation() != nullptr) return;
   SharedDtor();
+  _internal_metadata_.Delete<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
-void Version::SharedDtor() {
-  git_hash_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  producer_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+inline void Version::SharedDtor() {
+  GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
+  git_hash_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  producer_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
 
+void Version::ArenaDtor(void* object) {
+  Version* _this = reinterpret_cast< Version* >(object);
+  (void)_this;
+}
+void Version::RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena*) {
+}
 void Version::SetCachedSize(int size) const {
   _cached_size_.Set(size);
 }
-const ::google::protobuf::Descriptor* Version::descriptor() {
-  ::protobuf_substrait_2fplan_2eproto::protobuf_AssignDescriptorsOnce();
-  return ::protobuf_substrait_2fplan_2eproto::file_level_metadata[kIndexInFileMessages].descriptor;
-}
-
-const Version& Version::default_instance() {
-  ::google::protobuf::internal::InitSCC(&protobuf_substrait_2fplan_2eproto::scc_info_Version.base);
-  return *internal_default_instance();
-}
-
 
 void Version::Clear() {
 // @@protoc_insertion_point(message_clear_start:substrait.Version)
-  ::google::protobuf::uint32 cached_has_bits = 0;
+  uint32_t cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  git_hash_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  producer_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  git_hash_.ClearToEmpty();
+  producer_.ClearToEmpty();
   ::memset(&major_number_, 0, static_cast<size_t>(
       reinterpret_cast<char*>(&patch_number_) -
       reinterpret_cast<char*>(&major_number_)) + sizeof(patch_number_));
-  _internal_metadata_.Clear();
+  _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
-bool Version::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:substrait.Version)
-  for (;;) {
-    ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+const char* Version::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
+#define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
+  while (!ctx->Done(&ptr)) {
+    uint32_t tag;
+    ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
+    switch (tag >> 3) {
       // uint32 major_number = 1;
-      case 1: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(8u /* 8 & 0xFF */)) {
-
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
-                 input, &major_number_)));
-        } else {
+      case 1:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 8)) {
+          major_number_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+          CHK_(ptr);
+        } else
           goto handle_unusual;
-        }
-        break;
-      }
-
+        continue;
       // uint32 minor_number = 2;
-      case 2: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(16u /* 16 & 0xFF */)) {
-
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
-                 input, &minor_number_)));
-        } else {
+      case 2:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 16)) {
+          minor_number_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+          CHK_(ptr);
+        } else
           goto handle_unusual;
-        }
-        break;
-      }
-
+        continue;
       // uint32 patch_number = 3;
-      case 3: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(24u /* 24 & 0xFF */)) {
-
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
-                 input, &patch_number_)));
-        } else {
+      case 3:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 24)) {
+          patch_number_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+          CHK_(ptr);
+        } else
           goto handle_unusual;
-        }
-        break;
-      }
-
+        continue;
       // string git_hash = 4;
-      case 4: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(34u /* 34 & 0xFF */)) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_git_hash()));
-          DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-            this->git_hash().data(), static_cast<int>(this->git_hash().length()),
-            ::google::protobuf::internal::WireFormatLite::PARSE,
-            "substrait.Version.git_hash"));
-        } else {
+      case 4:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 34)) {
+          auto str = _internal_mutable_git_hash();
+          ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
+          CHK_(::PROTOBUF_NAMESPACE_ID::internal::VerifyUTF8(str, "substrait.Version.git_hash"));
+          CHK_(ptr);
+        } else
           goto handle_unusual;
-        }
-        break;
-      }
-
+        continue;
       // string producer = 5;
-      case 5: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(42u /* 42 & 0xFF */)) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_producer()));
-          DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-            this->producer().data(), static_cast<int>(this->producer().length()),
-            ::google::protobuf::internal::WireFormatLite::PARSE,
-            "substrait.Version.producer"));
-        } else {
+      case 5:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 42)) {
+          auto str = _internal_mutable_producer();
+          ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
+          CHK_(::PROTOBUF_NAMESPACE_ID::internal::VerifyUTF8(str, "substrait.Version.producer"));
+          CHK_(ptr);
+        } else
           goto handle_unusual;
-        }
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, _internal_metadata_.mutable_unknown_fields()));
-        break;
-      }
+        continue;
+      default:
+        goto handle_unusual;
+    }  // switch
+  handle_unusual:
+    if ((tag == 0) || ((tag & 7) == 4)) {
+      CHK_(ptr);
+      ctx->SetLastTag(tag);
+      goto message_done;
     }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:substrait.Version)
-  return true;
+    ptr = UnknownFieldParse(
+        tag,
+        _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
+        ptr, ctx);
+    CHK_(ptr != nullptr);
+  }  // while
+message_done:
+  return ptr;
 failure:
-  // @@protoc_insertion_point(parse_failure:substrait.Version)
-  return false;
-#undef DO_
+  ptr = nullptr;
+  goto message_done;
+#undef CHK_
 }
 
-void Version::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:substrait.Version)
-  ::google::protobuf::uint32 cached_has_bits = 0;
-  (void) cached_has_bits;
-
-  // uint32 major_number = 1;
-  if (this->major_number() != 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt32(1, this->major_number(), output);
-  }
-
-  // uint32 minor_number = 2;
-  if (this->minor_number() != 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt32(2, this->minor_number(), output);
-  }
-
-  // uint32 patch_number = 3;
-  if (this->patch_number() != 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt32(3, this->patch_number(), output);
-  }
-
-  // string git_hash = 4;
-  if (this->git_hash().size() > 0) {
-    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-      this->git_hash().data(), static_cast<int>(this->git_hash().length()),
-      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
-      "substrait.Version.git_hash");
-    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
-      4, this->git_hash(), output);
-  }
-
-  // string producer = 5;
-  if (this->producer().size() > 0) {
-    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-      this->producer().data(), static_cast<int>(this->producer().length()),
-      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
-      "substrait.Version.producer");
-    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
-      5, this->producer(), output);
-  }
-
-  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), output);
-  }
-  // @@protoc_insertion_point(serialize_end:substrait.Version)
-}
-
-::google::protobuf::uint8* Version::InternalSerializeWithCachedSizesToArray(
-    bool deterministic, ::google::protobuf::uint8* target) const {
-  (void)deterministic; // Unused
+uint8_t* Version::_InternalSerialize(
+    uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
   // @@protoc_insertion_point(serialize_to_array_start:substrait.Version)
-  ::google::protobuf::uint32 cached_has_bits = 0;
+  uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
   // uint32 major_number = 1;
-  if (this->major_number() != 0) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(1, this->major_number(), target);
+  if (this->_internal_major_number() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteUInt32ToArray(1, this->_internal_major_number(), target);
   }
 
   // uint32 minor_number = 2;
-  if (this->minor_number() != 0) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(2, this->minor_number(), target);
+  if (this->_internal_minor_number() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteUInt32ToArray(2, this->_internal_minor_number(), target);
   }
 
   // uint32 patch_number = 3;
-  if (this->patch_number() != 0) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(3, this->patch_number(), target);
+  if (this->_internal_patch_number() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteUInt32ToArray(3, this->_internal_patch_number(), target);
   }
 
   // string git_hash = 4;
-  if (this->git_hash().size() > 0) {
-    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-      this->git_hash().data(), static_cast<int>(this->git_hash().length()),
-      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+  if (!this->_internal_git_hash().empty()) {
+    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
+      this->_internal_git_hash().data(), static_cast<int>(this->_internal_git_hash().length()),
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
       "substrait.Version.git_hash");
-    target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        4, this->git_hash(), target);
+    target = stream->WriteStringMaybeAliased(
+        4, this->_internal_git_hash(), target);
   }
 
   // string producer = 5;
-  if (this->producer().size() > 0) {
-    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-      this->producer().data(), static_cast<int>(this->producer().length()),
-      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+  if (!this->_internal_producer().empty()) {
+    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
+      this->_internal_producer().data(), static_cast<int>(this->_internal_producer().length()),
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
       "substrait.Version.producer");
-    target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        5, this->producer(), target);
+    target = stream->WriteStringMaybeAliased(
+        5, this->_internal_producer(), target);
   }
 
-  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), target);
+  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
+        _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
   }
   // @@protoc_insertion_point(serialize_to_array_end:substrait.Version)
   return target;
@@ -1603,97 +1304,77 @@ size_t Version::ByteSizeLong() const {
 // @@protoc_insertion_point(message_byte_size_start:substrait.Version)
   size_t total_size = 0;
 
-  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()));
-  }
+  uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
   // string git_hash = 4;
-  if (this->git_hash().size() > 0) {
+  if (!this->_internal_git_hash().empty()) {
     total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::StringSize(
-        this->git_hash());
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
+        this->_internal_git_hash());
   }
 
   // string producer = 5;
-  if (this->producer().size() > 0) {
+  if (!this->_internal_producer().empty()) {
     total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::StringSize(
-        this->producer());
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
+        this->_internal_producer());
   }
 
   // uint32 major_number = 1;
-  if (this->major_number() != 0) {
-    total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::UInt32Size(
-        this->major_number());
+  if (this->_internal_major_number() != 0) {
+    total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::UInt32SizePlusOne(this->_internal_major_number());
   }
 
   // uint32 minor_number = 2;
-  if (this->minor_number() != 0) {
-    total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::UInt32Size(
-        this->minor_number());
+  if (this->_internal_minor_number() != 0) {
+    total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::UInt32SizePlusOne(this->_internal_minor_number());
   }
 
   // uint32 patch_number = 3;
-  if (this->patch_number() != 0) {
-    total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::UInt32Size(
-        this->patch_number());
+  if (this->_internal_patch_number() != 0) {
+    total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::UInt32SizePlusOne(this->_internal_patch_number());
   }
 
-  int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
-  SetCachedSize(cached_size);
-  return total_size;
+  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
 }
 
-void Version::MergeFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:substrait.Version)
-  GOOGLE_DCHECK_NE(&from, this);
-  const Version* source =
-      ::google::protobuf::internal::DynamicCastToGenerated<const Version>(
-          &from);
-  if (source == NULL) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:substrait.Version)
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:substrait.Version)
-    MergeFrom(*source);
-  }
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData Version::_class_data_ = {
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    Version::MergeImpl
+};
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*Version::GetClassData() const { return &_class_data_; }
+
+void Version::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
+                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
+  static_cast<Version *>(to)->MergeFrom(
+      static_cast<const Version &>(from));
 }
+
 
 void Version::MergeFrom(const Version& from) {
 // @@protoc_insertion_point(class_specific_merge_from_start:substrait.Version)
   GOOGLE_DCHECK_NE(&from, this);
-  _internal_metadata_.MergeFrom(from._internal_metadata_);
-  ::google::protobuf::uint32 cached_has_bits = 0;
+  uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
-  if (from.git_hash().size() > 0) {
-
-    git_hash_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.git_hash_);
+  if (!from._internal_git_hash().empty()) {
+    _internal_set_git_hash(from._internal_git_hash());
   }
-  if (from.producer().size() > 0) {
-
-    producer_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.producer_);
+  if (!from._internal_producer().empty()) {
+    _internal_set_producer(from._internal_producer());
   }
-  if (from.major_number() != 0) {
-    set_major_number(from.major_number());
+  if (from._internal_major_number() != 0) {
+    _internal_set_major_number(from._internal_major_number());
   }
-  if (from.minor_number() != 0) {
-    set_minor_number(from.minor_number());
+  if (from._internal_minor_number() != 0) {
+    _internal_set_minor_number(from._internal_minor_number());
   }
-  if (from.patch_number() != 0) {
-    set_patch_number(from.patch_number());
+  if (from._internal_patch_number() != 0) {
+    _internal_set_patch_number(from._internal_patch_number());
   }
-}
-
-void Version::CopyFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:substrait.Version)
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void Version::CopyFrom(const Version& from) {
@@ -1707,45 +1388,51 @@ bool Version::IsInitialized() const {
   return true;
 }
 
-void Version::Swap(Version* other) {
-  if (other == this) return;
-  InternalSwap(other);
-}
 void Version::InternalSwap(Version* other) {
   using std::swap;
-  git_hash_.Swap(&other->git_hash_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
-    GetArenaNoVirtual());
-  producer_.Swap(&other->producer_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
-    GetArenaNoVirtual());
-  swap(major_number_, other->major_number_);
-  swap(minor_number_, other->minor_number_);
-  swap(patch_number_, other->patch_number_);
-  _internal_metadata_.Swap(&other->_internal_metadata_);
+  auto* lhs_arena = GetArenaForAllocation();
+  auto* rhs_arena = other->GetArenaForAllocation();
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
+      &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
+      &git_hash_, lhs_arena,
+      &other->git_hash_, rhs_arena
+  );
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
+      &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
+      &producer_, lhs_arena,
+      &other->producer_, rhs_arena
+  );
+  ::PROTOBUF_NAMESPACE_ID::internal::memswap<
+      PROTOBUF_FIELD_OFFSET(Version, patch_number_)
+      + sizeof(Version::patch_number_)
+      - PROTOBUF_FIELD_OFFSET(Version, major_number_)>(
+          reinterpret_cast<char*>(&major_number_),
+          reinterpret_cast<char*>(&other->major_number_));
 }
 
-::google::protobuf::Metadata Version::GetMetadata() const {
-  protobuf_substrait_2fplan_2eproto::protobuf_AssignDescriptorsOnce();
-  return ::protobuf_substrait_2fplan_2eproto::file_level_metadata[kIndexInFileMessages];
+::PROTOBUF_NAMESPACE_ID::Metadata Version::GetMetadata() const {
+  return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
+      &descriptor_table_substrait_2fplan_2eproto_getter, &descriptor_table_substrait_2fplan_2eproto_once,
+      file_level_metadata_substrait_2fplan_2eproto[3]);
 }
-
 
 // @@protoc_insertion_point(namespace_scope)
 }  // namespace substrait
-namespace google {
-namespace protobuf {
-template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::substrait::PlanRel* Arena::CreateMaybeMessage< ::substrait::PlanRel >(Arena* arena) {
-  return Arena::CreateInternal< ::substrait::PlanRel >(arena);
+PROTOBUF_NAMESPACE_OPEN
+template<> PROTOBUF_NOINLINE ::substrait::PlanRel* Arena::CreateMaybeMessage< ::substrait::PlanRel >(Arena* arena) {
+  return Arena::CreateMessageInternal< ::substrait::PlanRel >(arena);
 }
-template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::substrait::Plan* Arena::CreateMaybeMessage< ::substrait::Plan >(Arena* arena) {
-  return Arena::CreateInternal< ::substrait::Plan >(arena);
+template<> PROTOBUF_NOINLINE ::substrait::Plan* Arena::CreateMaybeMessage< ::substrait::Plan >(Arena* arena) {
+  return Arena::CreateMessageInternal< ::substrait::Plan >(arena);
 }
-template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::substrait::PlanVersion* Arena::CreateMaybeMessage< ::substrait::PlanVersion >(Arena* arena) {
-  return Arena::CreateInternal< ::substrait::PlanVersion >(arena);
+template<> PROTOBUF_NOINLINE ::substrait::PlanVersion* Arena::CreateMaybeMessage< ::substrait::PlanVersion >(Arena* arena) {
+  return Arena::CreateMessageInternal< ::substrait::PlanVersion >(arena);
 }
-template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::substrait::Version* Arena::CreateMaybeMessage< ::substrait::Version >(Arena* arena) {
-  return Arena::CreateInternal< ::substrait::Version >(arena);
+template<> PROTOBUF_NOINLINE ::substrait::Version* Arena::CreateMaybeMessage< ::substrait::Version >(Arena* arena) {
+  return Arena::CreateMessageInternal< ::substrait::Version >(arena);
 }
-}  // namespace protobuf
-}  // namespace google
+PROTOBUF_NAMESPACE_CLOSE
 
 // @@protoc_insertion_point(global_scope)
+#include <google/protobuf/port_undef.inc>
