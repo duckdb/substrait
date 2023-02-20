@@ -236,8 +236,7 @@ void DuckDBToSubstrait::TransformEnum(Value &dval,
 void DuckDBToSubstrait::TransformConstant(Value &dval,
                                           substrait::Expression &sexpr) {
   if (dval.IsNull()) {
-    auto &sval = *sexpr.mutable_literal();
-    sval.set_nullable(true);
+    sexpr.mutable_literal()->mutable_null();
     return;
   }
   auto &duckdb_type = dval.type();

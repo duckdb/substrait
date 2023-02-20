@@ -65,7 +65,7 @@ unique_ptr<ParsedExpression>
 SubstraitToDuckDB::TransformLiteralExpr(const substrait::Expression &sexpr) {
   const auto &slit = sexpr.literal();
   Value dval;
-  if (slit.nullable()) {
+  if (slit.has_null()) {
     dval = Value(LogicalType::SQLNULL);
     return make_unique<ConstantExpression>(dval);
   }
