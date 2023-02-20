@@ -20,278 +20,55 @@ CREATE table varchars (v VARCHAR);
 statement ok
 INSERT INTO varchars VALUES ('Duck'), ('DB'), ('🦆'), ('Quack');
 
-#-------------------------------------------------------------------------------------
-
-query I
+statement ok
 CALL get_substrait('SELECT stddev(i) FROM ints');
-----
-\x12\x0D\x1A\x0B\x10\x01\x1A\x07std_dev\x1Av\x12t\x0AW:U\x12I\x22G\x12!\x0A\x1F\x12\x0D\x0A\x01i\x12\x08\x0A\x04*\x02\x10\x01\x18\x02\x22\x06\x0A\x02\x0A\x00\x10\x01:\x06\x0A\x04ints\x1A\x00\x22 \x0A\x1E\x08\x01*\x04Z\x02\x10\x01:\x14\x1A\x12Z\x10\x0A\x04Z\x02\x10\x01\x12\x08\x12\x06\x0A\x02\x12\x00\x22\x00\x1A\x08\x12\x06\x0A\x02\x12\x00\x22\x00\x12\x19stddev(CAST(i AS DOUBLE))
 
-query I
-CALL from_substrait('\x12\x0D\x1A\x0B\x10\x01\x1A\x07std_dev\x1Av\x12t\x0AW:U\x12I\x22G\x12!\x0A\x1F\x12\x0D\x0A\x01i\x12\x08\x0A\x04*\x02\x10\x01\x18\x02\x22\x06\x0A\x02\x0A\x00\x10\x01:\x06\x0A\x04ints\x1A\x00\x22 \x0A\x1E\x08\x01*\x04Z\x02\x10\x01:\x14\x1A\x12Z\x10\x0A\x04Z\x02\x10\x01\x12\x08\x12\x06\x0A\x02\x12\x00\x22\x00\x1A\x08\x12\x06\x0A\x02\x12\x00\x22\x00\x12\x19stddev(CAST(i AS DOUBLE))'::BLOB)
-----
-49.44357052910587
-
-query I
-SELECT stddev(i) FROM ints;
-----
-49.44357052910587
-
-#-------------------------------------------------------------------------------------
-
-query I
+statement ok
 CALL get_substrait('SELECT count(i) FROM ints');
-----
-\x12\x0B\x1A\x09\x10\x01\x1A\x05count\x1AO\x12M\x0AA:?\x123\x221\x12!\x0A\x1F\x12\x0D\x0A\x01i\x12\x08\x0A\x04*\x02\x10\x01\x18\x02\x22\x06\x0A\x02\x0A\x00\x10\x01:\x06\x0A\x04ints\x1A\x00\x22\x0A\x0A\x08\x08\x01*\x04:\x02\x10\x01\x1A\x08\x12\x06\x0A\x02\x12\x00\x22\x00\x12\x08count(i)
 
-query I
-CALL from_substrait('\x12\x0B\x1A\x09\x10\x01\x1A\x05count\x1AO\x12M\x0AA:?\x123\x221\x12!\x0A\x1F\x12\x0D\x0A\x01i\x12\x08\x0A\x04*\x02\x10\x01\x18\x02\x22\x06\x0A\x02\x0A\x00\x10\x01:\x06\x0A\x04ints\x1A\x00\x22\x0A\x0A\x08\x08\x01*\x04:\x02\x10\x01\x1A\x08\x12\x06\x0A\x02\x12\x00\x22\x00\x12\x08count(i)'::BLOB);
-----
-4
-
-query I
-SELECT count(i) FROM ints
-----
-4
-
-#-------------------------------------------------------------------------------------
-
-query I
+statement ok
 CALL get_substrait('SELECT mod(i,3) FROM ints');
-----
-\x12\x0D\x1A\x0B\x10\x01\x1A\x07modulus\x1AX\x12V\x0AE:C\x12!\x0A\x1F\x12\x0D\x0A\x01i\x12\x08\x0A\x04*\x02\x10\x01\x18\x02\x22\x06\x0A\x02\x0A\x00\x10\x01:\x06\x0A\x04ints\x1A\x1E\x1A\x1C\x08\x01\x1A\x04*\x02\x10\x01\x22\x0A\x1A\x08\x12\x06\x0A\x02\x12\x00\x22\x00\x22\x06\x1A\x04\x0A\x02(\x03\x12\x0Dmodulus(i, 3)
 
-query I
-CALL from_substrait('\x12\x0D\x1A\x0B\x10\x01\x1A\x07modulus\x1AX\x12V\x0AE:C\x12!\x0A\x1F\x12\x0D\x0A\x01i\x12\x08\x0A\x04*\x02\x10\x01\x18\x02\x22\x06\x0A\x02\x0A\x00\x10\x01:\x06\x0A\x04ints\x1A\x1E\x1A\x1C\x08\x01\x1A\x04*\x02\x10\x01\x22\x0A\x1A\x08\x12\x06\x0A\x02\x12\x00\x22\x00\x22\x06\x1A\x04\x0A\x02(\x03\x12\x0Dmodulus(i, 3)'::BLOB);
-----
--1
-1
-0
-1
-
-query I 
-SELECT mod(i,3) FROM ints;
-----
--1
-1
-0
-1
-
-#-------------------------------------------------------------------------------------
-
-query I
+statement ok
 CALL get_substrait('SELECT sum(i) FROM ints');
-----
-\x12\x09\x1A\x07\x10\x01\x1A\x03sum\x1A\x5C\x12Z\x0AP:N\x12B\x22@\x12!\x0A\x1F\x12\x0D\x0A\x01i\x12\x08\x0A\x04*\x02\x10\x01\x18\x02\x22\x06\x0A\x02\x0A\x00\x10\x01:\x06\x0A\x04ints\x1A\x00\x22\x19\x0A\x17\x08\x01*\x07\xC2\x01\x04\x10& \x01:\x0A\x1A\x08\x12\x06\x0A\x02\x12\x00\x22\x00\x1A\x08\x12\x06\x0A\x02\x12\x00\x22\x00\x12\x06sum(i)
 
-query I
-CALL from_substrait('\x12\x09\x1A\x07\x10\x01\x1A\x03sum\x1A\x5C\x12Z\x0AP:N\x12B\x22@\x12!\x0A\x1F\x12\x0D\x0A\x01i\x12\x08\x0A\x04*\x02\x10\x01\x18\x02\x22\x06\x0A\x02\x0A\x00\x10\x01:\x06\x0A\x04ints\x1A\x00\x22\x19\x0A\x17\x08\x01*\x07\xC2\x01\x04\x10& \x01:\x0A\x1A\x08\x12\x06\x0A\x02\x12\x00\x22\x00\x1A\x08\x12\x06\x0A\x02\x12\x00\x22\x00\x12\x06sum(i)'::BLOB);
-----
-136
-
-query I
-SELECT sum(i) FROM ints;
-----
-136
-
-#-------------------------------------------------------------------------------------
-
-query I
+statement ok
 CALL get_substrait('SELECT abs(i) FROM ints');
-----
-\x12\x09\x1A\x07\x10\x01\x1A\x03abs\x1AI\x12G\x0A=:;\x12!\x0A\x1F\x12\x0D\x0A\x01i\x12\x08\x0A\x04*\x02\x10\x01\x18\x02\x22\x06\x0A\x02\x0A\x00\x10\x01:\x06\x0A\x04ints\x1A\x16\x1A\x14\x08\x01\x1A\x04*\x02\x10\x01\x22\x0A\x1A\x08\x12\x06\x0A\x02\x12\x00\x22\x00\x12\x06abs(i)
 
-query I
-CALL from_substrait('\x12\x09\x1A\x07\x10\x01\x1A\x03abs\x1AI\x12G\x0A=:;\x12!\x0A\x1F\x12\x0D\x0A\x01i\x12\x08\x0A\x04*\x02\x10\x01\x18\x02\x22\x06\x0A\x02\x0A\x00\x10\x01:\x06\x0A\x04ints\x1A\x16\x1A\x14\x08\x01\x1A\x04*\x02\x10\x01\x22\x0A\x1A\x08\x12\x06\x0A\x02\x12\x00\x22\x00\x12\x06abs(i)'::BLOB);
-----
-10
-100
-3
-43
-
-query I 
-SELECT abs(i) FROM ints;
-----
-10
-100
-3
-43
-
-
-#-------------------------------------------------------------------------------------
-
-query I
+statement ok
 CALL get_substrait('SELECT prefix(i, ''1'') FROM ints');
-----
-\x12\x11\x1A\x0F\x10\x01\x1A\x0Bstarts_with\x1A}\x12{\x0AS:Q\x12!\x0A\x1F\x12\x0D\x0A\x01i\x12\x08\x0A\x04*\x02\x10\x01\x18\x02\x22\x06\x0A\x02\x0A\x00\x10\x01:\x06\x0A\x04ints\x1A,\x1A*\x08\x01\x1A\x04\x0A\x02\x10\x01\x22\x17\x1A\x15Z\x13\x0A\x07\xB2\x01\x04\x08\x01\x18\x01\x12\x08\x12\x06\x0A\x02\x12\x00\x22\x00\x22\x07\x1A\x05\x0A\x03b\x011\x12$starts_with(CAST(i AS VARCHAR), \x271\x27)
 
-query I
-CALL from_substrait('\x12\x11\x1A\x0F\x10\x01\x1A\x0Bstarts_with\x1A}\x12{\x0AS:Q\x12!\x0A\x1F\x12\x0D\x0A\x01i\x12\x08\x0A\x04*\x02\x10\x01\x18\x02\x22\x06\x0A\x02\x0A\x00\x10\x01:\x06\x0A\x04ints\x1A,\x1A*\x08\x01\x1A\x04\x0A\x02\x10\x01\x22\x17\x1A\x15Z\x13\x0A\x07\xB2\x01\x04\x08\x01\x18\x01\x12\x08\x12\x06\x0A\x02\x12\x00\x22\x00\x22\x07\x1A\x05\x0A\x03b\x011\x12$starts_with(CAST(i AS VARCHAR), \x271\x27)'::BLOB);
-----
-false
-true
-false
-false
-
-query I
-SELECT prefix(i, '1') FROM ints;
-----
-false
-true
-false
-false
-
-#-------------------------------------------------------------------------------------
-
-query I
+statement ok
 CALL get_substrait('SELECT suffix(i, ''3'') FROM ints');
-----
-\x12\x0F\x1A\x0D\x10\x01\x1A\x09ends_with\x1A{\x12y\x0AS:Q\x12!\x0A\x1F\x12\x0D\x0A\x01i\x12\x08\x0A\x04*\x02\x10\x01\x18\x02\x22\x06\x0A\x02\x0A\x00\x10\x01:\x06\x0A\x04ints\x1A,\x1A*\x08\x01\x1A\x04\x0A\x02\x10\x01\x22\x17\x1A\x15Z\x13\x0A\x07\xB2\x01\x04\x08\x01\x18\x01\x12\x08\x12\x06\x0A\x02\x12\x00\x22\x00\x22\x07\x1A\x05\x0A\x03b\x013\x12\x22ends_with(CAST(i AS VARCHAR), \x273\x27)
 
-query I
-CALL from_substrait('\x12\x0F\x1A\x0D\x10\x01\x1A\x09ends_with\x1A{\x12y\x0AS:Q\x12!\x0A\x1F\x12\x0D\x0A\x01i\x12\x08\x0A\x04*\x02\x10\x01\x18\x02\x22\x06\x0A\x02\x0A\x00\x10\x01:\x06\x0A\x04ints\x1A,\x1A*\x08\x01\x1A\x04\x0A\x02\x10\x01\x22\x17\x1A\x15Z\x13\x0A\x07\xB2\x01\x04\x08\x01\x18\x01\x12\x08\x12\x06\x0A\x02\x12\x00\x22\x00\x22\x07\x1A\x05\x0A\x03b\x013\x12\x22ends_with(CAST(i AS VARCHAR), \x273\x27)'::BLOB);
-----
-false
-false
-true
-true
-
-query I
-SELECT suffix(i, '3') FROM ints;
-----
-false
-false
-true
-true
-
-#-------------------------------------------------------------------------------------
-
-query I
+statement ok
 CALL get_substrait('SELECT substr(v, 1, 1) FROM varchars');
-----
-\x12\x0F\x1A\x0D\x10\x01\x1A\x09substring\x1Ao\x12m\x0AW:U\x12(\x0A&\x12\x10\x0A\x01v\x12\x0B\x0A\x07\xB2\x01\x04\x08\x05\x18\x01\x18\x02\x22\x06\x0A\x02\x0A\x00\x10\x01:\x0A\x0A\x08varchars\x1A)\x1A\x27\x08\x01\x1A\x07\xB2\x01\x04\x08\x05\x18\x01\x22\x0A\x1A\x08\x12\x06\x0A\x02\x12\x00\x22\x00\x22\x06\x1A\x04\x0A\x028\x01\x22\x06\x1A\x04\x0A\x028\x01\x12\x12substring(v, 1, 1)
 
-query I
-CALL from_substrait('\x12\x0F\x1A\x0D\x10\x01\x1A\x09substring\x1Ao\x12m\x0AW:U\x12(\x0A&\x12\x10\x0A\x01v\x12\x0B\x0A\x07\xB2\x01\x04\x08\x05\x18\x01\x18\x02\x22\x06\x0A\x02\x0A\x00\x10\x01:\x0A\x0A\x08varchars\x1A)\x1A\x27\x08\x01\x1A\x07\xB2\x01\x04\x08\x05\x18\x01\x22\x0A\x1A\x08\x12\x06\x0A\x02\x12\x00\x22\x00\x22\x06\x1A\x04\x0A\x028\x01\x22\x06\x1A\x04\x0A\x028\x01\x12\x12substring(v, 1, 1)'::BLOB);
-----
-D
-D
-🦆
-Q
-
-query I
-SELECT substr(v, 1, 1) FROM varchars;
-----
-D
-D
-🦆
-Q
-
-#-------------------------------------------------------------------------------------
-
-query I
+statement ok
 CALL get_substrait('SELECT length(v) FROM varchars');
-----
-\x12\x11\x1A\x0F\x10\x01\x1A\x0Bchar_length\x1AX\x12V\x0AD:B\x12(\x0A&\x12\x10\x0A\x01v\x12\x0B\x0A\x07\xB2\x01\x04\x08\x05\x18\x01\x18\x02\x22\x06\x0A\x02\x0A\x00\x10\x01:\x0A\x0A\x08varchars\x1A\x16\x1A\x14\x08\x01\x1A\x04:\x02\x10\x01\x22\x0A\x1A\x08\x12\x06\x0A\x02\x12\x00\x22\x00\x12\x0Echar_length(v)
 
-query I
-CALL from_substrait('\x12\x11\x1A\x0F\x10\x01\x1A\x0Bchar_length\x1AX\x12V\x0AD:B\x12(\x0A&\x12\x10\x0A\x01v\x12\x0B\x0A\x07\xB2\x01\x04\x08\x05\x18\x01\x18\x02\x22\x06\x0A\x02\x0A\x00\x10\x01:\x0A\x0A\x08varchars\x1A\x16\x1A\x14\x08\x01\x1A\x04:\x02\x10\x01\x22\x0A\x1A\x08\x12\x06\x0A\x02\x12\x00\x22\x00\x12\x0Echar_length(v)'::BLOB);
-----
-4
-2
-1
-5
-
-query I 
-SELECT length(v) FROM varchars;
-----
-4
-2
-1
-5
-
-#-------------------------------------------------------------------------------------
-
-query I
+statement ok
 CALL get_substrait('SELECT isnan(i) FROM ints');
-----
-\x12\x0C\x1A\x0A\x10\x01\x1A\x06is_nan\x1Af\x12d\x0AG:E\x12!\x0A\x1F\x12\x0D\x0A\x01i\x12\x08\x0A\x04*\x02\x10\x01\x18\x02\x22\x06\x0A\x02\x0A\x00\x10\x01:\x06\x0A\x04ints\x1A \x1A\x1E\x08\x01\x1A\x04\x0A\x02\x10\x01\x22\x14\x1A\x12Z\x10\x0A\x04Z\x02\x10\x01\x12\x08\x12\x06\x0A\x02\x12\x00\x22\x00\x12\x19is_nan(CAST(i AS DOUBLE))
 
-query I
-CALL from_substrait('\x12\x0C\x1A\x0A\x10\x01\x1A\x06is_nan\x1Af\x12d\x0AG:E\x12!\x0A\x1F\x12\x0D\x0A\x01i\x12\x08\x0A\x04*\x02\x10\x01\x18\x02\x22\x06\x0A\x02\x0A\x00\x10\x01:\x06\x0A\x04ints\x1A \x1A\x1E\x08\x01\x1A\x04\x0A\x02\x10\x01\x22\x14\x1A\x12Z\x10\x0A\x04Z\x02\x10\x01\x12\x08\x12\x06\x0A\x02\x12\x00\x22\x00\x12\x19is_nan(CAST(i AS DOUBLE))'::BLOB);
-----
-false
-false
-false
-false
-
-query I 
-SELECT isnan(i) FROM ints;
-----
-false
-false
-false
-false
-
-#-------------------------------------------------------------------------------------
-
-query I
+statement ok
 CALL get_substrait('SELECT isinf(i) FROM ints');
-----
-\x12\x11\x1A\x0F\x10\x01\x1A\x0Bis_infinite\x1Ak\x12i\x0AG:E\x12!\x0A\x1F\x12\x0D\x0A\x01i\x12\x08\x0A\x04*\x02\x10\x01\x18\x02\x22\x06\x0A\x02\x0A\x00\x10\x01:\x06\x0A\x04ints\x1A \x1A\x1E\x08\x01\x1A\x04\x0A\x02\x10\x01\x22\x14\x1A\x12Z\x10\x0A\x04Z\x02\x10\x01\x12\x08\x12\x06\x0A\x02\x12\x00\x22\x00\x12\x1Eis_infinite(CAST(i AS DOUBLE))
 
-query I
-CALL from_substrait('\x12\x11\x1A\x0F\x10\x01\x1A\x0Bis_infinite\x1Ak\x12i\x0AG:E\x12!\x0A\x1F\x12\x0D\x0A\x01i\x12\x08\x0A\x04*\x02\x10\x01\x18\x02\x22\x06\x0A\x02\x0A\x00\x10\x01:\x06\x0A\x04ints\x1A \x1A\x1E\x08\x01\x1A\x04\x0A\x02\x10\x01\x22\x14\x1A\x12Z\x10\x0A\x04Z\x02\x10\x01\x12\x08\x12\x06\x0A\x02\x12\x00\x22\x00\x12\x1Eis_infinite(CAST(i AS DOUBLE))'::BLOB);
-----
-false
-false
-false
-false
-
-query I 
-SELECT isinf(i) FROM ints;
-----
-false
-false
-false
-false
-
-#-------------------------------------------------------------------------------------
-
-query I
+statement ok
 CALL get_substrait('SELECT isfinite(i) FROM ints');
-----
-\x12\x0F\x1A\x0D\x10\x01\x1A\x09is_finite\x1Ai\x12g\x0AG:E\x12!\x0A\x1F\x12\x0D\x0A\x01i\x12\x08\x0A\x04*\x02\x10\x01\x18\x02\x22\x06\x0A\x02\x0A\x00\x10\x01:\x06\x0A\x04ints\x1A \x1A\x1E\x08\x01\x1A\x04\x0A\x02\x10\x01\x22\x14\x1A\x12Z\x10\x0A\x04Z\x02\x10\x01\x12\x08\x12\x06\x0A\x02\x12\x00\x22\x00\x12\x1Cis_finite(CAST(i AS DOUBLE))
 
-query I
-CALL from_substrait('\x12\x0F\x1A\x0D\x10\x01\x1A\x09is_finite\x1Ai\x12g\x0AG:E\x12!\x0A\x1F\x12\x0D\x0A\x01i\x12\x08\x0A\x04*\x02\x10\x01\x18\x02\x22\x06\x0A\x02\x0A\x00\x10\x01:\x06\x0A\x04ints\x1A \x1A\x1E\x08\x01\x1A\x04\x0A\x02\x10\x01\x22\x14\x1A\x12Z\x10\x0A\x04Z\x02\x10\x01\x12\x08\x12\x06\x0A\x02\x12\x00\x22\x00\x12\x1Cis_finite(CAST(i AS DOUBLE))'::BLOB);
-----
-true
-true
-true
-true
-
-query I 
-SELECT isfinite(i) FROM ints;
-----
-true
-true
-true
-true
-
-#-------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------
 
 query I
 CALL get_substrait_json('SELECT * FROM varchars WHERE v LIKE ''Q%a%''');
 ----
-{"extensions":[{"extensionFunction":{"functionAnchor":1,"name":"gte"}},{"extensionFunction":{"functionAnchor":2,"name":"lt"}},{"extensionFunction":{"functionAnchor":3,"name":"and"}},{"extensionFunction":{"functionAnchor":4,"name":"is_not_null"}},{"extensionFunction":{"functionAnchor":5,"name":"like"}}],"relations":[{"root":{"input":{"project":{"input":{"filter":{"input":{"read":{"baseSchema":{"names":["v"],"struct":{"types":[{"varchar":{"length":5,"nullability":"NULLABILITY_NULLABLE"}}],"nullability":"NULLABILITY_REQUIRED"}},"filter":{"scalarFunction":{"functionReference":3,"outputType":{"bool":{"nullability":"NULLABILITY_NULLABLE"}},"arguments":[{"value":{"scalarFunction":{"functionReference":3,"outputType":{"bool":{"nullability":"NULLABILITY_NULLABLE"}},"arguments":[{"value":{"scalarFunction":{"functionReference":1,"outputType":{"varchar":{"length":1,"nullability":"NULLABILITY_NULLABLE"}},"arguments":[{"value":{"selection":{"directReference":{"structField":{}},"rootReference":{}}}},{"value":{"literal":{"string":"Q"}}}]}}},{"value":{"scalarFunction":{"functionReference":2,"outputType":{"varchar":{"length":1,"nullability":"NULLABILITY_NULLABLE"}},"arguments":[{"value":{"selection":{"directReference":{"structField":{}},"rootReference":{}}}},{"value":{"literal":{"string":"R"}}}]}}}]}}},{"value":{"scalarFunction":{"functionReference":4,"outputType":{"varchar":{"length":1,"nullability":"NULLABILITY_NULLABLE"}},"arguments":[{"value":{"selection":{"directReference":{"structField":{}},"rootReference":{}}}}]}}}]}},"projection":{"select":{"structItems":[{}]},"maintainSingularStruct":true},"namedTable":{"names":["varchars"]}}},"condition":{"scalarFunction":{"functionReference":5,"outputType":{"bool":{"nullability":"NULLABILITY_NULLABLE"}},"arguments":[{"value":{"selection":{"directReference":{"structField":{}},"rootReference":{}}}},{"value":{"literal":{"string":"Q%a%"}}}]}}}},"expressions":[{"selection":{"directReference":{"structField":{}},"rootReference":{}}}]}},"names":["v"]}}]}
+{"extensions":[{"extensionFunction":{"functionAnchor":1,"name":"gte"}},{"extensionFunction":{"functionAnchor":2,"name":"lt"}},{"extensionFunction":{"functionAnchor":3,"name":"and"}},{"extensionFunction":{"functionAnchor":4,"name":"is_not_null"}},{"extensionFunction":{"functionAnchor":5,"name":"like"}}],"relations":[{"root":{"input":{"project":{"input":{"filter":{"input":{"read":{"baseSchema":{"names":["v"],"struct":{"types":[{"varchar":{"length":5,"nullability":"NULLABILITY_NULLABLE"}}],"nullability":"NULLABILITY_REQUIRED"}},"filter":{"scalarFunction":{"functionReference":3,"outputType":{"bool":{"nullability":"NULLABILITY_NULLABLE"}},"arguments":[{"value":{"scalarFunction":{"functionReference":3,"outputType":{"bool":{"nullability":"NULLABILITY_NULLABLE"}},"arguments":[{"value":{"scalarFunction":{"functionReference":1,"outputType":{"varchar":{"length":1,"nullability":"NULLABILITY_NULLABLE"}},"arguments":[{"value":{"selection":{"directReference":{"structField":{}},"rootReference":{}}}},{"value":{"literal":{"string":"Q"}}}]}}},{"value":{"scalarFunction":{"functionReference":2,"outputType":{"varchar":{"length":1,"nullability":"NULLABILITY_NULLABLE"}},"arguments":[{"value":{"selection":{"directReference":{"structField":{}},"rootReference":{}}}},{"value":{"literal":{"string":"R"}}}]}}}]}}},{"value":{"scalarFunction":{"functionReference":4,"outputType":{"varchar":{"length":1,"nullability":"NULLABILITY_NULLABLE"}},"arguments":[{"value":{"selection":{"directReference":{"structField":{}},"rootReference":{}}}}]}}}]}},"projection":{"select":{"structItems":[{}]},"maintainSingularStruct":true},"namedTable":{"names":["varchars"]}}},"condition":{"scalarFunction":{"functionReference":5,"outputType":{"bool":{"nullability":"NULLABILITY_NULLABLE"}},"arguments":[{"value":{"selection":{"directReference":{"structField":{}},"rootReference":{}}}},{"value":{"literal":{"string":"Q%a%"}}}]}}}},"expressions":[{"selection":{"directReference":{"structField":{}},"rootReference":{}}}]}},"names":["v"]}}],"version":{"minorNumber":24,"producer":"DuckDB"}}
 
 query I
-CALL from_substrait_json('{"extensions":[{"extensionFunction":{"functionAnchor":1,"name":"gte"}},{"extensionFunction":{"functionAnchor":2,"name":"lt"}},{"extensionFunction":{"functionAnchor":3,"name":"and"}},{"extensionFunction":{"functionAnchor":4,"name":"is_not_null"}},{"extensionFunction":{"functionAnchor":5,"name":"like"}}],"relations":[{"root":{"input":{"project":{"input":{"filter":{"input":{"read":{"baseSchema":{"names":["v"],"struct":{"types":[{"varchar":{"length":5,"nullability":"NULLABILITY_NULLABLE"}}],"nullability":"NULLABILITY_REQUIRED"}},"filter":{"scalarFunction":{"functionReference":3,"outputType":{"bool":{"nullability":"NULLABILITY_NULLABLE"}},"arguments":[{"value":{"scalarFunction":{"functionReference":3,"outputType":{"bool":{"nullability":"NULLABILITY_NULLABLE"}},"arguments":[{"value":{"scalarFunction":{"functionReference":1,"outputType":{"varchar":{"length":1,"nullability":"NULLABILITY_NULLABLE"}},"arguments":[{"value":{"selection":{"directReference":{"structField":{}},"rootReference":{}}}},{"value":{"literal":{"string":"Q"}}}]}}},{"value":{"scalarFunction":{"functionReference":2,"outputType":{"varchar":{"length":1,"nullability":"NULLABILITY_NULLABLE"}},"arguments":[{"value":{"selection":{"directReference":{"structField":{}},"rootReference":{}}}},{"value":{"literal":{"string":"R"}}}]}}}]}}},{"value":{"scalarFunction":{"functionReference":4,"outputType":{"varchar":{"length":1,"nullability":"NULLABILITY_NULLABLE"}},"arguments":[{"value":{"selection":{"directReference":{"structField":{}},"rootReference":{}}}}]}}}]}},"projection":{"select":{"structItems":[{}]},"maintainSingularStruct":true},"namedTable":{"names":["varchars"]}}},"condition":{"scalarFunction":{"functionReference":5,"outputType":{"bool":{"nullability":"NULLABILITY_NULLABLE"}},"arguments":[{"value":{"selection":{"directReference":{"structField":{}},"rootReference":{}}}},{"value":{"literal":{"string":"Q%a%"}}}]}}}},"expressions":[{"selection":{"directReference":{"structField":{}},"rootReference":{}}}]}},"names":["v"]}}]}');
+CALL from_substrait_json('{"extensions":[{"extensionFunction":{"functionAnchor":1,"name":"gte"}},{"extensionFunction":{"functionAnchor":2,"name":"lt"}},{"extensionFunction":{"functionAnchor":3,"name":"and"}},{"extensionFunction":{"functionAnchor":4,"name":"is_not_null"}},{"extensionFunction":{"functionAnchor":5,"name":"like"}}],"relations":[{"root":{"input":{"project":{"input":{"filter":{"input":{"read":{"baseSchema":{"names":["v"],"struct":{"types":[{"varchar":{"length":5,"nullability":"NULLABILITY_NULLABLE"}}],"nullability":"NULLABILITY_REQUIRED"}},"filter":{"scalarFunction":{"functionReference":3,"outputType":{"bool":{"nullability":"NULLABILITY_NULLABLE"}},"arguments":[{"value":{"scalarFunction":{"functionReference":3,"outputType":{"bool":{"nullability":"NULLABILITY_NULLABLE"}},"arguments":[{"value":{"scalarFunction":{"functionReference":1,"outputType":{"varchar":{"length":1,"nullability":"NULLABILITY_NULLABLE"}},"arguments":[{"value":{"selection":{"directReference":{"structField":{}},"rootReference":{}}}},{"value":{"literal":{"string":"Q"}}}]}}},{"value":{"scalarFunction":{"functionReference":2,"outputType":{"varchar":{"length":1,"nullability":"NULLABILITY_NULLABLE"}},"arguments":[{"value":{"selection":{"directReference":{"structField":{}},"rootReference":{}}}},{"value":{"literal":{"string":"R"}}}]}}}]}}},{"value":{"scalarFunction":{"functionReference":4,"outputType":{"varchar":{"length":1,"nullability":"NULLABILITY_NULLABLE"}},"arguments":[{"value":{"selection":{"directReference":{"structField":{}},"rootReference":{}}}}]}}}]}},"projection":{"select":{"structItems":[{}]},"maintainSingularStruct":true},"namedTable":{"names":["varchars"]}}},"condition":{"scalarFunction":{"functionReference":5,"outputType":{"bool":{"nullability":"NULLABILITY_NULLABLE"}},"arguments":[{"value":{"selection":{"directReference":{"structField":{}},"rootReference":{}}}},{"value":{"literal":{"string":"Q%a%"}}}]}}}},"expressions":[{"selection":{"directReference":{"structField":{}},"rootReference":{}}}]}},"names":["v"]}}],"version":{"minorNumber":24,"producer":"DuckDB"}}');
 ----
 Quack
 
-query I 
+query I
 SELECT * FROM varchars WHERE v LIKE 'Q%a%k'
 ----
 Quack

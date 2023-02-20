@@ -34,7 +34,6 @@
 #include <google/protobuf/generated_enum_reflection.h>
 #include <google/protobuf/unknown_field_set.h>
 #include <google/protobuf/any.pb.h>
-#include <google/protobuf/empty.pb.h>
 #include "substrait/extensions/extensions.pb.h"
 #include "substrait/type.pb.h"
 // @@protoc_insertion_point(includes)
@@ -52,7 +51,7 @@ struct TableStruct_substrait_2falgebra_2eproto {
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::AuxiliaryParseTableField aux[]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
-  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[95]
+  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[108]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::FieldMetadata field_metadata[];
   static const ::PROTOBUF_NAMESPACE_ID::internal::SerializationTable serialization_table[];
@@ -63,6 +62,9 @@ namespace substrait {
 class AggregateFunction;
 struct AggregateFunctionDefaultTypeInternal;
 extern AggregateFunctionDefaultTypeInternal _AggregateFunction_default_instance_;
+class AggregateFunction_ReferenceRel;
+struct AggregateFunction_ReferenceRelDefaultTypeInternal;
+extern AggregateFunction_ReferenceRelDefaultTypeInternal _AggregateFunction_ReferenceRel_default_instance_;
 class AggregateRel;
 struct AggregateRelDefaultTypeInternal;
 extern AggregateRelDefaultTypeInternal _AggregateRel_default_instance_;
@@ -75,6 +77,9 @@ extern AggregateRel_MeasureDefaultTypeInternal _AggregateRel_Measure_default_ins
 class CrossRel;
 struct CrossRelDefaultTypeInternal;
 extern CrossRelDefaultTypeInternal _CrossRel_default_instance_;
+class DdlRel;
+struct DdlRelDefaultTypeInternal;
+extern DdlRelDefaultTypeInternal _DdlRel_default_instance_;
 class ExchangeRel;
 struct ExchangeRelDefaultTypeInternal;
 extern ExchangeRelDefaultTypeInternal _ExchangeRel_default_instance_;
@@ -201,6 +206,21 @@ extern Expression_MultiOrListDefaultTypeInternal _Expression_MultiOrList_default
 class Expression_MultiOrList_Record;
 struct Expression_MultiOrList_RecordDefaultTypeInternal;
 extern Expression_MultiOrList_RecordDefaultTypeInternal _Expression_MultiOrList_Record_default_instance_;
+class Expression_Nested;
+struct Expression_NestedDefaultTypeInternal;
+extern Expression_NestedDefaultTypeInternal _Expression_Nested_default_instance_;
+class Expression_Nested_List;
+struct Expression_Nested_ListDefaultTypeInternal;
+extern Expression_Nested_ListDefaultTypeInternal _Expression_Nested_List_default_instance_;
+class Expression_Nested_Map;
+struct Expression_Nested_MapDefaultTypeInternal;
+extern Expression_Nested_MapDefaultTypeInternal _Expression_Nested_Map_default_instance_;
+class Expression_Nested_Map_KeyValue;
+struct Expression_Nested_Map_KeyValueDefaultTypeInternal;
+extern Expression_Nested_Map_KeyValueDefaultTypeInternal _Expression_Nested_Map_KeyValue_default_instance_;
+class Expression_Nested_Struct;
+struct Expression_Nested_StructDefaultTypeInternal;
+extern Expression_Nested_StructDefaultTypeInternal _Expression_Nested_Struct_default_instance_;
 class Expression_ReferenceSegment;
 struct Expression_ReferenceSegmentDefaultTypeInternal;
 extern Expression_ReferenceSegmentDefaultTypeInternal _Expression_ReferenceSegment_default_instance_;
@@ -264,6 +284,9 @@ extern ExtensionLeafRelDefaultTypeInternal _ExtensionLeafRel_default_instance_;
 class ExtensionMultiRel;
 struct ExtensionMultiRelDefaultTypeInternal;
 extern ExtensionMultiRelDefaultTypeInternal _ExtensionMultiRel_default_instance_;
+class ExtensionObject;
+struct ExtensionObjectDefaultTypeInternal;
+extern ExtensionObjectDefaultTypeInternal _ExtensionObject_default_instance_;
 class ExtensionSingleRel;
 struct ExtensionSingleRelDefaultTypeInternal;
 extern ExtensionSingleRelDefaultTypeInternal _ExtensionSingleRel_default_instance_;
@@ -276,12 +299,21 @@ extern FilterRelDefaultTypeInternal _FilterRel_default_instance_;
 class FunctionArgument;
 struct FunctionArgumentDefaultTypeInternal;
 extern FunctionArgumentDefaultTypeInternal _FunctionArgument_default_instance_;
-class FunctionArgument_Enum;
-struct FunctionArgument_EnumDefaultTypeInternal;
-extern FunctionArgument_EnumDefaultTypeInternal _FunctionArgument_Enum_default_instance_;
+class FunctionOption;
+struct FunctionOptionDefaultTypeInternal;
+extern FunctionOptionDefaultTypeInternal _FunctionOption_default_instance_;
+class HashJoinRel;
+struct HashJoinRelDefaultTypeInternal;
+extern HashJoinRelDefaultTypeInternal _HashJoinRel_default_instance_;
 class JoinRel;
 struct JoinRelDefaultTypeInternal;
 extern JoinRelDefaultTypeInternal _JoinRel_default_instance_;
+class MergeJoinRel;
+struct MergeJoinRelDefaultTypeInternal;
+extern MergeJoinRelDefaultTypeInternal _MergeJoinRel_default_instance_;
+class NamedObjectWrite;
+struct NamedObjectWriteDefaultTypeInternal;
+extern NamedObjectWriteDefaultTypeInternal _NamedObjectWrite_default_instance_;
 class ProjectRel;
 struct ProjectRelDefaultTypeInternal;
 extern ProjectRelDefaultTypeInternal _ProjectRel_default_instance_;
@@ -300,6 +332,9 @@ extern ReadRel_LocalFiles_FileOrFilesDefaultTypeInternal _ReadRel_LocalFiles_Fil
 class ReadRel_LocalFiles_FileOrFiles_ArrowReadOptions;
 struct ReadRel_LocalFiles_FileOrFiles_ArrowReadOptionsDefaultTypeInternal;
 extern ReadRel_LocalFiles_FileOrFiles_ArrowReadOptionsDefaultTypeInternal _ReadRel_LocalFiles_FileOrFiles_ArrowReadOptions_default_instance_;
+class ReadRel_LocalFiles_FileOrFiles_DwrfReadOptions;
+struct ReadRel_LocalFiles_FileOrFiles_DwrfReadOptionsDefaultTypeInternal;
+extern ReadRel_LocalFiles_FileOrFiles_DwrfReadOptionsDefaultTypeInternal _ReadRel_LocalFiles_FileOrFiles_DwrfReadOptions_default_instance_;
 class ReadRel_LocalFiles_FileOrFiles_OrcReadOptions;
 struct ReadRel_LocalFiles_FileOrFiles_OrcReadOptionsDefaultTypeInternal;
 extern ReadRel_LocalFiles_FileOrFiles_OrcReadOptionsDefaultTypeInternal _ReadRel_LocalFiles_FileOrFiles_OrcReadOptions_default_instance_;
@@ -345,13 +380,18 @@ extern SortFieldDefaultTypeInternal _SortField_default_instance_;
 class SortRel;
 struct SortRelDefaultTypeInternal;
 extern SortRelDefaultTypeInternal _SortRel_default_instance_;
+class WriteRel;
+struct WriteRelDefaultTypeInternal;
+extern WriteRelDefaultTypeInternal _WriteRel_default_instance_;
 }  // namespace substrait
 PROTOBUF_NAMESPACE_OPEN
 template<> ::substrait::AggregateFunction* Arena::CreateMaybeMessage<::substrait::AggregateFunction>(Arena*);
+template<> ::substrait::AggregateFunction_ReferenceRel* Arena::CreateMaybeMessage<::substrait::AggregateFunction_ReferenceRel>(Arena*);
 template<> ::substrait::AggregateRel* Arena::CreateMaybeMessage<::substrait::AggregateRel>(Arena*);
 template<> ::substrait::AggregateRel_Grouping* Arena::CreateMaybeMessage<::substrait::AggregateRel_Grouping>(Arena*);
 template<> ::substrait::AggregateRel_Measure* Arena::CreateMaybeMessage<::substrait::AggregateRel_Measure>(Arena*);
 template<> ::substrait::CrossRel* Arena::CreateMaybeMessage<::substrait::CrossRel>(Arena*);
+template<> ::substrait::DdlRel* Arena::CreateMaybeMessage<::substrait::DdlRel>(Arena*);
 template<> ::substrait::ExchangeRel* Arena::CreateMaybeMessage<::substrait::ExchangeRel>(Arena*);
 template<> ::substrait::ExchangeRel_Broadcast* Arena::CreateMaybeMessage<::substrait::ExchangeRel_Broadcast>(Arena*);
 template<> ::substrait::ExchangeRel_ExchangeTarget* Arena::CreateMaybeMessage<::substrait::ExchangeRel_ExchangeTarget>(Arena*);
@@ -394,6 +434,11 @@ template<> ::substrait::Expression_MaskExpression_StructItem* Arena::CreateMaybe
 template<> ::substrait::Expression_MaskExpression_StructSelect* Arena::CreateMaybeMessage<::substrait::Expression_MaskExpression_StructSelect>(Arena*);
 template<> ::substrait::Expression_MultiOrList* Arena::CreateMaybeMessage<::substrait::Expression_MultiOrList>(Arena*);
 template<> ::substrait::Expression_MultiOrList_Record* Arena::CreateMaybeMessage<::substrait::Expression_MultiOrList_Record>(Arena*);
+template<> ::substrait::Expression_Nested* Arena::CreateMaybeMessage<::substrait::Expression_Nested>(Arena*);
+template<> ::substrait::Expression_Nested_List* Arena::CreateMaybeMessage<::substrait::Expression_Nested_List>(Arena*);
+template<> ::substrait::Expression_Nested_Map* Arena::CreateMaybeMessage<::substrait::Expression_Nested_Map>(Arena*);
+template<> ::substrait::Expression_Nested_Map_KeyValue* Arena::CreateMaybeMessage<::substrait::Expression_Nested_Map_KeyValue>(Arena*);
+template<> ::substrait::Expression_Nested_Struct* Arena::CreateMaybeMessage<::substrait::Expression_Nested_Struct>(Arena*);
 template<> ::substrait::Expression_ReferenceSegment* Arena::CreateMaybeMessage<::substrait::Expression_ReferenceSegment>(Arena*);
 template<> ::substrait::Expression_ReferenceSegment_ListElement* Arena::CreateMaybeMessage<::substrait::Expression_ReferenceSegment_ListElement>(Arena*);
 template<> ::substrait::Expression_ReferenceSegment_MapKey* Arena::CreateMaybeMessage<::substrait::Expression_ReferenceSegment_MapKey>(Arena*);
@@ -415,18 +460,23 @@ template<> ::substrait::Expression_WindowFunction_Bound_Preceding* Arena::Create
 template<> ::substrait::Expression_WindowFunction_Bound_Unbounded* Arena::CreateMaybeMessage<::substrait::Expression_WindowFunction_Bound_Unbounded>(Arena*);
 template<> ::substrait::ExtensionLeafRel* Arena::CreateMaybeMessage<::substrait::ExtensionLeafRel>(Arena*);
 template<> ::substrait::ExtensionMultiRel* Arena::CreateMaybeMessage<::substrait::ExtensionMultiRel>(Arena*);
+template<> ::substrait::ExtensionObject* Arena::CreateMaybeMessage<::substrait::ExtensionObject>(Arena*);
 template<> ::substrait::ExtensionSingleRel* Arena::CreateMaybeMessage<::substrait::ExtensionSingleRel>(Arena*);
 template<> ::substrait::FetchRel* Arena::CreateMaybeMessage<::substrait::FetchRel>(Arena*);
 template<> ::substrait::FilterRel* Arena::CreateMaybeMessage<::substrait::FilterRel>(Arena*);
 template<> ::substrait::FunctionArgument* Arena::CreateMaybeMessage<::substrait::FunctionArgument>(Arena*);
-template<> ::substrait::FunctionArgument_Enum* Arena::CreateMaybeMessage<::substrait::FunctionArgument_Enum>(Arena*);
+template<> ::substrait::FunctionOption* Arena::CreateMaybeMessage<::substrait::FunctionOption>(Arena*);
+template<> ::substrait::HashJoinRel* Arena::CreateMaybeMessage<::substrait::HashJoinRel>(Arena*);
 template<> ::substrait::JoinRel* Arena::CreateMaybeMessage<::substrait::JoinRel>(Arena*);
+template<> ::substrait::MergeJoinRel* Arena::CreateMaybeMessage<::substrait::MergeJoinRel>(Arena*);
+template<> ::substrait::NamedObjectWrite* Arena::CreateMaybeMessage<::substrait::NamedObjectWrite>(Arena*);
 template<> ::substrait::ProjectRel* Arena::CreateMaybeMessage<::substrait::ProjectRel>(Arena*);
 template<> ::substrait::ReadRel* Arena::CreateMaybeMessage<::substrait::ReadRel>(Arena*);
 template<> ::substrait::ReadRel_ExtensionTable* Arena::CreateMaybeMessage<::substrait::ReadRel_ExtensionTable>(Arena*);
 template<> ::substrait::ReadRel_LocalFiles* Arena::CreateMaybeMessage<::substrait::ReadRel_LocalFiles>(Arena*);
 template<> ::substrait::ReadRel_LocalFiles_FileOrFiles* Arena::CreateMaybeMessage<::substrait::ReadRel_LocalFiles_FileOrFiles>(Arena*);
 template<> ::substrait::ReadRel_LocalFiles_FileOrFiles_ArrowReadOptions* Arena::CreateMaybeMessage<::substrait::ReadRel_LocalFiles_FileOrFiles_ArrowReadOptions>(Arena*);
+template<> ::substrait::ReadRel_LocalFiles_FileOrFiles_DwrfReadOptions* Arena::CreateMaybeMessage<::substrait::ReadRel_LocalFiles_FileOrFiles_DwrfReadOptions>(Arena*);
 template<> ::substrait::ReadRel_LocalFiles_FileOrFiles_OrcReadOptions* Arena::CreateMaybeMessage<::substrait::ReadRel_LocalFiles_FileOrFiles_OrcReadOptions>(Arena*);
 template<> ::substrait::ReadRel_LocalFiles_FileOrFiles_ParquetReadOptions* Arena::CreateMaybeMessage<::substrait::ReadRel_LocalFiles_FileOrFiles_ParquetReadOptions>(Arena*);
 template<> ::substrait::ReadRel_NamedTable* Arena::CreateMaybeMessage<::substrait::ReadRel_NamedTable>(Arena*);
@@ -442,6 +492,7 @@ template<> ::substrait::RelRoot* Arena::CreateMaybeMessage<::substrait::RelRoot>
 template<> ::substrait::SetRel* Arena::CreateMaybeMessage<::substrait::SetRel>(Arena*);
 template<> ::substrait::SortField* Arena::CreateMaybeMessage<::substrait::SortField>(Arena*);
 template<> ::substrait::SortRel* Arena::CreateMaybeMessage<::substrait::SortRel>(Arena*);
+template<> ::substrait::WriteRel* Arena::CreateMaybeMessage<::substrait::WriteRel>(Arena*);
 PROTOBUF_NAMESPACE_CLOSE
 namespace substrait {
 
@@ -505,6 +556,179 @@ inline bool SetRel_SetOp_Parse(
     ::PROTOBUF_NAMESPACE_ID::ConstStringParam name, SetRel_SetOp* value) {
   return ::PROTOBUF_NAMESPACE_ID::internal::ParseNamedEnum<SetRel_SetOp>(
     SetRel_SetOp_descriptor(), name, value);
+}
+enum DdlRel_DdlObject : int {
+  DdlRel_DdlObject_DDL_OBJECT_UNSPECIFIED = 0,
+  DdlRel_DdlObject_DDL_OBJECT_TABLE = 1,
+  DdlRel_DdlObject_DDL_OBJECT_VIEW = 2,
+  DdlRel_DdlObject_DdlRel_DdlObject_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
+  DdlRel_DdlObject_DdlRel_DdlObject_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
+};
+bool DdlRel_DdlObject_IsValid(int value);
+constexpr DdlRel_DdlObject DdlRel_DdlObject_DdlObject_MIN = DdlRel_DdlObject_DDL_OBJECT_UNSPECIFIED;
+constexpr DdlRel_DdlObject DdlRel_DdlObject_DdlObject_MAX = DdlRel_DdlObject_DDL_OBJECT_VIEW;
+constexpr int DdlRel_DdlObject_DdlObject_ARRAYSIZE = DdlRel_DdlObject_DdlObject_MAX + 1;
+
+const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* DdlRel_DdlObject_descriptor();
+template<typename T>
+inline const std::string& DdlRel_DdlObject_Name(T enum_t_value) {
+  static_assert(::std::is_same<T, DdlRel_DdlObject>::value ||
+    ::std::is_integral<T>::value,
+    "Incorrect type passed to function DdlRel_DdlObject_Name.");
+  return ::PROTOBUF_NAMESPACE_ID::internal::NameOfEnum(
+    DdlRel_DdlObject_descriptor(), enum_t_value);
+}
+inline bool DdlRel_DdlObject_Parse(
+    ::PROTOBUF_NAMESPACE_ID::ConstStringParam name, DdlRel_DdlObject* value) {
+  return ::PROTOBUF_NAMESPACE_ID::internal::ParseNamedEnum<DdlRel_DdlObject>(
+    DdlRel_DdlObject_descriptor(), name, value);
+}
+enum DdlRel_DdlOp : int {
+  DdlRel_DdlOp_DDL_OP_UNSPECIFIED = 0,
+  DdlRel_DdlOp_DDL_OP_CREATE = 1,
+  DdlRel_DdlOp_DDL_OP_CREATE_OR_REPLACE = 2,
+  DdlRel_DdlOp_DDL_OP_ALTER = 3,
+  DdlRel_DdlOp_DDL_OP_DROP = 4,
+  DdlRel_DdlOp_DDL_OP_DROP_IF_EXIST = 5,
+  DdlRel_DdlOp_DdlRel_DdlOp_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
+  DdlRel_DdlOp_DdlRel_DdlOp_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
+};
+bool DdlRel_DdlOp_IsValid(int value);
+constexpr DdlRel_DdlOp DdlRel_DdlOp_DdlOp_MIN = DdlRel_DdlOp_DDL_OP_UNSPECIFIED;
+constexpr DdlRel_DdlOp DdlRel_DdlOp_DdlOp_MAX = DdlRel_DdlOp_DDL_OP_DROP_IF_EXIST;
+constexpr int DdlRel_DdlOp_DdlOp_ARRAYSIZE = DdlRel_DdlOp_DdlOp_MAX + 1;
+
+const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* DdlRel_DdlOp_descriptor();
+template<typename T>
+inline const std::string& DdlRel_DdlOp_Name(T enum_t_value) {
+  static_assert(::std::is_same<T, DdlRel_DdlOp>::value ||
+    ::std::is_integral<T>::value,
+    "Incorrect type passed to function DdlRel_DdlOp_Name.");
+  return ::PROTOBUF_NAMESPACE_ID::internal::NameOfEnum(
+    DdlRel_DdlOp_descriptor(), enum_t_value);
+}
+inline bool DdlRel_DdlOp_Parse(
+    ::PROTOBUF_NAMESPACE_ID::ConstStringParam name, DdlRel_DdlOp* value) {
+  return ::PROTOBUF_NAMESPACE_ID::internal::ParseNamedEnum<DdlRel_DdlOp>(
+    DdlRel_DdlOp_descriptor(), name, value);
+}
+enum WriteRel_WriteOp : int {
+  WriteRel_WriteOp_WRITE_OP_UNSPECIFIED = 0,
+  WriteRel_WriteOp_WRITE_OP_INSERT = 1,
+  WriteRel_WriteOp_WRITE_OP_DELETE = 2,
+  WriteRel_WriteOp_WRITE_OP_UPDATE = 3,
+  WriteRel_WriteOp_WRITE_OP_CTAS = 4,
+  WriteRel_WriteOp_WriteRel_WriteOp_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
+  WriteRel_WriteOp_WriteRel_WriteOp_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
+};
+bool WriteRel_WriteOp_IsValid(int value);
+constexpr WriteRel_WriteOp WriteRel_WriteOp_WriteOp_MIN = WriteRel_WriteOp_WRITE_OP_UNSPECIFIED;
+constexpr WriteRel_WriteOp WriteRel_WriteOp_WriteOp_MAX = WriteRel_WriteOp_WRITE_OP_CTAS;
+constexpr int WriteRel_WriteOp_WriteOp_ARRAYSIZE = WriteRel_WriteOp_WriteOp_MAX + 1;
+
+const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* WriteRel_WriteOp_descriptor();
+template<typename T>
+inline const std::string& WriteRel_WriteOp_Name(T enum_t_value) {
+  static_assert(::std::is_same<T, WriteRel_WriteOp>::value ||
+    ::std::is_integral<T>::value,
+    "Incorrect type passed to function WriteRel_WriteOp_Name.");
+  return ::PROTOBUF_NAMESPACE_ID::internal::NameOfEnum(
+    WriteRel_WriteOp_descriptor(), enum_t_value);
+}
+inline bool WriteRel_WriteOp_Parse(
+    ::PROTOBUF_NAMESPACE_ID::ConstStringParam name, WriteRel_WriteOp* value) {
+  return ::PROTOBUF_NAMESPACE_ID::internal::ParseNamedEnum<WriteRel_WriteOp>(
+    WriteRel_WriteOp_descriptor(), name, value);
+}
+enum WriteRel_OutputMode : int {
+  WriteRel_OutputMode_OUTPUT_MODE_UNSPECIFIED = 0,
+  WriteRel_OutputMode_OUTPUT_MODE_NO_OUTPUT = 1,
+  WriteRel_OutputMode_OUTPUT_MODE_MODIFIED_TUPLES = 2,
+  WriteRel_OutputMode_WriteRel_OutputMode_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
+  WriteRel_OutputMode_WriteRel_OutputMode_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
+};
+bool WriteRel_OutputMode_IsValid(int value);
+constexpr WriteRel_OutputMode WriteRel_OutputMode_OutputMode_MIN = WriteRel_OutputMode_OUTPUT_MODE_UNSPECIFIED;
+constexpr WriteRel_OutputMode WriteRel_OutputMode_OutputMode_MAX = WriteRel_OutputMode_OUTPUT_MODE_MODIFIED_TUPLES;
+constexpr int WriteRel_OutputMode_OutputMode_ARRAYSIZE = WriteRel_OutputMode_OutputMode_MAX + 1;
+
+const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* WriteRel_OutputMode_descriptor();
+template<typename T>
+inline const std::string& WriteRel_OutputMode_Name(T enum_t_value) {
+  static_assert(::std::is_same<T, WriteRel_OutputMode>::value ||
+    ::std::is_integral<T>::value,
+    "Incorrect type passed to function WriteRel_OutputMode_Name.");
+  return ::PROTOBUF_NAMESPACE_ID::internal::NameOfEnum(
+    WriteRel_OutputMode_descriptor(), enum_t_value);
+}
+inline bool WriteRel_OutputMode_Parse(
+    ::PROTOBUF_NAMESPACE_ID::ConstStringParam name, WriteRel_OutputMode* value) {
+  return ::PROTOBUF_NAMESPACE_ID::internal::ParseNamedEnum<WriteRel_OutputMode>(
+    WriteRel_OutputMode_descriptor(), name, value);
+}
+enum HashJoinRel_JoinType : int {
+  HashJoinRel_JoinType_JOIN_TYPE_UNSPECIFIED = 0,
+  HashJoinRel_JoinType_JOIN_TYPE_INNER = 1,
+  HashJoinRel_JoinType_JOIN_TYPE_OUTER = 2,
+  HashJoinRel_JoinType_JOIN_TYPE_LEFT = 3,
+  HashJoinRel_JoinType_JOIN_TYPE_RIGHT = 4,
+  HashJoinRel_JoinType_JOIN_TYPE_LEFT_SEMI = 5,
+  HashJoinRel_JoinType_JOIN_TYPE_RIGHT_SEMI = 6,
+  HashJoinRel_JoinType_JOIN_TYPE_LEFT_ANTI = 7,
+  HashJoinRel_JoinType_JOIN_TYPE_RIGHT_ANTI = 8,
+  HashJoinRel_JoinType_HashJoinRel_JoinType_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
+  HashJoinRel_JoinType_HashJoinRel_JoinType_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
+};
+bool HashJoinRel_JoinType_IsValid(int value);
+constexpr HashJoinRel_JoinType HashJoinRel_JoinType_JoinType_MIN = HashJoinRel_JoinType_JOIN_TYPE_UNSPECIFIED;
+constexpr HashJoinRel_JoinType HashJoinRel_JoinType_JoinType_MAX = HashJoinRel_JoinType_JOIN_TYPE_RIGHT_ANTI;
+constexpr int HashJoinRel_JoinType_JoinType_ARRAYSIZE = HashJoinRel_JoinType_JoinType_MAX + 1;
+
+const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* HashJoinRel_JoinType_descriptor();
+template<typename T>
+inline const std::string& HashJoinRel_JoinType_Name(T enum_t_value) {
+  static_assert(::std::is_same<T, HashJoinRel_JoinType>::value ||
+    ::std::is_integral<T>::value,
+    "Incorrect type passed to function HashJoinRel_JoinType_Name.");
+  return ::PROTOBUF_NAMESPACE_ID::internal::NameOfEnum(
+    HashJoinRel_JoinType_descriptor(), enum_t_value);
+}
+inline bool HashJoinRel_JoinType_Parse(
+    ::PROTOBUF_NAMESPACE_ID::ConstStringParam name, HashJoinRel_JoinType* value) {
+  return ::PROTOBUF_NAMESPACE_ID::internal::ParseNamedEnum<HashJoinRel_JoinType>(
+    HashJoinRel_JoinType_descriptor(), name, value);
+}
+enum MergeJoinRel_JoinType : int {
+  MergeJoinRel_JoinType_JOIN_TYPE_UNSPECIFIED = 0,
+  MergeJoinRel_JoinType_JOIN_TYPE_INNER = 1,
+  MergeJoinRel_JoinType_JOIN_TYPE_OUTER = 2,
+  MergeJoinRel_JoinType_JOIN_TYPE_LEFT = 3,
+  MergeJoinRel_JoinType_JOIN_TYPE_RIGHT = 4,
+  MergeJoinRel_JoinType_JOIN_TYPE_LEFT_SEMI = 5,
+  MergeJoinRel_JoinType_JOIN_TYPE_RIGHT_SEMI = 6,
+  MergeJoinRel_JoinType_JOIN_TYPE_LEFT_ANTI = 7,
+  MergeJoinRel_JoinType_JOIN_TYPE_RIGHT_ANTI = 8,
+  MergeJoinRel_JoinType_MergeJoinRel_JoinType_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
+  MergeJoinRel_JoinType_MergeJoinRel_JoinType_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
+};
+bool MergeJoinRel_JoinType_IsValid(int value);
+constexpr MergeJoinRel_JoinType MergeJoinRel_JoinType_JoinType_MIN = MergeJoinRel_JoinType_JOIN_TYPE_UNSPECIFIED;
+constexpr MergeJoinRel_JoinType MergeJoinRel_JoinType_JoinType_MAX = MergeJoinRel_JoinType_JOIN_TYPE_RIGHT_ANTI;
+constexpr int MergeJoinRel_JoinType_JoinType_ARRAYSIZE = MergeJoinRel_JoinType_JoinType_MAX + 1;
+
+const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* MergeJoinRel_JoinType_descriptor();
+template<typename T>
+inline const std::string& MergeJoinRel_JoinType_Name(T enum_t_value) {
+  static_assert(::std::is_same<T, MergeJoinRel_JoinType>::value ||
+    ::std::is_integral<T>::value,
+    "Incorrect type passed to function MergeJoinRel_JoinType_Name.");
+  return ::PROTOBUF_NAMESPACE_ID::internal::NameOfEnum(
+    MergeJoinRel_JoinType_descriptor(), enum_t_value);
+}
+inline bool MergeJoinRel_JoinType_Parse(
+    ::PROTOBUF_NAMESPACE_ID::ConstStringParam name, MergeJoinRel_JoinType* value) {
+  return ::PROTOBUF_NAMESPACE_ID::internal::ParseNamedEnum<MergeJoinRel_JoinType>(
+    MergeJoinRel_JoinType_descriptor(), name, value);
 }
 enum Expression_Cast_FailureBehavior : int {
   Expression_Cast_FailureBehavior_FAILURE_BEHAVIOR_UNSPECIFIED = 0,
@@ -2590,6 +2814,124 @@ class ReadRel_LocalFiles_FileOrFiles_OrcReadOptions final :
 };
 // -------------------------------------------------------------------
 
+class ReadRel_LocalFiles_FileOrFiles_DwrfReadOptions final :
+    public ::PROTOBUF_NAMESPACE_ID::internal::ZeroFieldsBase /* @@protoc_insertion_point(class_definition:substrait.ReadRel.LocalFiles.FileOrFiles.DwrfReadOptions) */ {
+ public:
+  inline ReadRel_LocalFiles_FileOrFiles_DwrfReadOptions() : ReadRel_LocalFiles_FileOrFiles_DwrfReadOptions(nullptr) {}
+  explicit constexpr ReadRel_LocalFiles_FileOrFiles_DwrfReadOptions(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  ReadRel_LocalFiles_FileOrFiles_DwrfReadOptions(const ReadRel_LocalFiles_FileOrFiles_DwrfReadOptions& from);
+  ReadRel_LocalFiles_FileOrFiles_DwrfReadOptions(ReadRel_LocalFiles_FileOrFiles_DwrfReadOptions&& from) noexcept
+    : ReadRel_LocalFiles_FileOrFiles_DwrfReadOptions() {
+    *this = ::std::move(from);
+  }
+
+  inline ReadRel_LocalFiles_FileOrFiles_DwrfReadOptions& operator=(const ReadRel_LocalFiles_FileOrFiles_DwrfReadOptions& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline ReadRel_LocalFiles_FileOrFiles_DwrfReadOptions& operator=(ReadRel_LocalFiles_FileOrFiles_DwrfReadOptions&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()
+  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
+        && GetOwningArena() != nullptr
+  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
+    ) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const ReadRel_LocalFiles_FileOrFiles_DwrfReadOptions& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const ReadRel_LocalFiles_FileOrFiles_DwrfReadOptions* internal_default_instance() {
+    return reinterpret_cast<const ReadRel_LocalFiles_FileOrFiles_DwrfReadOptions*>(
+               &_ReadRel_LocalFiles_FileOrFiles_DwrfReadOptions_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    12;
+
+  friend void swap(ReadRel_LocalFiles_FileOrFiles_DwrfReadOptions& a, ReadRel_LocalFiles_FileOrFiles_DwrfReadOptions& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(ReadRel_LocalFiles_FileOrFiles_DwrfReadOptions* other) {
+    if (other == this) return;
+  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() != nullptr &&
+        GetOwningArena() == other->GetOwningArena()) {
+   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() == other->GetOwningArena()) {
+  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(ReadRel_LocalFiles_FileOrFiles_DwrfReadOptions* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  ReadRel_LocalFiles_FileOrFiles_DwrfReadOptions* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<ReadRel_LocalFiles_FileOrFiles_DwrfReadOptions>(arena);
+  }
+  using ::PROTOBUF_NAMESPACE_ID::internal::ZeroFieldsBase::CopyFrom;
+  inline void CopyFrom(const ReadRel_LocalFiles_FileOrFiles_DwrfReadOptions& from) {
+    ::PROTOBUF_NAMESPACE_ID::internal::ZeroFieldsBase::CopyImpl(this, from);
+  }
+  using ::PROTOBUF_NAMESPACE_ID::internal::ZeroFieldsBase::MergeFrom;
+  void MergeFrom(const ReadRel_LocalFiles_FileOrFiles_DwrfReadOptions& from) {
+    ::PROTOBUF_NAMESPACE_ID::internal::ZeroFieldsBase::MergeImpl(this, from);
+  }
+  public:
+
+  private:
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "substrait.ReadRel.LocalFiles.FileOrFiles.DwrfReadOptions";
+  }
+  protected:
+  explicit ReadRel_LocalFiles_FileOrFiles_DwrfReadOptions(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                       bool is_message_owned = false);
+  private:
+  public:
+
+  static const ClassData _class_data_;
+  const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetClassData() const final;
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // @@protoc_insertion_point(class_scope:substrait.ReadRel.LocalFiles.FileOrFiles.DwrfReadOptions)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_substrait_2falgebra_2eproto;
+};
+// -------------------------------------------------------------------
+
 class ReadRel_LocalFiles_FileOrFiles final :
     public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:substrait.ReadRel.LocalFiles.FileOrFiles) */ {
  public:
@@ -2646,6 +2988,7 @@ class ReadRel_LocalFiles_FileOrFiles final :
     kArrow = 10,
     kOrc = 11,
     kExtension = 12,
+    kDwrf = 13,
     FILE_FORMAT_NOT_SET = 0,
   };
 
@@ -2654,7 +2997,7 @@ class ReadRel_LocalFiles_FileOrFiles final :
                &_ReadRel_LocalFiles_FileOrFiles_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    12;
+    13;
 
   friend void swap(ReadRel_LocalFiles_FileOrFiles& a, ReadRel_LocalFiles_FileOrFiles& b) {
     a.Swap(&b);
@@ -2728,6 +3071,7 @@ class ReadRel_LocalFiles_FileOrFiles final :
   typedef ReadRel_LocalFiles_FileOrFiles_ParquetReadOptions ParquetReadOptions;
   typedef ReadRel_LocalFiles_FileOrFiles_ArrowReadOptions ArrowReadOptions;
   typedef ReadRel_LocalFiles_FileOrFiles_OrcReadOptions OrcReadOptions;
+  typedef ReadRel_LocalFiles_FileOrFiles_DwrfReadOptions DwrfReadOptions;
 
   // accessors -------------------------------------------------------
 
@@ -2743,6 +3087,7 @@ class ReadRel_LocalFiles_FileOrFiles final :
     kArrowFieldNumber = 10,
     kOrcFieldNumber = 11,
     kExtensionFieldNumber = 12,
+    kDwrfFieldNumber = 13,
   };
   // uint64 partition_index = 6;
   void clear_partition_index();
@@ -2915,6 +3260,24 @@ class ReadRel_LocalFiles_FileOrFiles final :
       ::PROTOBUF_NAMESPACE_ID::Any* extension);
   ::PROTOBUF_NAMESPACE_ID::Any* unsafe_arena_release_extension();
 
+  // .substrait.ReadRel.LocalFiles.FileOrFiles.DwrfReadOptions dwrf = 13;
+  bool has_dwrf() const;
+  private:
+  bool _internal_has_dwrf() const;
+  public:
+  void clear_dwrf();
+  const ::substrait::ReadRel_LocalFiles_FileOrFiles_DwrfReadOptions& dwrf() const;
+  PROTOBUF_NODISCARD ::substrait::ReadRel_LocalFiles_FileOrFiles_DwrfReadOptions* release_dwrf();
+  ::substrait::ReadRel_LocalFiles_FileOrFiles_DwrfReadOptions* mutable_dwrf();
+  void set_allocated_dwrf(::substrait::ReadRel_LocalFiles_FileOrFiles_DwrfReadOptions* dwrf);
+  private:
+  const ::substrait::ReadRel_LocalFiles_FileOrFiles_DwrfReadOptions& _internal_dwrf() const;
+  ::substrait::ReadRel_LocalFiles_FileOrFiles_DwrfReadOptions* _internal_mutable_dwrf();
+  public:
+  void unsafe_arena_set_allocated_dwrf(
+      ::substrait::ReadRel_LocalFiles_FileOrFiles_DwrfReadOptions* dwrf);
+  ::substrait::ReadRel_LocalFiles_FileOrFiles_DwrfReadOptions* unsafe_arena_release_dwrf();
+
   void clear_path_type();
   PathTypeCase path_type_case() const;
   void clear_file_format();
@@ -2930,6 +3293,7 @@ class ReadRel_LocalFiles_FileOrFiles final :
   void set_has_arrow();
   void set_has_orc();
   void set_has_extension();
+  void set_has_dwrf();
 
   inline bool has_path_type() const;
   inline void clear_has_path_type();
@@ -2958,6 +3322,7 @@ class ReadRel_LocalFiles_FileOrFiles final :
     ::substrait::ReadRel_LocalFiles_FileOrFiles_ArrowReadOptions* arrow_;
     ::substrait::ReadRel_LocalFiles_FileOrFiles_OrcReadOptions* orc_;
     ::PROTOBUF_NAMESPACE_ID::Any* extension_;
+    ::substrait::ReadRel_LocalFiles_FileOrFiles_DwrfReadOptions* dwrf_;
   } file_format_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   uint32_t _oneof_case_[2];
@@ -3014,7 +3379,7 @@ class ReadRel_LocalFiles final :
                &_ReadRel_LocalFiles_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    13;
+    14;
 
   friend void swap(ReadRel_LocalFiles& a, ReadRel_LocalFiles& b) {
     a.Swap(&b);
@@ -3199,7 +3564,7 @@ class ReadRel final :
                &_ReadRel_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    14;
+    15;
 
   friend void swap(ReadRel& a, ReadRel& b) {
     a.Swap(&b);
@@ -3283,6 +3648,7 @@ class ReadRel final :
     kFilterFieldNumber = 3,
     kProjectionFieldNumber = 4,
     kAdvancedExtensionFieldNumber = 10,
+    kBestEffortFilterFieldNumber = 11,
     kVirtualTableFieldNumber = 5,
     kLocalFilesFieldNumber = 6,
     kNamedTableFieldNumber = 7,
@@ -3378,6 +3744,24 @@ class ReadRel final :
       ::substrait::extensions::AdvancedExtension* advanced_extension);
   ::substrait::extensions::AdvancedExtension* unsafe_arena_release_advanced_extension();
 
+  // .substrait.Expression best_effort_filter = 11;
+  bool has_best_effort_filter() const;
+  private:
+  bool _internal_has_best_effort_filter() const;
+  public:
+  void clear_best_effort_filter();
+  const ::substrait::Expression& best_effort_filter() const;
+  PROTOBUF_NODISCARD ::substrait::Expression* release_best_effort_filter();
+  ::substrait::Expression* mutable_best_effort_filter();
+  void set_allocated_best_effort_filter(::substrait::Expression* best_effort_filter);
+  private:
+  const ::substrait::Expression& _internal_best_effort_filter() const;
+  ::substrait::Expression* _internal_mutable_best_effort_filter();
+  public:
+  void unsafe_arena_set_allocated_best_effort_filter(
+      ::substrait::Expression* best_effort_filter);
+  ::substrait::Expression* unsafe_arena_release_best_effort_filter();
+
   // .substrait.ReadRel.VirtualTable virtual_table = 5;
   bool has_virtual_table() const;
   private:
@@ -3471,6 +3855,7 @@ class ReadRel final :
   ::substrait::Expression* filter_;
   ::substrait::Expression_MaskExpression* projection_;
   ::substrait::extensions::AdvancedExtension* advanced_extension_;
+  ::substrait::Expression* best_effort_filter_;
   union ReadTypeUnion {
     constexpr ReadTypeUnion() : _constinit_{} {}
       ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized _constinit_;
@@ -3534,7 +3919,7 @@ class ProjectRel final :
                &_ProjectRel_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    15;
+    16;
 
   friend void swap(ProjectRel& a, ProjectRel& b) {
     a.Swap(&b);
@@ -3749,7 +4134,7 @@ class JoinRel final :
                &_JoinRel_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    16;
+    17;
 
   friend void swap(JoinRel& a, JoinRel& b) {
     a.Swap(&b);
@@ -4057,7 +4442,7 @@ class CrossRel final :
                &_CrossRel_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    17;
+    18;
 
   friend void swap(CrossRel& a, CrossRel& b) {
     a.Swap(&b);
@@ -4272,7 +4657,7 @@ class FetchRel final :
                &_FetchRel_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    18;
+    19;
 
   friend void swap(FetchRel& a, FetchRel& b) {
     a.Swap(&b);
@@ -4489,7 +4874,7 @@ class AggregateRel_Grouping final :
                &_AggregateRel_Grouping_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    19;
+    20;
 
   friend void swap(AggregateRel_Grouping& a, AggregateRel_Grouping& b) {
     a.Swap(&b);
@@ -4644,7 +5029,7 @@ class AggregateRel_Measure final :
                &_AggregateRel_Measure_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    20;
+    21;
 
   friend void swap(AggregateRel_Measure& a, AggregateRel_Measure& b) {
     a.Swap(&b);
@@ -4819,7 +5204,7 @@ class AggregateRel final :
                &_AggregateRel_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    21;
+    22;
 
   friend void swap(AggregateRel& a, AggregateRel& b) {
     a.Swap(&b);
@@ -5057,7 +5442,7 @@ class SortRel final :
                &_SortRel_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    22;
+    23;
 
   friend void swap(SortRel& a, SortRel& b) {
     a.Swap(&b);
@@ -5272,7 +5657,7 @@ class FilterRel final :
                &_FilterRel_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    23;
+    24;
 
   friend void swap(FilterRel& a, FilterRel& b) {
     a.Swap(&b);
@@ -5487,7 +5872,7 @@ class SetRel final :
                &_SetRel_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    24;
+    25;
 
   friend void swap(SetRel& a, SetRel& b) {
     a.Swap(&b);
@@ -5733,7 +6118,7 @@ class ExtensionSingleRel final :
                &_ExtensionSingleRel_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    25;
+    26;
 
   friend void swap(ExtensionSingleRel& a, ExtensionSingleRel& b) {
     a.Swap(&b);
@@ -5928,7 +6313,7 @@ class ExtensionLeafRel final :
                &_ExtensionLeafRel_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    26;
+    27;
 
   friend void swap(ExtensionLeafRel& a, ExtensionLeafRel& b) {
     a.Swap(&b);
@@ -6103,7 +6488,7 @@ class ExtensionMultiRel final :
                &_ExtensionMultiRel_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    27;
+    28;
 
   friend void swap(ExtensionMultiRel& a, ExtensionMultiRel& b) {
     a.Swap(&b);
@@ -6298,7 +6683,7 @@ class ExchangeRel_ScatterFields final :
                &_ExchangeRel_ScatterFields_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    28;
+    29;
 
   friend void swap(ExchangeRel_ScatterFields& a, ExchangeRel_ScatterFields& b) {
     a.Swap(&b);
@@ -6453,7 +6838,7 @@ class ExchangeRel_SingleBucketExpression final :
                &_ExchangeRel_SingleBucketExpression_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    29;
+    30;
 
   friend void swap(ExchangeRel_SingleBucketExpression& a, ExchangeRel_SingleBucketExpression& b) {
     a.Swap(&b);
@@ -6608,7 +6993,7 @@ class ExchangeRel_MultiBucketExpression final :
                &_ExchangeRel_MultiBucketExpression_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    30;
+    31;
 
   friend void swap(ExchangeRel_MultiBucketExpression& a, ExchangeRel_MultiBucketExpression& b) {
     a.Swap(&b);
@@ -6773,7 +7158,7 @@ class ExchangeRel_Broadcast final :
                &_ExchangeRel_Broadcast_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    31;
+    32;
 
   friend void swap(ExchangeRel_Broadcast& a, ExchangeRel_Broadcast& b) {
     a.Swap(&b);
@@ -6892,7 +7277,7 @@ class ExchangeRel_RoundRobin final :
                &_ExchangeRel_RoundRobin_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    32;
+    33;
 
   friend void swap(ExchangeRel_RoundRobin& a, ExchangeRel_RoundRobin& b) {
     a.Swap(&b);
@@ -7044,7 +7429,7 @@ class ExchangeRel_ExchangeTarget final :
                &_ExchangeRel_ExchangeTarget_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    33;
+    34;
 
   friend void swap(ExchangeRel_ExchangeTarget& a, ExchangeRel_ExchangeTarget& b) {
     a.Swap(&b);
@@ -7266,7 +7651,7 @@ class ExchangeRel final :
                &_ExchangeRel_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    34;
+    35;
 
   friend void swap(ExchangeRel& a, ExchangeRel& b) {
     a.Swap(&b);
@@ -7615,7 +8000,7 @@ class RelRoot final :
                &_RelRoot_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    35;
+    36;
 
   friend void swap(RelRoot& a, RelRoot& b) {
     a.Swap(&b);
@@ -7804,6 +8189,8 @@ class Rel final :
     kExtensionMulti = 10,
     kExtensionLeaf = 11,
     kCross = 12,
+    kHashJoin = 13,
+    kMergeJoin = 14,
     REL_TYPE_NOT_SET = 0,
   };
 
@@ -7812,7 +8199,7 @@ class Rel final :
                &_Rel_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    36;
+    37;
 
   friend void swap(Rel& a, Rel& b) {
     a.Swap(&b);
@@ -7898,6 +8285,8 @@ class Rel final :
     kExtensionMultiFieldNumber = 10,
     kExtensionLeafFieldNumber = 11,
     kCrossFieldNumber = 12,
+    kHashJoinFieldNumber = 13,
+    kMergeJoinFieldNumber = 14,
   };
   // .substrait.ReadRel read = 1;
   bool has_read() const;
@@ -8115,6 +8504,42 @@ class Rel final :
       ::substrait::CrossRel* cross);
   ::substrait::CrossRel* unsafe_arena_release_cross();
 
+  // .substrait.HashJoinRel hash_join = 13;
+  bool has_hash_join() const;
+  private:
+  bool _internal_has_hash_join() const;
+  public:
+  void clear_hash_join();
+  const ::substrait::HashJoinRel& hash_join() const;
+  PROTOBUF_NODISCARD ::substrait::HashJoinRel* release_hash_join();
+  ::substrait::HashJoinRel* mutable_hash_join();
+  void set_allocated_hash_join(::substrait::HashJoinRel* hash_join);
+  private:
+  const ::substrait::HashJoinRel& _internal_hash_join() const;
+  ::substrait::HashJoinRel* _internal_mutable_hash_join();
+  public:
+  void unsafe_arena_set_allocated_hash_join(
+      ::substrait::HashJoinRel* hash_join);
+  ::substrait::HashJoinRel* unsafe_arena_release_hash_join();
+
+  // .substrait.MergeJoinRel merge_join = 14;
+  bool has_merge_join() const;
+  private:
+  bool _internal_has_merge_join() const;
+  public:
+  void clear_merge_join();
+  const ::substrait::MergeJoinRel& merge_join() const;
+  PROTOBUF_NODISCARD ::substrait::MergeJoinRel* release_merge_join();
+  ::substrait::MergeJoinRel* mutable_merge_join();
+  void set_allocated_merge_join(::substrait::MergeJoinRel* merge_join);
+  private:
+  const ::substrait::MergeJoinRel& _internal_merge_join() const;
+  ::substrait::MergeJoinRel* _internal_mutable_merge_join();
+  public:
+  void unsafe_arena_set_allocated_merge_join(
+      ::substrait::MergeJoinRel* merge_join);
+  ::substrait::MergeJoinRel* unsafe_arena_release_merge_join();
+
   void clear_rel_type();
   RelTypeCase rel_type_case() const;
   // @@protoc_insertion_point(class_scope:substrait.Rel)
@@ -8132,6 +8557,8 @@ class Rel final :
   void set_has_extension_multi();
   void set_has_extension_leaf();
   void set_has_cross();
+  void set_has_hash_join();
+  void set_has_merge_join();
 
   inline bool has_rel_type() const;
   inline void clear_has_rel_type();
@@ -8154,6 +8581,8 @@ class Rel final :
     ::substrait::ExtensionMultiRel* extension_multi_;
     ::substrait::ExtensionLeafRel* extension_leaf_;
     ::substrait::CrossRel* cross_;
+    ::substrait::HashJoinRel* hash_join_;
+    ::substrait::MergeJoinRel* merge_join_;
   } rel_type_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   uint32_t _oneof_case_[1];
@@ -8162,24 +8591,24 @@ class Rel final :
 };
 // -------------------------------------------------------------------
 
-class FunctionArgument_Enum final :
-    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:substrait.FunctionArgument.Enum) */ {
+class NamedObjectWrite final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:substrait.NamedObjectWrite) */ {
  public:
-  inline FunctionArgument_Enum() : FunctionArgument_Enum(nullptr) {}
-  ~FunctionArgument_Enum() override;
-  explicit constexpr FunctionArgument_Enum(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+  inline NamedObjectWrite() : NamedObjectWrite(nullptr) {}
+  ~NamedObjectWrite() override;
+  explicit constexpr NamedObjectWrite(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
 
-  FunctionArgument_Enum(const FunctionArgument_Enum& from);
-  FunctionArgument_Enum(FunctionArgument_Enum&& from) noexcept
-    : FunctionArgument_Enum() {
+  NamedObjectWrite(const NamedObjectWrite& from);
+  NamedObjectWrite(NamedObjectWrite&& from) noexcept
+    : NamedObjectWrite() {
     *this = ::std::move(from);
   }
 
-  inline FunctionArgument_Enum& operator=(const FunctionArgument_Enum& from) {
+  inline NamedObjectWrite& operator=(const NamedObjectWrite& from) {
     CopyFrom(from);
     return *this;
   }
-  inline FunctionArgument_Enum& operator=(FunctionArgument_Enum&& from) noexcept {
+  inline NamedObjectWrite& operator=(NamedObjectWrite&& from) noexcept {
     if (this == &from) return *this;
     if (GetOwningArena() == from.GetOwningArena()
   #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
@@ -8202,26 +8631,20 @@ class FunctionArgument_Enum final :
   static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
     return default_instance().GetMetadata().reflection;
   }
-  static const FunctionArgument_Enum& default_instance() {
+  static const NamedObjectWrite& default_instance() {
     return *internal_default_instance();
   }
-  enum EnumKindCase {
-    kSpecified = 1,
-    kUnspecified = 2,
-    ENUM_KIND_NOT_SET = 0,
-  };
-
-  static inline const FunctionArgument_Enum* internal_default_instance() {
-    return reinterpret_cast<const FunctionArgument_Enum*>(
-               &_FunctionArgument_Enum_default_instance_);
+  static inline const NamedObjectWrite* internal_default_instance() {
+    return reinterpret_cast<const NamedObjectWrite*>(
+               &_NamedObjectWrite_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    37;
+    38;
 
-  friend void swap(FunctionArgument_Enum& a, FunctionArgument_Enum& b) {
+  friend void swap(NamedObjectWrite& a, NamedObjectWrite& b) {
     a.Swap(&b);
   }
-  inline void Swap(FunctionArgument_Enum* other) {
+  inline void Swap(NamedObjectWrite* other) {
     if (other == this) return;
   #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
     if (GetOwningArena() != nullptr &&
@@ -8234,7 +8657,7 @@ class FunctionArgument_Enum final :
       ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
     }
   }
-  void UnsafeArenaSwap(FunctionArgument_Enum* other) {
+  void UnsafeArenaSwap(NamedObjectWrite* other) {
     if (other == this) return;
     GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
     InternalSwap(other);
@@ -8242,13 +8665,13 @@ class FunctionArgument_Enum final :
 
   // implements Message ----------------------------------------------
 
-  FunctionArgument_Enum* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final {
-    return CreateMaybeMessage<FunctionArgument_Enum>(arena);
+  NamedObjectWrite* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<NamedObjectWrite>(arena);
   }
   using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
-  void CopyFrom(const FunctionArgument_Enum& from);
+  void CopyFrom(const NamedObjectWrite& from);
   using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
-  void MergeFrom(const FunctionArgument_Enum& from);
+  void MergeFrom(const NamedObjectWrite& from);
   private:
   static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to, const ::PROTOBUF_NAMESPACE_ID::Message& from);
   public:
@@ -8265,15 +8688,15 @@ class FunctionArgument_Enum final :
   void SharedCtor();
   void SharedDtor();
   void SetCachedSize(int size) const final;
-  void InternalSwap(FunctionArgument_Enum* other);
+  void InternalSwap(NamedObjectWrite* other);
 
   private:
   friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
   static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
-    return "substrait.FunctionArgument.Enum";
+    return "substrait.NamedObjectWrite";
   }
   protected:
-  explicit FunctionArgument_Enum(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+  explicit NamedObjectWrite(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                        bool is_message_owned = false);
   private:
   static void ArenaDtor(void* object);
@@ -8290,68 +8713,1546 @@ class FunctionArgument_Enum final :
   // accessors -------------------------------------------------------
 
   enum : int {
-    kSpecifiedFieldNumber = 1,
-    kUnspecifiedFieldNumber = 2,
+    kNamesFieldNumber = 1,
+    kAdvancedExtensionFieldNumber = 10,
   };
-  // string specified = 1;
-  bool has_specified() const;
+  // repeated string names = 1;
+  int names_size() const;
   private:
-  bool _internal_has_specified() const;
+  int _internal_names_size() const;
   public:
-  void clear_specified();
-  const std::string& specified() const;
-  template <typename ArgT0 = const std::string&, typename... ArgT>
-  void set_specified(ArgT0&& arg0, ArgT... args);
-  std::string* mutable_specified();
-  PROTOBUF_NODISCARD std::string* release_specified();
-  void set_allocated_specified(std::string* specified);
+  void clear_names();
+  const std::string& names(int index) const;
+  std::string* mutable_names(int index);
+  void set_names(int index, const std::string& value);
+  void set_names(int index, std::string&& value);
+  void set_names(int index, const char* value);
+  void set_names(int index, const char* value, size_t size);
+  std::string* add_names();
+  void add_names(const std::string& value);
+  void add_names(std::string&& value);
+  void add_names(const char* value);
+  void add_names(const char* value, size_t size);
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>& names() const;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>* mutable_names();
   private:
-  const std::string& _internal_specified() const;
-  inline PROTOBUF_ALWAYS_INLINE void _internal_set_specified(const std::string& value);
-  std::string* _internal_mutable_specified();
+  const std::string& _internal_names(int index) const;
+  std::string* _internal_add_names();
   public:
 
-  // .google.protobuf.Empty unspecified = 2;
-  bool has_unspecified() const;
+  // .substrait.extensions.AdvancedExtension advanced_extension = 10;
+  bool has_advanced_extension() const;
   private:
-  bool _internal_has_unspecified() const;
+  bool _internal_has_advanced_extension() const;
   public:
-  void clear_unspecified();
-  const ::PROTOBUF_NAMESPACE_ID::Empty& unspecified() const;
-  PROTOBUF_NODISCARD ::PROTOBUF_NAMESPACE_ID::Empty* release_unspecified();
-  ::PROTOBUF_NAMESPACE_ID::Empty* mutable_unspecified();
-  void set_allocated_unspecified(::PROTOBUF_NAMESPACE_ID::Empty* unspecified);
+  void clear_advanced_extension();
+  const ::substrait::extensions::AdvancedExtension& advanced_extension() const;
+  PROTOBUF_NODISCARD ::substrait::extensions::AdvancedExtension* release_advanced_extension();
+  ::substrait::extensions::AdvancedExtension* mutable_advanced_extension();
+  void set_allocated_advanced_extension(::substrait::extensions::AdvancedExtension* advanced_extension);
   private:
-  const ::PROTOBUF_NAMESPACE_ID::Empty& _internal_unspecified() const;
-  ::PROTOBUF_NAMESPACE_ID::Empty* _internal_mutable_unspecified();
+  const ::substrait::extensions::AdvancedExtension& _internal_advanced_extension() const;
+  ::substrait::extensions::AdvancedExtension* _internal_mutable_advanced_extension();
   public:
-  void unsafe_arena_set_allocated_unspecified(
-      ::PROTOBUF_NAMESPACE_ID::Empty* unspecified);
-  ::PROTOBUF_NAMESPACE_ID::Empty* unsafe_arena_release_unspecified();
+  void unsafe_arena_set_allocated_advanced_extension(
+      ::substrait::extensions::AdvancedExtension* advanced_extension);
+  ::substrait::extensions::AdvancedExtension* unsafe_arena_release_advanced_extension();
 
-  void clear_enum_kind();
-  EnumKindCase enum_kind_case() const;
-  // @@protoc_insertion_point(class_scope:substrait.FunctionArgument.Enum)
+  // @@protoc_insertion_point(class_scope:substrait.NamedObjectWrite)
  private:
   class _Internal;
-  void set_has_specified();
-  void set_has_unspecified();
-
-  inline bool has_enum_kind() const;
-  inline void clear_has_enum_kind();
 
   template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
-  union EnumKindUnion {
-    constexpr EnumKindUnion() : _constinit_{} {}
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string> names_;
+  ::substrait::extensions::AdvancedExtension* advanced_extension_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_substrait_2falgebra_2eproto;
+};
+// -------------------------------------------------------------------
+
+class ExtensionObject final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:substrait.ExtensionObject) */ {
+ public:
+  inline ExtensionObject() : ExtensionObject(nullptr) {}
+  ~ExtensionObject() override;
+  explicit constexpr ExtensionObject(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  ExtensionObject(const ExtensionObject& from);
+  ExtensionObject(ExtensionObject&& from) noexcept
+    : ExtensionObject() {
+    *this = ::std::move(from);
+  }
+
+  inline ExtensionObject& operator=(const ExtensionObject& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline ExtensionObject& operator=(ExtensionObject&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()
+  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
+        && GetOwningArena() != nullptr
+  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
+    ) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const ExtensionObject& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const ExtensionObject* internal_default_instance() {
+    return reinterpret_cast<const ExtensionObject*>(
+               &_ExtensionObject_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    39;
+
+  friend void swap(ExtensionObject& a, ExtensionObject& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(ExtensionObject* other) {
+    if (other == this) return;
+  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() != nullptr &&
+        GetOwningArena() == other->GetOwningArena()) {
+   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() == other->GetOwningArena()) {
+  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(ExtensionObject* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  ExtensionObject* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<ExtensionObject>(arena);
+  }
+  using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
+  void CopyFrom(const ExtensionObject& from);
+  using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
+  void MergeFrom(const ExtensionObject& from);
+  private:
+  static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to, const ::PROTOBUF_NAMESPACE_ID::Message& from);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  uint8_t* _InternalSerialize(
+      uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(ExtensionObject* other);
+
+  private:
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "substrait.ExtensionObject";
+  }
+  protected:
+  explicit ExtensionObject(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                       bool is_message_owned = false);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  static const ClassData _class_data_;
+  const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetClassData() const final;
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kDetailFieldNumber = 1,
+  };
+  // .google.protobuf.Any detail = 1;
+  bool has_detail() const;
+  private:
+  bool _internal_has_detail() const;
+  public:
+  void clear_detail();
+  const ::PROTOBUF_NAMESPACE_ID::Any& detail() const;
+  PROTOBUF_NODISCARD ::PROTOBUF_NAMESPACE_ID::Any* release_detail();
+  ::PROTOBUF_NAMESPACE_ID::Any* mutable_detail();
+  void set_allocated_detail(::PROTOBUF_NAMESPACE_ID::Any* detail);
+  private:
+  const ::PROTOBUF_NAMESPACE_ID::Any& _internal_detail() const;
+  ::PROTOBUF_NAMESPACE_ID::Any* _internal_mutable_detail();
+  public:
+  void unsafe_arena_set_allocated_detail(
+      ::PROTOBUF_NAMESPACE_ID::Any* detail);
+  ::PROTOBUF_NAMESPACE_ID::Any* unsafe_arena_release_detail();
+
+  // @@protoc_insertion_point(class_scope:substrait.ExtensionObject)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::Any* detail_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_substrait_2falgebra_2eproto;
+};
+// -------------------------------------------------------------------
+
+class DdlRel final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:substrait.DdlRel) */ {
+ public:
+  inline DdlRel() : DdlRel(nullptr) {}
+  ~DdlRel() override;
+  explicit constexpr DdlRel(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  DdlRel(const DdlRel& from);
+  DdlRel(DdlRel&& from) noexcept
+    : DdlRel() {
+    *this = ::std::move(from);
+  }
+
+  inline DdlRel& operator=(const DdlRel& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline DdlRel& operator=(DdlRel&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()
+  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
+        && GetOwningArena() != nullptr
+  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
+    ) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const DdlRel& default_instance() {
+    return *internal_default_instance();
+  }
+  enum WriteTypeCase {
+    kNamedObject = 1,
+    kExtensionObject = 2,
+    WRITE_TYPE_NOT_SET = 0,
+  };
+
+  static inline const DdlRel* internal_default_instance() {
+    return reinterpret_cast<const DdlRel*>(
+               &_DdlRel_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    40;
+
+  friend void swap(DdlRel& a, DdlRel& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(DdlRel* other) {
+    if (other == this) return;
+  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() != nullptr &&
+        GetOwningArena() == other->GetOwningArena()) {
+   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() == other->GetOwningArena()) {
+  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(DdlRel* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  DdlRel* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<DdlRel>(arena);
+  }
+  using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
+  void CopyFrom(const DdlRel& from);
+  using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
+  void MergeFrom(const DdlRel& from);
+  private:
+  static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to, const ::PROTOBUF_NAMESPACE_ID::Message& from);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  uint8_t* _InternalSerialize(
+      uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(DdlRel* other);
+
+  private:
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "substrait.DdlRel";
+  }
+  protected:
+  explicit DdlRel(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                       bool is_message_owned = false);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  static const ClassData _class_data_;
+  const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetClassData() const final;
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  typedef DdlRel_DdlObject DdlObject;
+  static constexpr DdlObject DDL_OBJECT_UNSPECIFIED =
+    DdlRel_DdlObject_DDL_OBJECT_UNSPECIFIED;
+  static constexpr DdlObject DDL_OBJECT_TABLE =
+    DdlRel_DdlObject_DDL_OBJECT_TABLE;
+  static constexpr DdlObject DDL_OBJECT_VIEW =
+    DdlRel_DdlObject_DDL_OBJECT_VIEW;
+  static inline bool DdlObject_IsValid(int value) {
+    return DdlRel_DdlObject_IsValid(value);
+  }
+  static constexpr DdlObject DdlObject_MIN =
+    DdlRel_DdlObject_DdlObject_MIN;
+  static constexpr DdlObject DdlObject_MAX =
+    DdlRel_DdlObject_DdlObject_MAX;
+  static constexpr int DdlObject_ARRAYSIZE =
+    DdlRel_DdlObject_DdlObject_ARRAYSIZE;
+  static inline const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor*
+  DdlObject_descriptor() {
+    return DdlRel_DdlObject_descriptor();
+  }
+  template<typename T>
+  static inline const std::string& DdlObject_Name(T enum_t_value) {
+    static_assert(::std::is_same<T, DdlObject>::value ||
+      ::std::is_integral<T>::value,
+      "Incorrect type passed to function DdlObject_Name.");
+    return DdlRel_DdlObject_Name(enum_t_value);
+  }
+  static inline bool DdlObject_Parse(::PROTOBUF_NAMESPACE_ID::ConstStringParam name,
+      DdlObject* value) {
+    return DdlRel_DdlObject_Parse(name, value);
+  }
+
+  typedef DdlRel_DdlOp DdlOp;
+  static constexpr DdlOp DDL_OP_UNSPECIFIED =
+    DdlRel_DdlOp_DDL_OP_UNSPECIFIED;
+  static constexpr DdlOp DDL_OP_CREATE =
+    DdlRel_DdlOp_DDL_OP_CREATE;
+  static constexpr DdlOp DDL_OP_CREATE_OR_REPLACE =
+    DdlRel_DdlOp_DDL_OP_CREATE_OR_REPLACE;
+  static constexpr DdlOp DDL_OP_ALTER =
+    DdlRel_DdlOp_DDL_OP_ALTER;
+  static constexpr DdlOp DDL_OP_DROP =
+    DdlRel_DdlOp_DDL_OP_DROP;
+  static constexpr DdlOp DDL_OP_DROP_IF_EXIST =
+    DdlRel_DdlOp_DDL_OP_DROP_IF_EXIST;
+  static inline bool DdlOp_IsValid(int value) {
+    return DdlRel_DdlOp_IsValid(value);
+  }
+  static constexpr DdlOp DdlOp_MIN =
+    DdlRel_DdlOp_DdlOp_MIN;
+  static constexpr DdlOp DdlOp_MAX =
+    DdlRel_DdlOp_DdlOp_MAX;
+  static constexpr int DdlOp_ARRAYSIZE =
+    DdlRel_DdlOp_DdlOp_ARRAYSIZE;
+  static inline const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor*
+  DdlOp_descriptor() {
+    return DdlRel_DdlOp_descriptor();
+  }
+  template<typename T>
+  static inline const std::string& DdlOp_Name(T enum_t_value) {
+    static_assert(::std::is_same<T, DdlOp>::value ||
+      ::std::is_integral<T>::value,
+      "Incorrect type passed to function DdlOp_Name.");
+    return DdlRel_DdlOp_Name(enum_t_value);
+  }
+  static inline bool DdlOp_Parse(::PROTOBUF_NAMESPACE_ID::ConstStringParam name,
+      DdlOp* value) {
+    return DdlRel_DdlOp_Parse(name, value);
+  }
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kTableSchemaFieldNumber = 3,
+    kTableDefaultsFieldNumber = 4,
+    kViewDefinitionFieldNumber = 7,
+    kObjectFieldNumber = 5,
+    kOpFieldNumber = 6,
+    kNamedObjectFieldNumber = 1,
+    kExtensionObjectFieldNumber = 2,
+  };
+  // .substrait.NamedStruct table_schema = 3;
+  bool has_table_schema() const;
+  private:
+  bool _internal_has_table_schema() const;
+  public:
+  void clear_table_schema();
+  const ::substrait::NamedStruct& table_schema() const;
+  PROTOBUF_NODISCARD ::substrait::NamedStruct* release_table_schema();
+  ::substrait::NamedStruct* mutable_table_schema();
+  void set_allocated_table_schema(::substrait::NamedStruct* table_schema);
+  private:
+  const ::substrait::NamedStruct& _internal_table_schema() const;
+  ::substrait::NamedStruct* _internal_mutable_table_schema();
+  public:
+  void unsafe_arena_set_allocated_table_schema(
+      ::substrait::NamedStruct* table_schema);
+  ::substrait::NamedStruct* unsafe_arena_release_table_schema();
+
+  // .substrait.Expression.Literal.Struct table_defaults = 4;
+  bool has_table_defaults() const;
+  private:
+  bool _internal_has_table_defaults() const;
+  public:
+  void clear_table_defaults();
+  const ::substrait::Expression_Literal_Struct& table_defaults() const;
+  PROTOBUF_NODISCARD ::substrait::Expression_Literal_Struct* release_table_defaults();
+  ::substrait::Expression_Literal_Struct* mutable_table_defaults();
+  void set_allocated_table_defaults(::substrait::Expression_Literal_Struct* table_defaults);
+  private:
+  const ::substrait::Expression_Literal_Struct& _internal_table_defaults() const;
+  ::substrait::Expression_Literal_Struct* _internal_mutable_table_defaults();
+  public:
+  void unsafe_arena_set_allocated_table_defaults(
+      ::substrait::Expression_Literal_Struct* table_defaults);
+  ::substrait::Expression_Literal_Struct* unsafe_arena_release_table_defaults();
+
+  // .substrait.Rel view_definition = 7;
+  bool has_view_definition() const;
+  private:
+  bool _internal_has_view_definition() const;
+  public:
+  void clear_view_definition();
+  const ::substrait::Rel& view_definition() const;
+  PROTOBUF_NODISCARD ::substrait::Rel* release_view_definition();
+  ::substrait::Rel* mutable_view_definition();
+  void set_allocated_view_definition(::substrait::Rel* view_definition);
+  private:
+  const ::substrait::Rel& _internal_view_definition() const;
+  ::substrait::Rel* _internal_mutable_view_definition();
+  public:
+  void unsafe_arena_set_allocated_view_definition(
+      ::substrait::Rel* view_definition);
+  ::substrait::Rel* unsafe_arena_release_view_definition();
+
+  // .substrait.DdlRel.DdlObject object = 5;
+  void clear_object();
+  ::substrait::DdlRel_DdlObject object() const;
+  void set_object(::substrait::DdlRel_DdlObject value);
+  private:
+  ::substrait::DdlRel_DdlObject _internal_object() const;
+  void _internal_set_object(::substrait::DdlRel_DdlObject value);
+  public:
+
+  // .substrait.DdlRel.DdlOp op = 6;
+  void clear_op();
+  ::substrait::DdlRel_DdlOp op() const;
+  void set_op(::substrait::DdlRel_DdlOp value);
+  private:
+  ::substrait::DdlRel_DdlOp _internal_op() const;
+  void _internal_set_op(::substrait::DdlRel_DdlOp value);
+  public:
+
+  // .substrait.NamedObjectWrite named_object = 1;
+  bool has_named_object() const;
+  private:
+  bool _internal_has_named_object() const;
+  public:
+  void clear_named_object();
+  const ::substrait::NamedObjectWrite& named_object() const;
+  PROTOBUF_NODISCARD ::substrait::NamedObjectWrite* release_named_object();
+  ::substrait::NamedObjectWrite* mutable_named_object();
+  void set_allocated_named_object(::substrait::NamedObjectWrite* named_object);
+  private:
+  const ::substrait::NamedObjectWrite& _internal_named_object() const;
+  ::substrait::NamedObjectWrite* _internal_mutable_named_object();
+  public:
+  void unsafe_arena_set_allocated_named_object(
+      ::substrait::NamedObjectWrite* named_object);
+  ::substrait::NamedObjectWrite* unsafe_arena_release_named_object();
+
+  // .substrait.ExtensionObject extension_object = 2;
+  bool has_extension_object() const;
+  private:
+  bool _internal_has_extension_object() const;
+  public:
+  void clear_extension_object();
+  const ::substrait::ExtensionObject& extension_object() const;
+  PROTOBUF_NODISCARD ::substrait::ExtensionObject* release_extension_object();
+  ::substrait::ExtensionObject* mutable_extension_object();
+  void set_allocated_extension_object(::substrait::ExtensionObject* extension_object);
+  private:
+  const ::substrait::ExtensionObject& _internal_extension_object() const;
+  ::substrait::ExtensionObject* _internal_mutable_extension_object();
+  public:
+  void unsafe_arena_set_allocated_extension_object(
+      ::substrait::ExtensionObject* extension_object);
+  ::substrait::ExtensionObject* unsafe_arena_release_extension_object();
+
+  void clear_write_type();
+  WriteTypeCase write_type_case() const;
+  // @@protoc_insertion_point(class_scope:substrait.DdlRel)
+ private:
+  class _Internal;
+  void set_has_named_object();
+  void set_has_extension_object();
+
+  inline bool has_write_type() const;
+  inline void clear_has_write_type();
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  ::substrait::NamedStruct* table_schema_;
+  ::substrait::Expression_Literal_Struct* table_defaults_;
+  ::substrait::Rel* view_definition_;
+  int object_;
+  int op_;
+  union WriteTypeUnion {
+    constexpr WriteTypeUnion() : _constinit_{} {}
       ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized _constinit_;
-    ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr specified_;
-    ::PROTOBUF_NAMESPACE_ID::Empty* unspecified_;
-  } enum_kind_;
+    ::substrait::NamedObjectWrite* named_object_;
+    ::substrait::ExtensionObject* extension_object_;
+  } write_type_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   uint32_t _oneof_case_[1];
 
+  friend struct ::TableStruct_substrait_2falgebra_2eproto;
+};
+// -------------------------------------------------------------------
+
+class WriteRel final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:substrait.WriteRel) */ {
+ public:
+  inline WriteRel() : WriteRel(nullptr) {}
+  ~WriteRel() override;
+  explicit constexpr WriteRel(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  WriteRel(const WriteRel& from);
+  WriteRel(WriteRel&& from) noexcept
+    : WriteRel() {
+    *this = ::std::move(from);
+  }
+
+  inline WriteRel& operator=(const WriteRel& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline WriteRel& operator=(WriteRel&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()
+  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
+        && GetOwningArena() != nullptr
+  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
+    ) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const WriteRel& default_instance() {
+    return *internal_default_instance();
+  }
+  enum WriteTypeCase {
+    kNamedTable = 1,
+    kExtensionTable = 2,
+    WRITE_TYPE_NOT_SET = 0,
+  };
+
+  static inline const WriteRel* internal_default_instance() {
+    return reinterpret_cast<const WriteRel*>(
+               &_WriteRel_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    41;
+
+  friend void swap(WriteRel& a, WriteRel& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(WriteRel* other) {
+    if (other == this) return;
+  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() != nullptr &&
+        GetOwningArena() == other->GetOwningArena()) {
+   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() == other->GetOwningArena()) {
+  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(WriteRel* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  WriteRel* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<WriteRel>(arena);
+  }
+  using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
+  void CopyFrom(const WriteRel& from);
+  using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
+  void MergeFrom(const WriteRel& from);
+  private:
+  static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to, const ::PROTOBUF_NAMESPACE_ID::Message& from);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  uint8_t* _InternalSerialize(
+      uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(WriteRel* other);
+
+  private:
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "substrait.WriteRel";
+  }
+  protected:
+  explicit WriteRel(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                       bool is_message_owned = false);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  static const ClassData _class_data_;
+  const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetClassData() const final;
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  typedef WriteRel_WriteOp WriteOp;
+  static constexpr WriteOp WRITE_OP_UNSPECIFIED =
+    WriteRel_WriteOp_WRITE_OP_UNSPECIFIED;
+  static constexpr WriteOp WRITE_OP_INSERT =
+    WriteRel_WriteOp_WRITE_OP_INSERT;
+  static constexpr WriteOp WRITE_OP_DELETE =
+    WriteRel_WriteOp_WRITE_OP_DELETE;
+  static constexpr WriteOp WRITE_OP_UPDATE =
+    WriteRel_WriteOp_WRITE_OP_UPDATE;
+  static constexpr WriteOp WRITE_OP_CTAS =
+    WriteRel_WriteOp_WRITE_OP_CTAS;
+  static inline bool WriteOp_IsValid(int value) {
+    return WriteRel_WriteOp_IsValid(value);
+  }
+  static constexpr WriteOp WriteOp_MIN =
+    WriteRel_WriteOp_WriteOp_MIN;
+  static constexpr WriteOp WriteOp_MAX =
+    WriteRel_WriteOp_WriteOp_MAX;
+  static constexpr int WriteOp_ARRAYSIZE =
+    WriteRel_WriteOp_WriteOp_ARRAYSIZE;
+  static inline const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor*
+  WriteOp_descriptor() {
+    return WriteRel_WriteOp_descriptor();
+  }
+  template<typename T>
+  static inline const std::string& WriteOp_Name(T enum_t_value) {
+    static_assert(::std::is_same<T, WriteOp>::value ||
+      ::std::is_integral<T>::value,
+      "Incorrect type passed to function WriteOp_Name.");
+    return WriteRel_WriteOp_Name(enum_t_value);
+  }
+  static inline bool WriteOp_Parse(::PROTOBUF_NAMESPACE_ID::ConstStringParam name,
+      WriteOp* value) {
+    return WriteRel_WriteOp_Parse(name, value);
+  }
+
+  typedef WriteRel_OutputMode OutputMode;
+  static constexpr OutputMode OUTPUT_MODE_UNSPECIFIED =
+    WriteRel_OutputMode_OUTPUT_MODE_UNSPECIFIED;
+  static constexpr OutputMode OUTPUT_MODE_NO_OUTPUT =
+    WriteRel_OutputMode_OUTPUT_MODE_NO_OUTPUT;
+  static constexpr OutputMode OUTPUT_MODE_MODIFIED_TUPLES =
+    WriteRel_OutputMode_OUTPUT_MODE_MODIFIED_TUPLES;
+  static inline bool OutputMode_IsValid(int value) {
+    return WriteRel_OutputMode_IsValid(value);
+  }
+  static constexpr OutputMode OutputMode_MIN =
+    WriteRel_OutputMode_OutputMode_MIN;
+  static constexpr OutputMode OutputMode_MAX =
+    WriteRel_OutputMode_OutputMode_MAX;
+  static constexpr int OutputMode_ARRAYSIZE =
+    WriteRel_OutputMode_OutputMode_ARRAYSIZE;
+  static inline const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor*
+  OutputMode_descriptor() {
+    return WriteRel_OutputMode_descriptor();
+  }
+  template<typename T>
+  static inline const std::string& OutputMode_Name(T enum_t_value) {
+    static_assert(::std::is_same<T, OutputMode>::value ||
+      ::std::is_integral<T>::value,
+      "Incorrect type passed to function OutputMode_Name.");
+    return WriteRel_OutputMode_Name(enum_t_value);
+  }
+  static inline bool OutputMode_Parse(::PROTOBUF_NAMESPACE_ID::ConstStringParam name,
+      OutputMode* value) {
+    return WriteRel_OutputMode_Parse(name, value);
+  }
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kTableSchemaFieldNumber = 3,
+    kInputFieldNumber = 5,
+    kOpFieldNumber = 4,
+    kOutputFieldNumber = 6,
+    kNamedTableFieldNumber = 1,
+    kExtensionTableFieldNumber = 2,
+  };
+  // .substrait.NamedStruct table_schema = 3;
+  bool has_table_schema() const;
+  private:
+  bool _internal_has_table_schema() const;
+  public:
+  void clear_table_schema();
+  const ::substrait::NamedStruct& table_schema() const;
+  PROTOBUF_NODISCARD ::substrait::NamedStruct* release_table_schema();
+  ::substrait::NamedStruct* mutable_table_schema();
+  void set_allocated_table_schema(::substrait::NamedStruct* table_schema);
+  private:
+  const ::substrait::NamedStruct& _internal_table_schema() const;
+  ::substrait::NamedStruct* _internal_mutable_table_schema();
+  public:
+  void unsafe_arena_set_allocated_table_schema(
+      ::substrait::NamedStruct* table_schema);
+  ::substrait::NamedStruct* unsafe_arena_release_table_schema();
+
+  // .substrait.Rel input = 5;
+  bool has_input() const;
+  private:
+  bool _internal_has_input() const;
+  public:
+  void clear_input();
+  const ::substrait::Rel& input() const;
+  PROTOBUF_NODISCARD ::substrait::Rel* release_input();
+  ::substrait::Rel* mutable_input();
+  void set_allocated_input(::substrait::Rel* input);
+  private:
+  const ::substrait::Rel& _internal_input() const;
+  ::substrait::Rel* _internal_mutable_input();
+  public:
+  void unsafe_arena_set_allocated_input(
+      ::substrait::Rel* input);
+  ::substrait::Rel* unsafe_arena_release_input();
+
+  // .substrait.WriteRel.WriteOp op = 4;
+  void clear_op();
+  ::substrait::WriteRel_WriteOp op() const;
+  void set_op(::substrait::WriteRel_WriteOp value);
+  private:
+  ::substrait::WriteRel_WriteOp _internal_op() const;
+  void _internal_set_op(::substrait::WriteRel_WriteOp value);
+  public:
+
+  // .substrait.WriteRel.OutputMode output = 6;
+  void clear_output();
+  ::substrait::WriteRel_OutputMode output() const;
+  void set_output(::substrait::WriteRel_OutputMode value);
+  private:
+  ::substrait::WriteRel_OutputMode _internal_output() const;
+  void _internal_set_output(::substrait::WriteRel_OutputMode value);
+  public:
+
+  // .substrait.NamedObjectWrite named_table = 1;
+  bool has_named_table() const;
+  private:
+  bool _internal_has_named_table() const;
+  public:
+  void clear_named_table();
+  const ::substrait::NamedObjectWrite& named_table() const;
+  PROTOBUF_NODISCARD ::substrait::NamedObjectWrite* release_named_table();
+  ::substrait::NamedObjectWrite* mutable_named_table();
+  void set_allocated_named_table(::substrait::NamedObjectWrite* named_table);
+  private:
+  const ::substrait::NamedObjectWrite& _internal_named_table() const;
+  ::substrait::NamedObjectWrite* _internal_mutable_named_table();
+  public:
+  void unsafe_arena_set_allocated_named_table(
+      ::substrait::NamedObjectWrite* named_table);
+  ::substrait::NamedObjectWrite* unsafe_arena_release_named_table();
+
+  // .substrait.ExtensionObject extension_table = 2;
+  bool has_extension_table() const;
+  private:
+  bool _internal_has_extension_table() const;
+  public:
+  void clear_extension_table();
+  const ::substrait::ExtensionObject& extension_table() const;
+  PROTOBUF_NODISCARD ::substrait::ExtensionObject* release_extension_table();
+  ::substrait::ExtensionObject* mutable_extension_table();
+  void set_allocated_extension_table(::substrait::ExtensionObject* extension_table);
+  private:
+  const ::substrait::ExtensionObject& _internal_extension_table() const;
+  ::substrait::ExtensionObject* _internal_mutable_extension_table();
+  public:
+  void unsafe_arena_set_allocated_extension_table(
+      ::substrait::ExtensionObject* extension_table);
+  ::substrait::ExtensionObject* unsafe_arena_release_extension_table();
+
+  void clear_write_type();
+  WriteTypeCase write_type_case() const;
+  // @@protoc_insertion_point(class_scope:substrait.WriteRel)
+ private:
+  class _Internal;
+  void set_has_named_table();
+  void set_has_extension_table();
+
+  inline bool has_write_type() const;
+  inline void clear_has_write_type();
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  ::substrait::NamedStruct* table_schema_;
+  ::substrait::Rel* input_;
+  int op_;
+  int output_;
+  union WriteTypeUnion {
+    constexpr WriteTypeUnion() : _constinit_{} {}
+      ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized _constinit_;
+    ::substrait::NamedObjectWrite* named_table_;
+    ::substrait::ExtensionObject* extension_table_;
+  } write_type_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  uint32_t _oneof_case_[1];
+
+  friend struct ::TableStruct_substrait_2falgebra_2eproto;
+};
+// -------------------------------------------------------------------
+
+class HashJoinRel final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:substrait.HashJoinRel) */ {
+ public:
+  inline HashJoinRel() : HashJoinRel(nullptr) {}
+  ~HashJoinRel() override;
+  explicit constexpr HashJoinRel(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  HashJoinRel(const HashJoinRel& from);
+  HashJoinRel(HashJoinRel&& from) noexcept
+    : HashJoinRel() {
+    *this = ::std::move(from);
+  }
+
+  inline HashJoinRel& operator=(const HashJoinRel& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline HashJoinRel& operator=(HashJoinRel&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()
+  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
+        && GetOwningArena() != nullptr
+  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
+    ) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const HashJoinRel& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const HashJoinRel* internal_default_instance() {
+    return reinterpret_cast<const HashJoinRel*>(
+               &_HashJoinRel_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    42;
+
+  friend void swap(HashJoinRel& a, HashJoinRel& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(HashJoinRel* other) {
+    if (other == this) return;
+  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() != nullptr &&
+        GetOwningArena() == other->GetOwningArena()) {
+   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() == other->GetOwningArena()) {
+  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(HashJoinRel* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  HashJoinRel* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<HashJoinRel>(arena);
+  }
+  using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
+  void CopyFrom(const HashJoinRel& from);
+  using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
+  void MergeFrom(const HashJoinRel& from);
+  private:
+  static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to, const ::PROTOBUF_NAMESPACE_ID::Message& from);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  uint8_t* _InternalSerialize(
+      uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(HashJoinRel* other);
+
+  private:
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "substrait.HashJoinRel";
+  }
+  protected:
+  explicit HashJoinRel(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                       bool is_message_owned = false);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  static const ClassData _class_data_;
+  const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetClassData() const final;
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  typedef HashJoinRel_JoinType JoinType;
+  static constexpr JoinType JOIN_TYPE_UNSPECIFIED =
+    HashJoinRel_JoinType_JOIN_TYPE_UNSPECIFIED;
+  static constexpr JoinType JOIN_TYPE_INNER =
+    HashJoinRel_JoinType_JOIN_TYPE_INNER;
+  static constexpr JoinType JOIN_TYPE_OUTER =
+    HashJoinRel_JoinType_JOIN_TYPE_OUTER;
+  static constexpr JoinType JOIN_TYPE_LEFT =
+    HashJoinRel_JoinType_JOIN_TYPE_LEFT;
+  static constexpr JoinType JOIN_TYPE_RIGHT =
+    HashJoinRel_JoinType_JOIN_TYPE_RIGHT;
+  static constexpr JoinType JOIN_TYPE_LEFT_SEMI =
+    HashJoinRel_JoinType_JOIN_TYPE_LEFT_SEMI;
+  static constexpr JoinType JOIN_TYPE_RIGHT_SEMI =
+    HashJoinRel_JoinType_JOIN_TYPE_RIGHT_SEMI;
+  static constexpr JoinType JOIN_TYPE_LEFT_ANTI =
+    HashJoinRel_JoinType_JOIN_TYPE_LEFT_ANTI;
+  static constexpr JoinType JOIN_TYPE_RIGHT_ANTI =
+    HashJoinRel_JoinType_JOIN_TYPE_RIGHT_ANTI;
+  static inline bool JoinType_IsValid(int value) {
+    return HashJoinRel_JoinType_IsValid(value);
+  }
+  static constexpr JoinType JoinType_MIN =
+    HashJoinRel_JoinType_JoinType_MIN;
+  static constexpr JoinType JoinType_MAX =
+    HashJoinRel_JoinType_JoinType_MAX;
+  static constexpr int JoinType_ARRAYSIZE =
+    HashJoinRel_JoinType_JoinType_ARRAYSIZE;
+  static inline const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor*
+  JoinType_descriptor() {
+    return HashJoinRel_JoinType_descriptor();
+  }
+  template<typename T>
+  static inline const std::string& JoinType_Name(T enum_t_value) {
+    static_assert(::std::is_same<T, JoinType>::value ||
+      ::std::is_integral<T>::value,
+      "Incorrect type passed to function JoinType_Name.");
+    return HashJoinRel_JoinType_Name(enum_t_value);
+  }
+  static inline bool JoinType_Parse(::PROTOBUF_NAMESPACE_ID::ConstStringParam name,
+      JoinType* value) {
+    return HashJoinRel_JoinType_Parse(name, value);
+  }
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kLeftKeysFieldNumber = 4,
+    kRightKeysFieldNumber = 5,
+    kCommonFieldNumber = 1,
+    kLeftFieldNumber = 2,
+    kRightFieldNumber = 3,
+    kPostJoinFilterFieldNumber = 6,
+    kAdvancedExtensionFieldNumber = 10,
+    kTypeFieldNumber = 7,
+  };
+  // repeated .substrait.Expression.FieldReference left_keys = 4;
+  int left_keys_size() const;
+  private:
+  int _internal_left_keys_size() const;
+  public:
+  void clear_left_keys();
+  ::substrait::Expression_FieldReference* mutable_left_keys(int index);
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Expression_FieldReference >*
+      mutable_left_keys();
+  private:
+  const ::substrait::Expression_FieldReference& _internal_left_keys(int index) const;
+  ::substrait::Expression_FieldReference* _internal_add_left_keys();
+  public:
+  const ::substrait::Expression_FieldReference& left_keys(int index) const;
+  ::substrait::Expression_FieldReference* add_left_keys();
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Expression_FieldReference >&
+      left_keys() const;
+
+  // repeated .substrait.Expression.FieldReference right_keys = 5;
+  int right_keys_size() const;
+  private:
+  int _internal_right_keys_size() const;
+  public:
+  void clear_right_keys();
+  ::substrait::Expression_FieldReference* mutable_right_keys(int index);
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Expression_FieldReference >*
+      mutable_right_keys();
+  private:
+  const ::substrait::Expression_FieldReference& _internal_right_keys(int index) const;
+  ::substrait::Expression_FieldReference* _internal_add_right_keys();
+  public:
+  const ::substrait::Expression_FieldReference& right_keys(int index) const;
+  ::substrait::Expression_FieldReference* add_right_keys();
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Expression_FieldReference >&
+      right_keys() const;
+
+  // .substrait.RelCommon common = 1;
+  bool has_common() const;
+  private:
+  bool _internal_has_common() const;
+  public:
+  void clear_common();
+  const ::substrait::RelCommon& common() const;
+  PROTOBUF_NODISCARD ::substrait::RelCommon* release_common();
+  ::substrait::RelCommon* mutable_common();
+  void set_allocated_common(::substrait::RelCommon* common);
+  private:
+  const ::substrait::RelCommon& _internal_common() const;
+  ::substrait::RelCommon* _internal_mutable_common();
+  public:
+  void unsafe_arena_set_allocated_common(
+      ::substrait::RelCommon* common);
+  ::substrait::RelCommon* unsafe_arena_release_common();
+
+  // .substrait.Rel left = 2;
+  bool has_left() const;
+  private:
+  bool _internal_has_left() const;
+  public:
+  void clear_left();
+  const ::substrait::Rel& left() const;
+  PROTOBUF_NODISCARD ::substrait::Rel* release_left();
+  ::substrait::Rel* mutable_left();
+  void set_allocated_left(::substrait::Rel* left);
+  private:
+  const ::substrait::Rel& _internal_left() const;
+  ::substrait::Rel* _internal_mutable_left();
+  public:
+  void unsafe_arena_set_allocated_left(
+      ::substrait::Rel* left);
+  ::substrait::Rel* unsafe_arena_release_left();
+
+  // .substrait.Rel right = 3;
+  bool has_right() const;
+  private:
+  bool _internal_has_right() const;
+  public:
+  void clear_right();
+  const ::substrait::Rel& right() const;
+  PROTOBUF_NODISCARD ::substrait::Rel* release_right();
+  ::substrait::Rel* mutable_right();
+  void set_allocated_right(::substrait::Rel* right);
+  private:
+  const ::substrait::Rel& _internal_right() const;
+  ::substrait::Rel* _internal_mutable_right();
+  public:
+  void unsafe_arena_set_allocated_right(
+      ::substrait::Rel* right);
+  ::substrait::Rel* unsafe_arena_release_right();
+
+  // .substrait.Expression post_join_filter = 6;
+  bool has_post_join_filter() const;
+  private:
+  bool _internal_has_post_join_filter() const;
+  public:
+  void clear_post_join_filter();
+  const ::substrait::Expression& post_join_filter() const;
+  PROTOBUF_NODISCARD ::substrait::Expression* release_post_join_filter();
+  ::substrait::Expression* mutable_post_join_filter();
+  void set_allocated_post_join_filter(::substrait::Expression* post_join_filter);
+  private:
+  const ::substrait::Expression& _internal_post_join_filter() const;
+  ::substrait::Expression* _internal_mutable_post_join_filter();
+  public:
+  void unsafe_arena_set_allocated_post_join_filter(
+      ::substrait::Expression* post_join_filter);
+  ::substrait::Expression* unsafe_arena_release_post_join_filter();
+
+  // .substrait.extensions.AdvancedExtension advanced_extension = 10;
+  bool has_advanced_extension() const;
+  private:
+  bool _internal_has_advanced_extension() const;
+  public:
+  void clear_advanced_extension();
+  const ::substrait::extensions::AdvancedExtension& advanced_extension() const;
+  PROTOBUF_NODISCARD ::substrait::extensions::AdvancedExtension* release_advanced_extension();
+  ::substrait::extensions::AdvancedExtension* mutable_advanced_extension();
+  void set_allocated_advanced_extension(::substrait::extensions::AdvancedExtension* advanced_extension);
+  private:
+  const ::substrait::extensions::AdvancedExtension& _internal_advanced_extension() const;
+  ::substrait::extensions::AdvancedExtension* _internal_mutable_advanced_extension();
+  public:
+  void unsafe_arena_set_allocated_advanced_extension(
+      ::substrait::extensions::AdvancedExtension* advanced_extension);
+  ::substrait::extensions::AdvancedExtension* unsafe_arena_release_advanced_extension();
+
+  // .substrait.HashJoinRel.JoinType type = 7;
+  void clear_type();
+  ::substrait::HashJoinRel_JoinType type() const;
+  void set_type(::substrait::HashJoinRel_JoinType value);
+  private:
+  ::substrait::HashJoinRel_JoinType _internal_type() const;
+  void _internal_set_type(::substrait::HashJoinRel_JoinType value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:substrait.HashJoinRel)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Expression_FieldReference > left_keys_;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Expression_FieldReference > right_keys_;
+  ::substrait::RelCommon* common_;
+  ::substrait::Rel* left_;
+  ::substrait::Rel* right_;
+  ::substrait::Expression* post_join_filter_;
+  ::substrait::extensions::AdvancedExtension* advanced_extension_;
+  int type_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_substrait_2falgebra_2eproto;
+};
+// -------------------------------------------------------------------
+
+class MergeJoinRel final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:substrait.MergeJoinRel) */ {
+ public:
+  inline MergeJoinRel() : MergeJoinRel(nullptr) {}
+  ~MergeJoinRel() override;
+  explicit constexpr MergeJoinRel(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  MergeJoinRel(const MergeJoinRel& from);
+  MergeJoinRel(MergeJoinRel&& from) noexcept
+    : MergeJoinRel() {
+    *this = ::std::move(from);
+  }
+
+  inline MergeJoinRel& operator=(const MergeJoinRel& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline MergeJoinRel& operator=(MergeJoinRel&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()
+  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
+        && GetOwningArena() != nullptr
+  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
+    ) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const MergeJoinRel& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const MergeJoinRel* internal_default_instance() {
+    return reinterpret_cast<const MergeJoinRel*>(
+               &_MergeJoinRel_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    43;
+
+  friend void swap(MergeJoinRel& a, MergeJoinRel& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(MergeJoinRel* other) {
+    if (other == this) return;
+  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() != nullptr &&
+        GetOwningArena() == other->GetOwningArena()) {
+   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() == other->GetOwningArena()) {
+  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(MergeJoinRel* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  MergeJoinRel* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<MergeJoinRel>(arena);
+  }
+  using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
+  void CopyFrom(const MergeJoinRel& from);
+  using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
+  void MergeFrom(const MergeJoinRel& from);
+  private:
+  static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to, const ::PROTOBUF_NAMESPACE_ID::Message& from);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  uint8_t* _InternalSerialize(
+      uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(MergeJoinRel* other);
+
+  private:
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "substrait.MergeJoinRel";
+  }
+  protected:
+  explicit MergeJoinRel(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                       bool is_message_owned = false);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  static const ClassData _class_data_;
+  const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetClassData() const final;
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  typedef MergeJoinRel_JoinType JoinType;
+  static constexpr JoinType JOIN_TYPE_UNSPECIFIED =
+    MergeJoinRel_JoinType_JOIN_TYPE_UNSPECIFIED;
+  static constexpr JoinType JOIN_TYPE_INNER =
+    MergeJoinRel_JoinType_JOIN_TYPE_INNER;
+  static constexpr JoinType JOIN_TYPE_OUTER =
+    MergeJoinRel_JoinType_JOIN_TYPE_OUTER;
+  static constexpr JoinType JOIN_TYPE_LEFT =
+    MergeJoinRel_JoinType_JOIN_TYPE_LEFT;
+  static constexpr JoinType JOIN_TYPE_RIGHT =
+    MergeJoinRel_JoinType_JOIN_TYPE_RIGHT;
+  static constexpr JoinType JOIN_TYPE_LEFT_SEMI =
+    MergeJoinRel_JoinType_JOIN_TYPE_LEFT_SEMI;
+  static constexpr JoinType JOIN_TYPE_RIGHT_SEMI =
+    MergeJoinRel_JoinType_JOIN_TYPE_RIGHT_SEMI;
+  static constexpr JoinType JOIN_TYPE_LEFT_ANTI =
+    MergeJoinRel_JoinType_JOIN_TYPE_LEFT_ANTI;
+  static constexpr JoinType JOIN_TYPE_RIGHT_ANTI =
+    MergeJoinRel_JoinType_JOIN_TYPE_RIGHT_ANTI;
+  static inline bool JoinType_IsValid(int value) {
+    return MergeJoinRel_JoinType_IsValid(value);
+  }
+  static constexpr JoinType JoinType_MIN =
+    MergeJoinRel_JoinType_JoinType_MIN;
+  static constexpr JoinType JoinType_MAX =
+    MergeJoinRel_JoinType_JoinType_MAX;
+  static constexpr int JoinType_ARRAYSIZE =
+    MergeJoinRel_JoinType_JoinType_ARRAYSIZE;
+  static inline const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor*
+  JoinType_descriptor() {
+    return MergeJoinRel_JoinType_descriptor();
+  }
+  template<typename T>
+  static inline const std::string& JoinType_Name(T enum_t_value) {
+    static_assert(::std::is_same<T, JoinType>::value ||
+      ::std::is_integral<T>::value,
+      "Incorrect type passed to function JoinType_Name.");
+    return MergeJoinRel_JoinType_Name(enum_t_value);
+  }
+  static inline bool JoinType_Parse(::PROTOBUF_NAMESPACE_ID::ConstStringParam name,
+      JoinType* value) {
+    return MergeJoinRel_JoinType_Parse(name, value);
+  }
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kLeftKeysFieldNumber = 4,
+    kRightKeysFieldNumber = 5,
+    kCommonFieldNumber = 1,
+    kLeftFieldNumber = 2,
+    kRightFieldNumber = 3,
+    kPostJoinFilterFieldNumber = 6,
+    kAdvancedExtensionFieldNumber = 10,
+    kTypeFieldNumber = 7,
+  };
+  // repeated .substrait.Expression.FieldReference left_keys = 4;
+  int left_keys_size() const;
+  private:
+  int _internal_left_keys_size() const;
+  public:
+  void clear_left_keys();
+  ::substrait::Expression_FieldReference* mutable_left_keys(int index);
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Expression_FieldReference >*
+      mutable_left_keys();
+  private:
+  const ::substrait::Expression_FieldReference& _internal_left_keys(int index) const;
+  ::substrait::Expression_FieldReference* _internal_add_left_keys();
+  public:
+  const ::substrait::Expression_FieldReference& left_keys(int index) const;
+  ::substrait::Expression_FieldReference* add_left_keys();
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Expression_FieldReference >&
+      left_keys() const;
+
+  // repeated .substrait.Expression.FieldReference right_keys = 5;
+  int right_keys_size() const;
+  private:
+  int _internal_right_keys_size() const;
+  public:
+  void clear_right_keys();
+  ::substrait::Expression_FieldReference* mutable_right_keys(int index);
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Expression_FieldReference >*
+      mutable_right_keys();
+  private:
+  const ::substrait::Expression_FieldReference& _internal_right_keys(int index) const;
+  ::substrait::Expression_FieldReference* _internal_add_right_keys();
+  public:
+  const ::substrait::Expression_FieldReference& right_keys(int index) const;
+  ::substrait::Expression_FieldReference* add_right_keys();
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Expression_FieldReference >&
+      right_keys() const;
+
+  // .substrait.RelCommon common = 1;
+  bool has_common() const;
+  private:
+  bool _internal_has_common() const;
+  public:
+  void clear_common();
+  const ::substrait::RelCommon& common() const;
+  PROTOBUF_NODISCARD ::substrait::RelCommon* release_common();
+  ::substrait::RelCommon* mutable_common();
+  void set_allocated_common(::substrait::RelCommon* common);
+  private:
+  const ::substrait::RelCommon& _internal_common() const;
+  ::substrait::RelCommon* _internal_mutable_common();
+  public:
+  void unsafe_arena_set_allocated_common(
+      ::substrait::RelCommon* common);
+  ::substrait::RelCommon* unsafe_arena_release_common();
+
+  // .substrait.Rel left = 2;
+  bool has_left() const;
+  private:
+  bool _internal_has_left() const;
+  public:
+  void clear_left();
+  const ::substrait::Rel& left() const;
+  PROTOBUF_NODISCARD ::substrait::Rel* release_left();
+  ::substrait::Rel* mutable_left();
+  void set_allocated_left(::substrait::Rel* left);
+  private:
+  const ::substrait::Rel& _internal_left() const;
+  ::substrait::Rel* _internal_mutable_left();
+  public:
+  void unsafe_arena_set_allocated_left(
+      ::substrait::Rel* left);
+  ::substrait::Rel* unsafe_arena_release_left();
+
+  // .substrait.Rel right = 3;
+  bool has_right() const;
+  private:
+  bool _internal_has_right() const;
+  public:
+  void clear_right();
+  const ::substrait::Rel& right() const;
+  PROTOBUF_NODISCARD ::substrait::Rel* release_right();
+  ::substrait::Rel* mutable_right();
+  void set_allocated_right(::substrait::Rel* right);
+  private:
+  const ::substrait::Rel& _internal_right() const;
+  ::substrait::Rel* _internal_mutable_right();
+  public:
+  void unsafe_arena_set_allocated_right(
+      ::substrait::Rel* right);
+  ::substrait::Rel* unsafe_arena_release_right();
+
+  // .substrait.Expression post_join_filter = 6;
+  bool has_post_join_filter() const;
+  private:
+  bool _internal_has_post_join_filter() const;
+  public:
+  void clear_post_join_filter();
+  const ::substrait::Expression& post_join_filter() const;
+  PROTOBUF_NODISCARD ::substrait::Expression* release_post_join_filter();
+  ::substrait::Expression* mutable_post_join_filter();
+  void set_allocated_post_join_filter(::substrait::Expression* post_join_filter);
+  private:
+  const ::substrait::Expression& _internal_post_join_filter() const;
+  ::substrait::Expression* _internal_mutable_post_join_filter();
+  public:
+  void unsafe_arena_set_allocated_post_join_filter(
+      ::substrait::Expression* post_join_filter);
+  ::substrait::Expression* unsafe_arena_release_post_join_filter();
+
+  // .substrait.extensions.AdvancedExtension advanced_extension = 10;
+  bool has_advanced_extension() const;
+  private:
+  bool _internal_has_advanced_extension() const;
+  public:
+  void clear_advanced_extension();
+  const ::substrait::extensions::AdvancedExtension& advanced_extension() const;
+  PROTOBUF_NODISCARD ::substrait::extensions::AdvancedExtension* release_advanced_extension();
+  ::substrait::extensions::AdvancedExtension* mutable_advanced_extension();
+  void set_allocated_advanced_extension(::substrait::extensions::AdvancedExtension* advanced_extension);
+  private:
+  const ::substrait::extensions::AdvancedExtension& _internal_advanced_extension() const;
+  ::substrait::extensions::AdvancedExtension* _internal_mutable_advanced_extension();
+  public:
+  void unsafe_arena_set_allocated_advanced_extension(
+      ::substrait::extensions::AdvancedExtension* advanced_extension);
+  ::substrait::extensions::AdvancedExtension* unsafe_arena_release_advanced_extension();
+
+  // .substrait.MergeJoinRel.JoinType type = 7;
+  void clear_type();
+  ::substrait::MergeJoinRel_JoinType type() const;
+  void set_type(::substrait::MergeJoinRel_JoinType value);
+  private:
+  ::substrait::MergeJoinRel_JoinType _internal_type() const;
+  void _internal_set_type(::substrait::MergeJoinRel_JoinType value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:substrait.MergeJoinRel)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Expression_FieldReference > left_keys_;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Expression_FieldReference > right_keys_;
+  ::substrait::RelCommon* common_;
+  ::substrait::Rel* left_;
+  ::substrait::Rel* right_;
+  ::substrait::Expression* post_join_filter_;
+  ::substrait::extensions::AdvancedExtension* advanced_extension_;
+  int type_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_substrait_2falgebra_2eproto;
 };
 // -------------------------------------------------------------------
@@ -8411,7 +10312,7 @@ class FunctionArgument final :
                &_FunctionArgument_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    38;
+    44;
 
   friend void swap(FunctionArgument& a, FunctionArgument& b) {
     a.Swap(&b);
@@ -8482,8 +10383,6 @@ class FunctionArgument final :
 
   // nested types ----------------------------------------------------
 
-  typedef FunctionArgument_Enum Enum;
-
   // accessors -------------------------------------------------------
 
   enum : int {
@@ -8491,23 +10390,23 @@ class FunctionArgument final :
     kTypeFieldNumber = 2,
     kValueFieldNumber = 3,
   };
-  // .substrait.FunctionArgument.Enum enum = 1;
+  // string enum = 1;
   bool has_enum_() const;
   private:
   bool _internal_has_enum_() const;
   public:
   void clear_enum_();
-  const ::substrait::FunctionArgument_Enum& enum_() const;
-  PROTOBUF_NODISCARD ::substrait::FunctionArgument_Enum* release_enum_();
-  ::substrait::FunctionArgument_Enum* mutable_enum_();
-  void set_allocated_enum_(::substrait::FunctionArgument_Enum* enum_);
+  const std::string& enum_() const;
+  template <typename ArgT0 = const std::string&, typename... ArgT>
+  void set_enum_(ArgT0&& arg0, ArgT... args);
+  std::string* mutable_enum_();
+  PROTOBUF_NODISCARD std::string* release_enum_();
+  void set_allocated_enum_(std::string* enum_);
   private:
-  const ::substrait::FunctionArgument_Enum& _internal_enum_() const;
-  ::substrait::FunctionArgument_Enum* _internal_mutable_enum_();
+  const std::string& _internal_enum_() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_enum_(const std::string& value);
+  std::string* _internal_mutable_enum_();
   public:
-  void unsafe_arena_set_allocated_enum_(
-      ::substrait::FunctionArgument_Enum* enum_);
-  ::substrait::FunctionArgument_Enum* unsafe_arena_release_enum_();
 
   // .substrait.Type type = 2;
   bool has_type() const;
@@ -8563,13 +10462,190 @@ class FunctionArgument final :
   union ArgTypeUnion {
     constexpr ArgTypeUnion() : _constinit_{} {}
       ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized _constinit_;
-    ::substrait::FunctionArgument_Enum* enum__;
+    ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr enum__;
     ::substrait::Type* type_;
     ::substrait::Expression* value_;
   } arg_type_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   uint32_t _oneof_case_[1];
 
+  friend struct ::TableStruct_substrait_2falgebra_2eproto;
+};
+// -------------------------------------------------------------------
+
+class FunctionOption final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:substrait.FunctionOption) */ {
+ public:
+  inline FunctionOption() : FunctionOption(nullptr) {}
+  ~FunctionOption() override;
+  explicit constexpr FunctionOption(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  FunctionOption(const FunctionOption& from);
+  FunctionOption(FunctionOption&& from) noexcept
+    : FunctionOption() {
+    *this = ::std::move(from);
+  }
+
+  inline FunctionOption& operator=(const FunctionOption& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline FunctionOption& operator=(FunctionOption&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()
+  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
+        && GetOwningArena() != nullptr
+  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
+    ) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const FunctionOption& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const FunctionOption* internal_default_instance() {
+    return reinterpret_cast<const FunctionOption*>(
+               &_FunctionOption_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    45;
+
+  friend void swap(FunctionOption& a, FunctionOption& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(FunctionOption* other) {
+    if (other == this) return;
+  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() != nullptr &&
+        GetOwningArena() == other->GetOwningArena()) {
+   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() == other->GetOwningArena()) {
+  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(FunctionOption* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  FunctionOption* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<FunctionOption>(arena);
+  }
+  using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
+  void CopyFrom(const FunctionOption& from);
+  using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
+  void MergeFrom(const FunctionOption& from);
+  private:
+  static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to, const ::PROTOBUF_NAMESPACE_ID::Message& from);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  uint8_t* _InternalSerialize(
+      uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(FunctionOption* other);
+
+  private:
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "substrait.FunctionOption";
+  }
+  protected:
+  explicit FunctionOption(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                       bool is_message_owned = false);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  static const ClassData _class_data_;
+  const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetClassData() const final;
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kPreferenceFieldNumber = 2,
+    kNameFieldNumber = 1,
+  };
+  // repeated string preference = 2;
+  int preference_size() const;
+  private:
+  int _internal_preference_size() const;
+  public:
+  void clear_preference();
+  const std::string& preference(int index) const;
+  std::string* mutable_preference(int index);
+  void set_preference(int index, const std::string& value);
+  void set_preference(int index, std::string&& value);
+  void set_preference(int index, const char* value);
+  void set_preference(int index, const char* value, size_t size);
+  std::string* add_preference();
+  void add_preference(const std::string& value);
+  void add_preference(std::string&& value);
+  void add_preference(const char* value);
+  void add_preference(const char* value, size_t size);
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>& preference() const;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>* mutable_preference();
+  private:
+  const std::string& _internal_preference(int index) const;
+  std::string* _internal_add_preference();
+  public:
+
+  // string name = 1;
+  void clear_name();
+  const std::string& name() const;
+  template <typename ArgT0 = const std::string&, typename... ArgT>
+  void set_name(ArgT0&& arg0, ArgT... args);
+  std::string* mutable_name();
+  PROTOBUF_NODISCARD std::string* release_name();
+  void set_allocated_name(std::string* name);
+  private:
+  const std::string& _internal_name() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_name(const std::string& value);
+  std::string* _internal_mutable_name();
+  public:
+
+  // @@protoc_insertion_point(class_scope:substrait.FunctionOption)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string> preference_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr name_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_substrait_2falgebra_2eproto;
 };
 // -------------------------------------------------------------------
@@ -8621,7 +10697,7 @@ class Expression_Enum_Empty final :
                &_Expression_Enum_Empty_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    39;
+    46;
 
   friend void swap(Expression_Enum_Empty& a, Expression_Enum_Empty& b) {
     a.Swap(&b);
@@ -8746,7 +10822,7 @@ class Expression_Enum final :
                &_Expression_Enum_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    40;
+    47;
 
   friend void swap(Expression_Enum& a, Expression_Enum& b) {
     a.Swap(&b);
@@ -8936,7 +11012,7 @@ class Expression_Literal_VarChar final :
                &_Expression_Literal_VarChar_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    41;
+    48;
 
   friend void swap(Expression_Literal_VarChar& a, Expression_Literal_VarChar& b) {
     a.Swap(&b);
@@ -9098,7 +11174,7 @@ class Expression_Literal_Decimal final :
                &_Expression_Literal_Decimal_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    42;
+    49;
 
   friend void swap(Expression_Literal_Decimal& a, Expression_Literal_Decimal& b) {
     a.Swap(&b);
@@ -9271,7 +11347,7 @@ class Expression_Literal_Map_KeyValue final :
                &_Expression_Literal_Map_KeyValue_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    43;
+    50;
 
   friend void swap(Expression_Literal_Map_KeyValue& a, Expression_Literal_Map_KeyValue& b) {
     a.Swap(&b);
@@ -9446,7 +11522,7 @@ class Expression_Literal_Map final :
                &_Expression_Literal_Map_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    44;
+    51;
 
   friend void swap(Expression_Literal_Map& a, Expression_Literal_Map& b) {
     a.Swap(&b);
@@ -9603,7 +11679,7 @@ class Expression_Literal_IntervalYearToMonth final :
                &_Expression_Literal_IntervalYearToMonth_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    45;
+    52;
 
   friend void swap(Expression_Literal_IntervalYearToMonth& a, Expression_Literal_IntervalYearToMonth& b) {
     a.Swap(&b);
@@ -9760,7 +11836,7 @@ class Expression_Literal_IntervalDayToSecond final :
                &_Expression_Literal_IntervalDayToSecond_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    46;
+    53;
 
   friend void swap(Expression_Literal_IntervalDayToSecond& a, Expression_Literal_IntervalDayToSecond& b) {
     a.Swap(&b);
@@ -9928,7 +12004,7 @@ class Expression_Literal_Struct final :
                &_Expression_Literal_Struct_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    47;
+    54;
 
   friend void swap(Expression_Literal_Struct& a, Expression_Literal_Struct& b) {
     a.Swap(&b);
@@ -10083,7 +12159,7 @@ class Expression_Literal_List final :
                &_Expression_Literal_List_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    48;
+    55;
 
   friend void swap(Expression_Literal_List& a, Expression_Literal_List& b) {
     a.Swap(&b);
@@ -10238,7 +12314,7 @@ class Expression_Literal_UserDefined final :
                &_Expression_Literal_UserDefined_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    49;
+    56;
 
   friend void swap(Expression_Literal_UserDefined& a, Expression_Literal_UserDefined& b) {
     a.Swap(&b);
@@ -10455,7 +12531,7 @@ class Expression_Literal final :
                &_Expression_Literal_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    50;
+    57;
 
   friend void swap(Expression_Literal& a, Expression_Literal& b) {
     a.Swap(&b);
@@ -11096,6 +13172,890 @@ class Expression_Literal final :
 };
 // -------------------------------------------------------------------
 
+class Expression_Nested_Map_KeyValue final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:substrait.Expression.Nested.Map.KeyValue) */ {
+ public:
+  inline Expression_Nested_Map_KeyValue() : Expression_Nested_Map_KeyValue(nullptr) {}
+  ~Expression_Nested_Map_KeyValue() override;
+  explicit constexpr Expression_Nested_Map_KeyValue(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  Expression_Nested_Map_KeyValue(const Expression_Nested_Map_KeyValue& from);
+  Expression_Nested_Map_KeyValue(Expression_Nested_Map_KeyValue&& from) noexcept
+    : Expression_Nested_Map_KeyValue() {
+    *this = ::std::move(from);
+  }
+
+  inline Expression_Nested_Map_KeyValue& operator=(const Expression_Nested_Map_KeyValue& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline Expression_Nested_Map_KeyValue& operator=(Expression_Nested_Map_KeyValue&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()
+  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
+        && GetOwningArena() != nullptr
+  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
+    ) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const Expression_Nested_Map_KeyValue& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const Expression_Nested_Map_KeyValue* internal_default_instance() {
+    return reinterpret_cast<const Expression_Nested_Map_KeyValue*>(
+               &_Expression_Nested_Map_KeyValue_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    58;
+
+  friend void swap(Expression_Nested_Map_KeyValue& a, Expression_Nested_Map_KeyValue& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(Expression_Nested_Map_KeyValue* other) {
+    if (other == this) return;
+  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() != nullptr &&
+        GetOwningArena() == other->GetOwningArena()) {
+   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() == other->GetOwningArena()) {
+  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(Expression_Nested_Map_KeyValue* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  Expression_Nested_Map_KeyValue* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<Expression_Nested_Map_KeyValue>(arena);
+  }
+  using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
+  void CopyFrom(const Expression_Nested_Map_KeyValue& from);
+  using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
+  void MergeFrom(const Expression_Nested_Map_KeyValue& from);
+  private:
+  static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to, const ::PROTOBUF_NAMESPACE_ID::Message& from);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  uint8_t* _InternalSerialize(
+      uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(Expression_Nested_Map_KeyValue* other);
+
+  private:
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "substrait.Expression.Nested.Map.KeyValue";
+  }
+  protected:
+  explicit Expression_Nested_Map_KeyValue(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                       bool is_message_owned = false);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  static const ClassData _class_data_;
+  const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetClassData() const final;
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kKeyFieldNumber = 1,
+    kValueFieldNumber = 2,
+  };
+  // .substrait.Expression key = 1;
+  bool has_key() const;
+  private:
+  bool _internal_has_key() const;
+  public:
+  void clear_key();
+  const ::substrait::Expression& key() const;
+  PROTOBUF_NODISCARD ::substrait::Expression* release_key();
+  ::substrait::Expression* mutable_key();
+  void set_allocated_key(::substrait::Expression* key);
+  private:
+  const ::substrait::Expression& _internal_key() const;
+  ::substrait::Expression* _internal_mutable_key();
+  public:
+  void unsafe_arena_set_allocated_key(
+      ::substrait::Expression* key);
+  ::substrait::Expression* unsafe_arena_release_key();
+
+  // .substrait.Expression value = 2;
+  bool has_value() const;
+  private:
+  bool _internal_has_value() const;
+  public:
+  void clear_value();
+  const ::substrait::Expression& value() const;
+  PROTOBUF_NODISCARD ::substrait::Expression* release_value();
+  ::substrait::Expression* mutable_value();
+  void set_allocated_value(::substrait::Expression* value);
+  private:
+  const ::substrait::Expression& _internal_value() const;
+  ::substrait::Expression* _internal_mutable_value();
+  public:
+  void unsafe_arena_set_allocated_value(
+      ::substrait::Expression* value);
+  ::substrait::Expression* unsafe_arena_release_value();
+
+  // @@protoc_insertion_point(class_scope:substrait.Expression.Nested.Map.KeyValue)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  ::substrait::Expression* key_;
+  ::substrait::Expression* value_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_substrait_2falgebra_2eproto;
+};
+// -------------------------------------------------------------------
+
+class Expression_Nested_Map final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:substrait.Expression.Nested.Map) */ {
+ public:
+  inline Expression_Nested_Map() : Expression_Nested_Map(nullptr) {}
+  ~Expression_Nested_Map() override;
+  explicit constexpr Expression_Nested_Map(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  Expression_Nested_Map(const Expression_Nested_Map& from);
+  Expression_Nested_Map(Expression_Nested_Map&& from) noexcept
+    : Expression_Nested_Map() {
+    *this = ::std::move(from);
+  }
+
+  inline Expression_Nested_Map& operator=(const Expression_Nested_Map& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline Expression_Nested_Map& operator=(Expression_Nested_Map&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()
+  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
+        && GetOwningArena() != nullptr
+  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
+    ) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const Expression_Nested_Map& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const Expression_Nested_Map* internal_default_instance() {
+    return reinterpret_cast<const Expression_Nested_Map*>(
+               &_Expression_Nested_Map_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    59;
+
+  friend void swap(Expression_Nested_Map& a, Expression_Nested_Map& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(Expression_Nested_Map* other) {
+    if (other == this) return;
+  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() != nullptr &&
+        GetOwningArena() == other->GetOwningArena()) {
+   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() == other->GetOwningArena()) {
+  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(Expression_Nested_Map* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  Expression_Nested_Map* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<Expression_Nested_Map>(arena);
+  }
+  using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
+  void CopyFrom(const Expression_Nested_Map& from);
+  using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
+  void MergeFrom(const Expression_Nested_Map& from);
+  private:
+  static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to, const ::PROTOBUF_NAMESPACE_ID::Message& from);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  uint8_t* _InternalSerialize(
+      uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(Expression_Nested_Map* other);
+
+  private:
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "substrait.Expression.Nested.Map";
+  }
+  protected:
+  explicit Expression_Nested_Map(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                       bool is_message_owned = false);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  static const ClassData _class_data_;
+  const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetClassData() const final;
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  typedef Expression_Nested_Map_KeyValue KeyValue;
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kKeyValuesFieldNumber = 1,
+  };
+  // repeated .substrait.Expression.Nested.Map.KeyValue key_values = 1;
+  int key_values_size() const;
+  private:
+  int _internal_key_values_size() const;
+  public:
+  void clear_key_values();
+  ::substrait::Expression_Nested_Map_KeyValue* mutable_key_values(int index);
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Expression_Nested_Map_KeyValue >*
+      mutable_key_values();
+  private:
+  const ::substrait::Expression_Nested_Map_KeyValue& _internal_key_values(int index) const;
+  ::substrait::Expression_Nested_Map_KeyValue* _internal_add_key_values();
+  public:
+  const ::substrait::Expression_Nested_Map_KeyValue& key_values(int index) const;
+  ::substrait::Expression_Nested_Map_KeyValue* add_key_values();
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Expression_Nested_Map_KeyValue >&
+      key_values() const;
+
+  // @@protoc_insertion_point(class_scope:substrait.Expression.Nested.Map)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Expression_Nested_Map_KeyValue > key_values_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_substrait_2falgebra_2eproto;
+};
+// -------------------------------------------------------------------
+
+class Expression_Nested_Struct final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:substrait.Expression.Nested.Struct) */ {
+ public:
+  inline Expression_Nested_Struct() : Expression_Nested_Struct(nullptr) {}
+  ~Expression_Nested_Struct() override;
+  explicit constexpr Expression_Nested_Struct(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  Expression_Nested_Struct(const Expression_Nested_Struct& from);
+  Expression_Nested_Struct(Expression_Nested_Struct&& from) noexcept
+    : Expression_Nested_Struct() {
+    *this = ::std::move(from);
+  }
+
+  inline Expression_Nested_Struct& operator=(const Expression_Nested_Struct& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline Expression_Nested_Struct& operator=(Expression_Nested_Struct&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()
+  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
+        && GetOwningArena() != nullptr
+  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
+    ) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const Expression_Nested_Struct& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const Expression_Nested_Struct* internal_default_instance() {
+    return reinterpret_cast<const Expression_Nested_Struct*>(
+               &_Expression_Nested_Struct_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    60;
+
+  friend void swap(Expression_Nested_Struct& a, Expression_Nested_Struct& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(Expression_Nested_Struct* other) {
+    if (other == this) return;
+  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() != nullptr &&
+        GetOwningArena() == other->GetOwningArena()) {
+   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() == other->GetOwningArena()) {
+  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(Expression_Nested_Struct* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  Expression_Nested_Struct* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<Expression_Nested_Struct>(arena);
+  }
+  using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
+  void CopyFrom(const Expression_Nested_Struct& from);
+  using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
+  void MergeFrom(const Expression_Nested_Struct& from);
+  private:
+  static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to, const ::PROTOBUF_NAMESPACE_ID::Message& from);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  uint8_t* _InternalSerialize(
+      uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(Expression_Nested_Struct* other);
+
+  private:
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "substrait.Expression.Nested.Struct";
+  }
+  protected:
+  explicit Expression_Nested_Struct(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                       bool is_message_owned = false);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  static const ClassData _class_data_;
+  const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetClassData() const final;
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kFieldsFieldNumber = 1,
+  };
+  // repeated .substrait.Expression fields = 1;
+  int fields_size() const;
+  private:
+  int _internal_fields_size() const;
+  public:
+  void clear_fields();
+  ::substrait::Expression* mutable_fields(int index);
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Expression >*
+      mutable_fields();
+  private:
+  const ::substrait::Expression& _internal_fields(int index) const;
+  ::substrait::Expression* _internal_add_fields();
+  public:
+  const ::substrait::Expression& fields(int index) const;
+  ::substrait::Expression* add_fields();
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Expression >&
+      fields() const;
+
+  // @@protoc_insertion_point(class_scope:substrait.Expression.Nested.Struct)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Expression > fields_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_substrait_2falgebra_2eproto;
+};
+// -------------------------------------------------------------------
+
+class Expression_Nested_List final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:substrait.Expression.Nested.List) */ {
+ public:
+  inline Expression_Nested_List() : Expression_Nested_List(nullptr) {}
+  ~Expression_Nested_List() override;
+  explicit constexpr Expression_Nested_List(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  Expression_Nested_List(const Expression_Nested_List& from);
+  Expression_Nested_List(Expression_Nested_List&& from) noexcept
+    : Expression_Nested_List() {
+    *this = ::std::move(from);
+  }
+
+  inline Expression_Nested_List& operator=(const Expression_Nested_List& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline Expression_Nested_List& operator=(Expression_Nested_List&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()
+  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
+        && GetOwningArena() != nullptr
+  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
+    ) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const Expression_Nested_List& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const Expression_Nested_List* internal_default_instance() {
+    return reinterpret_cast<const Expression_Nested_List*>(
+               &_Expression_Nested_List_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    61;
+
+  friend void swap(Expression_Nested_List& a, Expression_Nested_List& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(Expression_Nested_List* other) {
+    if (other == this) return;
+  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() != nullptr &&
+        GetOwningArena() == other->GetOwningArena()) {
+   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() == other->GetOwningArena()) {
+  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(Expression_Nested_List* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  Expression_Nested_List* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<Expression_Nested_List>(arena);
+  }
+  using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
+  void CopyFrom(const Expression_Nested_List& from);
+  using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
+  void MergeFrom(const Expression_Nested_List& from);
+  private:
+  static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to, const ::PROTOBUF_NAMESPACE_ID::Message& from);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  uint8_t* _InternalSerialize(
+      uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(Expression_Nested_List* other);
+
+  private:
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "substrait.Expression.Nested.List";
+  }
+  protected:
+  explicit Expression_Nested_List(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                       bool is_message_owned = false);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  static const ClassData _class_data_;
+  const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetClassData() const final;
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kValuesFieldNumber = 1,
+  };
+  // repeated .substrait.Expression values = 1;
+  int values_size() const;
+  private:
+  int _internal_values_size() const;
+  public:
+  void clear_values();
+  ::substrait::Expression* mutable_values(int index);
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Expression >*
+      mutable_values();
+  private:
+  const ::substrait::Expression& _internal_values(int index) const;
+  ::substrait::Expression* _internal_add_values();
+  public:
+  const ::substrait::Expression& values(int index) const;
+  ::substrait::Expression* add_values();
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Expression >&
+      values() const;
+
+  // @@protoc_insertion_point(class_scope:substrait.Expression.Nested.List)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Expression > values_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_substrait_2falgebra_2eproto;
+};
+// -------------------------------------------------------------------
+
+class Expression_Nested final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:substrait.Expression.Nested) */ {
+ public:
+  inline Expression_Nested() : Expression_Nested(nullptr) {}
+  ~Expression_Nested() override;
+  explicit constexpr Expression_Nested(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  Expression_Nested(const Expression_Nested& from);
+  Expression_Nested(Expression_Nested&& from) noexcept
+    : Expression_Nested() {
+    *this = ::std::move(from);
+  }
+
+  inline Expression_Nested& operator=(const Expression_Nested& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline Expression_Nested& operator=(Expression_Nested&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()
+  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
+        && GetOwningArena() != nullptr
+  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
+    ) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const Expression_Nested& default_instance() {
+    return *internal_default_instance();
+  }
+  enum NestedTypeCase {
+    kStruct = 3,
+    kList = 4,
+    kMap = 5,
+    NESTED_TYPE_NOT_SET = 0,
+  };
+
+  static inline const Expression_Nested* internal_default_instance() {
+    return reinterpret_cast<const Expression_Nested*>(
+               &_Expression_Nested_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    62;
+
+  friend void swap(Expression_Nested& a, Expression_Nested& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(Expression_Nested* other) {
+    if (other == this) return;
+  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() != nullptr &&
+        GetOwningArena() == other->GetOwningArena()) {
+   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() == other->GetOwningArena()) {
+  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(Expression_Nested* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  Expression_Nested* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<Expression_Nested>(arena);
+  }
+  using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
+  void CopyFrom(const Expression_Nested& from);
+  using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
+  void MergeFrom(const Expression_Nested& from);
+  private:
+  static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to, const ::PROTOBUF_NAMESPACE_ID::Message& from);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  uint8_t* _InternalSerialize(
+      uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(Expression_Nested* other);
+
+  private:
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "substrait.Expression.Nested";
+  }
+  protected:
+  explicit Expression_Nested(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                       bool is_message_owned = false);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  static const ClassData _class_data_;
+  const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetClassData() const final;
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  typedef Expression_Nested_Map Map;
+  typedef Expression_Nested_Struct Struct;
+  typedef Expression_Nested_List List;
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kNullableFieldNumber = 1,
+    kTypeVariationReferenceFieldNumber = 2,
+    kStructFieldNumber = 3,
+    kListFieldNumber = 4,
+    kMapFieldNumber = 5,
+  };
+  // bool nullable = 1;
+  void clear_nullable();
+  bool nullable() const;
+  void set_nullable(bool value);
+  private:
+  bool _internal_nullable() const;
+  void _internal_set_nullable(bool value);
+  public:
+
+  // uint32 type_variation_reference = 2;
+  void clear_type_variation_reference();
+  uint32_t type_variation_reference() const;
+  void set_type_variation_reference(uint32_t value);
+  private:
+  uint32_t _internal_type_variation_reference() const;
+  void _internal_set_type_variation_reference(uint32_t value);
+  public:
+
+  // .substrait.Expression.Nested.Struct struct = 3;
+  bool has_struct_() const;
+  private:
+  bool _internal_has_struct_() const;
+  public:
+  void clear_struct_();
+  const ::substrait::Expression_Nested_Struct& struct_() const;
+  PROTOBUF_NODISCARD ::substrait::Expression_Nested_Struct* release_struct_();
+  ::substrait::Expression_Nested_Struct* mutable_struct_();
+  void set_allocated_struct_(::substrait::Expression_Nested_Struct* struct_);
+  private:
+  const ::substrait::Expression_Nested_Struct& _internal_struct_() const;
+  ::substrait::Expression_Nested_Struct* _internal_mutable_struct_();
+  public:
+  void unsafe_arena_set_allocated_struct_(
+      ::substrait::Expression_Nested_Struct* struct_);
+  ::substrait::Expression_Nested_Struct* unsafe_arena_release_struct_();
+
+  // .substrait.Expression.Nested.List list = 4;
+  bool has_list() const;
+  private:
+  bool _internal_has_list() const;
+  public:
+  void clear_list();
+  const ::substrait::Expression_Nested_List& list() const;
+  PROTOBUF_NODISCARD ::substrait::Expression_Nested_List* release_list();
+  ::substrait::Expression_Nested_List* mutable_list();
+  void set_allocated_list(::substrait::Expression_Nested_List* list);
+  private:
+  const ::substrait::Expression_Nested_List& _internal_list() const;
+  ::substrait::Expression_Nested_List* _internal_mutable_list();
+  public:
+  void unsafe_arena_set_allocated_list(
+      ::substrait::Expression_Nested_List* list);
+  ::substrait::Expression_Nested_List* unsafe_arena_release_list();
+
+  // .substrait.Expression.Nested.Map map = 5;
+  bool has_map() const;
+  private:
+  bool _internal_has_map() const;
+  public:
+  void clear_map();
+  const ::substrait::Expression_Nested_Map& map() const;
+  PROTOBUF_NODISCARD ::substrait::Expression_Nested_Map* release_map();
+  ::substrait::Expression_Nested_Map* mutable_map();
+  void set_allocated_map(::substrait::Expression_Nested_Map* map);
+  private:
+  const ::substrait::Expression_Nested_Map& _internal_map() const;
+  ::substrait::Expression_Nested_Map* _internal_mutable_map();
+  public:
+  void unsafe_arena_set_allocated_map(
+      ::substrait::Expression_Nested_Map* map);
+  ::substrait::Expression_Nested_Map* unsafe_arena_release_map();
+
+  void clear_nested_type();
+  NestedTypeCase nested_type_case() const;
+  // @@protoc_insertion_point(class_scope:substrait.Expression.Nested)
+ private:
+  class _Internal;
+  void set_has_struct_();
+  void set_has_list();
+  void set_has_map();
+
+  inline bool has_nested_type() const;
+  inline void clear_has_nested_type();
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  bool nullable_;
+  uint32_t type_variation_reference_;
+  union NestedTypeUnion {
+    constexpr NestedTypeUnion() : _constinit_{} {}
+      ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized _constinit_;
+    ::substrait::Expression_Nested_Struct* struct__;
+    ::substrait::Expression_Nested_List* list_;
+    ::substrait::Expression_Nested_Map* map_;
+  } nested_type_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  uint32_t _oneof_case_[1];
+
+  friend struct ::TableStruct_substrait_2falgebra_2eproto;
+};
+// -------------------------------------------------------------------
+
 class Expression_ScalarFunction final :
     public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:substrait.Expression.ScalarFunction) */ {
  public:
@@ -11144,7 +14104,7 @@ class Expression_ScalarFunction final :
                &_Expression_ScalarFunction_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    51;
+    63;
 
   friend void swap(Expression_ScalarFunction& a, Expression_ScalarFunction& b) {
     a.Swap(&b);
@@ -11220,6 +14180,7 @@ class Expression_ScalarFunction final :
   enum : int {
     kArgsFieldNumber = 2,
     kArgumentsFieldNumber = 4,
+    kOptionsFieldNumber = 5,
     kOutputTypeFieldNumber = 3,
     kFunctionReferenceFieldNumber = 1,
   };
@@ -11259,6 +14220,24 @@ class Expression_ScalarFunction final :
   const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::FunctionArgument >&
       arguments() const;
 
+  // repeated .substrait.FunctionOption options = 5;
+  int options_size() const;
+  private:
+  int _internal_options_size() const;
+  public:
+  void clear_options();
+  ::substrait::FunctionOption* mutable_options(int index);
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::FunctionOption >*
+      mutable_options();
+  private:
+  const ::substrait::FunctionOption& _internal_options(int index) const;
+  ::substrait::FunctionOption* _internal_add_options();
+  public:
+  const ::substrait::FunctionOption& options(int index) const;
+  ::substrait::FunctionOption* add_options();
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::FunctionOption >&
+      options() const;
+
   // .substrait.Type output_type = 3;
   bool has_output_type() const;
   private:
@@ -11295,6 +14274,7 @@ class Expression_ScalarFunction final :
   typedef void DestructorSkippable_;
   ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Expression > args_;
   ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::FunctionArgument > arguments_;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::FunctionOption > options_;
   ::substrait::Type* output_type_;
   uint32_t function_reference_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
@@ -11350,7 +14330,7 @@ class Expression_WindowFunction_Bound_Preceding final :
                &_Expression_WindowFunction_Bound_Preceding_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    52;
+    64;
 
   friend void swap(Expression_WindowFunction_Bound_Preceding& a, Expression_WindowFunction_Bound_Preceding& b) {
     a.Swap(&b);
@@ -11496,7 +14476,7 @@ class Expression_WindowFunction_Bound_Following final :
                &_Expression_WindowFunction_Bound_Following_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    53;
+    65;
 
   friend void swap(Expression_WindowFunction_Bound_Following& a, Expression_WindowFunction_Bound_Following& b) {
     a.Swap(&b);
@@ -11641,7 +14621,7 @@ class Expression_WindowFunction_Bound_CurrentRow final :
                &_Expression_WindowFunction_Bound_CurrentRow_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    54;
+    66;
 
   friend void swap(Expression_WindowFunction_Bound_CurrentRow& a, Expression_WindowFunction_Bound_CurrentRow& b) {
     a.Swap(&b);
@@ -11759,7 +14739,7 @@ class Expression_WindowFunction_Bound_Unbounded final :
                &_Expression_WindowFunction_Bound_Unbounded_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    55;
+    67;
 
   friend void swap(Expression_WindowFunction_Bound_Unbounded& a, Expression_WindowFunction_Bound_Unbounded& b) {
     a.Swap(&b);
@@ -11886,7 +14866,7 @@ class Expression_WindowFunction_Bound final :
                &_Expression_WindowFunction_Bound_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    56;
+    68;
 
   friend void swap(Expression_WindowFunction_Bound& a, Expression_WindowFunction_Bound& b) {
     a.Swap(&b);
@@ -12121,7 +15101,7 @@ class Expression_WindowFunction final :
                &_Expression_WindowFunction_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    57;
+    69;
 
   friend void swap(Expression_WindowFunction& a, Expression_WindowFunction& b) {
     a.Swap(&b);
@@ -12201,11 +15181,13 @@ class Expression_WindowFunction final :
     kSortsFieldNumber = 3,
     kArgsFieldNumber = 8,
     kArgumentsFieldNumber = 9,
+    kOptionsFieldNumber = 11,
     kUpperBoundFieldNumber = 4,
     kLowerBoundFieldNumber = 5,
     kOutputTypeFieldNumber = 7,
     kFunctionReferenceFieldNumber = 1,
     kPhaseFieldNumber = 6,
+    kInvocationFieldNumber = 10,
   };
   // repeated .substrait.Expression partitions = 2;
   int partitions_size() const;
@@ -12279,6 +15261,24 @@ class Expression_WindowFunction final :
   const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::FunctionArgument >&
       arguments() const;
 
+  // repeated .substrait.FunctionOption options = 11;
+  int options_size() const;
+  private:
+  int _internal_options_size() const;
+  public:
+  void clear_options();
+  ::substrait::FunctionOption* mutable_options(int index);
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::FunctionOption >*
+      mutable_options();
+  private:
+  const ::substrait::FunctionOption& _internal_options(int index) const;
+  ::substrait::FunctionOption* _internal_add_options();
+  public:
+  const ::substrait::FunctionOption& options(int index) const;
+  ::substrait::FunctionOption* add_options();
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::FunctionOption >&
+      options() const;
+
   // .substrait.Expression.WindowFunction.Bound upper_bound = 4;
   bool has_upper_bound() const;
   private:
@@ -12351,6 +15351,15 @@ class Expression_WindowFunction final :
   void _internal_set_phase(::substrait::AggregationPhase value);
   public:
 
+  // .substrait.AggregateFunction.AggregationInvocation invocation = 10;
+  void clear_invocation();
+  ::substrait::AggregateFunction_AggregationInvocation invocation() const;
+  void set_invocation(::substrait::AggregateFunction_AggregationInvocation value);
+  private:
+  ::substrait::AggregateFunction_AggregationInvocation _internal_invocation() const;
+  void _internal_set_invocation(::substrait::AggregateFunction_AggregationInvocation value);
+  public:
+
   // @@protoc_insertion_point(class_scope:substrait.Expression.WindowFunction)
  private:
   class _Internal;
@@ -12362,11 +15371,13 @@ class Expression_WindowFunction final :
   ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::SortField > sorts_;
   ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Expression > args_;
   ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::FunctionArgument > arguments_;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::FunctionOption > options_;
   ::substrait::Expression_WindowFunction_Bound* upper_bound_;
   ::substrait::Expression_WindowFunction_Bound* lower_bound_;
   ::substrait::Type* output_type_;
   uint32_t function_reference_;
   int phase_;
+  int invocation_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_substrait_2falgebra_2eproto;
 };
@@ -12420,7 +15431,7 @@ class Expression_IfThen_IfClause final :
                &_Expression_IfThen_IfClause_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    58;
+    70;
 
   friend void swap(Expression_IfThen_IfClause& a, Expression_IfThen_IfClause& b) {
     a.Swap(&b);
@@ -12595,7 +15606,7 @@ class Expression_IfThen final :
                &_Expression_IfThen_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    59;
+    71;
 
   friend void swap(Expression_IfThen& a, Expression_IfThen& b) {
     a.Swap(&b);
@@ -12772,7 +15783,7 @@ class Expression_Cast final :
                &_Expression_Cast_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    60;
+    72;
 
   friend void swap(Expression_Cast& a, Expression_Cast& b) {
     a.Swap(&b);
@@ -12990,7 +16001,7 @@ class Expression_SwitchExpression_IfValue final :
                &_Expression_SwitchExpression_IfValue_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    61;
+    73;
 
   friend void swap(Expression_SwitchExpression_IfValue& a, Expression_SwitchExpression_IfValue& b) {
     a.Swap(&b);
@@ -13165,7 +16176,7 @@ class Expression_SwitchExpression final :
                &_Expression_SwitchExpression_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    62;
+    74;
 
   friend void swap(Expression_SwitchExpression& a, Expression_SwitchExpression& b) {
     a.Swap(&b);
@@ -13362,7 +16373,7 @@ class Expression_SingularOrList final :
                &_Expression_SingularOrList_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    63;
+    75;
 
   friend void swap(Expression_SingularOrList& a, Expression_SingularOrList& b) {
     a.Swap(&b);
@@ -13537,7 +16548,7 @@ class Expression_MultiOrList_Record final :
                &_Expression_MultiOrList_Record_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    64;
+    76;
 
   friend void swap(Expression_MultiOrList_Record& a, Expression_MultiOrList_Record& b) {
     a.Swap(&b);
@@ -13692,7 +16703,7 @@ class Expression_MultiOrList final :
                &_Expression_MultiOrList_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    65;
+    77;
 
   friend void swap(Expression_MultiOrList& a, Expression_MultiOrList& b) {
     a.Swap(&b);
@@ -13869,7 +16880,7 @@ class Expression_EmbeddedFunction_PythonPickleFunction final :
                &_Expression_EmbeddedFunction_PythonPickleFunction_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    66;
+    78;
 
   friend void swap(Expression_EmbeddedFunction_PythonPickleFunction& a, Expression_EmbeddedFunction_PythonPickleFunction& b) {
     a.Swap(&b);
@@ -14046,7 +17057,7 @@ class Expression_EmbeddedFunction_WebAssemblyFunction final :
                &_Expression_EmbeddedFunction_WebAssemblyFunction_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    67;
+    79;
 
   friend void swap(Expression_EmbeddedFunction_WebAssemblyFunction& a, Expression_EmbeddedFunction_WebAssemblyFunction& b) {
     a.Swap(&b);
@@ -14229,7 +17240,7 @@ class Expression_EmbeddedFunction final :
                &_Expression_EmbeddedFunction_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    68;
+    80;
 
   friend void swap(Expression_EmbeddedFunction& a, Expression_EmbeddedFunction& b) {
     a.Swap(&b);
@@ -14460,7 +17471,7 @@ class Expression_ReferenceSegment_MapKey final :
                &_Expression_ReferenceSegment_MapKey_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    69;
+    81;
 
   friend void swap(Expression_ReferenceSegment_MapKey& a, Expression_ReferenceSegment_MapKey& b) {
     a.Swap(&b);
@@ -14635,7 +17646,7 @@ class Expression_ReferenceSegment_StructField final :
                &_Expression_ReferenceSegment_StructField_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    70;
+    82;
 
   friend void swap(Expression_ReferenceSegment_StructField& a, Expression_ReferenceSegment_StructField& b) {
     a.Swap(&b);
@@ -14801,7 +17812,7 @@ class Expression_ReferenceSegment_ListElement final :
                &_Expression_ReferenceSegment_ListElement_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    71;
+    83;
 
   friend void swap(Expression_ReferenceSegment_ListElement& a, Expression_ReferenceSegment_ListElement& b) {
     a.Swap(&b);
@@ -14974,7 +17985,7 @@ class Expression_ReferenceSegment final :
                &_Expression_ReferenceSegment_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    72;
+    84;
 
   friend void swap(Expression_ReferenceSegment& a, Expression_ReferenceSegment& b) {
     a.Swap(&b);
@@ -15194,7 +18205,7 @@ class Expression_MaskExpression_Select final :
                &_Expression_MaskExpression_Select_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    73;
+    85;
 
   friend void swap(Expression_MaskExpression_Select& a, Expression_MaskExpression_Select& b) {
     a.Swap(&b);
@@ -15403,7 +18414,7 @@ class Expression_MaskExpression_StructSelect final :
                &_Expression_MaskExpression_StructSelect_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    74;
+    86;
 
   friend void swap(Expression_MaskExpression_StructSelect& a, Expression_MaskExpression_StructSelect& b) {
     a.Swap(&b);
@@ -15558,7 +18569,7 @@ class Expression_MaskExpression_StructItem final :
                &_Expression_MaskExpression_StructItem_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    75;
+    87;
 
   friend void swap(Expression_MaskExpression_StructItem& a, Expression_MaskExpression_StructItem& b) {
     a.Swap(&b);
@@ -15724,7 +18735,7 @@ class Expression_MaskExpression_ListSelect_ListSelectItem_ListElement final :
                &_Expression_MaskExpression_ListSelect_ListSelectItem_ListElement_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    76;
+    88;
 
   friend void swap(Expression_MaskExpression_ListSelect_ListSelectItem_ListElement& a, Expression_MaskExpression_ListSelect_ListSelectItem_ListElement& b) {
     a.Swap(&b);
@@ -15870,7 +18881,7 @@ class Expression_MaskExpression_ListSelect_ListSelectItem_ListSlice final :
                &_Expression_MaskExpression_ListSelect_ListSelectItem_ListSlice_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    77;
+    89;
 
   friend void swap(Expression_MaskExpression_ListSelect_ListSelectItem_ListSlice& a, Expression_MaskExpression_ListSelect_ListSelectItem_ListSlice& b) {
     a.Swap(&b);
@@ -16033,7 +19044,7 @@ class Expression_MaskExpression_ListSelect_ListSelectItem final :
                &_Expression_MaskExpression_ListSelect_ListSelectItem_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    78;
+    90;
 
   friend void swap(Expression_MaskExpression_ListSelect_ListSelectItem& a, Expression_MaskExpression_ListSelect_ListSelectItem& b) {
     a.Swap(&b);
@@ -16224,7 +19235,7 @@ class Expression_MaskExpression_ListSelect final :
                &_Expression_MaskExpression_ListSelect_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    79;
+    91;
 
   friend void swap(Expression_MaskExpression_ListSelect& a, Expression_MaskExpression_ListSelect& b) {
     a.Swap(&b);
@@ -16401,7 +19412,7 @@ class Expression_MaskExpression_MapSelect_MapKey final :
                &_Expression_MaskExpression_MapSelect_MapKey_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    80;
+    92;
 
   friend void swap(Expression_MaskExpression_MapSelect_MapKey& a, Expression_MaskExpression_MapSelect_MapKey& b) {
     a.Swap(&b);
@@ -16552,7 +19563,7 @@ class Expression_MaskExpression_MapSelect_MapKeyExpression final :
                &_Expression_MaskExpression_MapSelect_MapKeyExpression_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    81;
+    93;
 
   friend void swap(Expression_MaskExpression_MapSelect_MapKeyExpression& a, Expression_MaskExpression_MapSelect_MapKeyExpression& b) {
     a.Swap(&b);
@@ -16709,7 +19720,7 @@ class Expression_MaskExpression_MapSelect final :
                &_Expression_MaskExpression_MapSelect_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    82;
+    94;
 
   friend void swap(Expression_MaskExpression_MapSelect& a, Expression_MaskExpression_MapSelect& b) {
     a.Swap(&b);
@@ -16920,7 +19931,7 @@ class Expression_MaskExpression final :
                &_Expression_MaskExpression_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    83;
+    95;
 
   friend void swap(Expression_MaskExpression& a, Expression_MaskExpression& b) {
     a.Swap(&b);
@@ -17091,7 +20102,7 @@ class Expression_FieldReference_RootReference final :
                &_Expression_FieldReference_RootReference_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    84;
+    96;
 
   friend void swap(Expression_FieldReference_RootReference& a, Expression_FieldReference_RootReference& b) {
     a.Swap(&b);
@@ -17210,7 +20221,7 @@ class Expression_FieldReference_OuterReference final :
                &_Expression_FieldReference_OuterReference_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    85;
+    97;
 
   friend void swap(Expression_FieldReference_OuterReference& a, Expression_FieldReference_OuterReference& b) {
     a.Swap(&b);
@@ -17369,7 +20380,7 @@ class Expression_FieldReference final :
                &_Expression_FieldReference_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    86;
+    98;
 
   friend void swap(Expression_FieldReference& a, Expression_FieldReference& b) {
     a.Swap(&b);
@@ -17632,7 +20643,7 @@ class Expression_Subquery_Scalar final :
                &_Expression_Subquery_Scalar_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    87;
+    99;
 
   friend void swap(Expression_Subquery_Scalar& a, Expression_Subquery_Scalar& b) {
     a.Swap(&b);
@@ -17787,7 +20798,7 @@ class Expression_Subquery_InPredicate final :
                &_Expression_Subquery_InPredicate_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    88;
+    100;
 
   friend void swap(Expression_Subquery_InPredicate& a, Expression_Subquery_InPredicate& b) {
     a.Swap(&b);
@@ -17962,7 +20973,7 @@ class Expression_Subquery_SetPredicate final :
                &_Expression_Subquery_SetPredicate_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    89;
+    101;
 
   friend void swap(Expression_Subquery_SetPredicate& a, Expression_Subquery_SetPredicate& b) {
     a.Swap(&b);
@@ -18160,7 +21171,7 @@ class Expression_Subquery_SetComparison final :
                &_Expression_Subquery_SetComparison_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    90;
+    102;
 
   friend void swap(Expression_Subquery_SetComparison& a, Expression_Subquery_SetComparison& b) {
     a.Swap(&b);
@@ -18437,7 +21448,7 @@ class Expression_Subquery final :
                &_Expression_Subquery_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    91;
+    103;
 
   friend void swap(Expression_Subquery& a, Expression_Subquery& b) {
     a.Swap(&b);
@@ -18678,6 +21689,7 @@ class Expression final :
     kMultiOrList = 9,
     kCast = 11,
     kSubquery = 12,
+    kNested = 13,
     kEnum = 10,
     REX_TYPE_NOT_SET = 0,
   };
@@ -18687,7 +21699,7 @@ class Expression final :
                &_Expression_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    92;
+    104;
 
   friend void swap(Expression& a, Expression& b) {
     a.Swap(&b);
@@ -18760,6 +21772,7 @@ class Expression final :
 
   typedef Expression_Enum Enum;
   typedef Expression_Literal Literal;
+  typedef Expression_Nested Nested;
   typedef Expression_ScalarFunction ScalarFunction;
   typedef Expression_WindowFunction WindowFunction;
   typedef Expression_IfThen IfThen;
@@ -18786,6 +21799,7 @@ class Expression final :
     kMultiOrListFieldNumber = 9,
     kCastFieldNumber = 11,
     kSubqueryFieldNumber = 12,
+    kNestedFieldNumber = 13,
     kEnumFieldNumber = 10,
   };
   // .substrait.Expression.Literal literal = 1;
@@ -18968,6 +21982,24 @@ class Expression final :
       ::substrait::Expression_Subquery* subquery);
   ::substrait::Expression_Subquery* unsafe_arena_release_subquery();
 
+  // .substrait.Expression.Nested nested = 13;
+  bool has_nested() const;
+  private:
+  bool _internal_has_nested() const;
+  public:
+  void clear_nested();
+  const ::substrait::Expression_Nested& nested() const;
+  PROTOBUF_NODISCARD ::substrait::Expression_Nested* release_nested();
+  ::substrait::Expression_Nested* mutable_nested();
+  void set_allocated_nested(::substrait::Expression_Nested* nested);
+  private:
+  const ::substrait::Expression_Nested& _internal_nested() const;
+  ::substrait::Expression_Nested* _internal_mutable_nested();
+  public:
+  void unsafe_arena_set_allocated_nested(
+      ::substrait::Expression_Nested* nested);
+  ::substrait::Expression_Nested* unsafe_arena_release_nested();
+
   // .substrait.Expression.Enum enum = 10 [deprecated = true];
   PROTOBUF_DEPRECATED bool has_enum_() const;
   private:
@@ -19001,6 +22033,7 @@ class Expression final :
   void set_has_multi_or_list();
   void set_has_cast();
   void set_has_subquery();
+  void set_has_nested();
   void set_has_enum_();
 
   inline bool has_rex_type() const;
@@ -19022,6 +22055,7 @@ class Expression final :
     ::substrait::Expression_MultiOrList* multi_or_list_;
     ::substrait::Expression_Cast* cast_;
     ::substrait::Expression_Subquery* subquery_;
+    ::substrait::Expression_Nested* nested_;
     ::substrait::Expression_Enum* enum__;
   } rex_type_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
@@ -19085,7 +22119,7 @@ class SortField final :
                &_SortField_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    93;
+    105;
 
   friend void swap(SortField& a, SortField& b) {
     a.Swap(&b);
@@ -19273,6 +22307,152 @@ class SortField final :
 };
 // -------------------------------------------------------------------
 
+class AggregateFunction_ReferenceRel final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:substrait.AggregateFunction.ReferenceRel) */ {
+ public:
+  inline AggregateFunction_ReferenceRel() : AggregateFunction_ReferenceRel(nullptr) {}
+  ~AggregateFunction_ReferenceRel() override;
+  explicit constexpr AggregateFunction_ReferenceRel(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  AggregateFunction_ReferenceRel(const AggregateFunction_ReferenceRel& from);
+  AggregateFunction_ReferenceRel(AggregateFunction_ReferenceRel&& from) noexcept
+    : AggregateFunction_ReferenceRel() {
+    *this = ::std::move(from);
+  }
+
+  inline AggregateFunction_ReferenceRel& operator=(const AggregateFunction_ReferenceRel& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline AggregateFunction_ReferenceRel& operator=(AggregateFunction_ReferenceRel&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()
+  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
+        && GetOwningArena() != nullptr
+  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
+    ) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const AggregateFunction_ReferenceRel& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const AggregateFunction_ReferenceRel* internal_default_instance() {
+    return reinterpret_cast<const AggregateFunction_ReferenceRel*>(
+               &_AggregateFunction_ReferenceRel_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    106;
+
+  friend void swap(AggregateFunction_ReferenceRel& a, AggregateFunction_ReferenceRel& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(AggregateFunction_ReferenceRel* other) {
+    if (other == this) return;
+  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() != nullptr &&
+        GetOwningArena() == other->GetOwningArena()) {
+   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() == other->GetOwningArena()) {
+  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(AggregateFunction_ReferenceRel* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  AggregateFunction_ReferenceRel* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<AggregateFunction_ReferenceRel>(arena);
+  }
+  using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
+  void CopyFrom(const AggregateFunction_ReferenceRel& from);
+  using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
+  void MergeFrom(const AggregateFunction_ReferenceRel& from);
+  private:
+  static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to, const ::PROTOBUF_NAMESPACE_ID::Message& from);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  uint8_t* _InternalSerialize(
+      uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(AggregateFunction_ReferenceRel* other);
+
+  private:
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "substrait.AggregateFunction.ReferenceRel";
+  }
+  protected:
+  explicit AggregateFunction_ReferenceRel(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                       bool is_message_owned = false);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  static const ClassData _class_data_;
+  const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetClassData() const final;
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kSubtreeOrdinalFieldNumber = 1,
+  };
+  // int32 subtree_ordinal = 1;
+  void clear_subtree_ordinal();
+  int32_t subtree_ordinal() const;
+  void set_subtree_ordinal(int32_t value);
+  private:
+  int32_t _internal_subtree_ordinal() const;
+  void _internal_set_subtree_ordinal(int32_t value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:substrait.AggregateFunction.ReferenceRel)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  int32_t subtree_ordinal_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_substrait_2falgebra_2eproto;
+};
+// -------------------------------------------------------------------
+
 class AggregateFunction final :
     public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:substrait.AggregateFunction) */ {
  public:
@@ -19321,7 +22501,7 @@ class AggregateFunction final :
                &_AggregateFunction_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    94;
+    107;
 
   friend void swap(AggregateFunction& a, AggregateFunction& b) {
     a.Swap(&b);
@@ -19392,6 +22572,8 @@ class AggregateFunction final :
 
   // nested types ----------------------------------------------------
 
+  typedef AggregateFunction_ReferenceRel ReferenceRel;
+
   typedef AggregateFunction_AggregationInvocation AggregationInvocation;
   static constexpr AggregationInvocation AGGREGATION_INVOCATION_UNSPECIFIED =
     AggregateFunction_AggregationInvocation_AGGREGATION_INVOCATION_UNSPECIFIED;
@@ -19430,6 +22612,7 @@ class AggregateFunction final :
     kArgsFieldNumber = 2,
     kSortsFieldNumber = 3,
     kArgumentsFieldNumber = 7,
+    kOptionsFieldNumber = 8,
     kOutputTypeFieldNumber = 5,
     kFunctionReferenceFieldNumber = 1,
     kPhaseFieldNumber = 4,
@@ -19489,6 +22672,24 @@ class AggregateFunction final :
   const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::FunctionArgument >&
       arguments() const;
 
+  // repeated .substrait.FunctionOption options = 8;
+  int options_size() const;
+  private:
+  int _internal_options_size() const;
+  public:
+  void clear_options();
+  ::substrait::FunctionOption* mutable_options(int index);
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::FunctionOption >*
+      mutable_options();
+  private:
+  const ::substrait::FunctionOption& _internal_options(int index) const;
+  ::substrait::FunctionOption* _internal_add_options();
+  public:
+  const ::substrait::FunctionOption& options(int index) const;
+  ::substrait::FunctionOption* add_options();
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::FunctionOption >&
+      options() const;
+
   // .substrait.Type output_type = 5;
   bool has_output_type() const;
   private:
@@ -19544,6 +22745,7 @@ class AggregateFunction final :
   ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Expression > args_;
   ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::SortField > sorts_;
   ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::FunctionArgument > arguments_;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::FunctionOption > options_;
   ::substrait::Type* output_type_;
   uint32_t function_reference_;
   int phase_;
@@ -20753,6 +23955,10 @@ inline void ReadRel_ExtensionTable::set_allocated_detail(::PROTOBUF_NAMESPACE_ID
 
 // -------------------------------------------------------------------
 
+// ReadRel_LocalFiles_FileOrFiles_DwrfReadOptions
+
+// -------------------------------------------------------------------
+
 // ReadRel_LocalFiles_FileOrFiles
 
 // string uri_path = 1;
@@ -21431,6 +24637,80 @@ inline ::PROTOBUF_NAMESPACE_ID::Any* ReadRel_LocalFiles_FileOrFiles::mutable_ext
   return _msg;
 }
 
+// .substrait.ReadRel.LocalFiles.FileOrFiles.DwrfReadOptions dwrf = 13;
+inline bool ReadRel_LocalFiles_FileOrFiles::_internal_has_dwrf() const {
+  return file_format_case() == kDwrf;
+}
+inline bool ReadRel_LocalFiles_FileOrFiles::has_dwrf() const {
+  return _internal_has_dwrf();
+}
+inline void ReadRel_LocalFiles_FileOrFiles::set_has_dwrf() {
+  _oneof_case_[1] = kDwrf;
+}
+inline void ReadRel_LocalFiles_FileOrFiles::clear_dwrf() {
+  if (_internal_has_dwrf()) {
+    if (GetArenaForAllocation() == nullptr) {
+      delete file_format_.dwrf_;
+    }
+    clear_has_file_format();
+  }
+}
+inline ::substrait::ReadRel_LocalFiles_FileOrFiles_DwrfReadOptions* ReadRel_LocalFiles_FileOrFiles::release_dwrf() {
+  // @@protoc_insertion_point(field_release:substrait.ReadRel.LocalFiles.FileOrFiles.dwrf)
+  if (_internal_has_dwrf()) {
+    clear_has_file_format();
+      ::substrait::ReadRel_LocalFiles_FileOrFiles_DwrfReadOptions* temp = file_format_.dwrf_;
+    if (GetArenaForAllocation() != nullptr) {
+      temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+    }
+    file_format_.dwrf_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::substrait::ReadRel_LocalFiles_FileOrFiles_DwrfReadOptions& ReadRel_LocalFiles_FileOrFiles::_internal_dwrf() const {
+  return _internal_has_dwrf()
+      ? *file_format_.dwrf_
+      : reinterpret_cast< ::substrait::ReadRel_LocalFiles_FileOrFiles_DwrfReadOptions&>(::substrait::_ReadRel_LocalFiles_FileOrFiles_DwrfReadOptions_default_instance_);
+}
+inline const ::substrait::ReadRel_LocalFiles_FileOrFiles_DwrfReadOptions& ReadRel_LocalFiles_FileOrFiles::dwrf() const {
+  // @@protoc_insertion_point(field_get:substrait.ReadRel.LocalFiles.FileOrFiles.dwrf)
+  return _internal_dwrf();
+}
+inline ::substrait::ReadRel_LocalFiles_FileOrFiles_DwrfReadOptions* ReadRel_LocalFiles_FileOrFiles::unsafe_arena_release_dwrf() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:substrait.ReadRel.LocalFiles.FileOrFiles.dwrf)
+  if (_internal_has_dwrf()) {
+    clear_has_file_format();
+    ::substrait::ReadRel_LocalFiles_FileOrFiles_DwrfReadOptions* temp = file_format_.dwrf_;
+    file_format_.dwrf_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void ReadRel_LocalFiles_FileOrFiles::unsafe_arena_set_allocated_dwrf(::substrait::ReadRel_LocalFiles_FileOrFiles_DwrfReadOptions* dwrf) {
+  clear_file_format();
+  if (dwrf) {
+    set_has_dwrf();
+    file_format_.dwrf_ = dwrf;
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:substrait.ReadRel.LocalFiles.FileOrFiles.dwrf)
+}
+inline ::substrait::ReadRel_LocalFiles_FileOrFiles_DwrfReadOptions* ReadRel_LocalFiles_FileOrFiles::_internal_mutable_dwrf() {
+  if (!_internal_has_dwrf()) {
+    clear_file_format();
+    set_has_dwrf();
+    file_format_.dwrf_ = CreateMaybeMessage< ::substrait::ReadRel_LocalFiles_FileOrFiles_DwrfReadOptions >(GetArenaForAllocation());
+  }
+  return file_format_.dwrf_;
+}
+inline ::substrait::ReadRel_LocalFiles_FileOrFiles_DwrfReadOptions* ReadRel_LocalFiles_FileOrFiles::mutable_dwrf() {
+  ::substrait::ReadRel_LocalFiles_FileOrFiles_DwrfReadOptions* _msg = _internal_mutable_dwrf();
+  // @@protoc_insertion_point(field_mutable:substrait.ReadRel.LocalFiles.FileOrFiles.dwrf)
+  return _msg;
+}
+
 inline bool ReadRel_LocalFiles_FileOrFiles::has_path_type() const {
   return path_type_case() != PATH_TYPE_NOT_SET;
 }
@@ -21847,6 +25127,96 @@ inline void ReadRel::set_allocated_filter(::substrait::Expression* filter) {
   }
   filter_ = filter;
   // @@protoc_insertion_point(field_set_allocated:substrait.ReadRel.filter)
+}
+
+// .substrait.Expression best_effort_filter = 11;
+inline bool ReadRel::_internal_has_best_effort_filter() const {
+  return this != internal_default_instance() && best_effort_filter_ != nullptr;
+}
+inline bool ReadRel::has_best_effort_filter() const {
+  return _internal_has_best_effort_filter();
+}
+inline void ReadRel::clear_best_effort_filter() {
+  if (GetArenaForAllocation() == nullptr && best_effort_filter_ != nullptr) {
+    delete best_effort_filter_;
+  }
+  best_effort_filter_ = nullptr;
+}
+inline const ::substrait::Expression& ReadRel::_internal_best_effort_filter() const {
+  const ::substrait::Expression* p = best_effort_filter_;
+  return p != nullptr ? *p : reinterpret_cast<const ::substrait::Expression&>(
+      ::substrait::_Expression_default_instance_);
+}
+inline const ::substrait::Expression& ReadRel::best_effort_filter() const {
+  // @@protoc_insertion_point(field_get:substrait.ReadRel.best_effort_filter)
+  return _internal_best_effort_filter();
+}
+inline void ReadRel::unsafe_arena_set_allocated_best_effort_filter(
+    ::substrait::Expression* best_effort_filter) {
+  if (GetArenaForAllocation() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(best_effort_filter_);
+  }
+  best_effort_filter_ = best_effort_filter;
+  if (best_effort_filter) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:substrait.ReadRel.best_effort_filter)
+}
+inline ::substrait::Expression* ReadRel::release_best_effort_filter() {
+  
+  ::substrait::Expression* temp = best_effort_filter_;
+  best_effort_filter_ = nullptr;
+#ifdef PROTOBUF_FORCE_COPY_IN_RELEASE
+  auto* old =  reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(temp);
+  temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  if (GetArenaForAllocation() == nullptr) { delete old; }
+#else  // PROTOBUF_FORCE_COPY_IN_RELEASE
+  if (GetArenaForAllocation() != nullptr) {
+    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  }
+#endif  // !PROTOBUF_FORCE_COPY_IN_RELEASE
+  return temp;
+}
+inline ::substrait::Expression* ReadRel::unsafe_arena_release_best_effort_filter() {
+  // @@protoc_insertion_point(field_release:substrait.ReadRel.best_effort_filter)
+  
+  ::substrait::Expression* temp = best_effort_filter_;
+  best_effort_filter_ = nullptr;
+  return temp;
+}
+inline ::substrait::Expression* ReadRel::_internal_mutable_best_effort_filter() {
+  
+  if (best_effort_filter_ == nullptr) {
+    auto* p = CreateMaybeMessage<::substrait::Expression>(GetArenaForAllocation());
+    best_effort_filter_ = p;
+  }
+  return best_effort_filter_;
+}
+inline ::substrait::Expression* ReadRel::mutable_best_effort_filter() {
+  ::substrait::Expression* _msg = _internal_mutable_best_effort_filter();
+  // @@protoc_insertion_point(field_mutable:substrait.ReadRel.best_effort_filter)
+  return _msg;
+}
+inline void ReadRel::set_allocated_best_effort_filter(::substrait::Expression* best_effort_filter) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
+  if (message_arena == nullptr) {
+    delete best_effort_filter_;
+  }
+  if (best_effort_filter) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+        ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper<::substrait::Expression>::GetOwningArena(best_effort_filter);
+    if (message_arena != submessage_arena) {
+      best_effort_filter = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, best_effort_filter, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  best_effort_filter_ = best_effort_filter;
+  // @@protoc_insertion_point(field_set_allocated:substrait.ReadRel.best_effort_filter)
 }
 
 // .substrait.Expression.MaskExpression projection = 4;
@@ -28286,6 +31656,154 @@ inline ::substrait::CrossRel* Rel::mutable_cross() {
   return _msg;
 }
 
+// .substrait.HashJoinRel hash_join = 13;
+inline bool Rel::_internal_has_hash_join() const {
+  return rel_type_case() == kHashJoin;
+}
+inline bool Rel::has_hash_join() const {
+  return _internal_has_hash_join();
+}
+inline void Rel::set_has_hash_join() {
+  _oneof_case_[0] = kHashJoin;
+}
+inline void Rel::clear_hash_join() {
+  if (_internal_has_hash_join()) {
+    if (GetArenaForAllocation() == nullptr) {
+      delete rel_type_.hash_join_;
+    }
+    clear_has_rel_type();
+  }
+}
+inline ::substrait::HashJoinRel* Rel::release_hash_join() {
+  // @@protoc_insertion_point(field_release:substrait.Rel.hash_join)
+  if (_internal_has_hash_join()) {
+    clear_has_rel_type();
+      ::substrait::HashJoinRel* temp = rel_type_.hash_join_;
+    if (GetArenaForAllocation() != nullptr) {
+      temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+    }
+    rel_type_.hash_join_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::substrait::HashJoinRel& Rel::_internal_hash_join() const {
+  return _internal_has_hash_join()
+      ? *rel_type_.hash_join_
+      : reinterpret_cast< ::substrait::HashJoinRel&>(::substrait::_HashJoinRel_default_instance_);
+}
+inline const ::substrait::HashJoinRel& Rel::hash_join() const {
+  // @@protoc_insertion_point(field_get:substrait.Rel.hash_join)
+  return _internal_hash_join();
+}
+inline ::substrait::HashJoinRel* Rel::unsafe_arena_release_hash_join() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:substrait.Rel.hash_join)
+  if (_internal_has_hash_join()) {
+    clear_has_rel_type();
+    ::substrait::HashJoinRel* temp = rel_type_.hash_join_;
+    rel_type_.hash_join_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void Rel::unsafe_arena_set_allocated_hash_join(::substrait::HashJoinRel* hash_join) {
+  clear_rel_type();
+  if (hash_join) {
+    set_has_hash_join();
+    rel_type_.hash_join_ = hash_join;
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:substrait.Rel.hash_join)
+}
+inline ::substrait::HashJoinRel* Rel::_internal_mutable_hash_join() {
+  if (!_internal_has_hash_join()) {
+    clear_rel_type();
+    set_has_hash_join();
+    rel_type_.hash_join_ = CreateMaybeMessage< ::substrait::HashJoinRel >(GetArenaForAllocation());
+  }
+  return rel_type_.hash_join_;
+}
+inline ::substrait::HashJoinRel* Rel::mutable_hash_join() {
+  ::substrait::HashJoinRel* _msg = _internal_mutable_hash_join();
+  // @@protoc_insertion_point(field_mutable:substrait.Rel.hash_join)
+  return _msg;
+}
+
+// .substrait.MergeJoinRel merge_join = 14;
+inline bool Rel::_internal_has_merge_join() const {
+  return rel_type_case() == kMergeJoin;
+}
+inline bool Rel::has_merge_join() const {
+  return _internal_has_merge_join();
+}
+inline void Rel::set_has_merge_join() {
+  _oneof_case_[0] = kMergeJoin;
+}
+inline void Rel::clear_merge_join() {
+  if (_internal_has_merge_join()) {
+    if (GetArenaForAllocation() == nullptr) {
+      delete rel_type_.merge_join_;
+    }
+    clear_has_rel_type();
+  }
+}
+inline ::substrait::MergeJoinRel* Rel::release_merge_join() {
+  // @@protoc_insertion_point(field_release:substrait.Rel.merge_join)
+  if (_internal_has_merge_join()) {
+    clear_has_rel_type();
+      ::substrait::MergeJoinRel* temp = rel_type_.merge_join_;
+    if (GetArenaForAllocation() != nullptr) {
+      temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+    }
+    rel_type_.merge_join_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::substrait::MergeJoinRel& Rel::_internal_merge_join() const {
+  return _internal_has_merge_join()
+      ? *rel_type_.merge_join_
+      : reinterpret_cast< ::substrait::MergeJoinRel&>(::substrait::_MergeJoinRel_default_instance_);
+}
+inline const ::substrait::MergeJoinRel& Rel::merge_join() const {
+  // @@protoc_insertion_point(field_get:substrait.Rel.merge_join)
+  return _internal_merge_join();
+}
+inline ::substrait::MergeJoinRel* Rel::unsafe_arena_release_merge_join() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:substrait.Rel.merge_join)
+  if (_internal_has_merge_join()) {
+    clear_has_rel_type();
+    ::substrait::MergeJoinRel* temp = rel_type_.merge_join_;
+    rel_type_.merge_join_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void Rel::unsafe_arena_set_allocated_merge_join(::substrait::MergeJoinRel* merge_join) {
+  clear_rel_type();
+  if (merge_join) {
+    set_has_merge_join();
+    rel_type_.merge_join_ = merge_join;
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:substrait.Rel.merge_join)
+}
+inline ::substrait::MergeJoinRel* Rel::_internal_mutable_merge_join() {
+  if (!_internal_has_merge_join()) {
+    clear_rel_type();
+    set_has_merge_join();
+    rel_type_.merge_join_ = CreateMaybeMessage< ::substrait::MergeJoinRel >(GetArenaForAllocation());
+  }
+  return rel_type_.merge_join_;
+}
+inline ::substrait::MergeJoinRel* Rel::mutable_merge_join() {
+  ::substrait::MergeJoinRel* _msg = _internal_mutable_merge_join();
+  // @@protoc_insertion_point(field_mutable:substrait.Rel.merge_join)
+  return _msg;
+}
+
 inline bool Rel::has_rel_type() const {
   return rel_type_case() != REL_TYPE_NOT_SET;
 }
@@ -28297,170 +31815,2208 @@ inline Rel::RelTypeCase Rel::rel_type_case() const {
 }
 // -------------------------------------------------------------------
 
-// FunctionArgument_Enum
+// NamedObjectWrite
 
-// string specified = 1;
-inline bool FunctionArgument_Enum::_internal_has_specified() const {
-  return enum_kind_case() == kSpecified;
+// repeated string names = 1;
+inline int NamedObjectWrite::_internal_names_size() const {
+  return names_.size();
 }
-inline bool FunctionArgument_Enum::has_specified() const {
-  return _internal_has_specified();
+inline int NamedObjectWrite::names_size() const {
+  return _internal_names_size();
 }
-inline void FunctionArgument_Enum::set_has_specified() {
-  _oneof_case_[0] = kSpecified;
+inline void NamedObjectWrite::clear_names() {
+  names_.Clear();
 }
-inline void FunctionArgument_Enum::clear_specified() {
-  if (_internal_has_specified()) {
-    enum_kind_.specified_.Destroy(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, GetArenaForAllocation());
-    clear_has_enum_kind();
-  }
-}
-inline const std::string& FunctionArgument_Enum::specified() const {
-  // @@protoc_insertion_point(field_get:substrait.FunctionArgument.Enum.specified)
-  return _internal_specified();
-}
-template <typename ArgT0, typename... ArgT>
-inline void FunctionArgument_Enum::set_specified(ArgT0&& arg0, ArgT... args) {
-  if (!_internal_has_specified()) {
-    clear_enum_kind();
-    set_has_specified();
-    enum_kind_.specified_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-  }
-  enum_kind_.specified_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
-  // @@protoc_insertion_point(field_set:substrait.FunctionArgument.Enum.specified)
-}
-inline std::string* FunctionArgument_Enum::mutable_specified() {
-  std::string* _s = _internal_mutable_specified();
-  // @@protoc_insertion_point(field_mutable:substrait.FunctionArgument.Enum.specified)
+inline std::string* NamedObjectWrite::add_names() {
+  std::string* _s = _internal_add_names();
+  // @@protoc_insertion_point(field_add_mutable:substrait.NamedObjectWrite.names)
   return _s;
 }
-inline const std::string& FunctionArgument_Enum::_internal_specified() const {
-  if (_internal_has_specified()) {
-    return enum_kind_.specified_.Get();
-  }
-  return ::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited();
+inline const std::string& NamedObjectWrite::_internal_names(int index) const {
+  return names_.Get(index);
 }
-inline void FunctionArgument_Enum::_internal_set_specified(const std::string& value) {
-  if (!_internal_has_specified()) {
-    clear_enum_kind();
-    set_has_specified();
-    enum_kind_.specified_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-  }
-  enum_kind_.specified_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, value, GetArenaForAllocation());
+inline const std::string& NamedObjectWrite::names(int index) const {
+  // @@protoc_insertion_point(field_get:substrait.NamedObjectWrite.names)
+  return _internal_names(index);
 }
-inline std::string* FunctionArgument_Enum::_internal_mutable_specified() {
-  if (!_internal_has_specified()) {
-    clear_enum_kind();
-    set_has_specified();
-    enum_kind_.specified_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-  }
-  return enum_kind_.specified_.Mutable(
-      ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, GetArenaForAllocation());
+inline std::string* NamedObjectWrite::mutable_names(int index) {
+  // @@protoc_insertion_point(field_mutable:substrait.NamedObjectWrite.names)
+  return names_.Mutable(index);
 }
-inline std::string* FunctionArgument_Enum::release_specified() {
-  // @@protoc_insertion_point(field_release:substrait.FunctionArgument.Enum.specified)
-  if (_internal_has_specified()) {
-    clear_has_enum_kind();
-    return enum_kind_.specified_.ReleaseNonDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArenaForAllocation());
-  } else {
-    return nullptr;
-  }
+inline void NamedObjectWrite::set_names(int index, const std::string& value) {
+  names_.Mutable(index)->assign(value);
+  // @@protoc_insertion_point(field_set:substrait.NamedObjectWrite.names)
 }
-inline void FunctionArgument_Enum::set_allocated_specified(std::string* specified) {
-  if (has_enum_kind()) {
-    clear_enum_kind();
-  }
-  if (specified != nullptr) {
-    set_has_specified();
-    enum_kind_.specified_.UnsafeSetDefault(specified);
-    ::PROTOBUF_NAMESPACE_ID::Arena* arena = GetArenaForAllocation();
-    if (arena != nullptr) {
-      arena->Own(specified);
-    }
-  }
-  // @@protoc_insertion_point(field_set_allocated:substrait.FunctionArgument.Enum.specified)
+inline void NamedObjectWrite::set_names(int index, std::string&& value) {
+  names_.Mutable(index)->assign(std::move(value));
+  // @@protoc_insertion_point(field_set:substrait.NamedObjectWrite.names)
+}
+inline void NamedObjectWrite::set_names(int index, const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  names_.Mutable(index)->assign(value);
+  // @@protoc_insertion_point(field_set_char:substrait.NamedObjectWrite.names)
+}
+inline void NamedObjectWrite::set_names(int index, const char* value, size_t size) {
+  names_.Mutable(index)->assign(
+    reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:substrait.NamedObjectWrite.names)
+}
+inline std::string* NamedObjectWrite::_internal_add_names() {
+  return names_.Add();
+}
+inline void NamedObjectWrite::add_names(const std::string& value) {
+  names_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add:substrait.NamedObjectWrite.names)
+}
+inline void NamedObjectWrite::add_names(std::string&& value) {
+  names_.Add(std::move(value));
+  // @@protoc_insertion_point(field_add:substrait.NamedObjectWrite.names)
+}
+inline void NamedObjectWrite::add_names(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  names_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add_char:substrait.NamedObjectWrite.names)
+}
+inline void NamedObjectWrite::add_names(const char* value, size_t size) {
+  names_.Add()->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_add_pointer:substrait.NamedObjectWrite.names)
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>&
+NamedObjectWrite::names() const {
+  // @@protoc_insertion_point(field_list:substrait.NamedObjectWrite.names)
+  return names_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>*
+NamedObjectWrite::mutable_names() {
+  // @@protoc_insertion_point(field_mutable_list:substrait.NamedObjectWrite.names)
+  return &names_;
 }
 
-// .google.protobuf.Empty unspecified = 2;
-inline bool FunctionArgument_Enum::_internal_has_unspecified() const {
-  return enum_kind_case() == kUnspecified;
+// .substrait.extensions.AdvancedExtension advanced_extension = 10;
+inline bool NamedObjectWrite::_internal_has_advanced_extension() const {
+  return this != internal_default_instance() && advanced_extension_ != nullptr;
 }
-inline bool FunctionArgument_Enum::has_unspecified() const {
-  return _internal_has_unspecified();
+inline bool NamedObjectWrite::has_advanced_extension() const {
+  return _internal_has_advanced_extension();
 }
-inline void FunctionArgument_Enum::set_has_unspecified() {
-  _oneof_case_[0] = kUnspecified;
+inline const ::substrait::extensions::AdvancedExtension& NamedObjectWrite::_internal_advanced_extension() const {
+  const ::substrait::extensions::AdvancedExtension* p = advanced_extension_;
+  return p != nullptr ? *p : reinterpret_cast<const ::substrait::extensions::AdvancedExtension&>(
+      ::substrait::extensions::_AdvancedExtension_default_instance_);
 }
-inline ::PROTOBUF_NAMESPACE_ID::Empty* FunctionArgument_Enum::release_unspecified() {
-  // @@protoc_insertion_point(field_release:substrait.FunctionArgument.Enum.unspecified)
-  if (_internal_has_unspecified()) {
-    clear_has_enum_kind();
-      ::PROTOBUF_NAMESPACE_ID::Empty* temp = enum_kind_.unspecified_;
+inline const ::substrait::extensions::AdvancedExtension& NamedObjectWrite::advanced_extension() const {
+  // @@protoc_insertion_point(field_get:substrait.NamedObjectWrite.advanced_extension)
+  return _internal_advanced_extension();
+}
+inline void NamedObjectWrite::unsafe_arena_set_allocated_advanced_extension(
+    ::substrait::extensions::AdvancedExtension* advanced_extension) {
+  if (GetArenaForAllocation() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(advanced_extension_);
+  }
+  advanced_extension_ = advanced_extension;
+  if (advanced_extension) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:substrait.NamedObjectWrite.advanced_extension)
+}
+inline ::substrait::extensions::AdvancedExtension* NamedObjectWrite::release_advanced_extension() {
+  
+  ::substrait::extensions::AdvancedExtension* temp = advanced_extension_;
+  advanced_extension_ = nullptr;
+#ifdef PROTOBUF_FORCE_COPY_IN_RELEASE
+  auto* old =  reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(temp);
+  temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  if (GetArenaForAllocation() == nullptr) { delete old; }
+#else  // PROTOBUF_FORCE_COPY_IN_RELEASE
+  if (GetArenaForAllocation() != nullptr) {
+    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  }
+#endif  // !PROTOBUF_FORCE_COPY_IN_RELEASE
+  return temp;
+}
+inline ::substrait::extensions::AdvancedExtension* NamedObjectWrite::unsafe_arena_release_advanced_extension() {
+  // @@protoc_insertion_point(field_release:substrait.NamedObjectWrite.advanced_extension)
+  
+  ::substrait::extensions::AdvancedExtension* temp = advanced_extension_;
+  advanced_extension_ = nullptr;
+  return temp;
+}
+inline ::substrait::extensions::AdvancedExtension* NamedObjectWrite::_internal_mutable_advanced_extension() {
+  
+  if (advanced_extension_ == nullptr) {
+    auto* p = CreateMaybeMessage<::substrait::extensions::AdvancedExtension>(GetArenaForAllocation());
+    advanced_extension_ = p;
+  }
+  return advanced_extension_;
+}
+inline ::substrait::extensions::AdvancedExtension* NamedObjectWrite::mutable_advanced_extension() {
+  ::substrait::extensions::AdvancedExtension* _msg = _internal_mutable_advanced_extension();
+  // @@protoc_insertion_point(field_mutable:substrait.NamedObjectWrite.advanced_extension)
+  return _msg;
+}
+inline void NamedObjectWrite::set_allocated_advanced_extension(::substrait::extensions::AdvancedExtension* advanced_extension) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
+  if (message_arena == nullptr) {
+    delete reinterpret_cast< ::PROTOBUF_NAMESPACE_ID::MessageLite*>(advanced_extension_);
+  }
+  if (advanced_extension) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+        ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper<
+            ::PROTOBUF_NAMESPACE_ID::MessageLite>::GetOwningArena(
+                reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(advanced_extension));
+    if (message_arena != submessage_arena) {
+      advanced_extension = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, advanced_extension, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  advanced_extension_ = advanced_extension;
+  // @@protoc_insertion_point(field_set_allocated:substrait.NamedObjectWrite.advanced_extension)
+}
+
+// -------------------------------------------------------------------
+
+// ExtensionObject
+
+// .google.protobuf.Any detail = 1;
+inline bool ExtensionObject::_internal_has_detail() const {
+  return this != internal_default_instance() && detail_ != nullptr;
+}
+inline bool ExtensionObject::has_detail() const {
+  return _internal_has_detail();
+}
+inline const ::PROTOBUF_NAMESPACE_ID::Any& ExtensionObject::_internal_detail() const {
+  const ::PROTOBUF_NAMESPACE_ID::Any* p = detail_;
+  return p != nullptr ? *p : reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Any&>(
+      ::PROTOBUF_NAMESPACE_ID::_Any_default_instance_);
+}
+inline const ::PROTOBUF_NAMESPACE_ID::Any& ExtensionObject::detail() const {
+  // @@protoc_insertion_point(field_get:substrait.ExtensionObject.detail)
+  return _internal_detail();
+}
+inline void ExtensionObject::unsafe_arena_set_allocated_detail(
+    ::PROTOBUF_NAMESPACE_ID::Any* detail) {
+  if (GetArenaForAllocation() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(detail_);
+  }
+  detail_ = detail;
+  if (detail) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:substrait.ExtensionObject.detail)
+}
+inline ::PROTOBUF_NAMESPACE_ID::Any* ExtensionObject::release_detail() {
+  
+  ::PROTOBUF_NAMESPACE_ID::Any* temp = detail_;
+  detail_ = nullptr;
+#ifdef PROTOBUF_FORCE_COPY_IN_RELEASE
+  auto* old =  reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(temp);
+  temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  if (GetArenaForAllocation() == nullptr) { delete old; }
+#else  // PROTOBUF_FORCE_COPY_IN_RELEASE
+  if (GetArenaForAllocation() != nullptr) {
+    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  }
+#endif  // !PROTOBUF_FORCE_COPY_IN_RELEASE
+  return temp;
+}
+inline ::PROTOBUF_NAMESPACE_ID::Any* ExtensionObject::unsafe_arena_release_detail() {
+  // @@protoc_insertion_point(field_release:substrait.ExtensionObject.detail)
+  
+  ::PROTOBUF_NAMESPACE_ID::Any* temp = detail_;
+  detail_ = nullptr;
+  return temp;
+}
+inline ::PROTOBUF_NAMESPACE_ID::Any* ExtensionObject::_internal_mutable_detail() {
+  
+  if (detail_ == nullptr) {
+    auto* p = CreateMaybeMessage<::PROTOBUF_NAMESPACE_ID::Any>(GetArenaForAllocation());
+    detail_ = p;
+  }
+  return detail_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::Any* ExtensionObject::mutable_detail() {
+  ::PROTOBUF_NAMESPACE_ID::Any* _msg = _internal_mutable_detail();
+  // @@protoc_insertion_point(field_mutable:substrait.ExtensionObject.detail)
+  return _msg;
+}
+inline void ExtensionObject::set_allocated_detail(::PROTOBUF_NAMESPACE_ID::Any* detail) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
+  if (message_arena == nullptr) {
+    delete reinterpret_cast< ::PROTOBUF_NAMESPACE_ID::MessageLite*>(detail_);
+  }
+  if (detail) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+        ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper<
+            ::PROTOBUF_NAMESPACE_ID::MessageLite>::GetOwningArena(
+                reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(detail));
+    if (message_arena != submessage_arena) {
+      detail = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, detail, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  detail_ = detail;
+  // @@protoc_insertion_point(field_set_allocated:substrait.ExtensionObject.detail)
+}
+
+// -------------------------------------------------------------------
+
+// DdlRel
+
+// .substrait.NamedObjectWrite named_object = 1;
+inline bool DdlRel::_internal_has_named_object() const {
+  return write_type_case() == kNamedObject;
+}
+inline bool DdlRel::has_named_object() const {
+  return _internal_has_named_object();
+}
+inline void DdlRel::set_has_named_object() {
+  _oneof_case_[0] = kNamedObject;
+}
+inline void DdlRel::clear_named_object() {
+  if (_internal_has_named_object()) {
+    if (GetArenaForAllocation() == nullptr) {
+      delete write_type_.named_object_;
+    }
+    clear_has_write_type();
+  }
+}
+inline ::substrait::NamedObjectWrite* DdlRel::release_named_object() {
+  // @@protoc_insertion_point(field_release:substrait.DdlRel.named_object)
+  if (_internal_has_named_object()) {
+    clear_has_write_type();
+      ::substrait::NamedObjectWrite* temp = write_type_.named_object_;
     if (GetArenaForAllocation() != nullptr) {
       temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
     }
-    enum_kind_.unspecified_ = nullptr;
+    write_type_.named_object_ = nullptr;
     return temp;
   } else {
     return nullptr;
   }
 }
-inline const ::PROTOBUF_NAMESPACE_ID::Empty& FunctionArgument_Enum::_internal_unspecified() const {
-  return _internal_has_unspecified()
-      ? *enum_kind_.unspecified_
-      : reinterpret_cast< ::PROTOBUF_NAMESPACE_ID::Empty&>(::PROTOBUF_NAMESPACE_ID::_Empty_default_instance_);
+inline const ::substrait::NamedObjectWrite& DdlRel::_internal_named_object() const {
+  return _internal_has_named_object()
+      ? *write_type_.named_object_
+      : reinterpret_cast< ::substrait::NamedObjectWrite&>(::substrait::_NamedObjectWrite_default_instance_);
 }
-inline const ::PROTOBUF_NAMESPACE_ID::Empty& FunctionArgument_Enum::unspecified() const {
-  // @@protoc_insertion_point(field_get:substrait.FunctionArgument.Enum.unspecified)
-  return _internal_unspecified();
+inline const ::substrait::NamedObjectWrite& DdlRel::named_object() const {
+  // @@protoc_insertion_point(field_get:substrait.DdlRel.named_object)
+  return _internal_named_object();
 }
-inline ::PROTOBUF_NAMESPACE_ID::Empty* FunctionArgument_Enum::unsafe_arena_release_unspecified() {
-  // @@protoc_insertion_point(field_unsafe_arena_release:substrait.FunctionArgument.Enum.unspecified)
-  if (_internal_has_unspecified()) {
-    clear_has_enum_kind();
-    ::PROTOBUF_NAMESPACE_ID::Empty* temp = enum_kind_.unspecified_;
-    enum_kind_.unspecified_ = nullptr;
+inline ::substrait::NamedObjectWrite* DdlRel::unsafe_arena_release_named_object() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:substrait.DdlRel.named_object)
+  if (_internal_has_named_object()) {
+    clear_has_write_type();
+    ::substrait::NamedObjectWrite* temp = write_type_.named_object_;
+    write_type_.named_object_ = nullptr;
     return temp;
   } else {
     return nullptr;
   }
 }
-inline void FunctionArgument_Enum::unsafe_arena_set_allocated_unspecified(::PROTOBUF_NAMESPACE_ID::Empty* unspecified) {
-  clear_enum_kind();
-  if (unspecified) {
-    set_has_unspecified();
-    enum_kind_.unspecified_ = unspecified;
+inline void DdlRel::unsafe_arena_set_allocated_named_object(::substrait::NamedObjectWrite* named_object) {
+  clear_write_type();
+  if (named_object) {
+    set_has_named_object();
+    write_type_.named_object_ = named_object;
   }
-  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:substrait.FunctionArgument.Enum.unspecified)
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:substrait.DdlRel.named_object)
 }
-inline ::PROTOBUF_NAMESPACE_ID::Empty* FunctionArgument_Enum::_internal_mutable_unspecified() {
-  if (!_internal_has_unspecified()) {
-    clear_enum_kind();
-    set_has_unspecified();
-    enum_kind_.unspecified_ = CreateMaybeMessage< ::PROTOBUF_NAMESPACE_ID::Empty >(GetArenaForAllocation());
+inline ::substrait::NamedObjectWrite* DdlRel::_internal_mutable_named_object() {
+  if (!_internal_has_named_object()) {
+    clear_write_type();
+    set_has_named_object();
+    write_type_.named_object_ = CreateMaybeMessage< ::substrait::NamedObjectWrite >(GetArenaForAllocation());
   }
-  return enum_kind_.unspecified_;
+  return write_type_.named_object_;
 }
-inline ::PROTOBUF_NAMESPACE_ID::Empty* FunctionArgument_Enum::mutable_unspecified() {
-  ::PROTOBUF_NAMESPACE_ID::Empty* _msg = _internal_mutable_unspecified();
-  // @@protoc_insertion_point(field_mutable:substrait.FunctionArgument.Enum.unspecified)
+inline ::substrait::NamedObjectWrite* DdlRel::mutable_named_object() {
+  ::substrait::NamedObjectWrite* _msg = _internal_mutable_named_object();
+  // @@protoc_insertion_point(field_mutable:substrait.DdlRel.named_object)
   return _msg;
 }
 
-inline bool FunctionArgument_Enum::has_enum_kind() const {
-  return enum_kind_case() != ENUM_KIND_NOT_SET;
+// .substrait.ExtensionObject extension_object = 2;
+inline bool DdlRel::_internal_has_extension_object() const {
+  return write_type_case() == kExtensionObject;
 }
-inline void FunctionArgument_Enum::clear_has_enum_kind() {
-  _oneof_case_[0] = ENUM_KIND_NOT_SET;
+inline bool DdlRel::has_extension_object() const {
+  return _internal_has_extension_object();
 }
-inline FunctionArgument_Enum::EnumKindCase FunctionArgument_Enum::enum_kind_case() const {
-  return FunctionArgument_Enum::EnumKindCase(_oneof_case_[0]);
+inline void DdlRel::set_has_extension_object() {
+  _oneof_case_[0] = kExtensionObject;
 }
+inline void DdlRel::clear_extension_object() {
+  if (_internal_has_extension_object()) {
+    if (GetArenaForAllocation() == nullptr) {
+      delete write_type_.extension_object_;
+    }
+    clear_has_write_type();
+  }
+}
+inline ::substrait::ExtensionObject* DdlRel::release_extension_object() {
+  // @@protoc_insertion_point(field_release:substrait.DdlRel.extension_object)
+  if (_internal_has_extension_object()) {
+    clear_has_write_type();
+      ::substrait::ExtensionObject* temp = write_type_.extension_object_;
+    if (GetArenaForAllocation() != nullptr) {
+      temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+    }
+    write_type_.extension_object_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::substrait::ExtensionObject& DdlRel::_internal_extension_object() const {
+  return _internal_has_extension_object()
+      ? *write_type_.extension_object_
+      : reinterpret_cast< ::substrait::ExtensionObject&>(::substrait::_ExtensionObject_default_instance_);
+}
+inline const ::substrait::ExtensionObject& DdlRel::extension_object() const {
+  // @@protoc_insertion_point(field_get:substrait.DdlRel.extension_object)
+  return _internal_extension_object();
+}
+inline ::substrait::ExtensionObject* DdlRel::unsafe_arena_release_extension_object() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:substrait.DdlRel.extension_object)
+  if (_internal_has_extension_object()) {
+    clear_has_write_type();
+    ::substrait::ExtensionObject* temp = write_type_.extension_object_;
+    write_type_.extension_object_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void DdlRel::unsafe_arena_set_allocated_extension_object(::substrait::ExtensionObject* extension_object) {
+  clear_write_type();
+  if (extension_object) {
+    set_has_extension_object();
+    write_type_.extension_object_ = extension_object;
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:substrait.DdlRel.extension_object)
+}
+inline ::substrait::ExtensionObject* DdlRel::_internal_mutable_extension_object() {
+  if (!_internal_has_extension_object()) {
+    clear_write_type();
+    set_has_extension_object();
+    write_type_.extension_object_ = CreateMaybeMessage< ::substrait::ExtensionObject >(GetArenaForAllocation());
+  }
+  return write_type_.extension_object_;
+}
+inline ::substrait::ExtensionObject* DdlRel::mutable_extension_object() {
+  ::substrait::ExtensionObject* _msg = _internal_mutable_extension_object();
+  // @@protoc_insertion_point(field_mutable:substrait.DdlRel.extension_object)
+  return _msg;
+}
+
+// .substrait.NamedStruct table_schema = 3;
+inline bool DdlRel::_internal_has_table_schema() const {
+  return this != internal_default_instance() && table_schema_ != nullptr;
+}
+inline bool DdlRel::has_table_schema() const {
+  return _internal_has_table_schema();
+}
+inline const ::substrait::NamedStruct& DdlRel::_internal_table_schema() const {
+  const ::substrait::NamedStruct* p = table_schema_;
+  return p != nullptr ? *p : reinterpret_cast<const ::substrait::NamedStruct&>(
+      ::substrait::_NamedStruct_default_instance_);
+}
+inline const ::substrait::NamedStruct& DdlRel::table_schema() const {
+  // @@protoc_insertion_point(field_get:substrait.DdlRel.table_schema)
+  return _internal_table_schema();
+}
+inline void DdlRel::unsafe_arena_set_allocated_table_schema(
+    ::substrait::NamedStruct* table_schema) {
+  if (GetArenaForAllocation() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(table_schema_);
+  }
+  table_schema_ = table_schema;
+  if (table_schema) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:substrait.DdlRel.table_schema)
+}
+inline ::substrait::NamedStruct* DdlRel::release_table_schema() {
+  
+  ::substrait::NamedStruct* temp = table_schema_;
+  table_schema_ = nullptr;
+#ifdef PROTOBUF_FORCE_COPY_IN_RELEASE
+  auto* old =  reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(temp);
+  temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  if (GetArenaForAllocation() == nullptr) { delete old; }
+#else  // PROTOBUF_FORCE_COPY_IN_RELEASE
+  if (GetArenaForAllocation() != nullptr) {
+    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  }
+#endif  // !PROTOBUF_FORCE_COPY_IN_RELEASE
+  return temp;
+}
+inline ::substrait::NamedStruct* DdlRel::unsafe_arena_release_table_schema() {
+  // @@protoc_insertion_point(field_release:substrait.DdlRel.table_schema)
+  
+  ::substrait::NamedStruct* temp = table_schema_;
+  table_schema_ = nullptr;
+  return temp;
+}
+inline ::substrait::NamedStruct* DdlRel::_internal_mutable_table_schema() {
+  
+  if (table_schema_ == nullptr) {
+    auto* p = CreateMaybeMessage<::substrait::NamedStruct>(GetArenaForAllocation());
+    table_schema_ = p;
+  }
+  return table_schema_;
+}
+inline ::substrait::NamedStruct* DdlRel::mutable_table_schema() {
+  ::substrait::NamedStruct* _msg = _internal_mutable_table_schema();
+  // @@protoc_insertion_point(field_mutable:substrait.DdlRel.table_schema)
+  return _msg;
+}
+inline void DdlRel::set_allocated_table_schema(::substrait::NamedStruct* table_schema) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
+  if (message_arena == nullptr) {
+    delete reinterpret_cast< ::PROTOBUF_NAMESPACE_ID::MessageLite*>(table_schema_);
+  }
+  if (table_schema) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+        ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper<
+            ::PROTOBUF_NAMESPACE_ID::MessageLite>::GetOwningArena(
+                reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(table_schema));
+    if (message_arena != submessage_arena) {
+      table_schema = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, table_schema, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  table_schema_ = table_schema;
+  // @@protoc_insertion_point(field_set_allocated:substrait.DdlRel.table_schema)
+}
+
+// .substrait.Expression.Literal.Struct table_defaults = 4;
+inline bool DdlRel::_internal_has_table_defaults() const {
+  return this != internal_default_instance() && table_defaults_ != nullptr;
+}
+inline bool DdlRel::has_table_defaults() const {
+  return _internal_has_table_defaults();
+}
+inline void DdlRel::clear_table_defaults() {
+  if (GetArenaForAllocation() == nullptr && table_defaults_ != nullptr) {
+    delete table_defaults_;
+  }
+  table_defaults_ = nullptr;
+}
+inline const ::substrait::Expression_Literal_Struct& DdlRel::_internal_table_defaults() const {
+  const ::substrait::Expression_Literal_Struct* p = table_defaults_;
+  return p != nullptr ? *p : reinterpret_cast<const ::substrait::Expression_Literal_Struct&>(
+      ::substrait::_Expression_Literal_Struct_default_instance_);
+}
+inline const ::substrait::Expression_Literal_Struct& DdlRel::table_defaults() const {
+  // @@protoc_insertion_point(field_get:substrait.DdlRel.table_defaults)
+  return _internal_table_defaults();
+}
+inline void DdlRel::unsafe_arena_set_allocated_table_defaults(
+    ::substrait::Expression_Literal_Struct* table_defaults) {
+  if (GetArenaForAllocation() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(table_defaults_);
+  }
+  table_defaults_ = table_defaults;
+  if (table_defaults) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:substrait.DdlRel.table_defaults)
+}
+inline ::substrait::Expression_Literal_Struct* DdlRel::release_table_defaults() {
+  
+  ::substrait::Expression_Literal_Struct* temp = table_defaults_;
+  table_defaults_ = nullptr;
+#ifdef PROTOBUF_FORCE_COPY_IN_RELEASE
+  auto* old =  reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(temp);
+  temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  if (GetArenaForAllocation() == nullptr) { delete old; }
+#else  // PROTOBUF_FORCE_COPY_IN_RELEASE
+  if (GetArenaForAllocation() != nullptr) {
+    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  }
+#endif  // !PROTOBUF_FORCE_COPY_IN_RELEASE
+  return temp;
+}
+inline ::substrait::Expression_Literal_Struct* DdlRel::unsafe_arena_release_table_defaults() {
+  // @@protoc_insertion_point(field_release:substrait.DdlRel.table_defaults)
+  
+  ::substrait::Expression_Literal_Struct* temp = table_defaults_;
+  table_defaults_ = nullptr;
+  return temp;
+}
+inline ::substrait::Expression_Literal_Struct* DdlRel::_internal_mutable_table_defaults() {
+  
+  if (table_defaults_ == nullptr) {
+    auto* p = CreateMaybeMessage<::substrait::Expression_Literal_Struct>(GetArenaForAllocation());
+    table_defaults_ = p;
+  }
+  return table_defaults_;
+}
+inline ::substrait::Expression_Literal_Struct* DdlRel::mutable_table_defaults() {
+  ::substrait::Expression_Literal_Struct* _msg = _internal_mutable_table_defaults();
+  // @@protoc_insertion_point(field_mutable:substrait.DdlRel.table_defaults)
+  return _msg;
+}
+inline void DdlRel::set_allocated_table_defaults(::substrait::Expression_Literal_Struct* table_defaults) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
+  if (message_arena == nullptr) {
+    delete table_defaults_;
+  }
+  if (table_defaults) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+        ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper<::substrait::Expression_Literal_Struct>::GetOwningArena(table_defaults);
+    if (message_arena != submessage_arena) {
+      table_defaults = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, table_defaults, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  table_defaults_ = table_defaults;
+  // @@protoc_insertion_point(field_set_allocated:substrait.DdlRel.table_defaults)
+}
+
+// .substrait.DdlRel.DdlObject object = 5;
+inline void DdlRel::clear_object() {
+  object_ = 0;
+}
+inline ::substrait::DdlRel_DdlObject DdlRel::_internal_object() const {
+  return static_cast< ::substrait::DdlRel_DdlObject >(object_);
+}
+inline ::substrait::DdlRel_DdlObject DdlRel::object() const {
+  // @@protoc_insertion_point(field_get:substrait.DdlRel.object)
+  return _internal_object();
+}
+inline void DdlRel::_internal_set_object(::substrait::DdlRel_DdlObject value) {
+  
+  object_ = value;
+}
+inline void DdlRel::set_object(::substrait::DdlRel_DdlObject value) {
+  _internal_set_object(value);
+  // @@protoc_insertion_point(field_set:substrait.DdlRel.object)
+}
+
+// .substrait.DdlRel.DdlOp op = 6;
+inline void DdlRel::clear_op() {
+  op_ = 0;
+}
+inline ::substrait::DdlRel_DdlOp DdlRel::_internal_op() const {
+  return static_cast< ::substrait::DdlRel_DdlOp >(op_);
+}
+inline ::substrait::DdlRel_DdlOp DdlRel::op() const {
+  // @@protoc_insertion_point(field_get:substrait.DdlRel.op)
+  return _internal_op();
+}
+inline void DdlRel::_internal_set_op(::substrait::DdlRel_DdlOp value) {
+  
+  op_ = value;
+}
+inline void DdlRel::set_op(::substrait::DdlRel_DdlOp value) {
+  _internal_set_op(value);
+  // @@protoc_insertion_point(field_set:substrait.DdlRel.op)
+}
+
+// .substrait.Rel view_definition = 7;
+inline bool DdlRel::_internal_has_view_definition() const {
+  return this != internal_default_instance() && view_definition_ != nullptr;
+}
+inline bool DdlRel::has_view_definition() const {
+  return _internal_has_view_definition();
+}
+inline void DdlRel::clear_view_definition() {
+  if (GetArenaForAllocation() == nullptr && view_definition_ != nullptr) {
+    delete view_definition_;
+  }
+  view_definition_ = nullptr;
+}
+inline const ::substrait::Rel& DdlRel::_internal_view_definition() const {
+  const ::substrait::Rel* p = view_definition_;
+  return p != nullptr ? *p : reinterpret_cast<const ::substrait::Rel&>(
+      ::substrait::_Rel_default_instance_);
+}
+inline const ::substrait::Rel& DdlRel::view_definition() const {
+  // @@protoc_insertion_point(field_get:substrait.DdlRel.view_definition)
+  return _internal_view_definition();
+}
+inline void DdlRel::unsafe_arena_set_allocated_view_definition(
+    ::substrait::Rel* view_definition) {
+  if (GetArenaForAllocation() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(view_definition_);
+  }
+  view_definition_ = view_definition;
+  if (view_definition) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:substrait.DdlRel.view_definition)
+}
+inline ::substrait::Rel* DdlRel::release_view_definition() {
+  
+  ::substrait::Rel* temp = view_definition_;
+  view_definition_ = nullptr;
+#ifdef PROTOBUF_FORCE_COPY_IN_RELEASE
+  auto* old =  reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(temp);
+  temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  if (GetArenaForAllocation() == nullptr) { delete old; }
+#else  // PROTOBUF_FORCE_COPY_IN_RELEASE
+  if (GetArenaForAllocation() != nullptr) {
+    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  }
+#endif  // !PROTOBUF_FORCE_COPY_IN_RELEASE
+  return temp;
+}
+inline ::substrait::Rel* DdlRel::unsafe_arena_release_view_definition() {
+  // @@protoc_insertion_point(field_release:substrait.DdlRel.view_definition)
+  
+  ::substrait::Rel* temp = view_definition_;
+  view_definition_ = nullptr;
+  return temp;
+}
+inline ::substrait::Rel* DdlRel::_internal_mutable_view_definition() {
+  
+  if (view_definition_ == nullptr) {
+    auto* p = CreateMaybeMessage<::substrait::Rel>(GetArenaForAllocation());
+    view_definition_ = p;
+  }
+  return view_definition_;
+}
+inline ::substrait::Rel* DdlRel::mutable_view_definition() {
+  ::substrait::Rel* _msg = _internal_mutable_view_definition();
+  // @@protoc_insertion_point(field_mutable:substrait.DdlRel.view_definition)
+  return _msg;
+}
+inline void DdlRel::set_allocated_view_definition(::substrait::Rel* view_definition) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
+  if (message_arena == nullptr) {
+    delete view_definition_;
+  }
+  if (view_definition) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+        ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper<::substrait::Rel>::GetOwningArena(view_definition);
+    if (message_arena != submessage_arena) {
+      view_definition = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, view_definition, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  view_definition_ = view_definition;
+  // @@protoc_insertion_point(field_set_allocated:substrait.DdlRel.view_definition)
+}
+
+inline bool DdlRel::has_write_type() const {
+  return write_type_case() != WRITE_TYPE_NOT_SET;
+}
+inline void DdlRel::clear_has_write_type() {
+  _oneof_case_[0] = WRITE_TYPE_NOT_SET;
+}
+inline DdlRel::WriteTypeCase DdlRel::write_type_case() const {
+  return DdlRel::WriteTypeCase(_oneof_case_[0]);
+}
+// -------------------------------------------------------------------
+
+// WriteRel
+
+// .substrait.NamedObjectWrite named_table = 1;
+inline bool WriteRel::_internal_has_named_table() const {
+  return write_type_case() == kNamedTable;
+}
+inline bool WriteRel::has_named_table() const {
+  return _internal_has_named_table();
+}
+inline void WriteRel::set_has_named_table() {
+  _oneof_case_[0] = kNamedTable;
+}
+inline void WriteRel::clear_named_table() {
+  if (_internal_has_named_table()) {
+    if (GetArenaForAllocation() == nullptr) {
+      delete write_type_.named_table_;
+    }
+    clear_has_write_type();
+  }
+}
+inline ::substrait::NamedObjectWrite* WriteRel::release_named_table() {
+  // @@protoc_insertion_point(field_release:substrait.WriteRel.named_table)
+  if (_internal_has_named_table()) {
+    clear_has_write_type();
+      ::substrait::NamedObjectWrite* temp = write_type_.named_table_;
+    if (GetArenaForAllocation() != nullptr) {
+      temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+    }
+    write_type_.named_table_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::substrait::NamedObjectWrite& WriteRel::_internal_named_table() const {
+  return _internal_has_named_table()
+      ? *write_type_.named_table_
+      : reinterpret_cast< ::substrait::NamedObjectWrite&>(::substrait::_NamedObjectWrite_default_instance_);
+}
+inline const ::substrait::NamedObjectWrite& WriteRel::named_table() const {
+  // @@protoc_insertion_point(field_get:substrait.WriteRel.named_table)
+  return _internal_named_table();
+}
+inline ::substrait::NamedObjectWrite* WriteRel::unsafe_arena_release_named_table() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:substrait.WriteRel.named_table)
+  if (_internal_has_named_table()) {
+    clear_has_write_type();
+    ::substrait::NamedObjectWrite* temp = write_type_.named_table_;
+    write_type_.named_table_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void WriteRel::unsafe_arena_set_allocated_named_table(::substrait::NamedObjectWrite* named_table) {
+  clear_write_type();
+  if (named_table) {
+    set_has_named_table();
+    write_type_.named_table_ = named_table;
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:substrait.WriteRel.named_table)
+}
+inline ::substrait::NamedObjectWrite* WriteRel::_internal_mutable_named_table() {
+  if (!_internal_has_named_table()) {
+    clear_write_type();
+    set_has_named_table();
+    write_type_.named_table_ = CreateMaybeMessage< ::substrait::NamedObjectWrite >(GetArenaForAllocation());
+  }
+  return write_type_.named_table_;
+}
+inline ::substrait::NamedObjectWrite* WriteRel::mutable_named_table() {
+  ::substrait::NamedObjectWrite* _msg = _internal_mutable_named_table();
+  // @@protoc_insertion_point(field_mutable:substrait.WriteRel.named_table)
+  return _msg;
+}
+
+// .substrait.ExtensionObject extension_table = 2;
+inline bool WriteRel::_internal_has_extension_table() const {
+  return write_type_case() == kExtensionTable;
+}
+inline bool WriteRel::has_extension_table() const {
+  return _internal_has_extension_table();
+}
+inline void WriteRel::set_has_extension_table() {
+  _oneof_case_[0] = kExtensionTable;
+}
+inline void WriteRel::clear_extension_table() {
+  if (_internal_has_extension_table()) {
+    if (GetArenaForAllocation() == nullptr) {
+      delete write_type_.extension_table_;
+    }
+    clear_has_write_type();
+  }
+}
+inline ::substrait::ExtensionObject* WriteRel::release_extension_table() {
+  // @@protoc_insertion_point(field_release:substrait.WriteRel.extension_table)
+  if (_internal_has_extension_table()) {
+    clear_has_write_type();
+      ::substrait::ExtensionObject* temp = write_type_.extension_table_;
+    if (GetArenaForAllocation() != nullptr) {
+      temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+    }
+    write_type_.extension_table_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::substrait::ExtensionObject& WriteRel::_internal_extension_table() const {
+  return _internal_has_extension_table()
+      ? *write_type_.extension_table_
+      : reinterpret_cast< ::substrait::ExtensionObject&>(::substrait::_ExtensionObject_default_instance_);
+}
+inline const ::substrait::ExtensionObject& WriteRel::extension_table() const {
+  // @@protoc_insertion_point(field_get:substrait.WriteRel.extension_table)
+  return _internal_extension_table();
+}
+inline ::substrait::ExtensionObject* WriteRel::unsafe_arena_release_extension_table() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:substrait.WriteRel.extension_table)
+  if (_internal_has_extension_table()) {
+    clear_has_write_type();
+    ::substrait::ExtensionObject* temp = write_type_.extension_table_;
+    write_type_.extension_table_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void WriteRel::unsafe_arena_set_allocated_extension_table(::substrait::ExtensionObject* extension_table) {
+  clear_write_type();
+  if (extension_table) {
+    set_has_extension_table();
+    write_type_.extension_table_ = extension_table;
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:substrait.WriteRel.extension_table)
+}
+inline ::substrait::ExtensionObject* WriteRel::_internal_mutable_extension_table() {
+  if (!_internal_has_extension_table()) {
+    clear_write_type();
+    set_has_extension_table();
+    write_type_.extension_table_ = CreateMaybeMessage< ::substrait::ExtensionObject >(GetArenaForAllocation());
+  }
+  return write_type_.extension_table_;
+}
+inline ::substrait::ExtensionObject* WriteRel::mutable_extension_table() {
+  ::substrait::ExtensionObject* _msg = _internal_mutable_extension_table();
+  // @@protoc_insertion_point(field_mutable:substrait.WriteRel.extension_table)
+  return _msg;
+}
+
+// .substrait.NamedStruct table_schema = 3;
+inline bool WriteRel::_internal_has_table_schema() const {
+  return this != internal_default_instance() && table_schema_ != nullptr;
+}
+inline bool WriteRel::has_table_schema() const {
+  return _internal_has_table_schema();
+}
+inline const ::substrait::NamedStruct& WriteRel::_internal_table_schema() const {
+  const ::substrait::NamedStruct* p = table_schema_;
+  return p != nullptr ? *p : reinterpret_cast<const ::substrait::NamedStruct&>(
+      ::substrait::_NamedStruct_default_instance_);
+}
+inline const ::substrait::NamedStruct& WriteRel::table_schema() const {
+  // @@protoc_insertion_point(field_get:substrait.WriteRel.table_schema)
+  return _internal_table_schema();
+}
+inline void WriteRel::unsafe_arena_set_allocated_table_schema(
+    ::substrait::NamedStruct* table_schema) {
+  if (GetArenaForAllocation() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(table_schema_);
+  }
+  table_schema_ = table_schema;
+  if (table_schema) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:substrait.WriteRel.table_schema)
+}
+inline ::substrait::NamedStruct* WriteRel::release_table_schema() {
+  
+  ::substrait::NamedStruct* temp = table_schema_;
+  table_schema_ = nullptr;
+#ifdef PROTOBUF_FORCE_COPY_IN_RELEASE
+  auto* old =  reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(temp);
+  temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  if (GetArenaForAllocation() == nullptr) { delete old; }
+#else  // PROTOBUF_FORCE_COPY_IN_RELEASE
+  if (GetArenaForAllocation() != nullptr) {
+    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  }
+#endif  // !PROTOBUF_FORCE_COPY_IN_RELEASE
+  return temp;
+}
+inline ::substrait::NamedStruct* WriteRel::unsafe_arena_release_table_schema() {
+  // @@protoc_insertion_point(field_release:substrait.WriteRel.table_schema)
+  
+  ::substrait::NamedStruct* temp = table_schema_;
+  table_schema_ = nullptr;
+  return temp;
+}
+inline ::substrait::NamedStruct* WriteRel::_internal_mutable_table_schema() {
+  
+  if (table_schema_ == nullptr) {
+    auto* p = CreateMaybeMessage<::substrait::NamedStruct>(GetArenaForAllocation());
+    table_schema_ = p;
+  }
+  return table_schema_;
+}
+inline ::substrait::NamedStruct* WriteRel::mutable_table_schema() {
+  ::substrait::NamedStruct* _msg = _internal_mutable_table_schema();
+  // @@protoc_insertion_point(field_mutable:substrait.WriteRel.table_schema)
+  return _msg;
+}
+inline void WriteRel::set_allocated_table_schema(::substrait::NamedStruct* table_schema) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
+  if (message_arena == nullptr) {
+    delete reinterpret_cast< ::PROTOBUF_NAMESPACE_ID::MessageLite*>(table_schema_);
+  }
+  if (table_schema) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+        ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper<
+            ::PROTOBUF_NAMESPACE_ID::MessageLite>::GetOwningArena(
+                reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(table_schema));
+    if (message_arena != submessage_arena) {
+      table_schema = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, table_schema, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  table_schema_ = table_schema;
+  // @@protoc_insertion_point(field_set_allocated:substrait.WriteRel.table_schema)
+}
+
+// .substrait.WriteRel.WriteOp op = 4;
+inline void WriteRel::clear_op() {
+  op_ = 0;
+}
+inline ::substrait::WriteRel_WriteOp WriteRel::_internal_op() const {
+  return static_cast< ::substrait::WriteRel_WriteOp >(op_);
+}
+inline ::substrait::WriteRel_WriteOp WriteRel::op() const {
+  // @@protoc_insertion_point(field_get:substrait.WriteRel.op)
+  return _internal_op();
+}
+inline void WriteRel::_internal_set_op(::substrait::WriteRel_WriteOp value) {
+  
+  op_ = value;
+}
+inline void WriteRel::set_op(::substrait::WriteRel_WriteOp value) {
+  _internal_set_op(value);
+  // @@protoc_insertion_point(field_set:substrait.WriteRel.op)
+}
+
+// .substrait.Rel input = 5;
+inline bool WriteRel::_internal_has_input() const {
+  return this != internal_default_instance() && input_ != nullptr;
+}
+inline bool WriteRel::has_input() const {
+  return _internal_has_input();
+}
+inline void WriteRel::clear_input() {
+  if (GetArenaForAllocation() == nullptr && input_ != nullptr) {
+    delete input_;
+  }
+  input_ = nullptr;
+}
+inline const ::substrait::Rel& WriteRel::_internal_input() const {
+  const ::substrait::Rel* p = input_;
+  return p != nullptr ? *p : reinterpret_cast<const ::substrait::Rel&>(
+      ::substrait::_Rel_default_instance_);
+}
+inline const ::substrait::Rel& WriteRel::input() const {
+  // @@protoc_insertion_point(field_get:substrait.WriteRel.input)
+  return _internal_input();
+}
+inline void WriteRel::unsafe_arena_set_allocated_input(
+    ::substrait::Rel* input) {
+  if (GetArenaForAllocation() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(input_);
+  }
+  input_ = input;
+  if (input) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:substrait.WriteRel.input)
+}
+inline ::substrait::Rel* WriteRel::release_input() {
+  
+  ::substrait::Rel* temp = input_;
+  input_ = nullptr;
+#ifdef PROTOBUF_FORCE_COPY_IN_RELEASE
+  auto* old =  reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(temp);
+  temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  if (GetArenaForAllocation() == nullptr) { delete old; }
+#else  // PROTOBUF_FORCE_COPY_IN_RELEASE
+  if (GetArenaForAllocation() != nullptr) {
+    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  }
+#endif  // !PROTOBUF_FORCE_COPY_IN_RELEASE
+  return temp;
+}
+inline ::substrait::Rel* WriteRel::unsafe_arena_release_input() {
+  // @@protoc_insertion_point(field_release:substrait.WriteRel.input)
+  
+  ::substrait::Rel* temp = input_;
+  input_ = nullptr;
+  return temp;
+}
+inline ::substrait::Rel* WriteRel::_internal_mutable_input() {
+  
+  if (input_ == nullptr) {
+    auto* p = CreateMaybeMessage<::substrait::Rel>(GetArenaForAllocation());
+    input_ = p;
+  }
+  return input_;
+}
+inline ::substrait::Rel* WriteRel::mutable_input() {
+  ::substrait::Rel* _msg = _internal_mutable_input();
+  // @@protoc_insertion_point(field_mutable:substrait.WriteRel.input)
+  return _msg;
+}
+inline void WriteRel::set_allocated_input(::substrait::Rel* input) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
+  if (message_arena == nullptr) {
+    delete input_;
+  }
+  if (input) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+        ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper<::substrait::Rel>::GetOwningArena(input);
+    if (message_arena != submessage_arena) {
+      input = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, input, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  input_ = input;
+  // @@protoc_insertion_point(field_set_allocated:substrait.WriteRel.input)
+}
+
+// .substrait.WriteRel.OutputMode output = 6;
+inline void WriteRel::clear_output() {
+  output_ = 0;
+}
+inline ::substrait::WriteRel_OutputMode WriteRel::_internal_output() const {
+  return static_cast< ::substrait::WriteRel_OutputMode >(output_);
+}
+inline ::substrait::WriteRel_OutputMode WriteRel::output() const {
+  // @@protoc_insertion_point(field_get:substrait.WriteRel.output)
+  return _internal_output();
+}
+inline void WriteRel::_internal_set_output(::substrait::WriteRel_OutputMode value) {
+  
+  output_ = value;
+}
+inline void WriteRel::set_output(::substrait::WriteRel_OutputMode value) {
+  _internal_set_output(value);
+  // @@protoc_insertion_point(field_set:substrait.WriteRel.output)
+}
+
+inline bool WriteRel::has_write_type() const {
+  return write_type_case() != WRITE_TYPE_NOT_SET;
+}
+inline void WriteRel::clear_has_write_type() {
+  _oneof_case_[0] = WRITE_TYPE_NOT_SET;
+}
+inline WriteRel::WriteTypeCase WriteRel::write_type_case() const {
+  return WriteRel::WriteTypeCase(_oneof_case_[0]);
+}
+// -------------------------------------------------------------------
+
+// HashJoinRel
+
+// .substrait.RelCommon common = 1;
+inline bool HashJoinRel::_internal_has_common() const {
+  return this != internal_default_instance() && common_ != nullptr;
+}
+inline bool HashJoinRel::has_common() const {
+  return _internal_has_common();
+}
+inline void HashJoinRel::clear_common() {
+  if (GetArenaForAllocation() == nullptr && common_ != nullptr) {
+    delete common_;
+  }
+  common_ = nullptr;
+}
+inline const ::substrait::RelCommon& HashJoinRel::_internal_common() const {
+  const ::substrait::RelCommon* p = common_;
+  return p != nullptr ? *p : reinterpret_cast<const ::substrait::RelCommon&>(
+      ::substrait::_RelCommon_default_instance_);
+}
+inline const ::substrait::RelCommon& HashJoinRel::common() const {
+  // @@protoc_insertion_point(field_get:substrait.HashJoinRel.common)
+  return _internal_common();
+}
+inline void HashJoinRel::unsafe_arena_set_allocated_common(
+    ::substrait::RelCommon* common) {
+  if (GetArenaForAllocation() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(common_);
+  }
+  common_ = common;
+  if (common) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:substrait.HashJoinRel.common)
+}
+inline ::substrait::RelCommon* HashJoinRel::release_common() {
+  
+  ::substrait::RelCommon* temp = common_;
+  common_ = nullptr;
+#ifdef PROTOBUF_FORCE_COPY_IN_RELEASE
+  auto* old =  reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(temp);
+  temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  if (GetArenaForAllocation() == nullptr) { delete old; }
+#else  // PROTOBUF_FORCE_COPY_IN_RELEASE
+  if (GetArenaForAllocation() != nullptr) {
+    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  }
+#endif  // !PROTOBUF_FORCE_COPY_IN_RELEASE
+  return temp;
+}
+inline ::substrait::RelCommon* HashJoinRel::unsafe_arena_release_common() {
+  // @@protoc_insertion_point(field_release:substrait.HashJoinRel.common)
+  
+  ::substrait::RelCommon* temp = common_;
+  common_ = nullptr;
+  return temp;
+}
+inline ::substrait::RelCommon* HashJoinRel::_internal_mutable_common() {
+  
+  if (common_ == nullptr) {
+    auto* p = CreateMaybeMessage<::substrait::RelCommon>(GetArenaForAllocation());
+    common_ = p;
+  }
+  return common_;
+}
+inline ::substrait::RelCommon* HashJoinRel::mutable_common() {
+  ::substrait::RelCommon* _msg = _internal_mutable_common();
+  // @@protoc_insertion_point(field_mutable:substrait.HashJoinRel.common)
+  return _msg;
+}
+inline void HashJoinRel::set_allocated_common(::substrait::RelCommon* common) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
+  if (message_arena == nullptr) {
+    delete common_;
+  }
+  if (common) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+        ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper<::substrait::RelCommon>::GetOwningArena(common);
+    if (message_arena != submessage_arena) {
+      common = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, common, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  common_ = common;
+  // @@protoc_insertion_point(field_set_allocated:substrait.HashJoinRel.common)
+}
+
+// .substrait.Rel left = 2;
+inline bool HashJoinRel::_internal_has_left() const {
+  return this != internal_default_instance() && left_ != nullptr;
+}
+inline bool HashJoinRel::has_left() const {
+  return _internal_has_left();
+}
+inline void HashJoinRel::clear_left() {
+  if (GetArenaForAllocation() == nullptr && left_ != nullptr) {
+    delete left_;
+  }
+  left_ = nullptr;
+}
+inline const ::substrait::Rel& HashJoinRel::_internal_left() const {
+  const ::substrait::Rel* p = left_;
+  return p != nullptr ? *p : reinterpret_cast<const ::substrait::Rel&>(
+      ::substrait::_Rel_default_instance_);
+}
+inline const ::substrait::Rel& HashJoinRel::left() const {
+  // @@protoc_insertion_point(field_get:substrait.HashJoinRel.left)
+  return _internal_left();
+}
+inline void HashJoinRel::unsafe_arena_set_allocated_left(
+    ::substrait::Rel* left) {
+  if (GetArenaForAllocation() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(left_);
+  }
+  left_ = left;
+  if (left) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:substrait.HashJoinRel.left)
+}
+inline ::substrait::Rel* HashJoinRel::release_left() {
+  
+  ::substrait::Rel* temp = left_;
+  left_ = nullptr;
+#ifdef PROTOBUF_FORCE_COPY_IN_RELEASE
+  auto* old =  reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(temp);
+  temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  if (GetArenaForAllocation() == nullptr) { delete old; }
+#else  // PROTOBUF_FORCE_COPY_IN_RELEASE
+  if (GetArenaForAllocation() != nullptr) {
+    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  }
+#endif  // !PROTOBUF_FORCE_COPY_IN_RELEASE
+  return temp;
+}
+inline ::substrait::Rel* HashJoinRel::unsafe_arena_release_left() {
+  // @@protoc_insertion_point(field_release:substrait.HashJoinRel.left)
+  
+  ::substrait::Rel* temp = left_;
+  left_ = nullptr;
+  return temp;
+}
+inline ::substrait::Rel* HashJoinRel::_internal_mutable_left() {
+  
+  if (left_ == nullptr) {
+    auto* p = CreateMaybeMessage<::substrait::Rel>(GetArenaForAllocation());
+    left_ = p;
+  }
+  return left_;
+}
+inline ::substrait::Rel* HashJoinRel::mutable_left() {
+  ::substrait::Rel* _msg = _internal_mutable_left();
+  // @@protoc_insertion_point(field_mutable:substrait.HashJoinRel.left)
+  return _msg;
+}
+inline void HashJoinRel::set_allocated_left(::substrait::Rel* left) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
+  if (message_arena == nullptr) {
+    delete left_;
+  }
+  if (left) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+        ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper<::substrait::Rel>::GetOwningArena(left);
+    if (message_arena != submessage_arena) {
+      left = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, left, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  left_ = left;
+  // @@protoc_insertion_point(field_set_allocated:substrait.HashJoinRel.left)
+}
+
+// .substrait.Rel right = 3;
+inline bool HashJoinRel::_internal_has_right() const {
+  return this != internal_default_instance() && right_ != nullptr;
+}
+inline bool HashJoinRel::has_right() const {
+  return _internal_has_right();
+}
+inline void HashJoinRel::clear_right() {
+  if (GetArenaForAllocation() == nullptr && right_ != nullptr) {
+    delete right_;
+  }
+  right_ = nullptr;
+}
+inline const ::substrait::Rel& HashJoinRel::_internal_right() const {
+  const ::substrait::Rel* p = right_;
+  return p != nullptr ? *p : reinterpret_cast<const ::substrait::Rel&>(
+      ::substrait::_Rel_default_instance_);
+}
+inline const ::substrait::Rel& HashJoinRel::right() const {
+  // @@protoc_insertion_point(field_get:substrait.HashJoinRel.right)
+  return _internal_right();
+}
+inline void HashJoinRel::unsafe_arena_set_allocated_right(
+    ::substrait::Rel* right) {
+  if (GetArenaForAllocation() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(right_);
+  }
+  right_ = right;
+  if (right) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:substrait.HashJoinRel.right)
+}
+inline ::substrait::Rel* HashJoinRel::release_right() {
+  
+  ::substrait::Rel* temp = right_;
+  right_ = nullptr;
+#ifdef PROTOBUF_FORCE_COPY_IN_RELEASE
+  auto* old =  reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(temp);
+  temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  if (GetArenaForAllocation() == nullptr) { delete old; }
+#else  // PROTOBUF_FORCE_COPY_IN_RELEASE
+  if (GetArenaForAllocation() != nullptr) {
+    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  }
+#endif  // !PROTOBUF_FORCE_COPY_IN_RELEASE
+  return temp;
+}
+inline ::substrait::Rel* HashJoinRel::unsafe_arena_release_right() {
+  // @@protoc_insertion_point(field_release:substrait.HashJoinRel.right)
+  
+  ::substrait::Rel* temp = right_;
+  right_ = nullptr;
+  return temp;
+}
+inline ::substrait::Rel* HashJoinRel::_internal_mutable_right() {
+  
+  if (right_ == nullptr) {
+    auto* p = CreateMaybeMessage<::substrait::Rel>(GetArenaForAllocation());
+    right_ = p;
+  }
+  return right_;
+}
+inline ::substrait::Rel* HashJoinRel::mutable_right() {
+  ::substrait::Rel* _msg = _internal_mutable_right();
+  // @@protoc_insertion_point(field_mutable:substrait.HashJoinRel.right)
+  return _msg;
+}
+inline void HashJoinRel::set_allocated_right(::substrait::Rel* right) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
+  if (message_arena == nullptr) {
+    delete right_;
+  }
+  if (right) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+        ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper<::substrait::Rel>::GetOwningArena(right);
+    if (message_arena != submessage_arena) {
+      right = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, right, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  right_ = right;
+  // @@protoc_insertion_point(field_set_allocated:substrait.HashJoinRel.right)
+}
+
+// repeated .substrait.Expression.FieldReference left_keys = 4;
+inline int HashJoinRel::_internal_left_keys_size() const {
+  return left_keys_.size();
+}
+inline int HashJoinRel::left_keys_size() const {
+  return _internal_left_keys_size();
+}
+inline void HashJoinRel::clear_left_keys() {
+  left_keys_.Clear();
+}
+inline ::substrait::Expression_FieldReference* HashJoinRel::mutable_left_keys(int index) {
+  // @@protoc_insertion_point(field_mutable:substrait.HashJoinRel.left_keys)
+  return left_keys_.Mutable(index);
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Expression_FieldReference >*
+HashJoinRel::mutable_left_keys() {
+  // @@protoc_insertion_point(field_mutable_list:substrait.HashJoinRel.left_keys)
+  return &left_keys_;
+}
+inline const ::substrait::Expression_FieldReference& HashJoinRel::_internal_left_keys(int index) const {
+  return left_keys_.Get(index);
+}
+inline const ::substrait::Expression_FieldReference& HashJoinRel::left_keys(int index) const {
+  // @@protoc_insertion_point(field_get:substrait.HashJoinRel.left_keys)
+  return _internal_left_keys(index);
+}
+inline ::substrait::Expression_FieldReference* HashJoinRel::_internal_add_left_keys() {
+  return left_keys_.Add();
+}
+inline ::substrait::Expression_FieldReference* HashJoinRel::add_left_keys() {
+  ::substrait::Expression_FieldReference* _add = _internal_add_left_keys();
+  // @@protoc_insertion_point(field_add:substrait.HashJoinRel.left_keys)
+  return _add;
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Expression_FieldReference >&
+HashJoinRel::left_keys() const {
+  // @@protoc_insertion_point(field_list:substrait.HashJoinRel.left_keys)
+  return left_keys_;
+}
+
+// repeated .substrait.Expression.FieldReference right_keys = 5;
+inline int HashJoinRel::_internal_right_keys_size() const {
+  return right_keys_.size();
+}
+inline int HashJoinRel::right_keys_size() const {
+  return _internal_right_keys_size();
+}
+inline void HashJoinRel::clear_right_keys() {
+  right_keys_.Clear();
+}
+inline ::substrait::Expression_FieldReference* HashJoinRel::mutable_right_keys(int index) {
+  // @@protoc_insertion_point(field_mutable:substrait.HashJoinRel.right_keys)
+  return right_keys_.Mutable(index);
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Expression_FieldReference >*
+HashJoinRel::mutable_right_keys() {
+  // @@protoc_insertion_point(field_mutable_list:substrait.HashJoinRel.right_keys)
+  return &right_keys_;
+}
+inline const ::substrait::Expression_FieldReference& HashJoinRel::_internal_right_keys(int index) const {
+  return right_keys_.Get(index);
+}
+inline const ::substrait::Expression_FieldReference& HashJoinRel::right_keys(int index) const {
+  // @@protoc_insertion_point(field_get:substrait.HashJoinRel.right_keys)
+  return _internal_right_keys(index);
+}
+inline ::substrait::Expression_FieldReference* HashJoinRel::_internal_add_right_keys() {
+  return right_keys_.Add();
+}
+inline ::substrait::Expression_FieldReference* HashJoinRel::add_right_keys() {
+  ::substrait::Expression_FieldReference* _add = _internal_add_right_keys();
+  // @@protoc_insertion_point(field_add:substrait.HashJoinRel.right_keys)
+  return _add;
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Expression_FieldReference >&
+HashJoinRel::right_keys() const {
+  // @@protoc_insertion_point(field_list:substrait.HashJoinRel.right_keys)
+  return right_keys_;
+}
+
+// .substrait.Expression post_join_filter = 6;
+inline bool HashJoinRel::_internal_has_post_join_filter() const {
+  return this != internal_default_instance() && post_join_filter_ != nullptr;
+}
+inline bool HashJoinRel::has_post_join_filter() const {
+  return _internal_has_post_join_filter();
+}
+inline void HashJoinRel::clear_post_join_filter() {
+  if (GetArenaForAllocation() == nullptr && post_join_filter_ != nullptr) {
+    delete post_join_filter_;
+  }
+  post_join_filter_ = nullptr;
+}
+inline const ::substrait::Expression& HashJoinRel::_internal_post_join_filter() const {
+  const ::substrait::Expression* p = post_join_filter_;
+  return p != nullptr ? *p : reinterpret_cast<const ::substrait::Expression&>(
+      ::substrait::_Expression_default_instance_);
+}
+inline const ::substrait::Expression& HashJoinRel::post_join_filter() const {
+  // @@protoc_insertion_point(field_get:substrait.HashJoinRel.post_join_filter)
+  return _internal_post_join_filter();
+}
+inline void HashJoinRel::unsafe_arena_set_allocated_post_join_filter(
+    ::substrait::Expression* post_join_filter) {
+  if (GetArenaForAllocation() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(post_join_filter_);
+  }
+  post_join_filter_ = post_join_filter;
+  if (post_join_filter) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:substrait.HashJoinRel.post_join_filter)
+}
+inline ::substrait::Expression* HashJoinRel::release_post_join_filter() {
+  
+  ::substrait::Expression* temp = post_join_filter_;
+  post_join_filter_ = nullptr;
+#ifdef PROTOBUF_FORCE_COPY_IN_RELEASE
+  auto* old =  reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(temp);
+  temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  if (GetArenaForAllocation() == nullptr) { delete old; }
+#else  // PROTOBUF_FORCE_COPY_IN_RELEASE
+  if (GetArenaForAllocation() != nullptr) {
+    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  }
+#endif  // !PROTOBUF_FORCE_COPY_IN_RELEASE
+  return temp;
+}
+inline ::substrait::Expression* HashJoinRel::unsafe_arena_release_post_join_filter() {
+  // @@protoc_insertion_point(field_release:substrait.HashJoinRel.post_join_filter)
+  
+  ::substrait::Expression* temp = post_join_filter_;
+  post_join_filter_ = nullptr;
+  return temp;
+}
+inline ::substrait::Expression* HashJoinRel::_internal_mutable_post_join_filter() {
+  
+  if (post_join_filter_ == nullptr) {
+    auto* p = CreateMaybeMessage<::substrait::Expression>(GetArenaForAllocation());
+    post_join_filter_ = p;
+  }
+  return post_join_filter_;
+}
+inline ::substrait::Expression* HashJoinRel::mutable_post_join_filter() {
+  ::substrait::Expression* _msg = _internal_mutable_post_join_filter();
+  // @@protoc_insertion_point(field_mutable:substrait.HashJoinRel.post_join_filter)
+  return _msg;
+}
+inline void HashJoinRel::set_allocated_post_join_filter(::substrait::Expression* post_join_filter) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
+  if (message_arena == nullptr) {
+    delete post_join_filter_;
+  }
+  if (post_join_filter) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+        ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper<::substrait::Expression>::GetOwningArena(post_join_filter);
+    if (message_arena != submessage_arena) {
+      post_join_filter = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, post_join_filter, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  post_join_filter_ = post_join_filter;
+  // @@protoc_insertion_point(field_set_allocated:substrait.HashJoinRel.post_join_filter)
+}
+
+// .substrait.HashJoinRel.JoinType type = 7;
+inline void HashJoinRel::clear_type() {
+  type_ = 0;
+}
+inline ::substrait::HashJoinRel_JoinType HashJoinRel::_internal_type() const {
+  return static_cast< ::substrait::HashJoinRel_JoinType >(type_);
+}
+inline ::substrait::HashJoinRel_JoinType HashJoinRel::type() const {
+  // @@protoc_insertion_point(field_get:substrait.HashJoinRel.type)
+  return _internal_type();
+}
+inline void HashJoinRel::_internal_set_type(::substrait::HashJoinRel_JoinType value) {
+  
+  type_ = value;
+}
+inline void HashJoinRel::set_type(::substrait::HashJoinRel_JoinType value) {
+  _internal_set_type(value);
+  // @@protoc_insertion_point(field_set:substrait.HashJoinRel.type)
+}
+
+// .substrait.extensions.AdvancedExtension advanced_extension = 10;
+inline bool HashJoinRel::_internal_has_advanced_extension() const {
+  return this != internal_default_instance() && advanced_extension_ != nullptr;
+}
+inline bool HashJoinRel::has_advanced_extension() const {
+  return _internal_has_advanced_extension();
+}
+inline const ::substrait::extensions::AdvancedExtension& HashJoinRel::_internal_advanced_extension() const {
+  const ::substrait::extensions::AdvancedExtension* p = advanced_extension_;
+  return p != nullptr ? *p : reinterpret_cast<const ::substrait::extensions::AdvancedExtension&>(
+      ::substrait::extensions::_AdvancedExtension_default_instance_);
+}
+inline const ::substrait::extensions::AdvancedExtension& HashJoinRel::advanced_extension() const {
+  // @@protoc_insertion_point(field_get:substrait.HashJoinRel.advanced_extension)
+  return _internal_advanced_extension();
+}
+inline void HashJoinRel::unsafe_arena_set_allocated_advanced_extension(
+    ::substrait::extensions::AdvancedExtension* advanced_extension) {
+  if (GetArenaForAllocation() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(advanced_extension_);
+  }
+  advanced_extension_ = advanced_extension;
+  if (advanced_extension) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:substrait.HashJoinRel.advanced_extension)
+}
+inline ::substrait::extensions::AdvancedExtension* HashJoinRel::release_advanced_extension() {
+  
+  ::substrait::extensions::AdvancedExtension* temp = advanced_extension_;
+  advanced_extension_ = nullptr;
+#ifdef PROTOBUF_FORCE_COPY_IN_RELEASE
+  auto* old =  reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(temp);
+  temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  if (GetArenaForAllocation() == nullptr) { delete old; }
+#else  // PROTOBUF_FORCE_COPY_IN_RELEASE
+  if (GetArenaForAllocation() != nullptr) {
+    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  }
+#endif  // !PROTOBUF_FORCE_COPY_IN_RELEASE
+  return temp;
+}
+inline ::substrait::extensions::AdvancedExtension* HashJoinRel::unsafe_arena_release_advanced_extension() {
+  // @@protoc_insertion_point(field_release:substrait.HashJoinRel.advanced_extension)
+  
+  ::substrait::extensions::AdvancedExtension* temp = advanced_extension_;
+  advanced_extension_ = nullptr;
+  return temp;
+}
+inline ::substrait::extensions::AdvancedExtension* HashJoinRel::_internal_mutable_advanced_extension() {
+  
+  if (advanced_extension_ == nullptr) {
+    auto* p = CreateMaybeMessage<::substrait::extensions::AdvancedExtension>(GetArenaForAllocation());
+    advanced_extension_ = p;
+  }
+  return advanced_extension_;
+}
+inline ::substrait::extensions::AdvancedExtension* HashJoinRel::mutable_advanced_extension() {
+  ::substrait::extensions::AdvancedExtension* _msg = _internal_mutable_advanced_extension();
+  // @@protoc_insertion_point(field_mutable:substrait.HashJoinRel.advanced_extension)
+  return _msg;
+}
+inline void HashJoinRel::set_allocated_advanced_extension(::substrait::extensions::AdvancedExtension* advanced_extension) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
+  if (message_arena == nullptr) {
+    delete reinterpret_cast< ::PROTOBUF_NAMESPACE_ID::MessageLite*>(advanced_extension_);
+  }
+  if (advanced_extension) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+        ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper<
+            ::PROTOBUF_NAMESPACE_ID::MessageLite>::GetOwningArena(
+                reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(advanced_extension));
+    if (message_arena != submessage_arena) {
+      advanced_extension = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, advanced_extension, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  advanced_extension_ = advanced_extension;
+  // @@protoc_insertion_point(field_set_allocated:substrait.HashJoinRel.advanced_extension)
+}
+
+// -------------------------------------------------------------------
+
+// MergeJoinRel
+
+// .substrait.RelCommon common = 1;
+inline bool MergeJoinRel::_internal_has_common() const {
+  return this != internal_default_instance() && common_ != nullptr;
+}
+inline bool MergeJoinRel::has_common() const {
+  return _internal_has_common();
+}
+inline void MergeJoinRel::clear_common() {
+  if (GetArenaForAllocation() == nullptr && common_ != nullptr) {
+    delete common_;
+  }
+  common_ = nullptr;
+}
+inline const ::substrait::RelCommon& MergeJoinRel::_internal_common() const {
+  const ::substrait::RelCommon* p = common_;
+  return p != nullptr ? *p : reinterpret_cast<const ::substrait::RelCommon&>(
+      ::substrait::_RelCommon_default_instance_);
+}
+inline const ::substrait::RelCommon& MergeJoinRel::common() const {
+  // @@protoc_insertion_point(field_get:substrait.MergeJoinRel.common)
+  return _internal_common();
+}
+inline void MergeJoinRel::unsafe_arena_set_allocated_common(
+    ::substrait::RelCommon* common) {
+  if (GetArenaForAllocation() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(common_);
+  }
+  common_ = common;
+  if (common) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:substrait.MergeJoinRel.common)
+}
+inline ::substrait::RelCommon* MergeJoinRel::release_common() {
+  
+  ::substrait::RelCommon* temp = common_;
+  common_ = nullptr;
+#ifdef PROTOBUF_FORCE_COPY_IN_RELEASE
+  auto* old =  reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(temp);
+  temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  if (GetArenaForAllocation() == nullptr) { delete old; }
+#else  // PROTOBUF_FORCE_COPY_IN_RELEASE
+  if (GetArenaForAllocation() != nullptr) {
+    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  }
+#endif  // !PROTOBUF_FORCE_COPY_IN_RELEASE
+  return temp;
+}
+inline ::substrait::RelCommon* MergeJoinRel::unsafe_arena_release_common() {
+  // @@protoc_insertion_point(field_release:substrait.MergeJoinRel.common)
+  
+  ::substrait::RelCommon* temp = common_;
+  common_ = nullptr;
+  return temp;
+}
+inline ::substrait::RelCommon* MergeJoinRel::_internal_mutable_common() {
+  
+  if (common_ == nullptr) {
+    auto* p = CreateMaybeMessage<::substrait::RelCommon>(GetArenaForAllocation());
+    common_ = p;
+  }
+  return common_;
+}
+inline ::substrait::RelCommon* MergeJoinRel::mutable_common() {
+  ::substrait::RelCommon* _msg = _internal_mutable_common();
+  // @@protoc_insertion_point(field_mutable:substrait.MergeJoinRel.common)
+  return _msg;
+}
+inline void MergeJoinRel::set_allocated_common(::substrait::RelCommon* common) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
+  if (message_arena == nullptr) {
+    delete common_;
+  }
+  if (common) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+        ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper<::substrait::RelCommon>::GetOwningArena(common);
+    if (message_arena != submessage_arena) {
+      common = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, common, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  common_ = common;
+  // @@protoc_insertion_point(field_set_allocated:substrait.MergeJoinRel.common)
+}
+
+// .substrait.Rel left = 2;
+inline bool MergeJoinRel::_internal_has_left() const {
+  return this != internal_default_instance() && left_ != nullptr;
+}
+inline bool MergeJoinRel::has_left() const {
+  return _internal_has_left();
+}
+inline void MergeJoinRel::clear_left() {
+  if (GetArenaForAllocation() == nullptr && left_ != nullptr) {
+    delete left_;
+  }
+  left_ = nullptr;
+}
+inline const ::substrait::Rel& MergeJoinRel::_internal_left() const {
+  const ::substrait::Rel* p = left_;
+  return p != nullptr ? *p : reinterpret_cast<const ::substrait::Rel&>(
+      ::substrait::_Rel_default_instance_);
+}
+inline const ::substrait::Rel& MergeJoinRel::left() const {
+  // @@protoc_insertion_point(field_get:substrait.MergeJoinRel.left)
+  return _internal_left();
+}
+inline void MergeJoinRel::unsafe_arena_set_allocated_left(
+    ::substrait::Rel* left) {
+  if (GetArenaForAllocation() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(left_);
+  }
+  left_ = left;
+  if (left) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:substrait.MergeJoinRel.left)
+}
+inline ::substrait::Rel* MergeJoinRel::release_left() {
+  
+  ::substrait::Rel* temp = left_;
+  left_ = nullptr;
+#ifdef PROTOBUF_FORCE_COPY_IN_RELEASE
+  auto* old =  reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(temp);
+  temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  if (GetArenaForAllocation() == nullptr) { delete old; }
+#else  // PROTOBUF_FORCE_COPY_IN_RELEASE
+  if (GetArenaForAllocation() != nullptr) {
+    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  }
+#endif  // !PROTOBUF_FORCE_COPY_IN_RELEASE
+  return temp;
+}
+inline ::substrait::Rel* MergeJoinRel::unsafe_arena_release_left() {
+  // @@protoc_insertion_point(field_release:substrait.MergeJoinRel.left)
+  
+  ::substrait::Rel* temp = left_;
+  left_ = nullptr;
+  return temp;
+}
+inline ::substrait::Rel* MergeJoinRel::_internal_mutable_left() {
+  
+  if (left_ == nullptr) {
+    auto* p = CreateMaybeMessage<::substrait::Rel>(GetArenaForAllocation());
+    left_ = p;
+  }
+  return left_;
+}
+inline ::substrait::Rel* MergeJoinRel::mutable_left() {
+  ::substrait::Rel* _msg = _internal_mutable_left();
+  // @@protoc_insertion_point(field_mutable:substrait.MergeJoinRel.left)
+  return _msg;
+}
+inline void MergeJoinRel::set_allocated_left(::substrait::Rel* left) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
+  if (message_arena == nullptr) {
+    delete left_;
+  }
+  if (left) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+        ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper<::substrait::Rel>::GetOwningArena(left);
+    if (message_arena != submessage_arena) {
+      left = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, left, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  left_ = left;
+  // @@protoc_insertion_point(field_set_allocated:substrait.MergeJoinRel.left)
+}
+
+// .substrait.Rel right = 3;
+inline bool MergeJoinRel::_internal_has_right() const {
+  return this != internal_default_instance() && right_ != nullptr;
+}
+inline bool MergeJoinRel::has_right() const {
+  return _internal_has_right();
+}
+inline void MergeJoinRel::clear_right() {
+  if (GetArenaForAllocation() == nullptr && right_ != nullptr) {
+    delete right_;
+  }
+  right_ = nullptr;
+}
+inline const ::substrait::Rel& MergeJoinRel::_internal_right() const {
+  const ::substrait::Rel* p = right_;
+  return p != nullptr ? *p : reinterpret_cast<const ::substrait::Rel&>(
+      ::substrait::_Rel_default_instance_);
+}
+inline const ::substrait::Rel& MergeJoinRel::right() const {
+  // @@protoc_insertion_point(field_get:substrait.MergeJoinRel.right)
+  return _internal_right();
+}
+inline void MergeJoinRel::unsafe_arena_set_allocated_right(
+    ::substrait::Rel* right) {
+  if (GetArenaForAllocation() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(right_);
+  }
+  right_ = right;
+  if (right) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:substrait.MergeJoinRel.right)
+}
+inline ::substrait::Rel* MergeJoinRel::release_right() {
+  
+  ::substrait::Rel* temp = right_;
+  right_ = nullptr;
+#ifdef PROTOBUF_FORCE_COPY_IN_RELEASE
+  auto* old =  reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(temp);
+  temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  if (GetArenaForAllocation() == nullptr) { delete old; }
+#else  // PROTOBUF_FORCE_COPY_IN_RELEASE
+  if (GetArenaForAllocation() != nullptr) {
+    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  }
+#endif  // !PROTOBUF_FORCE_COPY_IN_RELEASE
+  return temp;
+}
+inline ::substrait::Rel* MergeJoinRel::unsafe_arena_release_right() {
+  // @@protoc_insertion_point(field_release:substrait.MergeJoinRel.right)
+  
+  ::substrait::Rel* temp = right_;
+  right_ = nullptr;
+  return temp;
+}
+inline ::substrait::Rel* MergeJoinRel::_internal_mutable_right() {
+  
+  if (right_ == nullptr) {
+    auto* p = CreateMaybeMessage<::substrait::Rel>(GetArenaForAllocation());
+    right_ = p;
+  }
+  return right_;
+}
+inline ::substrait::Rel* MergeJoinRel::mutable_right() {
+  ::substrait::Rel* _msg = _internal_mutable_right();
+  // @@protoc_insertion_point(field_mutable:substrait.MergeJoinRel.right)
+  return _msg;
+}
+inline void MergeJoinRel::set_allocated_right(::substrait::Rel* right) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
+  if (message_arena == nullptr) {
+    delete right_;
+  }
+  if (right) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+        ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper<::substrait::Rel>::GetOwningArena(right);
+    if (message_arena != submessage_arena) {
+      right = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, right, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  right_ = right;
+  // @@protoc_insertion_point(field_set_allocated:substrait.MergeJoinRel.right)
+}
+
+// repeated .substrait.Expression.FieldReference left_keys = 4;
+inline int MergeJoinRel::_internal_left_keys_size() const {
+  return left_keys_.size();
+}
+inline int MergeJoinRel::left_keys_size() const {
+  return _internal_left_keys_size();
+}
+inline void MergeJoinRel::clear_left_keys() {
+  left_keys_.Clear();
+}
+inline ::substrait::Expression_FieldReference* MergeJoinRel::mutable_left_keys(int index) {
+  // @@protoc_insertion_point(field_mutable:substrait.MergeJoinRel.left_keys)
+  return left_keys_.Mutable(index);
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Expression_FieldReference >*
+MergeJoinRel::mutable_left_keys() {
+  // @@protoc_insertion_point(field_mutable_list:substrait.MergeJoinRel.left_keys)
+  return &left_keys_;
+}
+inline const ::substrait::Expression_FieldReference& MergeJoinRel::_internal_left_keys(int index) const {
+  return left_keys_.Get(index);
+}
+inline const ::substrait::Expression_FieldReference& MergeJoinRel::left_keys(int index) const {
+  // @@protoc_insertion_point(field_get:substrait.MergeJoinRel.left_keys)
+  return _internal_left_keys(index);
+}
+inline ::substrait::Expression_FieldReference* MergeJoinRel::_internal_add_left_keys() {
+  return left_keys_.Add();
+}
+inline ::substrait::Expression_FieldReference* MergeJoinRel::add_left_keys() {
+  ::substrait::Expression_FieldReference* _add = _internal_add_left_keys();
+  // @@protoc_insertion_point(field_add:substrait.MergeJoinRel.left_keys)
+  return _add;
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Expression_FieldReference >&
+MergeJoinRel::left_keys() const {
+  // @@protoc_insertion_point(field_list:substrait.MergeJoinRel.left_keys)
+  return left_keys_;
+}
+
+// repeated .substrait.Expression.FieldReference right_keys = 5;
+inline int MergeJoinRel::_internal_right_keys_size() const {
+  return right_keys_.size();
+}
+inline int MergeJoinRel::right_keys_size() const {
+  return _internal_right_keys_size();
+}
+inline void MergeJoinRel::clear_right_keys() {
+  right_keys_.Clear();
+}
+inline ::substrait::Expression_FieldReference* MergeJoinRel::mutable_right_keys(int index) {
+  // @@protoc_insertion_point(field_mutable:substrait.MergeJoinRel.right_keys)
+  return right_keys_.Mutable(index);
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Expression_FieldReference >*
+MergeJoinRel::mutable_right_keys() {
+  // @@protoc_insertion_point(field_mutable_list:substrait.MergeJoinRel.right_keys)
+  return &right_keys_;
+}
+inline const ::substrait::Expression_FieldReference& MergeJoinRel::_internal_right_keys(int index) const {
+  return right_keys_.Get(index);
+}
+inline const ::substrait::Expression_FieldReference& MergeJoinRel::right_keys(int index) const {
+  // @@protoc_insertion_point(field_get:substrait.MergeJoinRel.right_keys)
+  return _internal_right_keys(index);
+}
+inline ::substrait::Expression_FieldReference* MergeJoinRel::_internal_add_right_keys() {
+  return right_keys_.Add();
+}
+inline ::substrait::Expression_FieldReference* MergeJoinRel::add_right_keys() {
+  ::substrait::Expression_FieldReference* _add = _internal_add_right_keys();
+  // @@protoc_insertion_point(field_add:substrait.MergeJoinRel.right_keys)
+  return _add;
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Expression_FieldReference >&
+MergeJoinRel::right_keys() const {
+  // @@protoc_insertion_point(field_list:substrait.MergeJoinRel.right_keys)
+  return right_keys_;
+}
+
+// .substrait.Expression post_join_filter = 6;
+inline bool MergeJoinRel::_internal_has_post_join_filter() const {
+  return this != internal_default_instance() && post_join_filter_ != nullptr;
+}
+inline bool MergeJoinRel::has_post_join_filter() const {
+  return _internal_has_post_join_filter();
+}
+inline void MergeJoinRel::clear_post_join_filter() {
+  if (GetArenaForAllocation() == nullptr && post_join_filter_ != nullptr) {
+    delete post_join_filter_;
+  }
+  post_join_filter_ = nullptr;
+}
+inline const ::substrait::Expression& MergeJoinRel::_internal_post_join_filter() const {
+  const ::substrait::Expression* p = post_join_filter_;
+  return p != nullptr ? *p : reinterpret_cast<const ::substrait::Expression&>(
+      ::substrait::_Expression_default_instance_);
+}
+inline const ::substrait::Expression& MergeJoinRel::post_join_filter() const {
+  // @@protoc_insertion_point(field_get:substrait.MergeJoinRel.post_join_filter)
+  return _internal_post_join_filter();
+}
+inline void MergeJoinRel::unsafe_arena_set_allocated_post_join_filter(
+    ::substrait::Expression* post_join_filter) {
+  if (GetArenaForAllocation() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(post_join_filter_);
+  }
+  post_join_filter_ = post_join_filter;
+  if (post_join_filter) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:substrait.MergeJoinRel.post_join_filter)
+}
+inline ::substrait::Expression* MergeJoinRel::release_post_join_filter() {
+  
+  ::substrait::Expression* temp = post_join_filter_;
+  post_join_filter_ = nullptr;
+#ifdef PROTOBUF_FORCE_COPY_IN_RELEASE
+  auto* old =  reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(temp);
+  temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  if (GetArenaForAllocation() == nullptr) { delete old; }
+#else  // PROTOBUF_FORCE_COPY_IN_RELEASE
+  if (GetArenaForAllocation() != nullptr) {
+    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  }
+#endif  // !PROTOBUF_FORCE_COPY_IN_RELEASE
+  return temp;
+}
+inline ::substrait::Expression* MergeJoinRel::unsafe_arena_release_post_join_filter() {
+  // @@protoc_insertion_point(field_release:substrait.MergeJoinRel.post_join_filter)
+  
+  ::substrait::Expression* temp = post_join_filter_;
+  post_join_filter_ = nullptr;
+  return temp;
+}
+inline ::substrait::Expression* MergeJoinRel::_internal_mutable_post_join_filter() {
+  
+  if (post_join_filter_ == nullptr) {
+    auto* p = CreateMaybeMessage<::substrait::Expression>(GetArenaForAllocation());
+    post_join_filter_ = p;
+  }
+  return post_join_filter_;
+}
+inline ::substrait::Expression* MergeJoinRel::mutable_post_join_filter() {
+  ::substrait::Expression* _msg = _internal_mutable_post_join_filter();
+  // @@protoc_insertion_point(field_mutable:substrait.MergeJoinRel.post_join_filter)
+  return _msg;
+}
+inline void MergeJoinRel::set_allocated_post_join_filter(::substrait::Expression* post_join_filter) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
+  if (message_arena == nullptr) {
+    delete post_join_filter_;
+  }
+  if (post_join_filter) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+        ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper<::substrait::Expression>::GetOwningArena(post_join_filter);
+    if (message_arena != submessage_arena) {
+      post_join_filter = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, post_join_filter, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  post_join_filter_ = post_join_filter;
+  // @@protoc_insertion_point(field_set_allocated:substrait.MergeJoinRel.post_join_filter)
+}
+
+// .substrait.MergeJoinRel.JoinType type = 7;
+inline void MergeJoinRel::clear_type() {
+  type_ = 0;
+}
+inline ::substrait::MergeJoinRel_JoinType MergeJoinRel::_internal_type() const {
+  return static_cast< ::substrait::MergeJoinRel_JoinType >(type_);
+}
+inline ::substrait::MergeJoinRel_JoinType MergeJoinRel::type() const {
+  // @@protoc_insertion_point(field_get:substrait.MergeJoinRel.type)
+  return _internal_type();
+}
+inline void MergeJoinRel::_internal_set_type(::substrait::MergeJoinRel_JoinType value) {
+  
+  type_ = value;
+}
+inline void MergeJoinRel::set_type(::substrait::MergeJoinRel_JoinType value) {
+  _internal_set_type(value);
+  // @@protoc_insertion_point(field_set:substrait.MergeJoinRel.type)
+}
+
+// .substrait.extensions.AdvancedExtension advanced_extension = 10;
+inline bool MergeJoinRel::_internal_has_advanced_extension() const {
+  return this != internal_default_instance() && advanced_extension_ != nullptr;
+}
+inline bool MergeJoinRel::has_advanced_extension() const {
+  return _internal_has_advanced_extension();
+}
+inline const ::substrait::extensions::AdvancedExtension& MergeJoinRel::_internal_advanced_extension() const {
+  const ::substrait::extensions::AdvancedExtension* p = advanced_extension_;
+  return p != nullptr ? *p : reinterpret_cast<const ::substrait::extensions::AdvancedExtension&>(
+      ::substrait::extensions::_AdvancedExtension_default_instance_);
+}
+inline const ::substrait::extensions::AdvancedExtension& MergeJoinRel::advanced_extension() const {
+  // @@protoc_insertion_point(field_get:substrait.MergeJoinRel.advanced_extension)
+  return _internal_advanced_extension();
+}
+inline void MergeJoinRel::unsafe_arena_set_allocated_advanced_extension(
+    ::substrait::extensions::AdvancedExtension* advanced_extension) {
+  if (GetArenaForAllocation() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(advanced_extension_);
+  }
+  advanced_extension_ = advanced_extension;
+  if (advanced_extension) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:substrait.MergeJoinRel.advanced_extension)
+}
+inline ::substrait::extensions::AdvancedExtension* MergeJoinRel::release_advanced_extension() {
+  
+  ::substrait::extensions::AdvancedExtension* temp = advanced_extension_;
+  advanced_extension_ = nullptr;
+#ifdef PROTOBUF_FORCE_COPY_IN_RELEASE
+  auto* old =  reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(temp);
+  temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  if (GetArenaForAllocation() == nullptr) { delete old; }
+#else  // PROTOBUF_FORCE_COPY_IN_RELEASE
+  if (GetArenaForAllocation() != nullptr) {
+    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  }
+#endif  // !PROTOBUF_FORCE_COPY_IN_RELEASE
+  return temp;
+}
+inline ::substrait::extensions::AdvancedExtension* MergeJoinRel::unsafe_arena_release_advanced_extension() {
+  // @@protoc_insertion_point(field_release:substrait.MergeJoinRel.advanced_extension)
+  
+  ::substrait::extensions::AdvancedExtension* temp = advanced_extension_;
+  advanced_extension_ = nullptr;
+  return temp;
+}
+inline ::substrait::extensions::AdvancedExtension* MergeJoinRel::_internal_mutable_advanced_extension() {
+  
+  if (advanced_extension_ == nullptr) {
+    auto* p = CreateMaybeMessage<::substrait::extensions::AdvancedExtension>(GetArenaForAllocation());
+    advanced_extension_ = p;
+  }
+  return advanced_extension_;
+}
+inline ::substrait::extensions::AdvancedExtension* MergeJoinRel::mutable_advanced_extension() {
+  ::substrait::extensions::AdvancedExtension* _msg = _internal_mutable_advanced_extension();
+  // @@protoc_insertion_point(field_mutable:substrait.MergeJoinRel.advanced_extension)
+  return _msg;
+}
+inline void MergeJoinRel::set_allocated_advanced_extension(::substrait::extensions::AdvancedExtension* advanced_extension) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
+  if (message_arena == nullptr) {
+    delete reinterpret_cast< ::PROTOBUF_NAMESPACE_ID::MessageLite*>(advanced_extension_);
+  }
+  if (advanced_extension) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+        ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper<
+            ::PROTOBUF_NAMESPACE_ID::MessageLite>::GetOwningArena(
+                reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(advanced_extension));
+    if (message_arena != submessage_arena) {
+      advanced_extension = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, advanced_extension, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  advanced_extension_ = advanced_extension;
+  // @@protoc_insertion_point(field_set_allocated:substrait.MergeJoinRel.advanced_extension)
+}
+
 // -------------------------------------------------------------------
 
 // FunctionArgument
 
-// .substrait.FunctionArgument.Enum enum = 1;
+// string enum = 1;
 inline bool FunctionArgument::_internal_has_enum_() const {
   return arg_type_case() == kEnum;
 }
@@ -28472,66 +34028,74 @@ inline void FunctionArgument::set_has_enum_() {
 }
 inline void FunctionArgument::clear_enum_() {
   if (_internal_has_enum_()) {
-    if (GetArenaForAllocation() == nullptr) {
-      delete arg_type_.enum__;
-    }
+    arg_type_.enum__.Destroy(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, GetArenaForAllocation());
     clear_has_arg_type();
   }
 }
-inline ::substrait::FunctionArgument_Enum* FunctionArgument::release_enum_() {
-  // @@protoc_insertion_point(field_release:substrait.FunctionArgument.enum)
-  if (_internal_has_enum_()) {
-    clear_has_arg_type();
-      ::substrait::FunctionArgument_Enum* temp = arg_type_.enum__;
-    if (GetArenaForAllocation() != nullptr) {
-      temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
-    }
-    arg_type_.enum__ = nullptr;
-    return temp;
-  } else {
-    return nullptr;
-  }
-}
-inline const ::substrait::FunctionArgument_Enum& FunctionArgument::_internal_enum_() const {
-  return _internal_has_enum_()
-      ? *arg_type_.enum__
-      : reinterpret_cast< ::substrait::FunctionArgument_Enum&>(::substrait::_FunctionArgument_Enum_default_instance_);
-}
-inline const ::substrait::FunctionArgument_Enum& FunctionArgument::enum_() const {
+inline const std::string& FunctionArgument::enum_() const {
   // @@protoc_insertion_point(field_get:substrait.FunctionArgument.enum)
   return _internal_enum_();
 }
-inline ::substrait::FunctionArgument_Enum* FunctionArgument::unsafe_arena_release_enum_() {
-  // @@protoc_insertion_point(field_unsafe_arena_release:substrait.FunctionArgument.enum)
+template <typename ArgT0, typename... ArgT>
+inline void FunctionArgument::set_enum_(ArgT0&& arg0, ArgT... args) {
+  if (!_internal_has_enum_()) {
+    clear_arg_type();
+    set_has_enum_();
+    arg_type_.enum__.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  }
+  arg_type_.enum__.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set:substrait.FunctionArgument.enum)
+}
+inline std::string* FunctionArgument::mutable_enum_() {
+  std::string* _s = _internal_mutable_enum_();
+  // @@protoc_insertion_point(field_mutable:substrait.FunctionArgument.enum)
+  return _s;
+}
+inline const std::string& FunctionArgument::_internal_enum_() const {
+  if (_internal_has_enum_()) {
+    return arg_type_.enum__.Get();
+  }
+  return ::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited();
+}
+inline void FunctionArgument::_internal_set_enum_(const std::string& value) {
+  if (!_internal_has_enum_()) {
+    clear_arg_type();
+    set_has_enum_();
+    arg_type_.enum__.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  }
+  arg_type_.enum__.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, value, GetArenaForAllocation());
+}
+inline std::string* FunctionArgument::_internal_mutable_enum_() {
+  if (!_internal_has_enum_()) {
+    clear_arg_type();
+    set_has_enum_();
+    arg_type_.enum__.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  }
+  return arg_type_.enum__.Mutable(
+      ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, GetArenaForAllocation());
+}
+inline std::string* FunctionArgument::release_enum_() {
+  // @@protoc_insertion_point(field_release:substrait.FunctionArgument.enum)
   if (_internal_has_enum_()) {
     clear_has_arg_type();
-    ::substrait::FunctionArgument_Enum* temp = arg_type_.enum__;
-    arg_type_.enum__ = nullptr;
-    return temp;
+    return arg_type_.enum__.ReleaseNonDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArenaForAllocation());
   } else {
     return nullptr;
   }
 }
-inline void FunctionArgument::unsafe_arena_set_allocated_enum_(::substrait::FunctionArgument_Enum* enum_) {
-  clear_arg_type();
-  if (enum_) {
-    set_has_enum_();
-    arg_type_.enum__ = enum_;
-  }
-  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:substrait.FunctionArgument.enum)
-}
-inline ::substrait::FunctionArgument_Enum* FunctionArgument::_internal_mutable_enum_() {
-  if (!_internal_has_enum_()) {
+inline void FunctionArgument::set_allocated_enum_(std::string* enum_) {
+  if (has_arg_type()) {
     clear_arg_type();
-    set_has_enum_();
-    arg_type_.enum__ = CreateMaybeMessage< ::substrait::FunctionArgument_Enum >(GetArenaForAllocation());
   }
-  return arg_type_.enum__;
-}
-inline ::substrait::FunctionArgument_Enum* FunctionArgument::mutable_enum_() {
-  ::substrait::FunctionArgument_Enum* _msg = _internal_mutable_enum_();
-  // @@protoc_insertion_point(field_mutable:substrait.FunctionArgument.enum)
-  return _msg;
+  if (enum_ != nullptr) {
+    set_has_enum_();
+    arg_type_.enum__.UnsafeSetDefault(enum_);
+    ::PROTOBUF_NAMESPACE_ID::Arena* arena = GetArenaForAllocation();
+    if (arena != nullptr) {
+      arena->Own(enum_);
+    }
+  }
+  // @@protoc_insertion_point(field_set_allocated:substrait.FunctionArgument.enum)
 }
 
 // .substrait.Type type = 2;
@@ -28683,6 +34247,136 @@ inline void FunctionArgument::clear_has_arg_type() {
 inline FunctionArgument::ArgTypeCase FunctionArgument::arg_type_case() const {
   return FunctionArgument::ArgTypeCase(_oneof_case_[0]);
 }
+// -------------------------------------------------------------------
+
+// FunctionOption
+
+// string name = 1;
+inline void FunctionOption::clear_name() {
+  name_.ClearToEmpty();
+}
+inline const std::string& FunctionOption::name() const {
+  // @@protoc_insertion_point(field_get:substrait.FunctionOption.name)
+  return _internal_name();
+}
+template <typename ArgT0, typename... ArgT>
+inline PROTOBUF_ALWAYS_INLINE
+void FunctionOption::set_name(ArgT0&& arg0, ArgT... args) {
+ 
+ name_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set:substrait.FunctionOption.name)
+}
+inline std::string* FunctionOption::mutable_name() {
+  std::string* _s = _internal_mutable_name();
+  // @@protoc_insertion_point(field_mutable:substrait.FunctionOption.name)
+  return _s;
+}
+inline const std::string& FunctionOption::_internal_name() const {
+  return name_.Get();
+}
+inline void FunctionOption::_internal_set_name(const std::string& value) {
+  
+  name_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, value, GetArenaForAllocation());
+}
+inline std::string* FunctionOption::_internal_mutable_name() {
+  
+  return name_.Mutable(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, GetArenaForAllocation());
+}
+inline std::string* FunctionOption::release_name() {
+  // @@protoc_insertion_point(field_release:substrait.FunctionOption.name)
+  return name_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArenaForAllocation());
+}
+inline void FunctionOption::set_allocated_name(std::string* name) {
+  if (name != nullptr) {
+    
+  } else {
+    
+  }
+  name_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), name,
+      GetArenaForAllocation());
+#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  if (name_.IsDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited())) {
+    name_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), "", GetArenaForAllocation());
+  }
+#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  // @@protoc_insertion_point(field_set_allocated:substrait.FunctionOption.name)
+}
+
+// repeated string preference = 2;
+inline int FunctionOption::_internal_preference_size() const {
+  return preference_.size();
+}
+inline int FunctionOption::preference_size() const {
+  return _internal_preference_size();
+}
+inline void FunctionOption::clear_preference() {
+  preference_.Clear();
+}
+inline std::string* FunctionOption::add_preference() {
+  std::string* _s = _internal_add_preference();
+  // @@protoc_insertion_point(field_add_mutable:substrait.FunctionOption.preference)
+  return _s;
+}
+inline const std::string& FunctionOption::_internal_preference(int index) const {
+  return preference_.Get(index);
+}
+inline const std::string& FunctionOption::preference(int index) const {
+  // @@protoc_insertion_point(field_get:substrait.FunctionOption.preference)
+  return _internal_preference(index);
+}
+inline std::string* FunctionOption::mutable_preference(int index) {
+  // @@protoc_insertion_point(field_mutable:substrait.FunctionOption.preference)
+  return preference_.Mutable(index);
+}
+inline void FunctionOption::set_preference(int index, const std::string& value) {
+  preference_.Mutable(index)->assign(value);
+  // @@protoc_insertion_point(field_set:substrait.FunctionOption.preference)
+}
+inline void FunctionOption::set_preference(int index, std::string&& value) {
+  preference_.Mutable(index)->assign(std::move(value));
+  // @@protoc_insertion_point(field_set:substrait.FunctionOption.preference)
+}
+inline void FunctionOption::set_preference(int index, const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  preference_.Mutable(index)->assign(value);
+  // @@protoc_insertion_point(field_set_char:substrait.FunctionOption.preference)
+}
+inline void FunctionOption::set_preference(int index, const char* value, size_t size) {
+  preference_.Mutable(index)->assign(
+    reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:substrait.FunctionOption.preference)
+}
+inline std::string* FunctionOption::_internal_add_preference() {
+  return preference_.Add();
+}
+inline void FunctionOption::add_preference(const std::string& value) {
+  preference_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add:substrait.FunctionOption.preference)
+}
+inline void FunctionOption::add_preference(std::string&& value) {
+  preference_.Add(std::move(value));
+  // @@protoc_insertion_point(field_add:substrait.FunctionOption.preference)
+}
+inline void FunctionOption::add_preference(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  preference_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add_char:substrait.FunctionOption.preference)
+}
+inline void FunctionOption::add_preference(const char* value, size_t size) {
+  preference_.Add()->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_add_pointer:substrait.FunctionOption.preference)
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>&
+FunctionOption::preference() const {
+  // @@protoc_insertion_point(field_list:substrait.FunctionOption.preference)
+  return preference_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>*
+FunctionOption::mutable_preference() {
+  // @@protoc_insertion_point(field_mutable_list:substrait.FunctionOption.preference)
+  return &preference_;
+}
+
 // -------------------------------------------------------------------
 
 // Expression_Enum_Empty
@@ -31270,6 +36964,597 @@ inline Expression_Literal::LiteralTypeCase Expression_Literal::literal_type_case
 }
 // -------------------------------------------------------------------
 
+// Expression_Nested_Map_KeyValue
+
+// .substrait.Expression key = 1;
+inline bool Expression_Nested_Map_KeyValue::_internal_has_key() const {
+  return this != internal_default_instance() && key_ != nullptr;
+}
+inline bool Expression_Nested_Map_KeyValue::has_key() const {
+  return _internal_has_key();
+}
+inline void Expression_Nested_Map_KeyValue::clear_key() {
+  if (GetArenaForAllocation() == nullptr && key_ != nullptr) {
+    delete key_;
+  }
+  key_ = nullptr;
+}
+inline const ::substrait::Expression& Expression_Nested_Map_KeyValue::_internal_key() const {
+  const ::substrait::Expression* p = key_;
+  return p != nullptr ? *p : reinterpret_cast<const ::substrait::Expression&>(
+      ::substrait::_Expression_default_instance_);
+}
+inline const ::substrait::Expression& Expression_Nested_Map_KeyValue::key() const {
+  // @@protoc_insertion_point(field_get:substrait.Expression.Nested.Map.KeyValue.key)
+  return _internal_key();
+}
+inline void Expression_Nested_Map_KeyValue::unsafe_arena_set_allocated_key(
+    ::substrait::Expression* key) {
+  if (GetArenaForAllocation() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(key_);
+  }
+  key_ = key;
+  if (key) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:substrait.Expression.Nested.Map.KeyValue.key)
+}
+inline ::substrait::Expression* Expression_Nested_Map_KeyValue::release_key() {
+  
+  ::substrait::Expression* temp = key_;
+  key_ = nullptr;
+#ifdef PROTOBUF_FORCE_COPY_IN_RELEASE
+  auto* old =  reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(temp);
+  temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  if (GetArenaForAllocation() == nullptr) { delete old; }
+#else  // PROTOBUF_FORCE_COPY_IN_RELEASE
+  if (GetArenaForAllocation() != nullptr) {
+    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  }
+#endif  // !PROTOBUF_FORCE_COPY_IN_RELEASE
+  return temp;
+}
+inline ::substrait::Expression* Expression_Nested_Map_KeyValue::unsafe_arena_release_key() {
+  // @@protoc_insertion_point(field_release:substrait.Expression.Nested.Map.KeyValue.key)
+  
+  ::substrait::Expression* temp = key_;
+  key_ = nullptr;
+  return temp;
+}
+inline ::substrait::Expression* Expression_Nested_Map_KeyValue::_internal_mutable_key() {
+  
+  if (key_ == nullptr) {
+    auto* p = CreateMaybeMessage<::substrait::Expression>(GetArenaForAllocation());
+    key_ = p;
+  }
+  return key_;
+}
+inline ::substrait::Expression* Expression_Nested_Map_KeyValue::mutable_key() {
+  ::substrait::Expression* _msg = _internal_mutable_key();
+  // @@protoc_insertion_point(field_mutable:substrait.Expression.Nested.Map.KeyValue.key)
+  return _msg;
+}
+inline void Expression_Nested_Map_KeyValue::set_allocated_key(::substrait::Expression* key) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
+  if (message_arena == nullptr) {
+    delete key_;
+  }
+  if (key) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+        ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper<::substrait::Expression>::GetOwningArena(key);
+    if (message_arena != submessage_arena) {
+      key = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, key, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  key_ = key;
+  // @@protoc_insertion_point(field_set_allocated:substrait.Expression.Nested.Map.KeyValue.key)
+}
+
+// .substrait.Expression value = 2;
+inline bool Expression_Nested_Map_KeyValue::_internal_has_value() const {
+  return this != internal_default_instance() && value_ != nullptr;
+}
+inline bool Expression_Nested_Map_KeyValue::has_value() const {
+  return _internal_has_value();
+}
+inline void Expression_Nested_Map_KeyValue::clear_value() {
+  if (GetArenaForAllocation() == nullptr && value_ != nullptr) {
+    delete value_;
+  }
+  value_ = nullptr;
+}
+inline const ::substrait::Expression& Expression_Nested_Map_KeyValue::_internal_value() const {
+  const ::substrait::Expression* p = value_;
+  return p != nullptr ? *p : reinterpret_cast<const ::substrait::Expression&>(
+      ::substrait::_Expression_default_instance_);
+}
+inline const ::substrait::Expression& Expression_Nested_Map_KeyValue::value() const {
+  // @@protoc_insertion_point(field_get:substrait.Expression.Nested.Map.KeyValue.value)
+  return _internal_value();
+}
+inline void Expression_Nested_Map_KeyValue::unsafe_arena_set_allocated_value(
+    ::substrait::Expression* value) {
+  if (GetArenaForAllocation() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(value_);
+  }
+  value_ = value;
+  if (value) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:substrait.Expression.Nested.Map.KeyValue.value)
+}
+inline ::substrait::Expression* Expression_Nested_Map_KeyValue::release_value() {
+  
+  ::substrait::Expression* temp = value_;
+  value_ = nullptr;
+#ifdef PROTOBUF_FORCE_COPY_IN_RELEASE
+  auto* old =  reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(temp);
+  temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  if (GetArenaForAllocation() == nullptr) { delete old; }
+#else  // PROTOBUF_FORCE_COPY_IN_RELEASE
+  if (GetArenaForAllocation() != nullptr) {
+    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  }
+#endif  // !PROTOBUF_FORCE_COPY_IN_RELEASE
+  return temp;
+}
+inline ::substrait::Expression* Expression_Nested_Map_KeyValue::unsafe_arena_release_value() {
+  // @@protoc_insertion_point(field_release:substrait.Expression.Nested.Map.KeyValue.value)
+  
+  ::substrait::Expression* temp = value_;
+  value_ = nullptr;
+  return temp;
+}
+inline ::substrait::Expression* Expression_Nested_Map_KeyValue::_internal_mutable_value() {
+  
+  if (value_ == nullptr) {
+    auto* p = CreateMaybeMessage<::substrait::Expression>(GetArenaForAllocation());
+    value_ = p;
+  }
+  return value_;
+}
+inline ::substrait::Expression* Expression_Nested_Map_KeyValue::mutable_value() {
+  ::substrait::Expression* _msg = _internal_mutable_value();
+  // @@protoc_insertion_point(field_mutable:substrait.Expression.Nested.Map.KeyValue.value)
+  return _msg;
+}
+inline void Expression_Nested_Map_KeyValue::set_allocated_value(::substrait::Expression* value) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
+  if (message_arena == nullptr) {
+    delete value_;
+  }
+  if (value) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+        ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper<::substrait::Expression>::GetOwningArena(value);
+    if (message_arena != submessage_arena) {
+      value = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, value, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  value_ = value;
+  // @@protoc_insertion_point(field_set_allocated:substrait.Expression.Nested.Map.KeyValue.value)
+}
+
+// -------------------------------------------------------------------
+
+// Expression_Nested_Map
+
+// repeated .substrait.Expression.Nested.Map.KeyValue key_values = 1;
+inline int Expression_Nested_Map::_internal_key_values_size() const {
+  return key_values_.size();
+}
+inline int Expression_Nested_Map::key_values_size() const {
+  return _internal_key_values_size();
+}
+inline void Expression_Nested_Map::clear_key_values() {
+  key_values_.Clear();
+}
+inline ::substrait::Expression_Nested_Map_KeyValue* Expression_Nested_Map::mutable_key_values(int index) {
+  // @@protoc_insertion_point(field_mutable:substrait.Expression.Nested.Map.key_values)
+  return key_values_.Mutable(index);
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Expression_Nested_Map_KeyValue >*
+Expression_Nested_Map::mutable_key_values() {
+  // @@protoc_insertion_point(field_mutable_list:substrait.Expression.Nested.Map.key_values)
+  return &key_values_;
+}
+inline const ::substrait::Expression_Nested_Map_KeyValue& Expression_Nested_Map::_internal_key_values(int index) const {
+  return key_values_.Get(index);
+}
+inline const ::substrait::Expression_Nested_Map_KeyValue& Expression_Nested_Map::key_values(int index) const {
+  // @@protoc_insertion_point(field_get:substrait.Expression.Nested.Map.key_values)
+  return _internal_key_values(index);
+}
+inline ::substrait::Expression_Nested_Map_KeyValue* Expression_Nested_Map::_internal_add_key_values() {
+  return key_values_.Add();
+}
+inline ::substrait::Expression_Nested_Map_KeyValue* Expression_Nested_Map::add_key_values() {
+  ::substrait::Expression_Nested_Map_KeyValue* _add = _internal_add_key_values();
+  // @@protoc_insertion_point(field_add:substrait.Expression.Nested.Map.key_values)
+  return _add;
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Expression_Nested_Map_KeyValue >&
+Expression_Nested_Map::key_values() const {
+  // @@protoc_insertion_point(field_list:substrait.Expression.Nested.Map.key_values)
+  return key_values_;
+}
+
+// -------------------------------------------------------------------
+
+// Expression_Nested_Struct
+
+// repeated .substrait.Expression fields = 1;
+inline int Expression_Nested_Struct::_internal_fields_size() const {
+  return fields_.size();
+}
+inline int Expression_Nested_Struct::fields_size() const {
+  return _internal_fields_size();
+}
+inline void Expression_Nested_Struct::clear_fields() {
+  fields_.Clear();
+}
+inline ::substrait::Expression* Expression_Nested_Struct::mutable_fields(int index) {
+  // @@protoc_insertion_point(field_mutable:substrait.Expression.Nested.Struct.fields)
+  return fields_.Mutable(index);
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Expression >*
+Expression_Nested_Struct::mutable_fields() {
+  // @@protoc_insertion_point(field_mutable_list:substrait.Expression.Nested.Struct.fields)
+  return &fields_;
+}
+inline const ::substrait::Expression& Expression_Nested_Struct::_internal_fields(int index) const {
+  return fields_.Get(index);
+}
+inline const ::substrait::Expression& Expression_Nested_Struct::fields(int index) const {
+  // @@protoc_insertion_point(field_get:substrait.Expression.Nested.Struct.fields)
+  return _internal_fields(index);
+}
+inline ::substrait::Expression* Expression_Nested_Struct::_internal_add_fields() {
+  return fields_.Add();
+}
+inline ::substrait::Expression* Expression_Nested_Struct::add_fields() {
+  ::substrait::Expression* _add = _internal_add_fields();
+  // @@protoc_insertion_point(field_add:substrait.Expression.Nested.Struct.fields)
+  return _add;
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Expression >&
+Expression_Nested_Struct::fields() const {
+  // @@protoc_insertion_point(field_list:substrait.Expression.Nested.Struct.fields)
+  return fields_;
+}
+
+// -------------------------------------------------------------------
+
+// Expression_Nested_List
+
+// repeated .substrait.Expression values = 1;
+inline int Expression_Nested_List::_internal_values_size() const {
+  return values_.size();
+}
+inline int Expression_Nested_List::values_size() const {
+  return _internal_values_size();
+}
+inline void Expression_Nested_List::clear_values() {
+  values_.Clear();
+}
+inline ::substrait::Expression* Expression_Nested_List::mutable_values(int index) {
+  // @@protoc_insertion_point(field_mutable:substrait.Expression.Nested.List.values)
+  return values_.Mutable(index);
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Expression >*
+Expression_Nested_List::mutable_values() {
+  // @@protoc_insertion_point(field_mutable_list:substrait.Expression.Nested.List.values)
+  return &values_;
+}
+inline const ::substrait::Expression& Expression_Nested_List::_internal_values(int index) const {
+  return values_.Get(index);
+}
+inline const ::substrait::Expression& Expression_Nested_List::values(int index) const {
+  // @@protoc_insertion_point(field_get:substrait.Expression.Nested.List.values)
+  return _internal_values(index);
+}
+inline ::substrait::Expression* Expression_Nested_List::_internal_add_values() {
+  return values_.Add();
+}
+inline ::substrait::Expression* Expression_Nested_List::add_values() {
+  ::substrait::Expression* _add = _internal_add_values();
+  // @@protoc_insertion_point(field_add:substrait.Expression.Nested.List.values)
+  return _add;
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Expression >&
+Expression_Nested_List::values() const {
+  // @@protoc_insertion_point(field_list:substrait.Expression.Nested.List.values)
+  return values_;
+}
+
+// -------------------------------------------------------------------
+
+// Expression_Nested
+
+// bool nullable = 1;
+inline void Expression_Nested::clear_nullable() {
+  nullable_ = false;
+}
+inline bool Expression_Nested::_internal_nullable() const {
+  return nullable_;
+}
+inline bool Expression_Nested::nullable() const {
+  // @@protoc_insertion_point(field_get:substrait.Expression.Nested.nullable)
+  return _internal_nullable();
+}
+inline void Expression_Nested::_internal_set_nullable(bool value) {
+  
+  nullable_ = value;
+}
+inline void Expression_Nested::set_nullable(bool value) {
+  _internal_set_nullable(value);
+  // @@protoc_insertion_point(field_set:substrait.Expression.Nested.nullable)
+}
+
+// uint32 type_variation_reference = 2;
+inline void Expression_Nested::clear_type_variation_reference() {
+  type_variation_reference_ = 0u;
+}
+inline uint32_t Expression_Nested::_internal_type_variation_reference() const {
+  return type_variation_reference_;
+}
+inline uint32_t Expression_Nested::type_variation_reference() const {
+  // @@protoc_insertion_point(field_get:substrait.Expression.Nested.type_variation_reference)
+  return _internal_type_variation_reference();
+}
+inline void Expression_Nested::_internal_set_type_variation_reference(uint32_t value) {
+  
+  type_variation_reference_ = value;
+}
+inline void Expression_Nested::set_type_variation_reference(uint32_t value) {
+  _internal_set_type_variation_reference(value);
+  // @@protoc_insertion_point(field_set:substrait.Expression.Nested.type_variation_reference)
+}
+
+// .substrait.Expression.Nested.Struct struct = 3;
+inline bool Expression_Nested::_internal_has_struct_() const {
+  return nested_type_case() == kStruct;
+}
+inline bool Expression_Nested::has_struct_() const {
+  return _internal_has_struct_();
+}
+inline void Expression_Nested::set_has_struct_() {
+  _oneof_case_[0] = kStruct;
+}
+inline void Expression_Nested::clear_struct_() {
+  if (_internal_has_struct_()) {
+    if (GetArenaForAllocation() == nullptr) {
+      delete nested_type_.struct__;
+    }
+    clear_has_nested_type();
+  }
+}
+inline ::substrait::Expression_Nested_Struct* Expression_Nested::release_struct_() {
+  // @@protoc_insertion_point(field_release:substrait.Expression.Nested.struct)
+  if (_internal_has_struct_()) {
+    clear_has_nested_type();
+      ::substrait::Expression_Nested_Struct* temp = nested_type_.struct__;
+    if (GetArenaForAllocation() != nullptr) {
+      temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+    }
+    nested_type_.struct__ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::substrait::Expression_Nested_Struct& Expression_Nested::_internal_struct_() const {
+  return _internal_has_struct_()
+      ? *nested_type_.struct__
+      : reinterpret_cast< ::substrait::Expression_Nested_Struct&>(::substrait::_Expression_Nested_Struct_default_instance_);
+}
+inline const ::substrait::Expression_Nested_Struct& Expression_Nested::struct_() const {
+  // @@protoc_insertion_point(field_get:substrait.Expression.Nested.struct)
+  return _internal_struct_();
+}
+inline ::substrait::Expression_Nested_Struct* Expression_Nested::unsafe_arena_release_struct_() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:substrait.Expression.Nested.struct)
+  if (_internal_has_struct_()) {
+    clear_has_nested_type();
+    ::substrait::Expression_Nested_Struct* temp = nested_type_.struct__;
+    nested_type_.struct__ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void Expression_Nested::unsafe_arena_set_allocated_struct_(::substrait::Expression_Nested_Struct* struct_) {
+  clear_nested_type();
+  if (struct_) {
+    set_has_struct_();
+    nested_type_.struct__ = struct_;
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:substrait.Expression.Nested.struct)
+}
+inline ::substrait::Expression_Nested_Struct* Expression_Nested::_internal_mutable_struct_() {
+  if (!_internal_has_struct_()) {
+    clear_nested_type();
+    set_has_struct_();
+    nested_type_.struct__ = CreateMaybeMessage< ::substrait::Expression_Nested_Struct >(GetArenaForAllocation());
+  }
+  return nested_type_.struct__;
+}
+inline ::substrait::Expression_Nested_Struct* Expression_Nested::mutable_struct_() {
+  ::substrait::Expression_Nested_Struct* _msg = _internal_mutable_struct_();
+  // @@protoc_insertion_point(field_mutable:substrait.Expression.Nested.struct)
+  return _msg;
+}
+
+// .substrait.Expression.Nested.List list = 4;
+inline bool Expression_Nested::_internal_has_list() const {
+  return nested_type_case() == kList;
+}
+inline bool Expression_Nested::has_list() const {
+  return _internal_has_list();
+}
+inline void Expression_Nested::set_has_list() {
+  _oneof_case_[0] = kList;
+}
+inline void Expression_Nested::clear_list() {
+  if (_internal_has_list()) {
+    if (GetArenaForAllocation() == nullptr) {
+      delete nested_type_.list_;
+    }
+    clear_has_nested_type();
+  }
+}
+inline ::substrait::Expression_Nested_List* Expression_Nested::release_list() {
+  // @@protoc_insertion_point(field_release:substrait.Expression.Nested.list)
+  if (_internal_has_list()) {
+    clear_has_nested_type();
+      ::substrait::Expression_Nested_List* temp = nested_type_.list_;
+    if (GetArenaForAllocation() != nullptr) {
+      temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+    }
+    nested_type_.list_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::substrait::Expression_Nested_List& Expression_Nested::_internal_list() const {
+  return _internal_has_list()
+      ? *nested_type_.list_
+      : reinterpret_cast< ::substrait::Expression_Nested_List&>(::substrait::_Expression_Nested_List_default_instance_);
+}
+inline const ::substrait::Expression_Nested_List& Expression_Nested::list() const {
+  // @@protoc_insertion_point(field_get:substrait.Expression.Nested.list)
+  return _internal_list();
+}
+inline ::substrait::Expression_Nested_List* Expression_Nested::unsafe_arena_release_list() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:substrait.Expression.Nested.list)
+  if (_internal_has_list()) {
+    clear_has_nested_type();
+    ::substrait::Expression_Nested_List* temp = nested_type_.list_;
+    nested_type_.list_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void Expression_Nested::unsafe_arena_set_allocated_list(::substrait::Expression_Nested_List* list) {
+  clear_nested_type();
+  if (list) {
+    set_has_list();
+    nested_type_.list_ = list;
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:substrait.Expression.Nested.list)
+}
+inline ::substrait::Expression_Nested_List* Expression_Nested::_internal_mutable_list() {
+  if (!_internal_has_list()) {
+    clear_nested_type();
+    set_has_list();
+    nested_type_.list_ = CreateMaybeMessage< ::substrait::Expression_Nested_List >(GetArenaForAllocation());
+  }
+  return nested_type_.list_;
+}
+inline ::substrait::Expression_Nested_List* Expression_Nested::mutable_list() {
+  ::substrait::Expression_Nested_List* _msg = _internal_mutable_list();
+  // @@protoc_insertion_point(field_mutable:substrait.Expression.Nested.list)
+  return _msg;
+}
+
+// .substrait.Expression.Nested.Map map = 5;
+inline bool Expression_Nested::_internal_has_map() const {
+  return nested_type_case() == kMap;
+}
+inline bool Expression_Nested::has_map() const {
+  return _internal_has_map();
+}
+inline void Expression_Nested::set_has_map() {
+  _oneof_case_[0] = kMap;
+}
+inline void Expression_Nested::clear_map() {
+  if (_internal_has_map()) {
+    if (GetArenaForAllocation() == nullptr) {
+      delete nested_type_.map_;
+    }
+    clear_has_nested_type();
+  }
+}
+inline ::substrait::Expression_Nested_Map* Expression_Nested::release_map() {
+  // @@protoc_insertion_point(field_release:substrait.Expression.Nested.map)
+  if (_internal_has_map()) {
+    clear_has_nested_type();
+      ::substrait::Expression_Nested_Map* temp = nested_type_.map_;
+    if (GetArenaForAllocation() != nullptr) {
+      temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+    }
+    nested_type_.map_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::substrait::Expression_Nested_Map& Expression_Nested::_internal_map() const {
+  return _internal_has_map()
+      ? *nested_type_.map_
+      : reinterpret_cast< ::substrait::Expression_Nested_Map&>(::substrait::_Expression_Nested_Map_default_instance_);
+}
+inline const ::substrait::Expression_Nested_Map& Expression_Nested::map() const {
+  // @@protoc_insertion_point(field_get:substrait.Expression.Nested.map)
+  return _internal_map();
+}
+inline ::substrait::Expression_Nested_Map* Expression_Nested::unsafe_arena_release_map() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:substrait.Expression.Nested.map)
+  if (_internal_has_map()) {
+    clear_has_nested_type();
+    ::substrait::Expression_Nested_Map* temp = nested_type_.map_;
+    nested_type_.map_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void Expression_Nested::unsafe_arena_set_allocated_map(::substrait::Expression_Nested_Map* map) {
+  clear_nested_type();
+  if (map) {
+    set_has_map();
+    nested_type_.map_ = map;
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:substrait.Expression.Nested.map)
+}
+inline ::substrait::Expression_Nested_Map* Expression_Nested::_internal_mutable_map() {
+  if (!_internal_has_map()) {
+    clear_nested_type();
+    set_has_map();
+    nested_type_.map_ = CreateMaybeMessage< ::substrait::Expression_Nested_Map >(GetArenaForAllocation());
+  }
+  return nested_type_.map_;
+}
+inline ::substrait::Expression_Nested_Map* Expression_Nested::mutable_map() {
+  ::substrait::Expression_Nested_Map* _msg = _internal_mutable_map();
+  // @@protoc_insertion_point(field_mutable:substrait.Expression.Nested.map)
+  return _msg;
+}
+
+inline bool Expression_Nested::has_nested_type() const {
+  return nested_type_case() != NESTED_TYPE_NOT_SET;
+}
+inline void Expression_Nested::clear_has_nested_type() {
+  _oneof_case_[0] = NESTED_TYPE_NOT_SET;
+}
+inline Expression_Nested::NestedTypeCase Expression_Nested::nested_type_case() const {
+  return Expression_Nested::NestedTypeCase(_oneof_case_[0]);
+}
+// -------------------------------------------------------------------
+
 // Expression_ScalarFunction
 
 // uint32 function_reference = 1;
@@ -31330,6 +37615,46 @@ inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::FunctionArg
 Expression_ScalarFunction::arguments() const {
   // @@protoc_insertion_point(field_list:substrait.Expression.ScalarFunction.arguments)
   return arguments_;
+}
+
+// repeated .substrait.FunctionOption options = 5;
+inline int Expression_ScalarFunction::_internal_options_size() const {
+  return options_.size();
+}
+inline int Expression_ScalarFunction::options_size() const {
+  return _internal_options_size();
+}
+inline void Expression_ScalarFunction::clear_options() {
+  options_.Clear();
+}
+inline ::substrait::FunctionOption* Expression_ScalarFunction::mutable_options(int index) {
+  // @@protoc_insertion_point(field_mutable:substrait.Expression.ScalarFunction.options)
+  return options_.Mutable(index);
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::FunctionOption >*
+Expression_ScalarFunction::mutable_options() {
+  // @@protoc_insertion_point(field_mutable_list:substrait.Expression.ScalarFunction.options)
+  return &options_;
+}
+inline const ::substrait::FunctionOption& Expression_ScalarFunction::_internal_options(int index) const {
+  return options_.Get(index);
+}
+inline const ::substrait::FunctionOption& Expression_ScalarFunction::options(int index) const {
+  // @@protoc_insertion_point(field_get:substrait.Expression.ScalarFunction.options)
+  return _internal_options(index);
+}
+inline ::substrait::FunctionOption* Expression_ScalarFunction::_internal_add_options() {
+  return options_.Add();
+}
+inline ::substrait::FunctionOption* Expression_ScalarFunction::add_options() {
+  ::substrait::FunctionOption* _add = _internal_add_options();
+  // @@protoc_insertion_point(field_add:substrait.Expression.ScalarFunction.options)
+  return _add;
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::FunctionOption >&
+Expression_ScalarFunction::options() const {
+  // @@protoc_insertion_point(field_list:substrait.Expression.ScalarFunction.options)
+  return options_;
 }
 
 // .substrait.Type output_type = 3;
@@ -31847,44 +38172,190 @@ inline void Expression_WindowFunction::set_function_reference(uint32_t value) {
   // @@protoc_insertion_point(field_set:substrait.Expression.WindowFunction.function_reference)
 }
 
-// repeated .substrait.Expression partitions = 2;
-inline int Expression_WindowFunction::_internal_partitions_size() const {
-  return partitions_.size();
+// repeated .substrait.FunctionArgument arguments = 9;
+inline int Expression_WindowFunction::_internal_arguments_size() const {
+  return arguments_.size();
 }
-inline int Expression_WindowFunction::partitions_size() const {
-  return _internal_partitions_size();
+inline int Expression_WindowFunction::arguments_size() const {
+  return _internal_arguments_size();
 }
-inline void Expression_WindowFunction::clear_partitions() {
-  partitions_.Clear();
+inline void Expression_WindowFunction::clear_arguments() {
+  arguments_.Clear();
 }
-inline ::substrait::Expression* Expression_WindowFunction::mutable_partitions(int index) {
-  // @@protoc_insertion_point(field_mutable:substrait.Expression.WindowFunction.partitions)
-  return partitions_.Mutable(index);
+inline ::substrait::FunctionArgument* Expression_WindowFunction::mutable_arguments(int index) {
+  // @@protoc_insertion_point(field_mutable:substrait.Expression.WindowFunction.arguments)
+  return arguments_.Mutable(index);
 }
-inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Expression >*
-Expression_WindowFunction::mutable_partitions() {
-  // @@protoc_insertion_point(field_mutable_list:substrait.Expression.WindowFunction.partitions)
-  return &partitions_;
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::FunctionArgument >*
+Expression_WindowFunction::mutable_arguments() {
+  // @@protoc_insertion_point(field_mutable_list:substrait.Expression.WindowFunction.arguments)
+  return &arguments_;
 }
-inline const ::substrait::Expression& Expression_WindowFunction::_internal_partitions(int index) const {
-  return partitions_.Get(index);
+inline const ::substrait::FunctionArgument& Expression_WindowFunction::_internal_arguments(int index) const {
+  return arguments_.Get(index);
 }
-inline const ::substrait::Expression& Expression_WindowFunction::partitions(int index) const {
-  // @@protoc_insertion_point(field_get:substrait.Expression.WindowFunction.partitions)
-  return _internal_partitions(index);
+inline const ::substrait::FunctionArgument& Expression_WindowFunction::arguments(int index) const {
+  // @@protoc_insertion_point(field_get:substrait.Expression.WindowFunction.arguments)
+  return _internal_arguments(index);
 }
-inline ::substrait::Expression* Expression_WindowFunction::_internal_add_partitions() {
-  return partitions_.Add();
+inline ::substrait::FunctionArgument* Expression_WindowFunction::_internal_add_arguments() {
+  return arguments_.Add();
 }
-inline ::substrait::Expression* Expression_WindowFunction::add_partitions() {
-  ::substrait::Expression* _add = _internal_add_partitions();
-  // @@protoc_insertion_point(field_add:substrait.Expression.WindowFunction.partitions)
+inline ::substrait::FunctionArgument* Expression_WindowFunction::add_arguments() {
+  ::substrait::FunctionArgument* _add = _internal_add_arguments();
+  // @@protoc_insertion_point(field_add:substrait.Expression.WindowFunction.arguments)
   return _add;
 }
-inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Expression >&
-Expression_WindowFunction::partitions() const {
-  // @@protoc_insertion_point(field_list:substrait.Expression.WindowFunction.partitions)
-  return partitions_;
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::FunctionArgument >&
+Expression_WindowFunction::arguments() const {
+  // @@protoc_insertion_point(field_list:substrait.Expression.WindowFunction.arguments)
+  return arguments_;
+}
+
+// repeated .substrait.FunctionOption options = 11;
+inline int Expression_WindowFunction::_internal_options_size() const {
+  return options_.size();
+}
+inline int Expression_WindowFunction::options_size() const {
+  return _internal_options_size();
+}
+inline void Expression_WindowFunction::clear_options() {
+  options_.Clear();
+}
+inline ::substrait::FunctionOption* Expression_WindowFunction::mutable_options(int index) {
+  // @@protoc_insertion_point(field_mutable:substrait.Expression.WindowFunction.options)
+  return options_.Mutable(index);
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::FunctionOption >*
+Expression_WindowFunction::mutable_options() {
+  // @@protoc_insertion_point(field_mutable_list:substrait.Expression.WindowFunction.options)
+  return &options_;
+}
+inline const ::substrait::FunctionOption& Expression_WindowFunction::_internal_options(int index) const {
+  return options_.Get(index);
+}
+inline const ::substrait::FunctionOption& Expression_WindowFunction::options(int index) const {
+  // @@protoc_insertion_point(field_get:substrait.Expression.WindowFunction.options)
+  return _internal_options(index);
+}
+inline ::substrait::FunctionOption* Expression_WindowFunction::_internal_add_options() {
+  return options_.Add();
+}
+inline ::substrait::FunctionOption* Expression_WindowFunction::add_options() {
+  ::substrait::FunctionOption* _add = _internal_add_options();
+  // @@protoc_insertion_point(field_add:substrait.Expression.WindowFunction.options)
+  return _add;
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::FunctionOption >&
+Expression_WindowFunction::options() const {
+  // @@protoc_insertion_point(field_list:substrait.Expression.WindowFunction.options)
+  return options_;
+}
+
+// .substrait.Type output_type = 7;
+inline bool Expression_WindowFunction::_internal_has_output_type() const {
+  return this != internal_default_instance() && output_type_ != nullptr;
+}
+inline bool Expression_WindowFunction::has_output_type() const {
+  return _internal_has_output_type();
+}
+inline const ::substrait::Type& Expression_WindowFunction::_internal_output_type() const {
+  const ::substrait::Type* p = output_type_;
+  return p != nullptr ? *p : reinterpret_cast<const ::substrait::Type&>(
+      ::substrait::_Type_default_instance_);
+}
+inline const ::substrait::Type& Expression_WindowFunction::output_type() const {
+  // @@protoc_insertion_point(field_get:substrait.Expression.WindowFunction.output_type)
+  return _internal_output_type();
+}
+inline void Expression_WindowFunction::unsafe_arena_set_allocated_output_type(
+    ::substrait::Type* output_type) {
+  if (GetArenaForAllocation() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(output_type_);
+  }
+  output_type_ = output_type;
+  if (output_type) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:substrait.Expression.WindowFunction.output_type)
+}
+inline ::substrait::Type* Expression_WindowFunction::release_output_type() {
+  
+  ::substrait::Type* temp = output_type_;
+  output_type_ = nullptr;
+#ifdef PROTOBUF_FORCE_COPY_IN_RELEASE
+  auto* old =  reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(temp);
+  temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  if (GetArenaForAllocation() == nullptr) { delete old; }
+#else  // PROTOBUF_FORCE_COPY_IN_RELEASE
+  if (GetArenaForAllocation() != nullptr) {
+    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  }
+#endif  // !PROTOBUF_FORCE_COPY_IN_RELEASE
+  return temp;
+}
+inline ::substrait::Type* Expression_WindowFunction::unsafe_arena_release_output_type() {
+  // @@protoc_insertion_point(field_release:substrait.Expression.WindowFunction.output_type)
+  
+  ::substrait::Type* temp = output_type_;
+  output_type_ = nullptr;
+  return temp;
+}
+inline ::substrait::Type* Expression_WindowFunction::_internal_mutable_output_type() {
+  
+  if (output_type_ == nullptr) {
+    auto* p = CreateMaybeMessage<::substrait::Type>(GetArenaForAllocation());
+    output_type_ = p;
+  }
+  return output_type_;
+}
+inline ::substrait::Type* Expression_WindowFunction::mutable_output_type() {
+  ::substrait::Type* _msg = _internal_mutable_output_type();
+  // @@protoc_insertion_point(field_mutable:substrait.Expression.WindowFunction.output_type)
+  return _msg;
+}
+inline void Expression_WindowFunction::set_allocated_output_type(::substrait::Type* output_type) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
+  if (message_arena == nullptr) {
+    delete reinterpret_cast< ::PROTOBUF_NAMESPACE_ID::MessageLite*>(output_type_);
+  }
+  if (output_type) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+        ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper<
+            ::PROTOBUF_NAMESPACE_ID::MessageLite>::GetOwningArena(
+                reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(output_type));
+    if (message_arena != submessage_arena) {
+      output_type = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, output_type, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  output_type_ = output_type;
+  // @@protoc_insertion_point(field_set_allocated:substrait.Expression.WindowFunction.output_type)
+}
+
+// .substrait.AggregationPhase phase = 6;
+inline void Expression_WindowFunction::clear_phase() {
+  phase_ = 0;
+}
+inline ::substrait::AggregationPhase Expression_WindowFunction::_internal_phase() const {
+  return static_cast< ::substrait::AggregationPhase >(phase_);
+}
+inline ::substrait::AggregationPhase Expression_WindowFunction::phase() const {
+  // @@protoc_insertion_point(field_get:substrait.Expression.WindowFunction.phase)
+  return _internal_phase();
+}
+inline void Expression_WindowFunction::_internal_set_phase(::substrait::AggregationPhase value) {
+  
+  phase_ = value;
+}
+inline void Expression_WindowFunction::set_phase(::substrait::AggregationPhase value) {
+  _internal_set_phase(value);
+  // @@protoc_insertion_point(field_set:substrait.Expression.WindowFunction.phase)
 }
 
 // repeated .substrait.SortField sorts = 3;
@@ -31927,94 +38398,64 @@ Expression_WindowFunction::sorts() const {
   return sorts_;
 }
 
-// .substrait.Expression.WindowFunction.Bound upper_bound = 4;
-inline bool Expression_WindowFunction::_internal_has_upper_bound() const {
-  return this != internal_default_instance() && upper_bound_ != nullptr;
+// .substrait.AggregateFunction.AggregationInvocation invocation = 10;
+inline void Expression_WindowFunction::clear_invocation() {
+  invocation_ = 0;
 }
-inline bool Expression_WindowFunction::has_upper_bound() const {
-  return _internal_has_upper_bound();
+inline ::substrait::AggregateFunction_AggregationInvocation Expression_WindowFunction::_internal_invocation() const {
+  return static_cast< ::substrait::AggregateFunction_AggregationInvocation >(invocation_);
 }
-inline void Expression_WindowFunction::clear_upper_bound() {
-  if (GetArenaForAllocation() == nullptr && upper_bound_ != nullptr) {
-    delete upper_bound_;
-  }
-  upper_bound_ = nullptr;
+inline ::substrait::AggregateFunction_AggregationInvocation Expression_WindowFunction::invocation() const {
+  // @@protoc_insertion_point(field_get:substrait.Expression.WindowFunction.invocation)
+  return _internal_invocation();
 }
-inline const ::substrait::Expression_WindowFunction_Bound& Expression_WindowFunction::_internal_upper_bound() const {
-  const ::substrait::Expression_WindowFunction_Bound* p = upper_bound_;
-  return p != nullptr ? *p : reinterpret_cast<const ::substrait::Expression_WindowFunction_Bound&>(
-      ::substrait::_Expression_WindowFunction_Bound_default_instance_);
-}
-inline const ::substrait::Expression_WindowFunction_Bound& Expression_WindowFunction::upper_bound() const {
-  // @@protoc_insertion_point(field_get:substrait.Expression.WindowFunction.upper_bound)
-  return _internal_upper_bound();
-}
-inline void Expression_WindowFunction::unsafe_arena_set_allocated_upper_bound(
-    ::substrait::Expression_WindowFunction_Bound* upper_bound) {
-  if (GetArenaForAllocation() == nullptr) {
-    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(upper_bound_);
-  }
-  upper_bound_ = upper_bound;
-  if (upper_bound) {
-    
-  } else {
-    
-  }
-  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:substrait.Expression.WindowFunction.upper_bound)
-}
-inline ::substrait::Expression_WindowFunction_Bound* Expression_WindowFunction::release_upper_bound() {
+inline void Expression_WindowFunction::_internal_set_invocation(::substrait::AggregateFunction_AggregationInvocation value) {
   
-  ::substrait::Expression_WindowFunction_Bound* temp = upper_bound_;
-  upper_bound_ = nullptr;
-#ifdef PROTOBUF_FORCE_COPY_IN_RELEASE
-  auto* old =  reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(temp);
-  temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
-  if (GetArenaForAllocation() == nullptr) { delete old; }
-#else  // PROTOBUF_FORCE_COPY_IN_RELEASE
-  if (GetArenaForAllocation() != nullptr) {
-    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
-  }
-#endif  // !PROTOBUF_FORCE_COPY_IN_RELEASE
-  return temp;
+  invocation_ = value;
 }
-inline ::substrait::Expression_WindowFunction_Bound* Expression_WindowFunction::unsafe_arena_release_upper_bound() {
-  // @@protoc_insertion_point(field_release:substrait.Expression.WindowFunction.upper_bound)
-  
-  ::substrait::Expression_WindowFunction_Bound* temp = upper_bound_;
-  upper_bound_ = nullptr;
-  return temp;
+inline void Expression_WindowFunction::set_invocation(::substrait::AggregateFunction_AggregationInvocation value) {
+  _internal_set_invocation(value);
+  // @@protoc_insertion_point(field_set:substrait.Expression.WindowFunction.invocation)
 }
-inline ::substrait::Expression_WindowFunction_Bound* Expression_WindowFunction::_internal_mutable_upper_bound() {
-  
-  if (upper_bound_ == nullptr) {
-    auto* p = CreateMaybeMessage<::substrait::Expression_WindowFunction_Bound>(GetArenaForAllocation());
-    upper_bound_ = p;
-  }
-  return upper_bound_;
+
+// repeated .substrait.Expression partitions = 2;
+inline int Expression_WindowFunction::_internal_partitions_size() const {
+  return partitions_.size();
 }
-inline ::substrait::Expression_WindowFunction_Bound* Expression_WindowFunction::mutable_upper_bound() {
-  ::substrait::Expression_WindowFunction_Bound* _msg = _internal_mutable_upper_bound();
-  // @@protoc_insertion_point(field_mutable:substrait.Expression.WindowFunction.upper_bound)
-  return _msg;
+inline int Expression_WindowFunction::partitions_size() const {
+  return _internal_partitions_size();
 }
-inline void Expression_WindowFunction::set_allocated_upper_bound(::substrait::Expression_WindowFunction_Bound* upper_bound) {
-  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
-  if (message_arena == nullptr) {
-    delete upper_bound_;
-  }
-  if (upper_bound) {
-    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
-        ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper<::substrait::Expression_WindowFunction_Bound>::GetOwningArena(upper_bound);
-    if (message_arena != submessage_arena) {
-      upper_bound = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
-          message_arena, upper_bound, submessage_arena);
-    }
-    
-  } else {
-    
-  }
-  upper_bound_ = upper_bound;
-  // @@protoc_insertion_point(field_set_allocated:substrait.Expression.WindowFunction.upper_bound)
+inline void Expression_WindowFunction::clear_partitions() {
+  partitions_.Clear();
+}
+inline ::substrait::Expression* Expression_WindowFunction::mutable_partitions(int index) {
+  // @@protoc_insertion_point(field_mutable:substrait.Expression.WindowFunction.partitions)
+  return partitions_.Mutable(index);
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Expression >*
+Expression_WindowFunction::mutable_partitions() {
+  // @@protoc_insertion_point(field_mutable_list:substrait.Expression.WindowFunction.partitions)
+  return &partitions_;
+}
+inline const ::substrait::Expression& Expression_WindowFunction::_internal_partitions(int index) const {
+  return partitions_.Get(index);
+}
+inline const ::substrait::Expression& Expression_WindowFunction::partitions(int index) const {
+  // @@protoc_insertion_point(field_get:substrait.Expression.WindowFunction.partitions)
+  return _internal_partitions(index);
+}
+inline ::substrait::Expression* Expression_WindowFunction::_internal_add_partitions() {
+  return partitions_.Add();
+}
+inline ::substrait::Expression* Expression_WindowFunction::add_partitions() {
+  ::substrait::Expression* _add = _internal_add_partitions();
+  // @@protoc_insertion_point(field_add:substrait.Expression.WindowFunction.partitions)
+  return _add;
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Expression >&
+Expression_WindowFunction::partitions() const {
+  // @@protoc_insertion_point(field_list:substrait.Expression.WindowFunction.partitions)
+  return partitions_;
 }
 
 // .substrait.Expression.WindowFunction.Bound lower_bound = 5;
@@ -32107,59 +38548,45 @@ inline void Expression_WindowFunction::set_allocated_lower_bound(::substrait::Ex
   // @@protoc_insertion_point(field_set_allocated:substrait.Expression.WindowFunction.lower_bound)
 }
 
-// .substrait.AggregationPhase phase = 6;
-inline void Expression_WindowFunction::clear_phase() {
-  phase_ = 0;
+// .substrait.Expression.WindowFunction.Bound upper_bound = 4;
+inline bool Expression_WindowFunction::_internal_has_upper_bound() const {
+  return this != internal_default_instance() && upper_bound_ != nullptr;
 }
-inline ::substrait::AggregationPhase Expression_WindowFunction::_internal_phase() const {
-  return static_cast< ::substrait::AggregationPhase >(phase_);
+inline bool Expression_WindowFunction::has_upper_bound() const {
+  return _internal_has_upper_bound();
 }
-inline ::substrait::AggregationPhase Expression_WindowFunction::phase() const {
-  // @@protoc_insertion_point(field_get:substrait.Expression.WindowFunction.phase)
-  return _internal_phase();
-}
-inline void Expression_WindowFunction::_internal_set_phase(::substrait::AggregationPhase value) {
-  
-  phase_ = value;
-}
-inline void Expression_WindowFunction::set_phase(::substrait::AggregationPhase value) {
-  _internal_set_phase(value);
-  // @@protoc_insertion_point(field_set:substrait.Expression.WindowFunction.phase)
-}
-
-// .substrait.Type output_type = 7;
-inline bool Expression_WindowFunction::_internal_has_output_type() const {
-  return this != internal_default_instance() && output_type_ != nullptr;
-}
-inline bool Expression_WindowFunction::has_output_type() const {
-  return _internal_has_output_type();
-}
-inline const ::substrait::Type& Expression_WindowFunction::_internal_output_type() const {
-  const ::substrait::Type* p = output_type_;
-  return p != nullptr ? *p : reinterpret_cast<const ::substrait::Type&>(
-      ::substrait::_Type_default_instance_);
-}
-inline const ::substrait::Type& Expression_WindowFunction::output_type() const {
-  // @@protoc_insertion_point(field_get:substrait.Expression.WindowFunction.output_type)
-  return _internal_output_type();
-}
-inline void Expression_WindowFunction::unsafe_arena_set_allocated_output_type(
-    ::substrait::Type* output_type) {
-  if (GetArenaForAllocation() == nullptr) {
-    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(output_type_);
+inline void Expression_WindowFunction::clear_upper_bound() {
+  if (GetArenaForAllocation() == nullptr && upper_bound_ != nullptr) {
+    delete upper_bound_;
   }
-  output_type_ = output_type;
-  if (output_type) {
+  upper_bound_ = nullptr;
+}
+inline const ::substrait::Expression_WindowFunction_Bound& Expression_WindowFunction::_internal_upper_bound() const {
+  const ::substrait::Expression_WindowFunction_Bound* p = upper_bound_;
+  return p != nullptr ? *p : reinterpret_cast<const ::substrait::Expression_WindowFunction_Bound&>(
+      ::substrait::_Expression_WindowFunction_Bound_default_instance_);
+}
+inline const ::substrait::Expression_WindowFunction_Bound& Expression_WindowFunction::upper_bound() const {
+  // @@protoc_insertion_point(field_get:substrait.Expression.WindowFunction.upper_bound)
+  return _internal_upper_bound();
+}
+inline void Expression_WindowFunction::unsafe_arena_set_allocated_upper_bound(
+    ::substrait::Expression_WindowFunction_Bound* upper_bound) {
+  if (GetArenaForAllocation() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(upper_bound_);
+  }
+  upper_bound_ = upper_bound;
+  if (upper_bound) {
     
   } else {
     
   }
-  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:substrait.Expression.WindowFunction.output_type)
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:substrait.Expression.WindowFunction.upper_bound)
 }
-inline ::substrait::Type* Expression_WindowFunction::release_output_type() {
+inline ::substrait::Expression_WindowFunction_Bound* Expression_WindowFunction::release_upper_bound() {
   
-  ::substrait::Type* temp = output_type_;
-  output_type_ = nullptr;
+  ::substrait::Expression_WindowFunction_Bound* temp = upper_bound_;
+  upper_bound_ = nullptr;
 #ifdef PROTOBUF_FORCE_COPY_IN_RELEASE
   auto* old =  reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(temp);
   temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
@@ -32171,86 +38598,44 @@ inline ::substrait::Type* Expression_WindowFunction::release_output_type() {
 #endif  // !PROTOBUF_FORCE_COPY_IN_RELEASE
   return temp;
 }
-inline ::substrait::Type* Expression_WindowFunction::unsafe_arena_release_output_type() {
-  // @@protoc_insertion_point(field_release:substrait.Expression.WindowFunction.output_type)
+inline ::substrait::Expression_WindowFunction_Bound* Expression_WindowFunction::unsafe_arena_release_upper_bound() {
+  // @@protoc_insertion_point(field_release:substrait.Expression.WindowFunction.upper_bound)
   
-  ::substrait::Type* temp = output_type_;
-  output_type_ = nullptr;
+  ::substrait::Expression_WindowFunction_Bound* temp = upper_bound_;
+  upper_bound_ = nullptr;
   return temp;
 }
-inline ::substrait::Type* Expression_WindowFunction::_internal_mutable_output_type() {
+inline ::substrait::Expression_WindowFunction_Bound* Expression_WindowFunction::_internal_mutable_upper_bound() {
   
-  if (output_type_ == nullptr) {
-    auto* p = CreateMaybeMessage<::substrait::Type>(GetArenaForAllocation());
-    output_type_ = p;
+  if (upper_bound_ == nullptr) {
+    auto* p = CreateMaybeMessage<::substrait::Expression_WindowFunction_Bound>(GetArenaForAllocation());
+    upper_bound_ = p;
   }
-  return output_type_;
+  return upper_bound_;
 }
-inline ::substrait::Type* Expression_WindowFunction::mutable_output_type() {
-  ::substrait::Type* _msg = _internal_mutable_output_type();
-  // @@protoc_insertion_point(field_mutable:substrait.Expression.WindowFunction.output_type)
+inline ::substrait::Expression_WindowFunction_Bound* Expression_WindowFunction::mutable_upper_bound() {
+  ::substrait::Expression_WindowFunction_Bound* _msg = _internal_mutable_upper_bound();
+  // @@protoc_insertion_point(field_mutable:substrait.Expression.WindowFunction.upper_bound)
   return _msg;
 }
-inline void Expression_WindowFunction::set_allocated_output_type(::substrait::Type* output_type) {
+inline void Expression_WindowFunction::set_allocated_upper_bound(::substrait::Expression_WindowFunction_Bound* upper_bound) {
   ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
   if (message_arena == nullptr) {
-    delete reinterpret_cast< ::PROTOBUF_NAMESPACE_ID::MessageLite*>(output_type_);
+    delete upper_bound_;
   }
-  if (output_type) {
+  if (upper_bound) {
     ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
-        ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper<
-            ::PROTOBUF_NAMESPACE_ID::MessageLite>::GetOwningArena(
-                reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(output_type));
+        ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper<::substrait::Expression_WindowFunction_Bound>::GetOwningArena(upper_bound);
     if (message_arena != submessage_arena) {
-      output_type = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
-          message_arena, output_type, submessage_arena);
+      upper_bound = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, upper_bound, submessage_arena);
     }
     
   } else {
     
   }
-  output_type_ = output_type;
-  // @@protoc_insertion_point(field_set_allocated:substrait.Expression.WindowFunction.output_type)
-}
-
-// repeated .substrait.FunctionArgument arguments = 9;
-inline int Expression_WindowFunction::_internal_arguments_size() const {
-  return arguments_.size();
-}
-inline int Expression_WindowFunction::arguments_size() const {
-  return _internal_arguments_size();
-}
-inline void Expression_WindowFunction::clear_arguments() {
-  arguments_.Clear();
-}
-inline ::substrait::FunctionArgument* Expression_WindowFunction::mutable_arguments(int index) {
-  // @@protoc_insertion_point(field_mutable:substrait.Expression.WindowFunction.arguments)
-  return arguments_.Mutable(index);
-}
-inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::FunctionArgument >*
-Expression_WindowFunction::mutable_arguments() {
-  // @@protoc_insertion_point(field_mutable_list:substrait.Expression.WindowFunction.arguments)
-  return &arguments_;
-}
-inline const ::substrait::FunctionArgument& Expression_WindowFunction::_internal_arguments(int index) const {
-  return arguments_.Get(index);
-}
-inline const ::substrait::FunctionArgument& Expression_WindowFunction::arguments(int index) const {
-  // @@protoc_insertion_point(field_get:substrait.Expression.WindowFunction.arguments)
-  return _internal_arguments(index);
-}
-inline ::substrait::FunctionArgument* Expression_WindowFunction::_internal_add_arguments() {
-  return arguments_.Add();
-}
-inline ::substrait::FunctionArgument* Expression_WindowFunction::add_arguments() {
-  ::substrait::FunctionArgument* _add = _internal_add_arguments();
-  // @@protoc_insertion_point(field_add:substrait.Expression.WindowFunction.arguments)
-  return _add;
-}
-inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::FunctionArgument >&
-Expression_WindowFunction::arguments() const {
-  // @@protoc_insertion_point(field_list:substrait.Expression.WindowFunction.arguments)
-  return arguments_;
+  upper_bound_ = upper_bound;
+  // @@protoc_insertion_point(field_set_allocated:substrait.Expression.WindowFunction.upper_bound)
 }
 
 // repeated .substrait.Expression args = 8 [deprecated = true];
@@ -37945,6 +44330,80 @@ inline ::substrait::Expression_Subquery* Expression::mutable_subquery() {
   return _msg;
 }
 
+// .substrait.Expression.Nested nested = 13;
+inline bool Expression::_internal_has_nested() const {
+  return rex_type_case() == kNested;
+}
+inline bool Expression::has_nested() const {
+  return _internal_has_nested();
+}
+inline void Expression::set_has_nested() {
+  _oneof_case_[0] = kNested;
+}
+inline void Expression::clear_nested() {
+  if (_internal_has_nested()) {
+    if (GetArenaForAllocation() == nullptr) {
+      delete rex_type_.nested_;
+    }
+    clear_has_rex_type();
+  }
+}
+inline ::substrait::Expression_Nested* Expression::release_nested() {
+  // @@protoc_insertion_point(field_release:substrait.Expression.nested)
+  if (_internal_has_nested()) {
+    clear_has_rex_type();
+      ::substrait::Expression_Nested* temp = rex_type_.nested_;
+    if (GetArenaForAllocation() != nullptr) {
+      temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+    }
+    rex_type_.nested_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::substrait::Expression_Nested& Expression::_internal_nested() const {
+  return _internal_has_nested()
+      ? *rex_type_.nested_
+      : reinterpret_cast< ::substrait::Expression_Nested&>(::substrait::_Expression_Nested_default_instance_);
+}
+inline const ::substrait::Expression_Nested& Expression::nested() const {
+  // @@protoc_insertion_point(field_get:substrait.Expression.nested)
+  return _internal_nested();
+}
+inline ::substrait::Expression_Nested* Expression::unsafe_arena_release_nested() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:substrait.Expression.nested)
+  if (_internal_has_nested()) {
+    clear_has_rex_type();
+    ::substrait::Expression_Nested* temp = rex_type_.nested_;
+    rex_type_.nested_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void Expression::unsafe_arena_set_allocated_nested(::substrait::Expression_Nested* nested) {
+  clear_rex_type();
+  if (nested) {
+    set_has_nested();
+    rex_type_.nested_ = nested;
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:substrait.Expression.nested)
+}
+inline ::substrait::Expression_Nested* Expression::_internal_mutable_nested() {
+  if (!_internal_has_nested()) {
+    clear_rex_type();
+    set_has_nested();
+    rex_type_.nested_ = CreateMaybeMessage< ::substrait::Expression_Nested >(GetArenaForAllocation());
+  }
+  return rex_type_.nested_;
+}
+inline ::substrait::Expression_Nested* Expression::mutable_nested() {
+  ::substrait::Expression_Nested* _msg = _internal_mutable_nested();
+  // @@protoc_insertion_point(field_mutable:substrait.Expression.nested)
+  return _msg;
+}
+
 // .substrait.Expression.Enum enum = 10 [deprecated = true];
 inline bool Expression::_internal_has_enum_() const {
   return rex_type_case() == kEnum;
@@ -38209,6 +44668,30 @@ inline SortField::SortKindCase SortField::sort_kind_case() const {
 }
 // -------------------------------------------------------------------
 
+// AggregateFunction_ReferenceRel
+
+// int32 subtree_ordinal = 1;
+inline void AggregateFunction_ReferenceRel::clear_subtree_ordinal() {
+  subtree_ordinal_ = 0;
+}
+inline int32_t AggregateFunction_ReferenceRel::_internal_subtree_ordinal() const {
+  return subtree_ordinal_;
+}
+inline int32_t AggregateFunction_ReferenceRel::subtree_ordinal() const {
+  // @@protoc_insertion_point(field_get:substrait.AggregateFunction.ReferenceRel.subtree_ordinal)
+  return _internal_subtree_ordinal();
+}
+inline void AggregateFunction_ReferenceRel::_internal_set_subtree_ordinal(int32_t value) {
+  
+  subtree_ordinal_ = value;
+}
+inline void AggregateFunction_ReferenceRel::set_subtree_ordinal(int32_t value) {
+  _internal_set_subtree_ordinal(value);
+  // @@protoc_insertion_point(field_set:substrait.AggregateFunction.ReferenceRel.subtree_ordinal)
+}
+
+// -------------------------------------------------------------------
+
 // AggregateFunction
 
 // uint32 function_reference = 1;
@@ -38271,64 +44754,44 @@ AggregateFunction::arguments() const {
   return arguments_;
 }
 
-// repeated .substrait.SortField sorts = 3;
-inline int AggregateFunction::_internal_sorts_size() const {
-  return sorts_.size();
+// repeated .substrait.FunctionOption options = 8;
+inline int AggregateFunction::_internal_options_size() const {
+  return options_.size();
 }
-inline int AggregateFunction::sorts_size() const {
-  return _internal_sorts_size();
+inline int AggregateFunction::options_size() const {
+  return _internal_options_size();
 }
-inline void AggregateFunction::clear_sorts() {
-  sorts_.Clear();
+inline void AggregateFunction::clear_options() {
+  options_.Clear();
 }
-inline ::substrait::SortField* AggregateFunction::mutable_sorts(int index) {
-  // @@protoc_insertion_point(field_mutable:substrait.AggregateFunction.sorts)
-  return sorts_.Mutable(index);
+inline ::substrait::FunctionOption* AggregateFunction::mutable_options(int index) {
+  // @@protoc_insertion_point(field_mutable:substrait.AggregateFunction.options)
+  return options_.Mutable(index);
 }
-inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::SortField >*
-AggregateFunction::mutable_sorts() {
-  // @@protoc_insertion_point(field_mutable_list:substrait.AggregateFunction.sorts)
-  return &sorts_;
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::FunctionOption >*
+AggregateFunction::mutable_options() {
+  // @@protoc_insertion_point(field_mutable_list:substrait.AggregateFunction.options)
+  return &options_;
 }
-inline const ::substrait::SortField& AggregateFunction::_internal_sorts(int index) const {
-  return sorts_.Get(index);
+inline const ::substrait::FunctionOption& AggregateFunction::_internal_options(int index) const {
+  return options_.Get(index);
 }
-inline const ::substrait::SortField& AggregateFunction::sorts(int index) const {
-  // @@protoc_insertion_point(field_get:substrait.AggregateFunction.sorts)
-  return _internal_sorts(index);
+inline const ::substrait::FunctionOption& AggregateFunction::options(int index) const {
+  // @@protoc_insertion_point(field_get:substrait.AggregateFunction.options)
+  return _internal_options(index);
 }
-inline ::substrait::SortField* AggregateFunction::_internal_add_sorts() {
-  return sorts_.Add();
+inline ::substrait::FunctionOption* AggregateFunction::_internal_add_options() {
+  return options_.Add();
 }
-inline ::substrait::SortField* AggregateFunction::add_sorts() {
-  ::substrait::SortField* _add = _internal_add_sorts();
-  // @@protoc_insertion_point(field_add:substrait.AggregateFunction.sorts)
+inline ::substrait::FunctionOption* AggregateFunction::add_options() {
+  ::substrait::FunctionOption* _add = _internal_add_options();
+  // @@protoc_insertion_point(field_add:substrait.AggregateFunction.options)
   return _add;
 }
-inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::SortField >&
-AggregateFunction::sorts() const {
-  // @@protoc_insertion_point(field_list:substrait.AggregateFunction.sorts)
-  return sorts_;
-}
-
-// .substrait.AggregationPhase phase = 4;
-inline void AggregateFunction::clear_phase() {
-  phase_ = 0;
-}
-inline ::substrait::AggregationPhase AggregateFunction::_internal_phase() const {
-  return static_cast< ::substrait::AggregationPhase >(phase_);
-}
-inline ::substrait::AggregationPhase AggregateFunction::phase() const {
-  // @@protoc_insertion_point(field_get:substrait.AggregateFunction.phase)
-  return _internal_phase();
-}
-inline void AggregateFunction::_internal_set_phase(::substrait::AggregationPhase value) {
-  
-  phase_ = value;
-}
-inline void AggregateFunction::set_phase(::substrait::AggregationPhase value) {
-  _internal_set_phase(value);
-  // @@protoc_insertion_point(field_set:substrait.AggregateFunction.phase)
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::FunctionOption >&
+AggregateFunction::options() const {
+  // @@protoc_insertion_point(field_list:substrait.AggregateFunction.options)
+  return options_;
 }
 
 // .substrait.Type output_type = 5;
@@ -38415,6 +44878,66 @@ inline void AggregateFunction::set_allocated_output_type(::substrait::Type* outp
   }
   output_type_ = output_type;
   // @@protoc_insertion_point(field_set_allocated:substrait.AggregateFunction.output_type)
+}
+
+// .substrait.AggregationPhase phase = 4;
+inline void AggregateFunction::clear_phase() {
+  phase_ = 0;
+}
+inline ::substrait::AggregationPhase AggregateFunction::_internal_phase() const {
+  return static_cast< ::substrait::AggregationPhase >(phase_);
+}
+inline ::substrait::AggregationPhase AggregateFunction::phase() const {
+  // @@protoc_insertion_point(field_get:substrait.AggregateFunction.phase)
+  return _internal_phase();
+}
+inline void AggregateFunction::_internal_set_phase(::substrait::AggregationPhase value) {
+  
+  phase_ = value;
+}
+inline void AggregateFunction::set_phase(::substrait::AggregationPhase value) {
+  _internal_set_phase(value);
+  // @@protoc_insertion_point(field_set:substrait.AggregateFunction.phase)
+}
+
+// repeated .substrait.SortField sorts = 3;
+inline int AggregateFunction::_internal_sorts_size() const {
+  return sorts_.size();
+}
+inline int AggregateFunction::sorts_size() const {
+  return _internal_sorts_size();
+}
+inline void AggregateFunction::clear_sorts() {
+  sorts_.Clear();
+}
+inline ::substrait::SortField* AggregateFunction::mutable_sorts(int index) {
+  // @@protoc_insertion_point(field_mutable:substrait.AggregateFunction.sorts)
+  return sorts_.Mutable(index);
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::SortField >*
+AggregateFunction::mutable_sorts() {
+  // @@protoc_insertion_point(field_mutable_list:substrait.AggregateFunction.sorts)
+  return &sorts_;
+}
+inline const ::substrait::SortField& AggregateFunction::_internal_sorts(int index) const {
+  return sorts_.Get(index);
+}
+inline const ::substrait::SortField& AggregateFunction::sorts(int index) const {
+  // @@protoc_insertion_point(field_get:substrait.AggregateFunction.sorts)
+  return _internal_sorts(index);
+}
+inline ::substrait::SortField* AggregateFunction::_internal_add_sorts() {
+  return sorts_.Add();
+}
+inline ::substrait::SortField* AggregateFunction::add_sorts() {
+  ::substrait::SortField* _add = _internal_add_sorts();
+  // @@protoc_insertion_point(field_add:substrait.AggregateFunction.sorts)
+  return _add;
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::SortField >&
+AggregateFunction::sorts() const {
+  // @@protoc_insertion_point(field_list:substrait.AggregateFunction.sorts)
+  return sorts_;
 }
 
 // .substrait.AggregateFunction.AggregationInvocation invocation = 6;
@@ -38668,6 +45191,32 @@ AggregateFunction::args() const {
 
 // -------------------------------------------------------------------
 
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
 
 // @@protoc_insertion_point(namespace_scope)
 
@@ -38684,6 +45233,36 @@ template <> struct is_proto_enum< ::substrait::SetRel_SetOp> : ::std::true_type 
 template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::substrait::SetRel_SetOp>() {
   return ::substrait::SetRel_SetOp_descriptor();
+}
+template <> struct is_proto_enum< ::substrait::DdlRel_DdlObject> : ::std::true_type {};
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::substrait::DdlRel_DdlObject>() {
+  return ::substrait::DdlRel_DdlObject_descriptor();
+}
+template <> struct is_proto_enum< ::substrait::DdlRel_DdlOp> : ::std::true_type {};
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::substrait::DdlRel_DdlOp>() {
+  return ::substrait::DdlRel_DdlOp_descriptor();
+}
+template <> struct is_proto_enum< ::substrait::WriteRel_WriteOp> : ::std::true_type {};
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::substrait::WriteRel_WriteOp>() {
+  return ::substrait::WriteRel_WriteOp_descriptor();
+}
+template <> struct is_proto_enum< ::substrait::WriteRel_OutputMode> : ::std::true_type {};
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::substrait::WriteRel_OutputMode>() {
+  return ::substrait::WriteRel_OutputMode_descriptor();
+}
+template <> struct is_proto_enum< ::substrait::HashJoinRel_JoinType> : ::std::true_type {};
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::substrait::HashJoinRel_JoinType>() {
+  return ::substrait::HashJoinRel_JoinType_descriptor();
+}
+template <> struct is_proto_enum< ::substrait::MergeJoinRel_JoinType> : ::std::true_type {};
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::substrait::MergeJoinRel_JoinType>() {
+  return ::substrait::MergeJoinRel_JoinType_descriptor();
 }
 template <> struct is_proto_enum< ::substrait::Expression_Cast_FailureBehavior> : ::std::true_type {};
 template <>

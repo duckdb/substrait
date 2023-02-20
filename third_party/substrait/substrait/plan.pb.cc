@@ -35,7 +35,8 @@ constexpr Plan::Plan(
   , extensions_()
   , relations_()
   , expected_type_urls_()
-  , advanced_extensions_(nullptr){}
+  , advanced_extensions_(nullptr)
+  , version_(nullptr){}
 struct PlanDefaultTypeInternal {
   constexpr PlanDefaultTypeInternal()
     : _instance(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized{}) {}
@@ -45,8 +46,36 @@ struct PlanDefaultTypeInternal {
   };
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PlanDefaultTypeInternal _Plan_default_instance_;
+constexpr PlanVersion::PlanVersion(
+  ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized)
+  : version_(nullptr){}
+struct PlanVersionDefaultTypeInternal {
+  constexpr PlanVersionDefaultTypeInternal()
+    : _instance(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized{}) {}
+  ~PlanVersionDefaultTypeInternal() {}
+  union {
+    PlanVersion _instance;
+  };
+};
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PlanVersionDefaultTypeInternal _PlanVersion_default_instance_;
+constexpr Version::Version(
+  ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized)
+  : git_hash_(&::PROTOBUF_NAMESPACE_ID::internal::fixed_address_empty_string)
+  , producer_(&::PROTOBUF_NAMESPACE_ID::internal::fixed_address_empty_string)
+  , major_number_(0u)
+  , minor_number_(0u)
+  , patch_number_(0u){}
+struct VersionDefaultTypeInternal {
+  constexpr VersionDefaultTypeInternal()
+    : _instance(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized{}) {}
+  ~VersionDefaultTypeInternal() {}
+  union {
+    Version _instance;
+  };
+};
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT VersionDefaultTypeInternal _Version_default_instance_;
 }  // namespace substrait
-static ::PROTOBUF_NAMESPACE_ID::Metadata file_level_metadata_substrait_2fplan_2eproto[2];
+static ::PROTOBUF_NAMESPACE_ID::Metadata file_level_metadata_substrait_2fplan_2eproto[4];
 static constexpr ::PROTOBUF_NAMESPACE_ID::EnumDescriptor const** file_level_enum_descriptors_substrait_2fplan_2eproto = nullptr;
 static constexpr ::PROTOBUF_NAMESPACE_ID::ServiceDescriptor const** file_level_service_descriptors_substrait_2fplan_2eproto = nullptr;
 
@@ -66,20 +95,43 @@ const uint32_t TableStruct_substrait_2fplan_2eproto::offsets[] PROTOBUF_SECTION_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
+  PROTOBUF_FIELD_OFFSET(::substrait::Plan, version_),
   PROTOBUF_FIELD_OFFSET(::substrait::Plan, extension_uris_),
   PROTOBUF_FIELD_OFFSET(::substrait::Plan, extensions_),
   PROTOBUF_FIELD_OFFSET(::substrait::Plan, relations_),
   PROTOBUF_FIELD_OFFSET(::substrait::Plan, advanced_extensions_),
   PROTOBUF_FIELD_OFFSET(::substrait::Plan, expected_type_urls_),
+  ~0u,  // no _has_bits_
+  PROTOBUF_FIELD_OFFSET(::substrait::PlanVersion, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  ~0u,  // no _inlined_string_donated_
+  PROTOBUF_FIELD_OFFSET(::substrait::PlanVersion, version_),
+  ~0u,  // no _has_bits_
+  PROTOBUF_FIELD_OFFSET(::substrait::Version, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  ~0u,  // no _inlined_string_donated_
+  PROTOBUF_FIELD_OFFSET(::substrait::Version, major_number_),
+  PROTOBUF_FIELD_OFFSET(::substrait::Version, minor_number_),
+  PROTOBUF_FIELD_OFFSET(::substrait::Version, patch_number_),
+  PROTOBUF_FIELD_OFFSET(::substrait::Version, git_hash_),
+  PROTOBUF_FIELD_OFFSET(::substrait::Version, producer_),
 };
 static const ::PROTOBUF_NAMESPACE_ID::internal::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
   { 0, -1, -1, sizeof(::substrait::PlanRel)},
   { 9, -1, -1, sizeof(::substrait::Plan)},
+  { 21, -1, -1, sizeof(::substrait::PlanVersion)},
+  { 28, -1, -1, sizeof(::substrait::Version)},
 };
 
 static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] = {
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::substrait::_PlanRel_default_instance_),
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::substrait::_Plan_default_instance_),
+  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::substrait::_PlanVersion_default_instance_),
+  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::substrait::_Version_default_instance_),
 };
 
 const char descriptor_table_protodef_substrait_2fplan_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) =
@@ -87,17 +139,22 @@ const char descriptor_table_protodef_substrait_2fplan_2eproto[] PROTOBUF_SECTION
   "rait/algebra.proto\032%substrait/extensions"
   "/extensions.proto\"X\n\007PlanRel\022\035\n\003rel\030\001 \001("
   "\0132\016.substrait.RelH\000\022\"\n\004root\030\002 \001(\0132\022.subs"
-  "trait.RelRootH\000B\n\n\010rel_type\"\227\002\n\004Plan\022@\n\016"
-  "extension_uris\030\001 \003(\0132(.substrait.extensi"
-  "ons.SimpleExtensionURI\022D\n\nextensions\030\002 \003"
-  "(\01320.substrait.extensions.SimpleExtensio"
-  "nDeclaration\022%\n\trelations\030\003 \003(\0132\022.substr"
-  "ait.PlanRel\022D\n\023advanced_extensions\030\004 \001(\013"
-  "2\'.substrait.extensions.AdvancedExtensio"
-  "n\022\032\n\022expected_type_urls\030\005 \003(\tBW\n\022io.subs"
-  "trait.protoP\001Z*github.com/substrait-io/s"
-  "ubstrait-go/proto\252\002\022Substrait.Protobufb\006"
-  "proto3"
+  "trait.RelRootH\000B\n\n\010rel_type\"\274\002\n\004Plan\022#\n\007"
+  "version\030\006 \001(\0132\022.substrait.Version\022@\n\016ext"
+  "ension_uris\030\001 \003(\0132(.substrait.extensions"
+  ".SimpleExtensionURI\022D\n\nextensions\030\002 \003(\0132"
+  "0.substrait.extensions.SimpleExtensionDe"
+  "claration\022%\n\trelations\030\003 \003(\0132\022.substrait"
+  ".PlanRel\022D\n\023advanced_extensions\030\004 \001(\0132\'."
+  "substrait.extensions.AdvancedExtension\022\032"
+  "\n\022expected_type_urls\030\005 \003(\t\"2\n\013PlanVersio"
+  "n\022#\n\007version\030\006 \001(\0132\022.substrait.Version\"o"
+  "\n\007Version\022\024\n\014major_number\030\001 \001(\r\022\024\n\014minor"
+  "_number\030\002 \001(\r\022\024\n\014patch_number\030\003 \001(\r\022\020\n\010g"
+  "it_hash\030\004 \001(\t\022\020\n\010producer\030\005 \001(\tBW\n\022io.su"
+  "bstrait.protoP\001Z*github.com/substrait-io"
+  "/substrait-go/proto\252\002\022Substrait.Protobuf"
+  "b\006proto3"
   ;
 static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor_table_substrait_2fplan_2eproto_deps[2] = {
   &::descriptor_table_substrait_2falgebra_2eproto,
@@ -105,8 +162,8 @@ static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor
 };
 static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_substrait_2fplan_2eproto_once;
 const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_substrait_2fplan_2eproto = {
-  false, false, 566, descriptor_table_protodef_substrait_2fplan_2eproto, "substrait/plan.proto", 
-  &descriptor_table_substrait_2fplan_2eproto_once, descriptor_table_substrait_2fplan_2eproto_deps, 2, 2,
+  false, false, 768, descriptor_table_protodef_substrait_2fplan_2eproto, "substrait/plan.proto", 
+  &descriptor_table_substrait_2fplan_2eproto_once, descriptor_table_substrait_2fplan_2eproto_deps, 2, 4,
   schemas, file_default_instances, TableStruct_substrait_2fplan_2eproto::offsets,
   file_level_metadata_substrait_2fplan_2eproto, file_level_enum_descriptors_substrait_2fplan_2eproto, file_level_service_descriptors_substrait_2fplan_2eproto,
 };
@@ -442,9 +499,14 @@ void PlanRel::InternalSwap(PlanRel* other) {
 
 class Plan::_Internal {
  public:
+  static const ::substrait::Version& version(const Plan* msg);
   static const ::substrait::extensions::AdvancedExtension& advanced_extensions(const Plan* msg);
 };
 
+const ::substrait::Version&
+Plan::_Internal::version(const Plan* msg) {
+  return *msg->version_;
+}
 const ::substrait::extensions::AdvancedExtension&
 Plan::_Internal::advanced_extensions(const Plan* msg) {
   return *msg->advanced_extensions_;
@@ -486,11 +548,19 @@ Plan::Plan(const Plan& from)
   } else {
     advanced_extensions_ = nullptr;
   }
+  if (from._internal_has_version()) {
+    version_ = new ::substrait::Version(*from.version_);
+  } else {
+    version_ = nullptr;
+  }
   // @@protoc_insertion_point(copy_constructor:substrait.Plan)
 }
 
 inline void Plan::SharedCtor() {
-advanced_extensions_ = nullptr;
+::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
+    reinterpret_cast<char*>(&advanced_extensions_) - reinterpret_cast<char*>(this)),
+    0, static_cast<size_t>(reinterpret_cast<char*>(&version_) -
+    reinterpret_cast<char*>(&advanced_extensions_)) + sizeof(version_));
 }
 
 Plan::~Plan() {
@@ -503,6 +573,7 @@ Plan::~Plan() {
 inline void Plan::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
   if (this != internal_default_instance()) delete advanced_extensions_;
+  if (this != internal_default_instance()) delete version_;
 }
 
 void Plan::ArenaDtor(void* object) {
@@ -529,6 +600,10 @@ void Plan::Clear() {
     delete advanced_extensions_;
   }
   advanced_extensions_ = nullptr;
+  if (GetArenaForAllocation() == nullptr && version_ != nullptr) {
+    delete version_;
+  }
+  version_ = nullptr;
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -597,6 +672,14 @@ const char* Plan::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::inter
             CHK_(ptr);
             if (!ctx->DataAvailable(ptr)) break;
           } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<42>(ptr));
+        } else
+          goto handle_unusual;
+        continue;
+      // .substrait.Version version = 6;
+      case 6:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 50)) {
+          ptr = ctx->ParseMessage(_internal_mutable_version(), ptr);
+          CHK_(ptr);
         } else
           goto handle_unusual;
         continue;
@@ -671,6 +754,14 @@ uint8_t* Plan::_InternalSerialize(
     target = stream->WriteString(5, s, target);
   }
 
+  // .substrait.Version version = 6;
+  if (this->_internal_has_version()) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+      InternalWriteMessage(
+        6, _Internal::version(this), target, stream);
+  }
+
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
@@ -723,6 +814,13 @@ size_t Plan::ByteSizeLong() const {
         *advanced_extensions_);
   }
 
+  // .substrait.Version version = 6;
+  if (this->_internal_has_version()) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
+        *version_);
+  }
+
   return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
 }
 
@@ -752,6 +850,9 @@ void Plan::MergeFrom(const Plan& from) {
   if (from._internal_has_advanced_extensions()) {
     _internal_mutable_advanced_extensions()->::substrait::extensions::AdvancedExtension::MergeFrom(from._internal_advanced_extensions());
   }
+  if (from._internal_has_version()) {
+    _internal_mutable_version()->::substrait::Version::MergeFrom(from._internal_version());
+  }
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
@@ -773,13 +874,547 @@ void Plan::InternalSwap(Plan* other) {
   extensions_.InternalSwap(&other->extensions_);
   relations_.InternalSwap(&other->relations_);
   expected_type_urls_.InternalSwap(&other->expected_type_urls_);
-  swap(advanced_extensions_, other->advanced_extensions_);
+  ::PROTOBUF_NAMESPACE_ID::internal::memswap<
+      PROTOBUF_FIELD_OFFSET(Plan, version_)
+      + sizeof(Plan::version_)
+      - PROTOBUF_FIELD_OFFSET(Plan, advanced_extensions_)>(
+          reinterpret_cast<char*>(&advanced_extensions_),
+          reinterpret_cast<char*>(&other->advanced_extensions_));
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata Plan::GetMetadata() const {
   return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
       &descriptor_table_substrait_2fplan_2eproto_getter, &descriptor_table_substrait_2fplan_2eproto_once,
       file_level_metadata_substrait_2fplan_2eproto[1]);
+}
+
+// ===================================================================
+
+class PlanVersion::_Internal {
+ public:
+  static const ::substrait::Version& version(const PlanVersion* msg);
+};
+
+const ::substrait::Version&
+PlanVersion::_Internal::version(const PlanVersion* msg) {
+  return *msg->version_;
+}
+PlanVersion::PlanVersion(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                         bool is_message_owned)
+  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
+  SharedCtor();
+  if (!is_message_owned) {
+    RegisterArenaDtor(arena);
+  }
+  // @@protoc_insertion_point(arena_constructor:substrait.PlanVersion)
+}
+PlanVersion::PlanVersion(const PlanVersion& from)
+  : ::PROTOBUF_NAMESPACE_ID::Message() {
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  if (from._internal_has_version()) {
+    version_ = new ::substrait::Version(*from.version_);
+  } else {
+    version_ = nullptr;
+  }
+  // @@protoc_insertion_point(copy_constructor:substrait.PlanVersion)
+}
+
+inline void PlanVersion::SharedCtor() {
+version_ = nullptr;
+}
+
+PlanVersion::~PlanVersion() {
+  // @@protoc_insertion_point(destructor:substrait.PlanVersion)
+  if (GetArenaForAllocation() != nullptr) return;
+  SharedDtor();
+  _internal_metadata_.Delete<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+}
+
+inline void PlanVersion::SharedDtor() {
+  GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
+  if (this != internal_default_instance()) delete version_;
+}
+
+void PlanVersion::ArenaDtor(void* object) {
+  PlanVersion* _this = reinterpret_cast< PlanVersion* >(object);
+  (void)_this;
+}
+void PlanVersion::RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena*) {
+}
+void PlanVersion::SetCachedSize(int size) const {
+  _cached_size_.Set(size);
+}
+
+void PlanVersion::Clear() {
+// @@protoc_insertion_point(message_clear_start:substrait.PlanVersion)
+  uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  if (GetArenaForAllocation() == nullptr && version_ != nullptr) {
+    delete version_;
+  }
+  version_ = nullptr;
+  _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+}
+
+const char* PlanVersion::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
+#define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
+  while (!ctx->Done(&ptr)) {
+    uint32_t tag;
+    ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
+    switch (tag >> 3) {
+      // .substrait.Version version = 6;
+      case 6:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 50)) {
+          ptr = ctx->ParseMessage(_internal_mutable_version(), ptr);
+          CHK_(ptr);
+        } else
+          goto handle_unusual;
+        continue;
+      default:
+        goto handle_unusual;
+    }  // switch
+  handle_unusual:
+    if ((tag == 0) || ((tag & 7) == 4)) {
+      CHK_(ptr);
+      ctx->SetLastTag(tag);
+      goto message_done;
+    }
+    ptr = UnknownFieldParse(
+        tag,
+        _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
+        ptr, ctx);
+    CHK_(ptr != nullptr);
+  }  // while
+message_done:
+  return ptr;
+failure:
+  ptr = nullptr;
+  goto message_done;
+#undef CHK_
+}
+
+uint8_t* PlanVersion::_InternalSerialize(
+    uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
+  // @@protoc_insertion_point(serialize_to_array_start:substrait.PlanVersion)
+  uint32_t cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // .substrait.Version version = 6;
+  if (this->_internal_has_version()) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+      InternalWriteMessage(
+        6, _Internal::version(this), target, stream);
+  }
+
+  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
+        _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:substrait.PlanVersion)
+  return target;
+}
+
+size_t PlanVersion::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:substrait.PlanVersion)
+  size_t total_size = 0;
+
+  uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  // .substrait.Version version = 6;
+  if (this->_internal_has_version()) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
+        *version_);
+  }
+
+  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
+}
+
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData PlanVersion::_class_data_ = {
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    PlanVersion::MergeImpl
+};
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*PlanVersion::GetClassData() const { return &_class_data_; }
+
+void PlanVersion::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
+                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
+  static_cast<PlanVersion *>(to)->MergeFrom(
+      static_cast<const PlanVersion &>(from));
+}
+
+
+void PlanVersion::MergeFrom(const PlanVersion& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:substrait.PlanVersion)
+  GOOGLE_DCHECK_NE(&from, this);
+  uint32_t cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  if (from._internal_has_version()) {
+    _internal_mutable_version()->::substrait::Version::MergeFrom(from._internal_version());
+  }
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+}
+
+void PlanVersion::CopyFrom(const PlanVersion& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:substrait.PlanVersion)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool PlanVersion::IsInitialized() const {
+  return true;
+}
+
+void PlanVersion::InternalSwap(PlanVersion* other) {
+  using std::swap;
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  swap(version_, other->version_);
+}
+
+::PROTOBUF_NAMESPACE_ID::Metadata PlanVersion::GetMetadata() const {
+  return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
+      &descriptor_table_substrait_2fplan_2eproto_getter, &descriptor_table_substrait_2fplan_2eproto_once,
+      file_level_metadata_substrait_2fplan_2eproto[2]);
+}
+
+// ===================================================================
+
+class Version::_Internal {
+ public:
+};
+
+Version::Version(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                         bool is_message_owned)
+  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
+  SharedCtor();
+  if (!is_message_owned) {
+    RegisterArenaDtor(arena);
+  }
+  // @@protoc_insertion_point(arena_constructor:substrait.Version)
+}
+Version::Version(const Version& from)
+  : ::PROTOBUF_NAMESPACE_ID::Message() {
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  git_hash_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    git_hash_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), "", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  if (!from._internal_git_hash().empty()) {
+    git_hash_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, from._internal_git_hash(), 
+      GetArenaForAllocation());
+  }
+  producer_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    producer_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), "", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  if (!from._internal_producer().empty()) {
+    producer_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, from._internal_producer(), 
+      GetArenaForAllocation());
+  }
+  ::memcpy(&major_number_, &from.major_number_,
+    static_cast<size_t>(reinterpret_cast<char*>(&patch_number_) -
+    reinterpret_cast<char*>(&major_number_)) + sizeof(patch_number_));
+  // @@protoc_insertion_point(copy_constructor:substrait.Version)
+}
+
+inline void Version::SharedCtor() {
+git_hash_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  git_hash_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), "", GetArenaForAllocation());
+#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+producer_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  producer_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), "", GetArenaForAllocation());
+#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
+    reinterpret_cast<char*>(&major_number_) - reinterpret_cast<char*>(this)),
+    0, static_cast<size_t>(reinterpret_cast<char*>(&patch_number_) -
+    reinterpret_cast<char*>(&major_number_)) + sizeof(patch_number_));
+}
+
+Version::~Version() {
+  // @@protoc_insertion_point(destructor:substrait.Version)
+  if (GetArenaForAllocation() != nullptr) return;
+  SharedDtor();
+  _internal_metadata_.Delete<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+}
+
+inline void Version::SharedDtor() {
+  GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
+  git_hash_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  producer_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+}
+
+void Version::ArenaDtor(void* object) {
+  Version* _this = reinterpret_cast< Version* >(object);
+  (void)_this;
+}
+void Version::RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena*) {
+}
+void Version::SetCachedSize(int size) const {
+  _cached_size_.Set(size);
+}
+
+void Version::Clear() {
+// @@protoc_insertion_point(message_clear_start:substrait.Version)
+  uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  git_hash_.ClearToEmpty();
+  producer_.ClearToEmpty();
+  ::memset(&major_number_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&patch_number_) -
+      reinterpret_cast<char*>(&major_number_)) + sizeof(patch_number_));
+  _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+}
+
+const char* Version::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
+#define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
+  while (!ctx->Done(&ptr)) {
+    uint32_t tag;
+    ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
+    switch (tag >> 3) {
+      // uint32 major_number = 1;
+      case 1:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 8)) {
+          major_number_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+          CHK_(ptr);
+        } else
+          goto handle_unusual;
+        continue;
+      // uint32 minor_number = 2;
+      case 2:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 16)) {
+          minor_number_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+          CHK_(ptr);
+        } else
+          goto handle_unusual;
+        continue;
+      // uint32 patch_number = 3;
+      case 3:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 24)) {
+          patch_number_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+          CHK_(ptr);
+        } else
+          goto handle_unusual;
+        continue;
+      // string git_hash = 4;
+      case 4:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 34)) {
+          auto str = _internal_mutable_git_hash();
+          ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
+          CHK_(::PROTOBUF_NAMESPACE_ID::internal::VerifyUTF8(str, "substrait.Version.git_hash"));
+          CHK_(ptr);
+        } else
+          goto handle_unusual;
+        continue;
+      // string producer = 5;
+      case 5:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 42)) {
+          auto str = _internal_mutable_producer();
+          ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
+          CHK_(::PROTOBUF_NAMESPACE_ID::internal::VerifyUTF8(str, "substrait.Version.producer"));
+          CHK_(ptr);
+        } else
+          goto handle_unusual;
+        continue;
+      default:
+        goto handle_unusual;
+    }  // switch
+  handle_unusual:
+    if ((tag == 0) || ((tag & 7) == 4)) {
+      CHK_(ptr);
+      ctx->SetLastTag(tag);
+      goto message_done;
+    }
+    ptr = UnknownFieldParse(
+        tag,
+        _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
+        ptr, ctx);
+    CHK_(ptr != nullptr);
+  }  // while
+message_done:
+  return ptr;
+failure:
+  ptr = nullptr;
+  goto message_done;
+#undef CHK_
+}
+
+uint8_t* Version::_InternalSerialize(
+    uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
+  // @@protoc_insertion_point(serialize_to_array_start:substrait.Version)
+  uint32_t cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // uint32 major_number = 1;
+  if (this->_internal_major_number() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteUInt32ToArray(1, this->_internal_major_number(), target);
+  }
+
+  // uint32 minor_number = 2;
+  if (this->_internal_minor_number() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteUInt32ToArray(2, this->_internal_minor_number(), target);
+  }
+
+  // uint32 patch_number = 3;
+  if (this->_internal_patch_number() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteUInt32ToArray(3, this->_internal_patch_number(), target);
+  }
+
+  // string git_hash = 4;
+  if (!this->_internal_git_hash().empty()) {
+    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
+      this->_internal_git_hash().data(), static_cast<int>(this->_internal_git_hash().length()),
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
+      "substrait.Version.git_hash");
+    target = stream->WriteStringMaybeAliased(
+        4, this->_internal_git_hash(), target);
+  }
+
+  // string producer = 5;
+  if (!this->_internal_producer().empty()) {
+    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
+      this->_internal_producer().data(), static_cast<int>(this->_internal_producer().length()),
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
+      "substrait.Version.producer");
+    target = stream->WriteStringMaybeAliased(
+        5, this->_internal_producer(), target);
+  }
+
+  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
+        _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:substrait.Version)
+  return target;
+}
+
+size_t Version::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:substrait.Version)
+  size_t total_size = 0;
+
+  uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  // string git_hash = 4;
+  if (!this->_internal_git_hash().empty()) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
+        this->_internal_git_hash());
+  }
+
+  // string producer = 5;
+  if (!this->_internal_producer().empty()) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
+        this->_internal_producer());
+  }
+
+  // uint32 major_number = 1;
+  if (this->_internal_major_number() != 0) {
+    total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::UInt32SizePlusOne(this->_internal_major_number());
+  }
+
+  // uint32 minor_number = 2;
+  if (this->_internal_minor_number() != 0) {
+    total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::UInt32SizePlusOne(this->_internal_minor_number());
+  }
+
+  // uint32 patch_number = 3;
+  if (this->_internal_patch_number() != 0) {
+    total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::UInt32SizePlusOne(this->_internal_patch_number());
+  }
+
+  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
+}
+
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData Version::_class_data_ = {
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    Version::MergeImpl
+};
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*Version::GetClassData() const { return &_class_data_; }
+
+void Version::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
+                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
+  static_cast<Version *>(to)->MergeFrom(
+      static_cast<const Version &>(from));
+}
+
+
+void Version::MergeFrom(const Version& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:substrait.Version)
+  GOOGLE_DCHECK_NE(&from, this);
+  uint32_t cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  if (!from._internal_git_hash().empty()) {
+    _internal_set_git_hash(from._internal_git_hash());
+  }
+  if (!from._internal_producer().empty()) {
+    _internal_set_producer(from._internal_producer());
+  }
+  if (from._internal_major_number() != 0) {
+    _internal_set_major_number(from._internal_major_number());
+  }
+  if (from._internal_minor_number() != 0) {
+    _internal_set_minor_number(from._internal_minor_number());
+  }
+  if (from._internal_patch_number() != 0) {
+    _internal_set_patch_number(from._internal_patch_number());
+  }
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+}
+
+void Version::CopyFrom(const Version& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:substrait.Version)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool Version::IsInitialized() const {
+  return true;
+}
+
+void Version::InternalSwap(Version* other) {
+  using std::swap;
+  auto* lhs_arena = GetArenaForAllocation();
+  auto* rhs_arena = other->GetArenaForAllocation();
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
+      &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
+      &git_hash_, lhs_arena,
+      &other->git_hash_, rhs_arena
+  );
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
+      &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
+      &producer_, lhs_arena,
+      &other->producer_, rhs_arena
+  );
+  ::PROTOBUF_NAMESPACE_ID::internal::memswap<
+      PROTOBUF_FIELD_OFFSET(Version, patch_number_)
+      + sizeof(Version::patch_number_)
+      - PROTOBUF_FIELD_OFFSET(Version, major_number_)>(
+          reinterpret_cast<char*>(&major_number_),
+          reinterpret_cast<char*>(&other->major_number_));
+}
+
+::PROTOBUF_NAMESPACE_ID::Metadata Version::GetMetadata() const {
+  return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
+      &descriptor_table_substrait_2fplan_2eproto_getter, &descriptor_table_substrait_2fplan_2eproto_once,
+      file_level_metadata_substrait_2fplan_2eproto[3]);
 }
 
 // @@protoc_insertion_point(namespace_scope)
@@ -790,6 +1425,12 @@ template<> PROTOBUF_NOINLINE ::substrait::PlanRel* Arena::CreateMaybeMessage< ::
 }
 template<> PROTOBUF_NOINLINE ::substrait::Plan* Arena::CreateMaybeMessage< ::substrait::Plan >(Arena* arena) {
   return Arena::CreateMessageInternal< ::substrait::Plan >(arena);
+}
+template<> PROTOBUF_NOINLINE ::substrait::PlanVersion* Arena::CreateMaybeMessage< ::substrait::PlanVersion >(Arena* arena) {
+  return Arena::CreateMessageInternal< ::substrait::PlanVersion >(arena);
+}
+template<> PROTOBUF_NOINLINE ::substrait::Version* Arena::CreateMaybeMessage< ::substrait::Version >(Arena* arena) {
+  return Arena::CreateMessageInternal< ::substrait::Version >(arena);
 }
 PROTOBUF_NAMESPACE_CLOSE
 

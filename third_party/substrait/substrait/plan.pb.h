@@ -48,7 +48,7 @@ struct TableStruct_substrait_2fplan_2eproto {
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::AuxiliaryParseTableField aux[]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
-  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[2]
+  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[4]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::FieldMetadata field_metadata[];
   static const ::PROTOBUF_NAMESPACE_ID::internal::SerializationTable serialization_table[];
@@ -62,10 +62,18 @@ extern PlanDefaultTypeInternal _Plan_default_instance_;
 class PlanRel;
 struct PlanRelDefaultTypeInternal;
 extern PlanRelDefaultTypeInternal _PlanRel_default_instance_;
+class PlanVersion;
+struct PlanVersionDefaultTypeInternal;
+extern PlanVersionDefaultTypeInternal _PlanVersion_default_instance_;
+class Version;
+struct VersionDefaultTypeInternal;
+extern VersionDefaultTypeInternal _Version_default_instance_;
 }  // namespace substrait
 PROTOBUF_NAMESPACE_OPEN
 template<> ::substrait::Plan* Arena::CreateMaybeMessage<::substrait::Plan>(Arena*);
 template<> ::substrait::PlanRel* Arena::CreateMaybeMessage<::substrait::PlanRel>(Arena*);
+template<> ::substrait::PlanVersion* Arena::CreateMaybeMessage<::substrait::PlanVersion>(Arena*);
+template<> ::substrait::Version* Arena::CreateMaybeMessage<::substrait::Version>(Arena*);
 PROTOBUF_NAMESPACE_CLOSE
 namespace substrait {
 
@@ -392,6 +400,7 @@ class Plan final :
     kRelationsFieldNumber = 3,
     kExpectedTypeUrlsFieldNumber = 5,
     kAdvancedExtensionsFieldNumber = 4,
+    kVersionFieldNumber = 6,
   };
   // repeated .substrait.extensions.SimpleExtensionURI extension_uris = 1;
   int extension_uris_size() const;
@@ -489,6 +498,24 @@ class Plan final :
       ::substrait::extensions::AdvancedExtension* advanced_extensions);
   ::substrait::extensions::AdvancedExtension* unsafe_arena_release_advanced_extensions();
 
+  // .substrait.Version version = 6;
+  bool has_version() const;
+  private:
+  bool _internal_has_version() const;
+  public:
+  void clear_version();
+  const ::substrait::Version& version() const;
+  PROTOBUF_NODISCARD ::substrait::Version* release_version();
+  ::substrait::Version* mutable_version();
+  void set_allocated_version(::substrait::Version* version);
+  private:
+  const ::substrait::Version& _internal_version() const;
+  ::substrait::Version* _internal_mutable_version();
+  public:
+  void unsafe_arena_set_allocated_version(
+      ::substrait::Version* version);
+  ::substrait::Version* unsafe_arena_release_version();
+
   // @@protoc_insertion_point(class_scope:substrait.Plan)
  private:
   class _Internal;
@@ -501,6 +528,362 @@ class Plan final :
   ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::PlanRel > relations_;
   ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string> expected_type_urls_;
   ::substrait::extensions::AdvancedExtension* advanced_extensions_;
+  ::substrait::Version* version_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_substrait_2fplan_2eproto;
+};
+// -------------------------------------------------------------------
+
+class PlanVersion final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:substrait.PlanVersion) */ {
+ public:
+  inline PlanVersion() : PlanVersion(nullptr) {}
+  ~PlanVersion() override;
+  explicit constexpr PlanVersion(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  PlanVersion(const PlanVersion& from);
+  PlanVersion(PlanVersion&& from) noexcept
+    : PlanVersion() {
+    *this = ::std::move(from);
+  }
+
+  inline PlanVersion& operator=(const PlanVersion& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline PlanVersion& operator=(PlanVersion&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()
+  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
+        && GetOwningArena() != nullptr
+  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
+    ) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const PlanVersion& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const PlanVersion* internal_default_instance() {
+    return reinterpret_cast<const PlanVersion*>(
+               &_PlanVersion_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    2;
+
+  friend void swap(PlanVersion& a, PlanVersion& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(PlanVersion* other) {
+    if (other == this) return;
+  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() != nullptr &&
+        GetOwningArena() == other->GetOwningArena()) {
+   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() == other->GetOwningArena()) {
+  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(PlanVersion* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  PlanVersion* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<PlanVersion>(arena);
+  }
+  using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
+  void CopyFrom(const PlanVersion& from);
+  using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
+  void MergeFrom(const PlanVersion& from);
+  private:
+  static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to, const ::PROTOBUF_NAMESPACE_ID::Message& from);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  uint8_t* _InternalSerialize(
+      uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(PlanVersion* other);
+
+  private:
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "substrait.PlanVersion";
+  }
+  protected:
+  explicit PlanVersion(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                       bool is_message_owned = false);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  static const ClassData _class_data_;
+  const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetClassData() const final;
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kVersionFieldNumber = 6,
+  };
+  // .substrait.Version version = 6;
+  bool has_version() const;
+  private:
+  bool _internal_has_version() const;
+  public:
+  void clear_version();
+  const ::substrait::Version& version() const;
+  PROTOBUF_NODISCARD ::substrait::Version* release_version();
+  ::substrait::Version* mutable_version();
+  void set_allocated_version(::substrait::Version* version);
+  private:
+  const ::substrait::Version& _internal_version() const;
+  ::substrait::Version* _internal_mutable_version();
+  public:
+  void unsafe_arena_set_allocated_version(
+      ::substrait::Version* version);
+  ::substrait::Version* unsafe_arena_release_version();
+
+  // @@protoc_insertion_point(class_scope:substrait.PlanVersion)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  ::substrait::Version* version_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_substrait_2fplan_2eproto;
+};
+// -------------------------------------------------------------------
+
+class Version final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:substrait.Version) */ {
+ public:
+  inline Version() : Version(nullptr) {}
+  ~Version() override;
+  explicit constexpr Version(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  Version(const Version& from);
+  Version(Version&& from) noexcept
+    : Version() {
+    *this = ::std::move(from);
+  }
+
+  inline Version& operator=(const Version& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline Version& operator=(Version&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()
+  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
+        && GetOwningArena() != nullptr
+  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
+    ) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const Version& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const Version* internal_default_instance() {
+    return reinterpret_cast<const Version*>(
+               &_Version_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    3;
+
+  friend void swap(Version& a, Version& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(Version* other) {
+    if (other == this) return;
+  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() != nullptr &&
+        GetOwningArena() == other->GetOwningArena()) {
+   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() == other->GetOwningArena()) {
+  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(Version* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  Version* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<Version>(arena);
+  }
+  using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
+  void CopyFrom(const Version& from);
+  using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
+  void MergeFrom(const Version& from);
+  private:
+  static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to, const ::PROTOBUF_NAMESPACE_ID::Message& from);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  uint8_t* _InternalSerialize(
+      uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(Version* other);
+
+  private:
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "substrait.Version";
+  }
+  protected:
+  explicit Version(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                       bool is_message_owned = false);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  static const ClassData _class_data_;
+  const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetClassData() const final;
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kGitHashFieldNumber = 4,
+    kProducerFieldNumber = 5,
+    kMajorNumberFieldNumber = 1,
+    kMinorNumberFieldNumber = 2,
+    kPatchNumberFieldNumber = 3,
+  };
+  // string git_hash = 4;
+  void clear_git_hash();
+  const std::string& git_hash() const;
+  template <typename ArgT0 = const std::string&, typename... ArgT>
+  void set_git_hash(ArgT0&& arg0, ArgT... args);
+  std::string* mutable_git_hash();
+  PROTOBUF_NODISCARD std::string* release_git_hash();
+  void set_allocated_git_hash(std::string* git_hash);
+  private:
+  const std::string& _internal_git_hash() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_git_hash(const std::string& value);
+  std::string* _internal_mutable_git_hash();
+  public:
+
+  // string producer = 5;
+  void clear_producer();
+  const std::string& producer() const;
+  template <typename ArgT0 = const std::string&, typename... ArgT>
+  void set_producer(ArgT0&& arg0, ArgT... args);
+  std::string* mutable_producer();
+  PROTOBUF_NODISCARD std::string* release_producer();
+  void set_allocated_producer(std::string* producer);
+  private:
+  const std::string& _internal_producer() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_producer(const std::string& value);
+  std::string* _internal_mutable_producer();
+  public:
+
+  // uint32 major_number = 1;
+  void clear_major_number();
+  uint32_t major_number() const;
+  void set_major_number(uint32_t value);
+  private:
+  uint32_t _internal_major_number() const;
+  void _internal_set_major_number(uint32_t value);
+  public:
+
+  // uint32 minor_number = 2;
+  void clear_minor_number();
+  uint32_t minor_number() const;
+  void set_minor_number(uint32_t value);
+  private:
+  uint32_t _internal_minor_number() const;
+  void _internal_set_minor_number(uint32_t value);
+  public:
+
+  // uint32 patch_number = 3;
+  void clear_patch_number();
+  uint32_t patch_number() const;
+  void set_patch_number(uint32_t value);
+  private:
+  uint32_t _internal_patch_number() const;
+  void _internal_set_patch_number(uint32_t value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:substrait.Version)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr git_hash_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr producer_;
+  uint32_t major_number_;
+  uint32_t minor_number_;
+  uint32_t patch_number_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_substrait_2fplan_2eproto;
 };
@@ -659,6 +1042,96 @@ inline PlanRel::RelTypeCase PlanRel::rel_type_case() const {
 // -------------------------------------------------------------------
 
 // Plan
+
+// .substrait.Version version = 6;
+inline bool Plan::_internal_has_version() const {
+  return this != internal_default_instance() && version_ != nullptr;
+}
+inline bool Plan::has_version() const {
+  return _internal_has_version();
+}
+inline void Plan::clear_version() {
+  if (GetArenaForAllocation() == nullptr && version_ != nullptr) {
+    delete version_;
+  }
+  version_ = nullptr;
+}
+inline const ::substrait::Version& Plan::_internal_version() const {
+  const ::substrait::Version* p = version_;
+  return p != nullptr ? *p : reinterpret_cast<const ::substrait::Version&>(
+      ::substrait::_Version_default_instance_);
+}
+inline const ::substrait::Version& Plan::version() const {
+  // @@protoc_insertion_point(field_get:substrait.Plan.version)
+  return _internal_version();
+}
+inline void Plan::unsafe_arena_set_allocated_version(
+    ::substrait::Version* version) {
+  if (GetArenaForAllocation() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(version_);
+  }
+  version_ = version;
+  if (version) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:substrait.Plan.version)
+}
+inline ::substrait::Version* Plan::release_version() {
+  
+  ::substrait::Version* temp = version_;
+  version_ = nullptr;
+#ifdef PROTOBUF_FORCE_COPY_IN_RELEASE
+  auto* old =  reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(temp);
+  temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  if (GetArenaForAllocation() == nullptr) { delete old; }
+#else  // PROTOBUF_FORCE_COPY_IN_RELEASE
+  if (GetArenaForAllocation() != nullptr) {
+    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  }
+#endif  // !PROTOBUF_FORCE_COPY_IN_RELEASE
+  return temp;
+}
+inline ::substrait::Version* Plan::unsafe_arena_release_version() {
+  // @@protoc_insertion_point(field_release:substrait.Plan.version)
+  
+  ::substrait::Version* temp = version_;
+  version_ = nullptr;
+  return temp;
+}
+inline ::substrait::Version* Plan::_internal_mutable_version() {
+  
+  if (version_ == nullptr) {
+    auto* p = CreateMaybeMessage<::substrait::Version>(GetArenaForAllocation());
+    version_ = p;
+  }
+  return version_;
+}
+inline ::substrait::Version* Plan::mutable_version() {
+  ::substrait::Version* _msg = _internal_mutable_version();
+  // @@protoc_insertion_point(field_mutable:substrait.Plan.version)
+  return _msg;
+}
+inline void Plan::set_allocated_version(::substrait::Version* version) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
+  if (message_arena == nullptr) {
+    delete version_;
+  }
+  if (version) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+        ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper<::substrait::Version>::GetOwningArena(version);
+    if (message_arena != submessage_arena) {
+      version = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, version, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  version_ = version;
+  // @@protoc_insertion_point(field_set_allocated:substrait.Plan.version)
+}
 
 // repeated .substrait.extensions.SimpleExtensionURI extension_uris = 1;
 inline int Plan::_internal_extension_uris_size() const {
@@ -935,9 +1408,273 @@ Plan::mutable_expected_type_urls() {
   return &expected_type_urls_;
 }
 
+// -------------------------------------------------------------------
+
+// PlanVersion
+
+// .substrait.Version version = 6;
+inline bool PlanVersion::_internal_has_version() const {
+  return this != internal_default_instance() && version_ != nullptr;
+}
+inline bool PlanVersion::has_version() const {
+  return _internal_has_version();
+}
+inline void PlanVersion::clear_version() {
+  if (GetArenaForAllocation() == nullptr && version_ != nullptr) {
+    delete version_;
+  }
+  version_ = nullptr;
+}
+inline const ::substrait::Version& PlanVersion::_internal_version() const {
+  const ::substrait::Version* p = version_;
+  return p != nullptr ? *p : reinterpret_cast<const ::substrait::Version&>(
+      ::substrait::_Version_default_instance_);
+}
+inline const ::substrait::Version& PlanVersion::version() const {
+  // @@protoc_insertion_point(field_get:substrait.PlanVersion.version)
+  return _internal_version();
+}
+inline void PlanVersion::unsafe_arena_set_allocated_version(
+    ::substrait::Version* version) {
+  if (GetArenaForAllocation() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(version_);
+  }
+  version_ = version;
+  if (version) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:substrait.PlanVersion.version)
+}
+inline ::substrait::Version* PlanVersion::release_version() {
+  
+  ::substrait::Version* temp = version_;
+  version_ = nullptr;
+#ifdef PROTOBUF_FORCE_COPY_IN_RELEASE
+  auto* old =  reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(temp);
+  temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  if (GetArenaForAllocation() == nullptr) { delete old; }
+#else  // PROTOBUF_FORCE_COPY_IN_RELEASE
+  if (GetArenaForAllocation() != nullptr) {
+    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  }
+#endif  // !PROTOBUF_FORCE_COPY_IN_RELEASE
+  return temp;
+}
+inline ::substrait::Version* PlanVersion::unsafe_arena_release_version() {
+  // @@protoc_insertion_point(field_release:substrait.PlanVersion.version)
+  
+  ::substrait::Version* temp = version_;
+  version_ = nullptr;
+  return temp;
+}
+inline ::substrait::Version* PlanVersion::_internal_mutable_version() {
+  
+  if (version_ == nullptr) {
+    auto* p = CreateMaybeMessage<::substrait::Version>(GetArenaForAllocation());
+    version_ = p;
+  }
+  return version_;
+}
+inline ::substrait::Version* PlanVersion::mutable_version() {
+  ::substrait::Version* _msg = _internal_mutable_version();
+  // @@protoc_insertion_point(field_mutable:substrait.PlanVersion.version)
+  return _msg;
+}
+inline void PlanVersion::set_allocated_version(::substrait::Version* version) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
+  if (message_arena == nullptr) {
+    delete version_;
+  }
+  if (version) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+        ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper<::substrait::Version>::GetOwningArena(version);
+    if (message_arena != submessage_arena) {
+      version = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, version, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  version_ = version;
+  // @@protoc_insertion_point(field_set_allocated:substrait.PlanVersion.version)
+}
+
+// -------------------------------------------------------------------
+
+// Version
+
+// uint32 major_number = 1;
+inline void Version::clear_major_number() {
+  major_number_ = 0u;
+}
+inline uint32_t Version::_internal_major_number() const {
+  return major_number_;
+}
+inline uint32_t Version::major_number() const {
+  // @@protoc_insertion_point(field_get:substrait.Version.major_number)
+  return _internal_major_number();
+}
+inline void Version::_internal_set_major_number(uint32_t value) {
+  
+  major_number_ = value;
+}
+inline void Version::set_major_number(uint32_t value) {
+  _internal_set_major_number(value);
+  // @@protoc_insertion_point(field_set:substrait.Version.major_number)
+}
+
+// uint32 minor_number = 2;
+inline void Version::clear_minor_number() {
+  minor_number_ = 0u;
+}
+inline uint32_t Version::_internal_minor_number() const {
+  return minor_number_;
+}
+inline uint32_t Version::minor_number() const {
+  // @@protoc_insertion_point(field_get:substrait.Version.minor_number)
+  return _internal_minor_number();
+}
+inline void Version::_internal_set_minor_number(uint32_t value) {
+  
+  minor_number_ = value;
+}
+inline void Version::set_minor_number(uint32_t value) {
+  _internal_set_minor_number(value);
+  // @@protoc_insertion_point(field_set:substrait.Version.minor_number)
+}
+
+// uint32 patch_number = 3;
+inline void Version::clear_patch_number() {
+  patch_number_ = 0u;
+}
+inline uint32_t Version::_internal_patch_number() const {
+  return patch_number_;
+}
+inline uint32_t Version::patch_number() const {
+  // @@protoc_insertion_point(field_get:substrait.Version.patch_number)
+  return _internal_patch_number();
+}
+inline void Version::_internal_set_patch_number(uint32_t value) {
+  
+  patch_number_ = value;
+}
+inline void Version::set_patch_number(uint32_t value) {
+  _internal_set_patch_number(value);
+  // @@protoc_insertion_point(field_set:substrait.Version.patch_number)
+}
+
+// string git_hash = 4;
+inline void Version::clear_git_hash() {
+  git_hash_.ClearToEmpty();
+}
+inline const std::string& Version::git_hash() const {
+  // @@protoc_insertion_point(field_get:substrait.Version.git_hash)
+  return _internal_git_hash();
+}
+template <typename ArgT0, typename... ArgT>
+inline PROTOBUF_ALWAYS_INLINE
+void Version::set_git_hash(ArgT0&& arg0, ArgT... args) {
+ 
+ git_hash_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set:substrait.Version.git_hash)
+}
+inline std::string* Version::mutable_git_hash() {
+  std::string* _s = _internal_mutable_git_hash();
+  // @@protoc_insertion_point(field_mutable:substrait.Version.git_hash)
+  return _s;
+}
+inline const std::string& Version::_internal_git_hash() const {
+  return git_hash_.Get();
+}
+inline void Version::_internal_set_git_hash(const std::string& value) {
+  
+  git_hash_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, value, GetArenaForAllocation());
+}
+inline std::string* Version::_internal_mutable_git_hash() {
+  
+  return git_hash_.Mutable(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, GetArenaForAllocation());
+}
+inline std::string* Version::release_git_hash() {
+  // @@protoc_insertion_point(field_release:substrait.Version.git_hash)
+  return git_hash_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArenaForAllocation());
+}
+inline void Version::set_allocated_git_hash(std::string* git_hash) {
+  if (git_hash != nullptr) {
+    
+  } else {
+    
+  }
+  git_hash_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), git_hash,
+      GetArenaForAllocation());
+#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  if (git_hash_.IsDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited())) {
+    git_hash_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), "", GetArenaForAllocation());
+  }
+#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  // @@protoc_insertion_point(field_set_allocated:substrait.Version.git_hash)
+}
+
+// string producer = 5;
+inline void Version::clear_producer() {
+  producer_.ClearToEmpty();
+}
+inline const std::string& Version::producer() const {
+  // @@protoc_insertion_point(field_get:substrait.Version.producer)
+  return _internal_producer();
+}
+template <typename ArgT0, typename... ArgT>
+inline PROTOBUF_ALWAYS_INLINE
+void Version::set_producer(ArgT0&& arg0, ArgT... args) {
+ 
+ producer_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set:substrait.Version.producer)
+}
+inline std::string* Version::mutable_producer() {
+  std::string* _s = _internal_mutable_producer();
+  // @@protoc_insertion_point(field_mutable:substrait.Version.producer)
+  return _s;
+}
+inline const std::string& Version::_internal_producer() const {
+  return producer_.Get();
+}
+inline void Version::_internal_set_producer(const std::string& value) {
+  
+  producer_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, value, GetArenaForAllocation());
+}
+inline std::string* Version::_internal_mutable_producer() {
+  
+  return producer_.Mutable(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, GetArenaForAllocation());
+}
+inline std::string* Version::release_producer() {
+  // @@protoc_insertion_point(field_release:substrait.Version.producer)
+  return producer_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArenaForAllocation());
+}
+inline void Version::set_allocated_producer(std::string* producer) {
+  if (producer != nullptr) {
+    
+  } else {
+    
+  }
+  producer_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), producer,
+      GetArenaForAllocation());
+#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  if (producer_.IsDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited())) {
+    producer_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), "", GetArenaForAllocation());
+  }
+#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  // @@protoc_insertion_point(field_set_allocated:substrait.Version.producer)
+}
+
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 
