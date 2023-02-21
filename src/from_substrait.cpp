@@ -67,7 +67,7 @@ SubstraitToDuckDB::TransformLiteralExpr(const substrait::Expression &sexpr) {
   Value dval;
   if (slit.has_null()) {
     dval = Value(LogicalType::SQLNULL);
-    return make_unique<ConstantExpression>(dval);
+    return make_uniq<ConstantExpression>(dval);
   }
   switch (slit.literal_type_case()) {
   case substrait::Expression_Literal::LiteralTypeCase::kFp64:
@@ -161,7 +161,7 @@ SubstraitToDuckDB::TransformLiteralExpr(const substrait::Expression &sexpr) {
   default:
     throw InternalException(to_string(slit.literal_type_case()));
   }
-  return make_unique<ConstantExpression>(dval);
+  return make_uniq<ConstantExpression>(dval);
 }
 
 unique_ptr<ParsedExpression>
@@ -171,7 +171,7 @@ SubstraitToDuckDB::TransformSelectionExpr(const substrait::Expression &sexpr) {
     throw InternalException(
         "Can only have direct struct references in selections");
   }
-  return make_unique<PositionalReferenceExpression>(
+  return make_uniq<PositionalReferenceExpression>(
       sexpr.selection().direct_reference().struct_field().field() + 1);
 }
 
@@ -186,70 +186,70 @@ unique_ptr<ParsedExpression> SubstraitToDuckDB::TransformScalarFunctionExpr(
   // string compare galore
   // TODO simplify this
   if (function_name == "and") {
-    return make_unique<ConjunctionExpression>(ExpressionType::CONJUNCTION_AND,
-                                              move(children));
+    return make_uniq<ConjunctionExpression>(ExpressionType::CONJUNCTION_AND,
+                                            move(children));
   } else if (function_name == "or") {
-    return make_unique<ConjunctionExpression>(ExpressionType::CONJUNCTION_OR,
-                                              move(children));
+    return make_uniq<ConjunctionExpression>(ExpressionType::CONJUNCTION_OR,
+                                            move(children));
   } else if (function_name == "lt") {
     D_ASSERT(children.size() == 2);
-    return make_unique<ComparisonExpression>(
+    return make_uniq<ComparisonExpression>(
         ExpressionType::COMPARE_LESSTHAN, move(children[0]), move(children[1]));
   } else if (function_name == "equal") {
     D_ASSERT(children.size() == 2);
-    return make_unique<ComparisonExpression>(
+    return make_uniq<ComparisonExpression>(
         ExpressionType::COMPARE_EQUAL, move(children[0]), move(children[1]));
   } else if (function_name == "not_equal") {
     D_ASSERT(children.size() == 2);
-    return make_unique<ComparisonExpression>(
+    return make_uniq<ComparisonExpression>(
         ExpressionType::COMPARE_NOTEQUAL, move(children[0]), move(children[1]));
   } else if (function_name == "lte") {
     D_ASSERT(children.size() == 2);
-    return make_unique<ComparisonExpression>(
+    return make_uniq<ComparisonExpression>(
         ExpressionType::COMPARE_LESSTHANOREQUALTO, move(children[0]),
         move(children[1]));
   } else if (function_name == "gte") {
     D_ASSERT(children.size() == 2);
-    return make_unique<ComparisonExpression>(
+    return make_uniq<ComparisonExpression>(
         ExpressionType::COMPARE_GREATERTHANOREQUALTO, move(children[0]),
         move(children[1]));
   } else if (function_name == "gt") {
     D_ASSERT(children.size() == 2);
-    return make_unique<ComparisonExpression>(
-        ExpressionType::COMPARE_GREATERTHAN, move(children[0]),
-        move(children[1]));
+    return make_uniq<ComparisonExpression>(ExpressionType::COMPARE_GREATERTHAN,
+                                           move(children[0]),
+                                           move(children[1]));
   } else if (function_name == "is_not_null") {
     D_ASSERT(children.size() == 1);
-    return make_unique<OperatorExpression>(ExpressionType::OPERATOR_IS_NOT_NULL,
-                                           move(children[0]));
+    return make_uniq<OperatorExpression>(ExpressionType::OPERATOR_IS_NOT_NULL,
+                                         move(children[0]));
   } else if (function_name == "is_null") {
     D_ASSERT(children.size() == 1);
-    return make_unique<OperatorExpression>(ExpressionType::OPERATOR_IS_NULL,
-                                           move(children[0]));
+    return make_uniq<OperatorExpression>(ExpressionType::OPERATOR_IS_NULL,
+                                         move(children[0]));
   } else if (function_name == "not") {
     D_ASSERT(children.size() == 1);
-    return make_unique<OperatorExpression>(ExpressionType::OPERATOR_NOT,
-                                           move(children[0]));
+    return make_uniq<OperatorExpression>(ExpressionType::OPERATOR_NOT,
+                                         move(children[0]));
   } else if (function_name == "is_not_distinct_from") {
     D_ASSERT(children.size() == 2);
-    return make_unique<ComparisonExpression>(
+    return make_uniq<ComparisonExpression>(
         ExpressionType::COMPARE_NOT_DISTINCT_FROM, move(children[0]),
         move(children[1]));
   } else if (function_name == "between") {
     // FIXME: ADD between to substrait extension
     D_ASSERT(children.size() == 3);
-    return make_unique<BetweenExpression>(move(children[0]), move(children[1]),
-                                          move(children[2]));
+    return make_uniq<BetweenExpression>(move(children[0]), move(children[1]),
+                                        move(children[2]));
   }
 
-  return make_unique<FunctionExpression>(RemapFunctionName(function_name),
-                                         move(children));
+  return make_uniq<FunctionExpression>(RemapFunctionName(function_name),
+                                       move(children));
 }
 
 unique_ptr<ParsedExpression>
 SubstraitToDuckDB::TransformIfThenExpr(const substrait::Expression &sexpr) {
   const auto &scase = sexpr.if_then();
-  auto dcase = make_unique<CaseExpression>();
+  auto dcase = make_uniq<CaseExpression>();
   for (const auto &sif : scase.ifs()) {
     CaseCheck dif;
     dif.when_expr = TransformExpr(sif.if_());
@@ -291,7 +291,7 @@ SubstraitToDuckDB::TransformCastExpr(const substrait::Expression &sexpr) {
   const auto &scast = sexpr.cast();
   auto cast_type = SubstraitToDuckType(scast.type());
   auto cast_child = TransformExpr(scast.input());
-  return make_unique<CastExpression>(cast_type, move(cast_child));
+  return make_uniq<CastExpression>(cast_type, move(cast_child));
 }
 
 unique_ptr<ParsedExpression>
@@ -305,8 +305,8 @@ SubstraitToDuckDB::TransformInExpr(const substrait::Expression &sexpr) {
     values.emplace_back(TransformExpr(substrait_in.options(i)));
   }
 
-  return make_unique<OperatorExpression>(ExpressionType::COMPARE_IN,
-                                         move(values));
+  return make_uniq<OperatorExpression>(ExpressionType::COMPARE_IN,
+                                       move(values));
 }
 
 unique_ptr<ParsedExpression>
@@ -465,7 +465,7 @@ SubstraitToDuckDB::TransformAggregateOp(const substrait::Rel &sop) {
     if (function_name == "count" && children.empty()) {
       function_name = "count_star";
     }
-    expressions.push_back(make_unique<FunctionExpression>(
+    expressions.push_back(make_uniq<FunctionExpression>(
         RemapFunctionName(function_name), move(children)));
   }
 
@@ -524,7 +524,7 @@ SubstraitToDuckDB::TransformReadOp(const substrait::Rel &sop) {
       aliases.push_back("expr_" + to_string(expr_idx++));
       // TODO make sure nothing else is in there
       expressions.push_back(
-          make_unique<PositionalReferenceExpression>(sproj.field() + 1));
+          make_uniq<PositionalReferenceExpression>(sproj.field() + 1));
     }
 
     scan = make_shared<ProjectionRelation>(move(scan), move(expressions),
@@ -575,7 +575,7 @@ SubstraitToDuckDB::TransformRootOp(const substrait::RelRoot &sop) {
   int id = 1;
   for (auto &column_name : column_names) {
     aliases.push_back(column_name);
-    expressions.push_back(make_unique<PositionalReferenceExpression>(id++));
+    expressions.push_back(make_uniq<PositionalReferenceExpression>(id++));
   }
   return make_shared<ProjectionRelation>(TransformOp(sop.input()),
                                          move(expressions), aliases);

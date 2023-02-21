@@ -24,7 +24,7 @@ struct ToSubstraitFunctionData : public TableFunctionData {
 static unique_ptr<FunctionData>
 ToSubstraitBind(ClientContext &context, TableFunctionBindInput &input,
                 vector<LogicalType> &return_types, vector<string> &names) {
-  auto result = make_unique<ToSubstraitFunctionData>();
+  auto result = make_uniq<ToSubstraitFunctionData>();
   result->query = input.inputs[0].ToString();
   if (input.named_parameters.size() == 1) {
     auto loption = StringUtil::Lower(input.named_parameters.begin()->first);
@@ -42,7 +42,7 @@ static unique_ptr<FunctionData> ToJsonBind(ClientContext &context,
                                            TableFunctionBindInput &input,
                                            vector<LogicalType> &return_types,
                                            vector<string> &names) {
-  auto result = make_unique<ToSubstraitFunctionData>();
+  auto result = make_uniq<ToSubstraitFunctionData>();
   result->query = input.inputs[0].ToString();
   if (input.named_parameters.size() == 1) {
     auto loption = StringUtil::Lower(input.named_parameters.begin()->first);
@@ -126,8 +126,8 @@ static unique_ptr<FunctionData> SubstraitBind(ClientContext &context,
                                               vector<LogicalType> &return_types,
                                               vector<string> &names,
                                               bool is_json) {
-  auto result = make_unique<FromSubstraitFunctionData>();
-  result->conn = make_unique<Connection>(*context.db);
+  auto result = make_uniq<FromSubstraitFunctionData>();
+  result->conn = make_uniq<Connection>(*context.db);
   string serialized = input.inputs[0].GetValueUnsafe<string>();
   result->plan = SubstraitPlanToDuckDBRel(*result->conn, serialized, is_json);
   for (auto &column : result->plan->Columns()) {
