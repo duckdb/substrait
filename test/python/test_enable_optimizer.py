@@ -2,7 +2,6 @@ import pandas as pd
 import duckdb
 import pytest
 
-@pytest.mark.skip(reason="needs to be merged in DuckDB repo first")
 def test_optimizer_defaults_to_true(require):
     connection = require('substrait')
 
@@ -17,7 +16,6 @@ def test_optimizer_defaults_to_true(require):
 
     assert proto_bytes1 == proto_bytes2
 
-@pytest.mark.skip(reason="needs to be merged in DuckDB repo first")
 def test_optimizer_with_abs(require):
     connection = require('substrait')
 
@@ -32,7 +30,6 @@ def test_optimizer_with_abs(require):
 
     assert proto_bytes1 != proto_bytes2
 
-@pytest.mark.skip(reason="needs to be merged in DuckDB repo first")
 def test_optimizer_with_like(require):
     connection = require('substrait')
 
@@ -48,7 +45,6 @@ def test_optimizer_with_like(require):
     assert proto_bytes1 != proto_bytes2
 
 # Now test get_substrait_json
-@pytest.mark.skip(reason="needs to be merged in DuckDB repo first")
 def test_optimizer_json_defaults_to_true(require):
     connection = require('substrait')
 
@@ -63,7 +59,6 @@ def test_optimizer_json_defaults_to_true(require):
 
     assert proto_bytes1 == proto_bytes2
 
-@pytest.mark.skip(reason="needs to be merged in DuckDB repo first")
 def test_optimizer_json_with_abs(require):
     connection = require('substrait')
 
@@ -78,7 +73,6 @@ def test_optimizer_json_with_abs(require):
 
     assert proto_bytes1 != proto_bytes2
 
-@pytest.mark.skip(reason="needs to be merged in DuckDB repo first")
 def test_optimizer_json_with_like(require):
     connection = require('substrait')
 
