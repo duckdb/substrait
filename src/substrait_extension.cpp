@@ -52,9 +52,36 @@ static unique_ptr<FunctionData> ToJsonBind(ClientContext &context, TableFunction
 	return move(result);
 }
 
-shared_ptr<Relation> SubstraitPlanToDuckDBRel(Connection &conn, string &serialized, bool json = false) {
+shared_ptr<Relation> SubstraitPlanToDuckDBRel(Connection &conn, const string &serialized, bool json = false) {
 	SubstraitToDuckDB transformer_s2d(conn, serialized, json);
 	return transformer_s2d.TransformPlan();
+}
+
+static void VerifySubstraitRoundtrip(unique_ptr<LogicalOperator> &query_plan, Connection &con, ClientContext &context,
+                                ToSubstraitFunctionData &data, const string &serialized, bool json) {
+	if (!context.config.query_verification_enabled) {
+		return;
+	}
+	// We round-trip the generated json and verify if the result is the same
+	auto actual_result = con.Query(data.query);
+	auto sub_relation = SubstraitPlanToDuckDBRel(con, serialized, json);
+	auto substrait_result = sub_relation->Execute();
+	substrait_result->names = actual_result->names;
+	if (!actual_result->Equals(*substrait_result)) {
+		query_plan->Print();
+		sub_relation->Print();
+		throw InternalException("The query result of DuckDB's query plan does not match Substrait");
+	}
+}
+
+static void VerifyBlobRoundtrip(unique_ptr<LogicalOperator> &query_plan, Connection &con, ClientContext &context,
+                                ToSubstraitFunctionData &data, const string &serialized) {
+	VerifySubstraitRoundtrip(query_plan, con, context, data, serialized, false);
+}
+
+static void VerifyJSONRoundtrip(unique_ptr<LogicalOperator> &query_plan, Connection &con, ClientContext &context,
+                                ToSubstraitFunctionData &data, const string &serialized) {
+	VerifySubstraitRoundtrip(query_plan, con, context, data, serialized, true);
 }
 
 static void ToSubFunction(ClientContext &context, TableFunctionInput &data_p, DataChunk &output) {
@@ -73,18 +100,7 @@ static void ToSubFunction(ClientContext &context, TableFunctionInput &data_p, Da
 
 	output.SetValue(0, 0, Value::BLOB_RAW(serialized));
 	data.finished = true;
-	if (context.config.query_verification_enabled) {
-		// We round-trip the generated blob and verify if the result is the same
-		auto actual_result = new_conn.Query(data.query);
-		auto sub_relation = SubstraitPlanToDuckDBRel(new_conn, serialized);
-		auto substrait_result = sub_relation->Execute();
-		substrait_result->names = actual_result->names;
-		if (!actual_result->Equals(*substrait_result)) {
-			query_plan->Print();
-			sub_relation->Print();
-			throw InternalException("The query result of DuckDB's query plan does not match Substrait");
-		}
-	}
+	VerifyBlobRoundtrip(query_plan, new_conn, context, data, serialized);
 }
 
 static void ToJsonFunction(ClientContext &context, TableFunctionInput &data_p, DataChunk &output) {
@@ -103,6 +119,7 @@ static void ToJsonFunction(ClientContext &context, TableFunctionInput &data_p, D
 
 	output.SetValue(0, 0, serialized);
 	data.finished = true;
+	VerifyJSONRoundtrip(query_plan, new_conn, context, data, serialized);
 }
 
 struct FromSubstraitFunctionData : public TableFunctionData {
