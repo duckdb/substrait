@@ -7,7 +7,7 @@ import glob
 import duckdb
 
 dir = os.path.dirname(os.path.abspath(__file__))
-build_type = "debug"
+build_type = "release"
 
 @pytest.fixture(scope="function")
 def duckdb_empty_cursor(request):

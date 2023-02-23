@@ -3,7 +3,7 @@ library("testthat")
 
 load_extension <- function() {
   # Change this when using a different build
-  build_type = "debug"
+  build_type = "release"
 
   file_directory <- dirname(rstudioapi::getSourceEditorContext()$path)
   con <- dbConnect(duckdb::duckdb(config=list("allow_unsigned_extensions"="true")))
