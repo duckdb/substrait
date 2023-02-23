@@ -2,6 +2,25 @@ import pandas as pd
 import duckdb
 import pytest
 
+def test_optimizer_abs_broken_result(require):
+    connection = require('substrait')
+
+    connection.execute('CREATE TABLE integers (i INTEGER)')
+    # Insert only positive values
+    connection.execute('INSERT INTO integers VALUES (0),(1),(2),(3),(4),(5),(6),(7),(8),(9),(NULL)')
+
+    # Generate query plan with optimizer enabled
+    res1 = connection.get_substrait("SELECT abs(i) FROM integers LIMIT 5")
+    proto_bytes1 = res1.fetchone()[0]
+
+    # Now insert a negative value
+    connection.execute('INSERT INTO integers VALUES (-1)')
+
+    # Use the previously generated query plan
+    incorrect_result = connection.from_substrait(proto_bytes1).fetchall()
+    print(incorrect_result)
+    assert(incorrect_result == [(0,), (1,), (2,), (3,), (4,)])
+
 def test_optimizer_defaults_to_true(require):
     connection = require('substrait')
 

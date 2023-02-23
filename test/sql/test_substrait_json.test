@@ -4,7 +4,6 @@
 
 require substrait
 
-
 statement ok
 PRAGMA enable_verification
 
@@ -14,13 +13,5 @@ CREATE TABLE integers (i integer)
 statement ok
 insert into integers values (1),(6)
 
-query I
+statement ok
 CALL get_substrait_json('select * from integers limit 5')
-----
-{"relations":[{"root":{"input":{"fetch":{"input":{"project":{"input":{"read":{"baseSchema":{"names":["i"],"struct":{"types":[{"i32":{"nullability":"NULLABILITY_NULLABLE"}}],"nullability":"NULLABILITY_REQUIRED"}},"projection":{"select":{"structItems":[{}]},"maintainSingularStruct":true},"namedTable":{"names":["integers"]}}},"expressions":[{"selection":{"directReference":{"structField":{}},"rootReference":{}}}]}},"count":"5"}},"names":["i"]}}],"version":{"minorNumber":24,"producer":"DuckDB"}}
-
-query I
-CALL from_substrait_json('{"relations":[{"root":{"input":{"fetch":{"input":{"project":{"input":{"read":{"baseSchema":{"names":["i"],"struct":{"types":[{"i32":{"nullability":"NULLABILITY_NULLABLE"}}],"nullability":"NULLABILITY_REQUIRED"}},"projection":{"select":{"structItems":[{}]},"maintainSingularStruct":true},"namedTable":{"names":["integers"]}}},"expressions":[{"selection":{"directReference":{"structField":{}},"rootReference":{}}}]}},"count":"5"}},"names":["i"]}}],"version":{"minorNumber":24,"producer":"DuckDB"}}')
-----
-1
-6

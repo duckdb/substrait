@@ -2,12 +2,12 @@
 # description: Test get_substrait with TPC-H queries
 # group: [sql]
 
-statement ok
-PRAGMA enable_verification
-
 require substrait
 
 require tpch
+
+statement ok
+PRAGMA enable_verification
 
 statement ok
 CALL dbgen(sf=0.01)

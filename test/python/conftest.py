@@ -6,6 +6,9 @@ from os.path import abspath
 import glob
 import duckdb
 
+dir = os.path.dirname(os.path.abspath(__file__))
+build_type = "debug"
+
 @pytest.fixture(scope="function")
 def duckdb_empty_cursor(request):
     connection = duckdb.connect('')
@@ -17,7 +20,7 @@ def duckdb_empty_cursor(request):
 def require():
     def _require(extension_name, db_name=''):
         conn = duckdb.connect(db_name, config={'allow_unsigned_extensions' : 'true'})
-        conn.execute("LOAD '../../build/release/extension/substrait/substrait.duckdb_extension'")
+        conn.execute(f"LOAD '{dir}/../../build/{build_type}/extension/substrait/substrait.duckdb_extension'")
         return conn
 
     return _require
