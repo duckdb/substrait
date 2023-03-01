@@ -36,6 +36,7 @@ private:
 	unique_ptr<ParsedExpression> TransformCastExpr(const substrait::Expression &sexpr);
 	unique_ptr<ParsedExpression> TransformInExpr(const substrait::Expression &sexpr);
 
+	void VerifyCorrectExtractSubfield(const string &subfield);
 	std::string &RemapFunctionName(std::string &function_name);
 	LogicalType SubstraitToDuckType(const ::substrait::Type &s_type);
 	//! Looks up for aggregation function in functions_map
@@ -52,5 +53,6 @@ private:
 	//! Remapped functions with differing names to the correct DuckDB functions
 	//! names
 	static const unordered_map<std::string, std::string> function_names_remap;
+	static const case_insensitive_set_t valid_extract_subfields;
 };
 } // namespace duckdb
