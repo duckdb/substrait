@@ -4,24 +4,26 @@ from io import StringIO
 
 SubstraitCompiler = pytest.importorskip('ibis_substrait.compiler.core')
 ibis = pytest.importorskip('ibis')
-BaseBackend = pytest.importorskip('ibis.backends.base')
-parse_type = pytest.importorskip('ibis.backends.duckdb.datatypes')
-get_tpch_query = pytest.importorskip('ibis_tpch_util')
+
+def initialize_db(path, queries):
+	con = duckdb.connect(path)
+	# Initialize + populate the database
+	for query in queries:
+		con.sql(query)
+	con.close()
 
 class IbisDuckDBTester:
-	def __init__(self, tmp_path, initialization_queries):
-		self.tmp_path = tmp_path
-		self.con = duckdb.connect(tmp_path)
+	def __init__(self, path):
+		self.path = path
 
-		# Initialize + populate the database
-		for query in initialization_queries:
-			self.con.sql(query)
+	def initialize(self, queries):
+		initialize_db(self.path, queries)
 		
-		self.con.close()
-		self.con = duckdb.connect(tmp_path, read_only=True)
+	def open(self):
+		# Create connections to the db
+		self.con = duckdb.connect(self.path, read_only=True)
+		self.ibis_con = ibis.connect(f"duckdb://{self.path}", read_only=True)
 
-		self.ibis_con = ibis.connect(f"duckdb://{tmp_path}", read_only=True)
-	
 	def test(self, expression_producer):
 		expr = expression_producer(self.ibis_con)
 		relation = self.generate_relation(expr.unbind())
@@ -34,6 +36,12 @@ class IbisDuckDBTester:
 		assert duck_res == res
 
 class SQLIbisDuckDBTester(IbisDuckDBTester):
+	def create(path, queries):
+		self = SQLIbisDuckDBTester(path)
+		self.initialize(queries)
+		self.open()
+		return self
+
 	def generate_relation(self, expr):
 		# From the ibis expression - generate sql
 		sql_string = StringIO()
@@ -43,10 +51,16 @@ class SQLIbisDuckDBTester(IbisDuckDBTester):
 		relation = self.con.sql(str(sql_string.getvalue()))
 		return relation
 
-	def __init__(self, tmp_path, initialization_queries):
-		super(SQLIbisDuckDBTester, self).__init__(tmp_path, initialization_queries)
+	def __init__(self, path):
+		super(SQLIbisDuckDBTester, self).__init__(path)
 
 class SubstraitIbisDuckDBTester(IbisDuckDBTester):
+	def create(path, queries):
+		self = SubstraitIbisDuckDBTester(path)
+		self.initialize(queries)
+		self.open()
+		return self
+
 	def generate_relation(self, expr):
 		compiler = SubstraitCompiler.SubstraitCompiler()
 		from google.protobuf import json_format
@@ -56,8 +70,25 @@ class SubstraitIbisDuckDBTester(IbisDuckDBTester):
 		json_plan = json_format.MessageToJson(proto)
 		return self.con.from_substrait_json(json_plan)
 
-	def __init__(self, tmp_path, initialization_queries):
-		super(SubstraitIbisDuckDBTester, self).__init__(tmp_path, initialization_queries)
+	def __init__(self, path):
+		super(SubstraitIbisDuckDBTester, self).__init__(path)
+
+class CombinedIbisDuckDBTester():
+	def __init__(self, path, queries):
+		self.path = path
+
+		self.testers = []
+		self.testers += [SQLIbisDuckDBTester(self.path)]
+		self.testers += [SubstraitIbisDuckDBTester(self.path)]
+
+		initialize_db(self.path, queries)
+
+		for tester in self.testers:
+			tester.open()
+	
+	def test(self, expression_producer):
+		for tester in self.testers:
+			tester.test(expression_producer)
 
 def extract_year(ibis_db):
 	tbl = ibis_db.table('tbl')
@@ -72,7 +103,7 @@ class TestIbisRoundtrip(object):
 		# Create a disk-backed duckdb database
 		db_path = str(tmp_path / 'extract_db')
 
-		tester = SubstraitIbisDuckDBTester(db_path, [
+		tester = CombinedIbisDuckDBTester(db_path, [
 			"""
 				create table tbl(date timestamp)
 			""",
