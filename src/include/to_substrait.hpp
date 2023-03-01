@@ -106,6 +106,7 @@ private:
 
 	void AllocateFunctionArgument(substrait::Expression_ScalarFunction *scalar_fun, substrait::Expression *value);
 	std::string &RemapFunctionName(std::string &function_name);
+	bool IsExtractFunction(const string &function_name) const;
 
 	//! Creates a Conjuction
 	template <typename T, typename FUNC>
@@ -133,6 +134,7 @@ private:
 	std::unordered_map<std::string, uint64_t> functions_map;
 	//! Remapped DuckDB functions names to Substrait compatible function names
 	static const unordered_map<std::string, std::string> function_names_remap;
+	static const case_insensitive_set_t valid_extract_subfields;
 	uint64_t last_function_id = 1;
 
 	//! The substrait Plan

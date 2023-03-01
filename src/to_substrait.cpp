@@ -24,6 +24,10 @@ const std::unordered_map<std::string, std::string> DuckDBToSubstrait::function_n
     {"substr", "substring"},  {"length", "char_length"},  {"isnan", "is_nan"},       {"isfinite", "is_finite"},
     {"isinf", "is_infinite"}, {"sum_no_overflow", "sum"}, {"count_star", "count"},   {"~~", "like"}};
 
+const case_insensitive_set_t DuckDBToSubstrait::valid_extract_subfields = {
+    "year",    "month",       "day",          "decade", "century", "millenium",
+    "quarter", "microsecond", "milliseconds", "second", "minute",  "hour"};
+
 std::string &DuckDBToSubstrait::RemapFunctionName(std::string &function_name) {
 	auto it = function_names_remap.find(function_name);
 	if (it != function_names_remap.end()) {
@@ -281,7 +285,8 @@ void DuckDBToSubstrait::TransformCastExpression(Expression &dexpr, substrait::Ex
 	*scast->mutable_type() = DuckToSubstraitType(dcast.return_type);
 }
 
-bool DuckDBToSubstrait::IsExtractFunction(const string &function_name) {
+bool DuckDBToSubstrait::IsExtractFunction(const string &function_name) const {
+	return DuckDBToSubstrait::valid_extract_subfields.count(function_name);
 }
 
 void DuckDBToSubstrait::TransformFunctionExpression(Expression &dexpr, substrait::Expression &sexpr,
