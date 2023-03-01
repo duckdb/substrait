@@ -39,7 +39,7 @@ std::string &SubstraitToDuckDB::RemapFunctionName(std::string &function_name) {
 	return function_name;
 }
 
-SubstraitToDuckDB::SubstraitToDuckDB(Connection &con_p, string &serialized, bool json) : con(con_p) {
+SubstraitToDuckDB::SubstraitToDuckDB(Connection &con_p, const string &serialized, bool json) : con(con_p) {
 	if (!json) {
 		if (!plan.ParseFromString(serialized)) {
 			throw std::runtime_error("Was not possible to convert binary into Substrait plan");
