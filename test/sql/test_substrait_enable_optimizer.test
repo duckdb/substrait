@@ -2,101 +2,104 @@
 # description: Test conversion of DuckDB built-in function names to Substrait function names
 # group: [sql]
 
+require substrait
+
 statement ok
 PRAGMA enable_verification
 
-# statement ok
-# CREATE table ints (i INT);
+statement ok
+CREATE table ints (i INT);
 
-# statement ok
-# INSERT INTO ints VALUES (20), (8), (99), (3000);
+# All of these values are positive, so our optimizer would remove the call to abs
+statement ok
+INSERT INTO ints VALUES (20), (8), (99), (3000);
 
-# # query plan from an optimised Duckdb query plan  
-# query I
-# CALL get_substrait('SELECT abs(i) FROM ints');
-# ----
-# \x1A6\x124\x0A/:-\x12!\x0A\x1F\x12\x0D\x0A\x01i\x12\x08\x0A\x04*\x02\x10\x01\x18\x02\x22\x06\x0A\x02\x0A\x00\x10\x01:\x06\x0A\x04ints\x1A\x08\x12\x06\x0A\x02\x12\x00\x22\x00\x12\x01i
+# query plan from an optimised Duckdb query plan  
+query I
+CALL get_substrait('SELECT abs(i) FROM ints');
+----
+\x1A6\x124\x0A/:-\x12!\x0A\x1F\x12\x0D\x0A\x01i\x12\x08\x0A\x04*\x02\x10\x01\x18\x02\x22\x06\x0A\x02\x0A\x00\x10\x01:\x06\x0A\x04ints\x1A\x08\x12\x06\x0A\x02\x12\x00\x22\x00\x12\x01i2\x0A\x10\x18*\x06DuckDB
 
-# # query plan from an unoptimised Duckdb query plan
-# query I
-# CALL get_substrait('SELECT abs(i) FROM ints', enable_optimizer=false);
-# ----
-# \x12\x09\x1A\x07\x10\x01\x1A\x03abs\x1AA\x12?\x0A5:3\x12\x19\x0A\x17\x12\x0D\x0A\x01i\x12\x08\x0A\x04*\x02\x10\x01\x18\x02:\x06\x0A\x04ints\x1A\x16\x1A\x14\x08\x01\x1A\x04*\x02\x10\x01\x22\x0A\x1A\x08\x12\x06\x0A\x02\x12\x00\x22\x00\x12\x06abs(i)
+# query plan from an unoptimised Duckdb query plan
+query I
+CALL get_substrait('SELECT abs(i) FROM ints', enable_optimizer=false);
+----
+\x12\x09\x1A\x07\x10\x01\x1A\x03abs\x1AA\x12?\x0A5:3\x12\x19\x0A\x17\x12\x0D\x0A\x01i\x12\x08\x0A\x04*\x02\x10\x01\x18\x02:\x06\x0A\x04ints\x1A\x16\x1A\x14\x08\x01\x1A\x04*\x02\x10\x01\x22\x0A\x1A\x08\x12\x06\x0A\x02\x12\x00\x22\x00\x12\x06abs(i)2\x0A\x10\x18*\x06DuckDB
+
+# insert negative value to break optimization on all positive dataset
+statement ok
+INSERT INTO ints VALUES (-1);
+
+# with the optimized plan negative values are not set correctly
+query I
+CALL from_substrait('\x1A6\x124\x0A/:-\x12!\x0A\x1F\x12\x0D\x0A\x01i\x12\x08\x0A\x04*\x02\x10\x01\x18\x02\x22\x06\x0A\x02\x0A\x00\x10\x01:\x06\x0A\x04ints\x1A\x08\x12\x06\x0A\x02\x12\x00\x22\x00\x12\x01i2\x0A\x10\x18*\x06DuckDB'::BLOB);
+----
+20
+8
+99
+3000
+-1
+
+# with the unoptimized plan negative values are handled correctly 
+query I
+CALL from_substrait('\x12\x09\x1A\x07\x10\x01\x1A\x03abs\x1AA\x12?\x0A5:3\x12\x19\x0A\x17\x12\x0D\x0A\x01i\x12\x08\x0A\x04*\x02\x10\x01\x18\x02:\x06\x0A\x04ints\x1A\x16\x1A\x14\x08\x01\x1A\x04*\x02\x10\x01\x22\x0A\x1A\x08\x12\x06\x0A\x02\x12\x00\x22\x00\x12\x06abs(i)2\x0A\x10\x18*\x06DuckDB'::BLOB);
+----
+20
+8
+99
+3000
+1
+
+statement ok
+CREATE table tbl (v varchar);
+
+statement ok
+insert into tbl VALUES('hi'), ('universe'), ('ducky');
+
+# An optimized DuckDB query plan often substitutes the LIKE operator for other operations/functions such as: equal, is_not_null, ends_with
+query I
+CALL get_substrait('select * from tbl where v LIKE ''%y''');
+----
+\x12\x0F\x1A\x0D\x10\x01\x1A\x09ends_with\x1A]\x12[\x0AV:T\x12H\x12F\x12#\x0A!\x12\x10\x0A\x01v\x12\x0B\x0A\x07\xB2\x01\x04\x08\x08\x18\x01\x18\x02\x22\x06\x0A\x02\x0A\x00\x10\x01:\x05\x0A\x03tbl\x1A\x1F\x1A\x1D\x08\x01\x1A\x04\x0A\x02\x10\x01\x22\x0A\x1A\x08\x12\x06\x0A\x02\x12\x00\x22\x00\x22\x07\x1A\x05\x0A\x03b\x01y\x1A\x08\x12\x06\x0A\x02\x12\x00\x22\x00\x12\x01v2\x0A\x10\x18*\x06DuckDB
+
+query I
+CALL from_substrait('\x12\x0F\x1A\x0D\x10\x01\x1A\x09ends_with\x1A]\x12[\x0AV:T\x12H\x12F\x12#\x0A!\x12\x10\x0A\x01v\x12\x0B\x0A\x07\xB2\x01\x04\x08\x08\x18\x01\x18\x02\x22\x06\x0A\x02\x0A\x00\x10\x01:\x05\x0A\x03tbl\x1A\x1F\x1A\x1D\x08\x01\x1A\x04\x0A\x02\x10\x01\x22\x0A\x1A\x08\x12\x06\x0A\x02\x12\x00\x22\x00\x22\x07\x1A\x05\x0A\x03b\x01y\x1A\x08\x12\x06\x0A\x02\x12\x00\x22\x00\x12\x01v2\x0A\x10\x18*\x06DuckDB'::BLOB);
+----
+ducky
+
+# If substitution is not desirable an unoptimized plan can be used instead.
+query I
+CALL get_substrait('select * from tbl where v LIKE ''%y''', enable_optimizer=false);
+----
+\x12\x0A\x1A\x08\x10\x01\x1A\x04like\x1AV\x12T\x0AO:M\x12A\x12?\x12\x1B\x0A\x19\x12\x10\x0A\x01v\x12\x0B\x0A\x07\xB2\x01\x04\x08\x08\x18\x01\x18\x02:\x05\x0A\x03tbl\x1A \x1A\x1E\x08\x01\x1A\x04\x0A\x02\x10\x01\x22\x0A\x1A\x08\x12\x06\x0A\x02\x12\x00\x22\x00\x22\x08\x1A\x06\x0A\x04b\x02%y\x1A\x08\x12\x06\x0A\x02\x12\x00\x22\x00\x12\x01v2\x0A\x10\x18*\x06DuckDB
+
+query I
+CALL from_substrait('\x12\x0A\x1A\x08\x10\x01\x1A\x04like\x1AV\x12T\x0AO:M\x12A\x12?\x12\x1B\x0A\x19\x12\x10\x0A\x01v\x12\x0B\x0A\x07\xB2\x01\x04\x08\x08\x18\x01\x18\x02:\x05\x0A\x03tbl\x1A \x1A\x1E\x08\x01\x1A\x04\x0A\x02\x10\x01\x22\x0A\x1A\x08\x12\x06\x0A\x02\x12\x00\x22\x00\x22\x08\x1A\x06\x0A\x04b\x02%y\x1A\x08\x12\x06\x0A\x02\x12\x00\x22\x00\x12\x01v2\x0A\x10\x18*\x06DuckDB'::BLOB);
+----
+ducky
+
+
+# ---------------------------- Same tests with JSON ----------------------------
+
+statement ok
+CREATE table ints_json (i INT);
+
+statement ok
+INSERT INTO ints_json VALUES (20), (8), (99), (3000);
+
+# query plan from an optimised Duckdb query plan  
+query I
+CALL get_substrait_json('SELECT abs(i) FROM ints_json');
+----
+{"relations":[{"root":{"input":{"project":{"input":{"read":{"baseSchema":{"names":["i"],"struct":{"types":[{"i32":{"nullability":"NULLABILITY_NULLABLE"}}],"nullability":"NULLABILITY_REQUIRED"}},"projection":{"select":{"structItems":[{}]},"maintainSingularStruct":true},"namedTable":{"names":["ints_json"]}}},"expressions":[{"selection":{"directReference":{"structField":{}},"rootReference":{}}}]}},"names":["i"]}}],"version":{"minorNumber":24,"producer":"DuckDB"}}
+
+# query plan from an unoptimised Duckdb query plan
+query I
+CALL get_substrait_json('SELECT abs(i) FROM ints_json', enable_optimizer=false);
+----
+{"extensions":[{"extensionFunction":{"functionAnchor":1,"name":"abs"}}],"relations":[{"root":{"input":{"project":{"input":{"read":{"baseSchema":{"names":["i"],"struct":{"types":[{"i32":{"nullability":"NULLABILITY_NULLABLE"}}],"nullability":"NULLABILITY_REQUIRED"}},"namedTable":{"names":["ints_json"]}}},"expressions":[{"scalarFunction":{"functionReference":1,"outputType":{"i32":{"nullability":"NULLABILITY_NULLABLE"}},"arguments":[{"value":{"selection":{"directReference":{"structField":{}},"rootReference":{}}}}]}}]}},"names":["abs(i)"]}}],"version":{"minorNumber":24,"producer":"DuckDB"}}
 
 # # insert negative value to break optimization on all positive dataset
-# statement ok
-# INSERT INTO ints VALUES (-1);
-
-# # with the optimized plan negative values are not set correctly
-# query I
-# CALL from_substrait('\x1A6\x124\x0A/:-\x12!\x0A\x1F\x12\x0D\x0A\x01i\x12\x08\x0A\x04*\x02\x10\x01\x18\x02\x22\x06\x0A\x02\x0A\x00\x10\x01:\x06\x0A\x04ints\x1A\x08\x12\x06\x0A\x02\x12\x00\x22\x00\x12\x01i'::BLOB);
-# ----
-# 20
-# 8
-# 99
-# 3000
-# -1
-
-# # with the unoptimized plan negative values are handled correctly 
-# query I
-# CALL from_substrait('\x12\x09\x1A\x07\x10\x01\x1A\x03abs\x1AA\x12?\x0A5:3\x12\x19\x0A\x17\x12\x0D\x0A\x01i\x12\x08\x0A\x04*\x02\x10\x01\x18\x02:\x06\x0A\x04ints\x1A\x16\x1A\x14\x08\x01\x1A\x04*\x02\x10\x01\x22\x0A\x1A\x08\x12\x06\x0A\x02\x12\x00\x22\x00\x12\x06abs(i)'::BLOB);
-# ----
-# 20
-# 8
-# 99
-# 3000
-# 1
-
-# statement ok
-# CREATE table tbl (v varchar);
-
-# statement ok
-# insert into tbl VALUES('hi'), ('universe'), ('ducky');
-
-# # An optimized DuckDB query plan often substitutes the LIKE operator for other operations/functions such as: equal, is_not_null, ends_with
-# query I
-# CALL get_substrait('select * from tbl where v LIKE ''%y''');
-# ----
-# \x12\x0F\x1A\x0D\x10\x01\x1A\x09ends_with\x1A]\x12[\x0AV:T\x12H\x12F\x12#\x0A!\x12\x10\x0A\x01v\x12\x0B\x0A\x07\xB2\x01\x04\x08\x08\x18\x01\x18\x02\x22\x06\x0A\x02\x0A\x00\x10\x01:\x05\x0A\x03tbl\x1A\x1F\x1A\x1D\x08\x01\x1A\x04\x0A\x02\x10\x01\x22\x0A\x1A\x08\x12\x06\x0A\x02\x12\x00\x22\x00\x22\x07\x1A\x05\x0A\x03b\x01y\x1A\x08\x12\x06\x0A\x02\x12\x00\x22\x00\x12\x01v
-
-# query I
-# CALL from_substrait('\x12\x0F\x1A\x0D\x10\x01\x1A\x09ends_with\x1A]\x12[\x0AV:T\x12H\x12F\x12#\x0A!\x12\x10\x0A\x01v\x12\x0B\x0A\x07\xB2\x01\x04\x08\x08\x18\x01\x18\x02\x22\x06\x0A\x02\x0A\x00\x10\x01:\x05\x0A\x03tbl\x1A\x1F\x1A\x1D\x08\x01\x1A\x04\x0A\x02\x10\x01\x22\x0A\x1A\x08\x12\x06\x0A\x02\x12\x00\x22\x00\x22\x07\x1A\x05\x0A\x03b\x01y\x1A\x08\x12\x06\x0A\x02\x12\x00\x22\x00\x12\x01v'::BLOB);
-# ----
-# ducky
-
-# # If substitution is not desirable an unoptimized plan can be used instead.
-# query I
-# CALL get_substrait('select * from tbl where v LIKE ''%y''', enable_optimizer=false);
-# ----
-# \x12\x0A\x1A\x08\x10\x01\x1A\x04like\x1AV\x12T\x0AO:M\x12A\x12?\x12\x1B\x0A\x19\x12\x10\x0A\x01v\x12\x0B\x0A\x07\xB2\x01\x04\x08\x08\x18\x01\x18\x02:\x05\x0A\x03tbl\x1A \x1A\x1E\x08\x01\x1A\x04\x0A\x02\x10\x01\x22\x0A\x1A\x08\x12\x06\x0A\x02\x12\x00\x22\x00\x22\x08\x1A\x06\x0A\x04b\x02%y\x1A\x08\x12\x06\x0A\x02\x12\x00\x22\x00\x12\x01v
-
-# query I
-# CALL from_substrait('\x12\x0A\x1A\x08\x10\x01\x1A\x04like\x1AV\x12T\x0AO:M\x12A\x12?\x12\x1B\x0A\x19\x12\x10\x0A\x01v\x12\x0B\x0A\x07\xB2\x01\x04\x08\x08\x18\x01\x18\x02:\x05\x0A\x03tbl\x1A \x1A\x1E\x08\x01\x1A\x04\x0A\x02\x10\x01\x22\x0A\x1A\x08\x12\x06\x0A\x02\x12\x00\x22\x00\x22\x08\x1A\x06\x0A\x04b\x02%y\x1A\x08\x12\x06\x0A\x02\x12\x00\x22\x00\x12\x01v'::BLOB);
-# ----
-# ducky
-
-
-# # ---------------------------- Same tests with JSON ----------------------------
-
-# statement ok
-# CREATE table ints_json (i INT);
-
-# statement ok
-# INSERT INTO ints_json VALUES (20), (8), (99), (3000);
-
-# # query plan from an optimised Duckdb query plan  
-# query I
-# CALL get_substrait_json('SELECT abs(i) FROM ints_json');
-# ----
-# {"relations":[{"root":{"input":{"project":{"input":{"read":{"baseSchema":{"names":["i"],"struct":{"types":[{"i32":{"nullability":"NULLABILITY_NULLABLE"}}],"nullability":"NULLABILITY_REQUIRED"}},"projection":{"select":{"structItems":[{}]},"maintainSingularStruct":true},"namedTable":{"names":["ints_json"]}}},"expressions":[{"selection":{"directReference":{"structField":{}},"rootReference":{}}}]}},"names":["i"]}}]}
-
-# # query plan from an unoptimised Duckdb query plan
-# query I
-# CALL get_substrait_json('SELECT abs(i) FROM ints_json', false);
-# ----
-# {"extensions":[{"extensionFunction":{"functionAnchor":1,"name":"abs"}}],"relations":[{"root":{"input":{"project":{"input":{"read":{"baseSchema":{"names":["i"],"struct":{"types":[{"i32":{"nullability":"NULLABILITY_NULLABLE"}}],"nullability":"NULLABILITY_REQUIRED"}},"namedTable":{"names":["ints_json"]}}},"expressions":[{"scalarFunction":{"functionReference":1,"outputType":{"i32":{"nullability":"NULLABILITY_NULLABLE"}},"arguments":[{"value":{"selection":{"directReference":{"structField":{}},"rootReference":{}}}}]}}]}},"names":["abs(i)"]}}]}
-
-# # # insert negative value to break optimization on all positive dataset
-# statement ok
-# INSERT INTO ints VALUES (-1);
+statement ok
+INSERT INTO ints VALUES (-1);
 

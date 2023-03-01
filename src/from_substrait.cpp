@@ -59,7 +59,11 @@ unique_ptr<ParsedExpression> SubstraitToDuckDB::TransformLiteralExpr(const subst
 	Value dval;
 	if (slit.has_null()) {
 		dval = Value(LogicalType::SQLNULL);
+<<<<<<< HEAD
 		return make_uniq<ConstantExpression>(dval);
+=======
+		return make_unique<ConstantExpression>(dval);
+>>>>>>> main
 	}
 	switch (slit.literal_type_case()) {
 	case substrait::Expression_Literal::LiteralTypeCase::kFp64:
@@ -143,14 +147,22 @@ unique_ptr<ParsedExpression> SubstraitToDuckDB::TransformLiteralExpr(const subst
 	default:
 		throw InternalException(to_string(slit.literal_type_case()));
 	}
+<<<<<<< HEAD
 	return make_uniq<ConstantExpression>(dval);
+=======
+	return make_unique<ConstantExpression>(dval);
+>>>>>>> main
 }
 
 unique_ptr<ParsedExpression> SubstraitToDuckDB::TransformSelectionExpr(const substrait::Expression &sexpr) {
 	if (!sexpr.selection().has_direct_reference() || !sexpr.selection().direct_reference().has_struct_field()) {
 		throw InternalException("Can only have direct struct references in selections");
 	}
+<<<<<<< HEAD
 	return make_uniq<PositionalReferenceExpression>(sexpr.selection().direct_reference().struct_field().field() + 1);
+=======
+	return make_unique<PositionalReferenceExpression>(sexpr.selection().direct_reference().struct_field().field() + 1);
+>>>>>>> main
 }
 
 unique_ptr<ParsedExpression> SubstraitToDuckDB::TransformScalarFunctionExpr(const substrait::Expression &sexpr) {
@@ -162,6 +174,7 @@ unique_ptr<ParsedExpression> SubstraitToDuckDB::TransformScalarFunctionExpr(cons
 	// string compare galore
 	// TODO simplify this
 	if (function_name == "and") {
+<<<<<<< HEAD
 		return make_uniq<ConjunctionExpression>(ExpressionType::CONJUNCTION_AND, std::move(children));
 	} else if (function_name == "or") {
 		return make_uniq<ConjunctionExpression>(ExpressionType::CONJUNCTION_OR, std::move(children));
@@ -209,19 +222,78 @@ unique_ptr<ParsedExpression> SubstraitToDuckDB::TransformScalarFunctionExpr(cons
 	}
 
 	return make_uniq<FunctionExpression>(RemapFunctionName(function_name), std::move(children));
+=======
+		return make_unique<ConjunctionExpression>(ExpressionType::CONJUNCTION_AND, move(children));
+	} else if (function_name == "or") {
+		return make_unique<ConjunctionExpression>(ExpressionType::CONJUNCTION_OR, move(children));
+	} else if (function_name == "lt") {
+		D_ASSERT(children.size() == 2);
+		return make_unique<ComparisonExpression>(ExpressionType::COMPARE_LESSTHAN, move(children[0]),
+		                                         move(children[1]));
+	} else if (function_name == "equal") {
+		D_ASSERT(children.size() == 2);
+		return make_unique<ComparisonExpression>(ExpressionType::COMPARE_EQUAL, move(children[0]), move(children[1]));
+	} else if (function_name == "not_equal") {
+		D_ASSERT(children.size() == 2);
+		return make_unique<ComparisonExpression>(ExpressionType::COMPARE_NOTEQUAL, move(children[0]),
+		                                         move(children[1]));
+	} else if (function_name == "lte") {
+		D_ASSERT(children.size() == 2);
+		return make_unique<ComparisonExpression>(ExpressionType::COMPARE_LESSTHANOREQUALTO, move(children[0]),
+		                                         move(children[1]));
+	} else if (function_name == "gte") {
+		D_ASSERT(children.size() == 2);
+		return make_unique<ComparisonExpression>(ExpressionType::COMPARE_GREATERTHANOREQUALTO, move(children[0]),
+		                                         move(children[1]));
+	} else if (function_name == "gt") {
+		D_ASSERT(children.size() == 2);
+		return make_unique<ComparisonExpression>(ExpressionType::COMPARE_GREATERTHAN, move(children[0]),
+		                                         move(children[1]));
+	} else if (function_name == "is_not_null") {
+		D_ASSERT(children.size() == 1);
+		return make_unique<OperatorExpression>(ExpressionType::OPERATOR_IS_NOT_NULL, move(children[0]));
+	} else if (function_name == "is_null") {
+		D_ASSERT(children.size() == 1);
+		return make_unique<OperatorExpression>(ExpressionType::OPERATOR_IS_NULL, move(children[0]));
+	} else if (function_name == "not") {
+		D_ASSERT(children.size() == 1);
+		return make_unique<OperatorExpression>(ExpressionType::OPERATOR_NOT, move(children[0]));
+	} else if (function_name == "is_not_distinct_from") {
+		D_ASSERT(children.size() == 2);
+		return make_unique<ComparisonExpression>(ExpressionType::COMPARE_NOT_DISTINCT_FROM, move(children[0]),
+		                                         move(children[1]));
+	} else if (function_name == "between") {
+		// FIXME: ADD between to substrait extension
+		D_ASSERT(children.size() == 3);
+		return make_unique<BetweenExpression>(move(children[0]), move(children[1]), move(children[2]));
+	}
+
+	return make_unique<FunctionExpression>(RemapFunctionName(function_name), move(children));
+>>>>>>> main
 }
 
 unique_ptr<ParsedExpression> SubstraitToDuckDB::TransformIfThenExpr(const substrait::Expression &sexpr) {
 	const auto &scase = sexpr.if_then();
+<<<<<<< HEAD
 	auto dcase = make_uniq<CaseExpression>();
+=======
+	auto dcase = make_unique<CaseExpression>();
+>>>>>>> main
 	for (const auto &sif : scase.ifs()) {
 		CaseCheck dif;
 		dif.when_expr = TransformExpr(sif.if_());
 		dif.then_expr = TransformExpr(sif.then());
+<<<<<<< HEAD
 		dcase->case_checks.push_back(std::move(dif));
 	}
 	dcase->else_expr = TransformExpr(scase.else_());
 	return std::move(dcase);
+=======
+		dcase->case_checks.push_back(move(dif));
+	}
+	dcase->else_expr = TransformExpr(scase.else_());
+	return move(dcase);
+>>>>>>> main
 }
 
 LogicalType SubstraitToDuckDB::SubstraitToDuckType(const ::substrait::Type &s_type) {
@@ -252,7 +324,11 @@ unique_ptr<ParsedExpression> SubstraitToDuckDB::TransformCastExpr(const substrai
 	const auto &scast = sexpr.cast();
 	auto cast_type = SubstraitToDuckType(scast.type());
 	auto cast_child = TransformExpr(scast.input());
+<<<<<<< HEAD
 	return make_uniq<CastExpression>(cast_type, std::move(cast_child));
+=======
+	return make_unique<CastExpression>(cast_type, move(cast_child));
+>>>>>>> main
 }
 
 unique_ptr<ParsedExpression> SubstraitToDuckDB::TransformInExpr(const substrait::Expression &sexpr) {
@@ -265,7 +341,11 @@ unique_ptr<ParsedExpression> SubstraitToDuckDB::TransformInExpr(const substrait:
 		values.emplace_back(TransformExpr(substrait_in.options(i)));
 	}
 
+<<<<<<< HEAD
 	return make_uniq<OperatorExpression>(ExpressionType::COMPARE_IN, std::move(values));
+=======
+	return make_unique<OperatorExpression>(ExpressionType::COMPARE_IN, move(values));
+>>>>>>> main
 }
 
 unique_ptr<ParsedExpression> SubstraitToDuckDB::TransformExpr(const substrait::Expression &sexpr) {
@@ -349,7 +429,11 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformJoinOp(const substrait::Rel &so
 	}
 	unique_ptr<ParsedExpression> join_condition = TransformExpr(sjoin.expression());
 	return make_shared<JoinRelation>(TransformOp(sjoin.left())->Alias("left"),
+<<<<<<< HEAD
 	                                 TransformOp(sjoin.right())->Alias("right"), std::move(join_condition), djointype);
+=======
+	                                 TransformOp(sjoin.right())->Alias("right"), move(join_condition), djointype);
+>>>>>>> main
 }
 
 shared_ptr<Relation> SubstraitToDuckDB::TransformCrossProductOp(const substrait::Rel &sop) {
@@ -379,8 +463,12 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformProjectOp(const substrait::Rel 
 	for (size_t i = 0; i < expressions.size(); i++) {
 		mock_aliases.push_back("expr_" + to_string(i));
 	}
+<<<<<<< HEAD
 	return make_shared<ProjectionRelation>(TransformOp(sop.project().input()), std::move(expressions),
 	                                       std::move(mock_aliases));
+=======
+	return make_shared<ProjectionRelation>(TransformOp(sop.project().input()), move(expressions), move(mock_aliases));
+>>>>>>> main
 }
 
 shared_ptr<Relation> SubstraitToDuckDB::TransformAggregateOp(const substrait::Rel &sop) {
@@ -404,11 +492,18 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformAggregateOp(const substrait::Re
 		if (function_name == "count" && children.empty()) {
 			function_name = "count_star";
 		}
+<<<<<<< HEAD
 		expressions.push_back(make_uniq<FunctionExpression>(RemapFunctionName(function_name), std::move(children)));
 	}
 
 	return make_shared<AggregateRelation>(TransformOp(sop.aggregate().input()), std::move(expressions),
 	                                      std::move(groups));
+=======
+		expressions.push_back(make_unique<FunctionExpression>(RemapFunctionName(function_name), move(children)));
+	}
+
+	return make_shared<AggregateRelation>(TransformOp(sop.aggregate().input()), move(expressions), move(groups));
+>>>>>>> main
 }
 
 shared_ptr<Relation> SubstraitToDuckDB::TransformReadOp(const substrait::Rel &sop) {
@@ -444,7 +539,11 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformReadOp(const substrait::Rel &so
 	}
 
 	if (sget.has_filter()) {
+<<<<<<< HEAD
 		scan = make_shared<FilterRelation>(std::move(scan), TransformExpr(sget.filter()));
+=======
+		scan = make_shared<FilterRelation>(move(scan), TransformExpr(sget.filter()));
+>>>>>>> main
 	}
 
 	if (sget.has_projection()) {
@@ -455,10 +554,17 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformReadOp(const substrait::Rel &so
 			// FIXME how to get actually alias?
 			aliases.push_back("expr_" + to_string(expr_idx++));
 			// TODO make sure nothing else is in there
+<<<<<<< HEAD
 			expressions.push_back(make_uniq<PositionalReferenceExpression>(sproj.field() + 1));
 		}
 
 		scan = make_shared<ProjectionRelation>(std::move(scan), std::move(expressions), std::move(aliases));
+=======
+			expressions.push_back(make_unique<PositionalReferenceExpression>(sproj.field() + 1));
+		}
+
+		scan = make_shared<ProjectionRelation>(move(scan), move(expressions), move(aliases));
+>>>>>>> main
 	}
 
 	return scan;
@@ -469,7 +575,11 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformSortOp(const substrait::Rel &so
 	for (auto &sordf : sop.sort().sorts()) {
 		order_nodes.push_back(TransformOrder(sordf));
 	}
+<<<<<<< HEAD
 	return make_shared<OrderRelation>(TransformOp(sop.sort().input()), std::move(order_nodes));
+=======
+	return make_shared<OrderRelation>(TransformOp(sop.sort().input()), move(order_nodes));
+>>>>>>> main
 }
 shared_ptr<Relation> SubstraitToDuckDB::TransformOp(const substrait::Rel &sop) {
 	switch (sop.rel_type_case()) {
@@ -501,9 +611,15 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformRootOp(const substrait::RelRoot
 	int id = 1;
 	for (auto &column_name : column_names) {
 		aliases.push_back(column_name);
+<<<<<<< HEAD
 		expressions.push_back(make_uniq<PositionalReferenceExpression>(id++));
 	}
 	return make_shared<ProjectionRelation>(TransformOp(sop.input()), std::move(expressions), aliases);
+=======
+		expressions.push_back(make_unique<PositionalReferenceExpression>(id++));
+	}
+	return make_shared<ProjectionRelation>(TransformOp(sop.input()), move(expressions), aliases);
+>>>>>>> main
 }
 
 shared_ptr<Relation> SubstraitToDuckDB::TransformPlan() {

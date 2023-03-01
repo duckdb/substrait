@@ -147,9 +147,7 @@ static void FromSubFunction(ClientContext &context, TableFunctionInput &data_p, 
 	output.Move(*result_chunk);
 }
 
-void SubstraitExtension::Load(DuckDB &db) {
-	Connection con(db);
-	con.BeginTransaction();
+void InitializeGetSubstrait(Connection &con) {
 	auto &catalog = Catalog::GetSystemCatalog(*con.context);
 
 	// create the get_substrait table function that allows us to get a substrait
@@ -158,19 +156,10 @@ void SubstraitExtension::Load(DuckDB &db) {
 	to_sub_func.named_parameters["enable_optimizer"] = LogicalType::BOOLEAN;
 	CreateTableFunctionInfo to_sub_info(to_sub_func);
 	catalog.CreateTableFunction(*con.context, &to_sub_info);
+}
 
-	// create the from_substrait table function that allows us to get a query
-	// result from a substrait plan
-	TableFunction from_sub_func("from_substrait", {LogicalType::BLOB}, FromSubFunction, FromSubstraitBind);
-	CreateTableFunctionInfo from_sub_info(from_sub_func);
-	catalog.CreateTableFunction(*con.context, &from_sub_info);
-
-	// create the from_substrait table function that allows us to get a query
-	// result from a substrait plan
-	TableFunction from_sub_func_json("from_substrait_json", {LogicalType::VARCHAR}, FromSubFunction,
-	                                 FromSubstraitBindJSON);
-	CreateTableFunctionInfo from_sub_info_json(from_sub_func_json);
-	catalog.CreateTableFunction(*con.context, &from_sub_info_json);
+void InitializeGetSubstraitJSON(Connection &con) {
+	auto &catalog = Catalog::GetSystemCatalog(*con.context);
 
 	// create the get_substrait table function that allows us to get a substrait
 	// JSON from a valid SQL Query
@@ -179,6 +168,38 @@ void SubstraitExtension::Load(DuckDB &db) {
 	get_substrait_json.named_parameters["enable_optimizer"] = LogicalType::BOOLEAN;
 	CreateTableFunctionInfo get_substrait_json_info(get_substrait_json);
 	catalog.CreateTableFunction(*con.context, &get_substrait_json_info);
+}
+
+void InitializeFromSubstrait(Connection &con) {
+	auto &catalog = Catalog::GetSystemCatalog(*con.context);
+
+	// create the from_substrait table function that allows us to get a query
+	// result from a substrait plan
+	TableFunction from_sub_func("from_substrait", {LogicalType::BLOB}, FromSubFunction, FromSubstraitBind);
+	CreateTableFunctionInfo from_sub_info(from_sub_func);
+	catalog.CreateTableFunction(*con.context, &from_sub_info);
+}
+
+void InitializeFromSubstraitJSON(Connection &con) {
+	auto &catalog = Catalog::GetSystemCatalog(*con.context);
+
+	// create the from_substrait table function that allows us to get a query
+	// result from a substrait plan
+	TableFunction from_sub_func_json("from_substrait_json", {LogicalType::VARCHAR}, FromSubFunction,
+	                                 FromSubstraitBindJSON);
+	CreateTableFunctionInfo from_sub_info_json(from_sub_func_json);
+	catalog.CreateTableFunction(*con.context, &from_sub_info_json);
+}
+
+void SubstraitExtension::Load(DuckDB &db) {
+	Connection con(db);
+	con.BeginTransaction();
+
+	InitializeGetSubstrait(con);
+	InitializeGetSubstraitJSON(con);
+
+	InitializeFromSubstrait(con);
+	InitializeFromSubstraitJSON(con);
 
 	con.Commit();
 }
