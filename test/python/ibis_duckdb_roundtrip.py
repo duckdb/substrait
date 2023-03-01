@@ -80,9 +80,5 @@ class TestIbisRoundtrip(object):
 				insert into tbl values ('2021/09/21 12:02:21'::TIMESTAMP)
 			"""
 		])
-		tester.test(
-			extract_year
-		)
-		tester.test(
-			extract_month
-		)
+		tester.test(extract_year)
+		tester.test(extract_month)
