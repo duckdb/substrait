@@ -1,0 +1,33 @@
+# name: test/sql/test_substrait_function_name.test
+# description: Test conversion of DuckDB built-in function names to Substrait function names
+# group: [sql]
+
+require substrait
+
+statement ok
+PRAGMA enable_verification
+
+statement ok
+CREATE table dates (d TIMESTAMP);
+
+statement ok
+INSERT INTO dates VALUES ('1992-09-20 20:38:48'), ('1971-09-15 15:14:28'), ('2030-01-03 03:01:54');
+
+query I
+CALL get_substrait_json('SELECT extract(hour FROM d) FROM dates');
+----
+{"extensions":[{"extensionFunction":{"functionAnchor":1,"name":"hour"}}],"relations":[{"root":{"input":{"project":{"input":{"read":{"baseSchema":{"names":["d"],"struct":{"types":[{"timestamp":{"nullability":"NULLABILITY_NULLABLE"}}],"nullability":"NULLABILITY_REQUIRED"}},"projection":{"select":{"structItems":[{}]},"maintainSingularStruct":true},"namedTable":{"names":["dates"]}}},"expressions":[{"scalarFunction":{"functionReference":1,"outputType":{"i64":{"nullability":"NULLABILITY_NULLABLE"}},"arguments":[{"value":{"selection":{"directReference":{"structField":{}},"rootReference":{}}}}]}}]}},"names":["hour(d)"]}}],"version":{"minorNumber":24,"producer":"DuckDB"}}
+
+query I
+CALL from_substrait_json('{"extensions":[{"extensionFunction":{"functionAnchor":1,"name":"hour"}}],"relations":[{"root":{"input":{"project":{"input":{"read":{"baseSchema":{"names":["d"],"struct":{"types":[{"timestamp":{"nullability":"NULLABILITY_NULLABLE"}}],"nullability":"NULLABILITY_REQUIRED"}},"projection":{"select":{"structItems":[{}]},"maintainSingularStruct":true},"namedTable":{"names":["dates"]}}},"expressions":[{"scalarFunction":{"functionReference":1,"outputType":{"i64":{"nullability":"NULLABILITY_NULLABLE"}},"arguments":[{"value":{"selection":{"directReference":{"structField":{}},"rootReference":{}}}}]}}]}},"names":["hour(d)"]}}],"version":{"minorNumber":24,"producer":"DuckDB"}}')
+----
+20
+15
+3
+
+query I
+SELECT extract(hour FROM d) FROM dates;
+----
+20
+15
+03
