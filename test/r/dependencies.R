@@ -1,4 +1,12 @@
-install.packages("testthat", repos = "https://cloud.r-project.org", pkgType = "binary")
-install.packages("DBI", repos = "https://cloud.r-project.org", pkgType = "binary")
-install.packages("dbplyr", repos = "https://cloud.r-project.org", pkgType = "binary")
-install.packages("arrow", repos = "https://cloud.r-project.org", pkgType = "binary")
+local({
+  pkg <- c("rstudioapi", "testthat", "DBI", "dbplyr", "arrow")
+
+  if (.Platform$OS.type == "unix") {
+    options(HTTPUserAgent = sprintf("R/4.1.0 R (4.1.0 %s)", paste(R.version$platform, R.version$arch, R.version$os)))
+    install.packages(pkg, repos = "https://packagemanager.rstudio.com/all/__linux__/focal/latest")
+    # https://github.com/r-lib/covr/pull/499
+    remotes::install_github("r-lib/covr")
+  } else {
+    install.packages(pkg, repos = "https://cloud.r-project.org", pkgType = "binary")
+  }
+})

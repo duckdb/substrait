@@ -1,5 +1,6 @@
 library("DBI")
 library("testthat")
+library("rstudioapi")
 
 load_extension <- function() {
   # Change this when using a different build
