@@ -24,8 +24,8 @@ class IbisDuckDBTester:
 		self.con = duckdb.connect(self.path, read_only=True)
 		self.ibis_con = ibis.connect(f"duckdb://{self.path}", read_only=True)
 
-	def test(self, expression_producer):
-		expr = expression_producer(self.ibis_con)
+	def test(self, expression_producer, *args):
+		expr = expression_producer(self.ibis_con, *args)
 		relation = self.generate_relation(expr.unbind())
 
 		# Verify that the expressions produce the same result
@@ -86,6 +86,6 @@ class CombinedIbisDuckDBTester():
 		for tester in self.testers:
 			tester.open()
 	
-	def test(self, expression_producer):
+	def test(self, expression_producer, *args):
 		for tester in self.testers:
-			tester.test(expression_producer)
+			tester.test(expression_producer, *args)
