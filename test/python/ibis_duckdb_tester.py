@@ -1,6 +1,5 @@
 import duckdb
 import pytest
-from io import StringIO
 
 SubstraitCompiler = pytest.importorskip('ibis_substrait.compiler.core')
 ibis = pytest.importorskip('ibis')
@@ -44,11 +43,10 @@ class SQLIbisDuckDBTester(IbisDuckDBTester):
 
 	def generate_relation(self, expr):
 		# From the ibis expression - generate sql
-		sql_string = StringIO()
-		ibis.show_sql(expr, file=sql_string)
+		sql_string = str(ibis.to_sql(expr))
 
 		# Then use the sql to generate a relation
-		relation = self.con.sql(str(sql_string.getvalue()))
+		relation = self.con.sql(sql_string)
 		return relation
 
 	def __init__(self, path):

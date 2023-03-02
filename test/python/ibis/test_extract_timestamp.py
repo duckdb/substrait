@@ -10,7 +10,7 @@ def extract_component(ibis_db, named_component):
 	expr = tbl[getattr(tbl.date, named_component)().cast('int64')]
 	return expr
 
-class TestIbisRoundtrip(object):
+class TestIbisExtractTimestamp(object):
 	def test_extract(self, tmp_path):
 		# Create a disk-backed duckdb database
 		db_path = str(tmp_path / 'extract_db')
