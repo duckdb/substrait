@@ -1,6 +1,6 @@
 import duckdb
 import pytest
-from io import StringIO 
+from io import StringIO
 
 SubstraitCompiler = pytest.importorskip('ibis_substrait.compiler.core')
 ibis = pytest.importorskip('ibis')
@@ -89,27 +89,3 @@ class CombinedIbisDuckDBTester():
 	def test(self, expression_producer):
 		for tester in self.testers:
 			tester.test(expression_producer)
-
-def extract_year(ibis_db):
-	tbl = ibis_db.table('tbl')
-	return tbl[getattr(tbl.date, "year")().cast('int64')]
-
-def extract_month(ibis_db):
-	tbl = ibis_db.table('tbl')
-	return tbl[getattr(tbl.date, "month")().cast('int64')]
-
-class TestIbisRoundtrip(object):
-	def test_extract(self, tmp_path):
-		# Create a disk-backed duckdb database
-		db_path = str(tmp_path / 'extract_db')
-
-		tester = CombinedIbisDuckDBTester(db_path, [
-			"""
-				create table tbl(date timestamp)
-			""",
-			"""
-				insert into tbl values ('2021/09/21 12:02:21'::TIMESTAMP)
-			"""
-		])
-		tester.test(extract_year)
-		tester.test(extract_month)
