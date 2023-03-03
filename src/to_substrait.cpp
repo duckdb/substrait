@@ -10,7 +10,7 @@
 #include "duckdb/planner/joinside.hpp"
 #include "duckdb/planner/operator/list.hpp"
 #include "duckdb/planner/table_filter.hpp"
-#include "duckdb/storage/statistics/string_statistics.hpp"
+#include "duckdb/storage/statistics/base_statistics.hpp"
 #include "duckdb/catalog/catalog_entry/duck_table_entry.hpp"
 #include "google/protobuf/util/json_util.h"
 #include "substrait/algebra.pb.h"
@@ -936,12 +936,12 @@ substrait::Rel *DuckDBToSubstrait::TransformAggregateGroup(LogicalOperator &dop)
 	case LogicalTypeId::VARCHAR: {
 		auto varchar_type = new substrait::Type_VarChar;
 		varchar_type->set_nullability(type_nullability);
-		if (column_statistics) {
-			auto string_statistics = (StringStatistics *)column_statistics;
-			if (max_string_length < string_statistics->max_string_length) {
-				max_string_length = string_statistics->max_string_length;
+		if (column_statistics && StringStats::HasMaxStringLength(*column_statistics)) {
+			auto stats_max_len = StringStats::MaxStringLength(*column_statistics);
+			if (max_string_length < stats_max_len) {
+				max_string_length = stats_max_len;
 			}
-			varchar_type->set_length(string_statistics->max_string_length);
+			varchar_type->set_length(stats_max_len);
 		} else {
 			// FIXME: Have to propagate the statistics to here somehow
 			varchar_type->set_length(max_string_length);
