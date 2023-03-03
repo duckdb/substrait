@@ -29,6 +29,8 @@ jobs:
         make pull
 
     - name: Install R Dependencies
+      env:
+        GITHUB_PAT: ${{ github.token }}
       run: |
         (cd duckdb/tools/rpkg && R -f dependencies.R)
 
