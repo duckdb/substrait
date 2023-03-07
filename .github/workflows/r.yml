@@ -7,37 +7,28 @@ defaults:
 jobs:
   R:
     name: R
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     env:
       GEN: ninja
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: ./.github/actions/ubuntu_16_setup
       with:
-        fetch-depth: 0
+        openssl: 0
 
-    - uses: actions/setup-python@v4
-      with:
-        python-version: '3.7'
-
-    - uses: r-lib/actions/setup-r@v1
-      with:
-        r-version: 'devel'
-
+    - name: Update DuckDB submodule
+      run: |
+        git config --global --add safe.directory '*'
+        make pull
 
     - name: Install
       env:
         GITHUB_PAT: ${{ github.token }}
       shell: bash
       run: |
-        sudo apt-get update -y -qq && sudo apt-get install -y -qq ninja-build texlive-latex-base texlive-fonts-extra libcurl4-openssl-dev valgrind pandoc tidy git-all 
+        sudo apt-get update -y -qq && sudo apt-get install -y -qq ninja-build texlive-latex-base texlive-fonts-extra libcurl4-openssl-dev valgrind pandoc tidy
         mkdir -p $HOME/.R
         R -f tools/rpkg/dependencies.R
-
-    - name: Update DuckDB submodule
-      run: |
-        git config --global --add safe.directory '*'
-        make pull
 
     - name: Build Extension
       run: |
