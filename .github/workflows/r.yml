@@ -24,29 +24,20 @@ jobs:
       with:
         r-version: 'devel'
 
-    - name: Install Git 2.18.5
-      shell: bash
-      run: |
-        wget https://github.com/git/git/archive/refs/tags/v2.18.5.tar.gz
-        tar xvf v2.18.5.tar.gz
-        cd git-2.18.5
-        make
-        make prefix=/usr install
-        git --version
-
-    - name: Update DuckDB submodule
-      run: |
-        git config --global --add safe.directory '*'
-        make pull
 
     - name: Install
       env:
         GITHUB_PAT: ${{ github.token }}
       shell: bash
       run: |
-        sudo apt-get update -y -qq && sudo apt-get install -y -qq ninja-build texlive-latex-base texlive-fonts-extra libcurl4-openssl-dev valgrind pandoc tidy
+        sudo apt-get update -y -qq && sudo apt-get install -y -qq ninja-build texlive-latex-base texlive-fonts-extra libcurl4-openssl-dev valgrind pandoc tidy git-all 
         mkdir -p $HOME/.R
         R -f tools/rpkg/dependencies.R
+
+    - name: Update DuckDB submodule
+      run: |
+        git config --global --add safe.directory '*'
+        make pull
 
     - name: Build Extension
       run: |
