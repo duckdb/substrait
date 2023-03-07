@@ -7,22 +7,21 @@ defaults:
 jobs:
   R:
     name: R
-    runs-on: ubuntu-latest
-    container: ubuntu:16.04
+    runs-on: macos-latest
     env:
       GEN: ninja
 
     steps:
+    - name: Install Ninja
+      run: brew install ninja
 
-    - uses: ./duckdb/.github/actions/ubuntu_16_setup
-      with:
-        aarch64_cross_compile: 0
-        openssl: 0
-
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v2
       with:
         fetch-depth: 0
-        submodules: 'true'
+
+    - uses: actions/setup-python@v2
+      with:
+        python-version: '3.9'
 
     - name: Update DuckDB submodule
       run: |
@@ -32,10 +31,8 @@ jobs:
     - name: Install R Dependencies
       env:
         GITHUB_PAT: ${{ github.token }}
-      shell: bash
       run: |
-        mkdir -p $HOME/.R
-        R -f tools/rpkg/dependencies.R
+        (cd duckdb/tools/rpkg && R -f dependencies.R)
 
     - name: Build Extension
       run: |
