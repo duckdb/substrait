@@ -12,7 +12,7 @@ jobs:
       GEN: ninja
 
     steps:
-    - uses: ./duckdb/.github/actions/ubuntu_16_setup
+    - uses: ./duckdb/.github/actions/ubuntu_16_setup/action.yml
       with:
         openssl: 0
 
