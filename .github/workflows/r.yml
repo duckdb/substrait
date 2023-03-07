@@ -14,6 +14,9 @@ jobs:
     steps:
     - name: Install Ninja
       run: brew install ninja
+      
+    - name: Install R
+      run: brew install r
 
     - uses: actions/checkout@v2
       with:
@@ -32,6 +35,7 @@ jobs:
       env:
         GITHUB_PAT: ${{ github.token }}
       run: |
+        mkdir -p $HOME/.R
         (cd duckdb/tools/rpkg && R -f dependencies.R)
 
     - name: Build Extension
