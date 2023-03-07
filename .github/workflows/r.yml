@@ -7,32 +7,46 @@ defaults:
 jobs:
   R:
     name: R
-    runs-on: macos-latest
+    runs-on: ubuntu-20.04
     env:
       GEN: ninja
 
     steps:
-    - name: Install Ninja
-      run: brew install ninja
-
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         fetch-depth: 0
 
-    - uses: actions/setup-python@v2
+    - uses: actions/setup-python@v4
       with:
-        python-version: '3.9'
+        python-version: '3.7'
+
+    - uses: r-lib/actions/setup-r@v1
+      with:
+        r-version: 'devel'
+
+    - name: Install Git 2.18.5
+      shell: bash
+      run: |
+        wget https://github.com/git/git/archive/refs/tags/v2.18.5.tar.gz
+        tar xvf v2.18.5.tar.gz
+        cd git-2.18.5
+        make
+        make prefix=/usr install
+        git --version
 
     - name: Update DuckDB submodule
       run: |
         git config --global --add safe.directory '*'
         make pull
 
-    - name: Install R Dependencies
+    - name: Install
       env:
         GITHUB_PAT: ${{ github.token }}
+      shell: bash
       run: |
-        (cd duckdb/tools/rpkg && R -f dependencies.R)
+        sudo apt-get update -y -qq && sudo apt-get install -y -qq ninja-build texlive-latex-base texlive-fonts-extra libcurl4-openssl-dev valgrind pandoc tidy
+        mkdir -p $HOME/.R
+        R -f tools/rpkg/dependencies.R
 
     - name: Build Extension
       run: |
