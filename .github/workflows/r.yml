@@ -32,7 +32,7 @@ jobs:
       env:
         GITHUB_PAT: ${{ github.token }}
       run: |
-        (cd test/r && R -f dependencies.R)
+        (cd duckdb/tools/rpkg && R -f dependencies.R)
 
     - name: Build Extension
       run: |
