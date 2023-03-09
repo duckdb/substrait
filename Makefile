@@ -98,6 +98,9 @@ test_release_python: release_python
 test_release_r: release_r
 	cd test/r && R -f test_substrait.R
 
+test_debug_r: debug_r
+	cd test/r && DUCKDB_R_DEBUG=1 R -f test_substrait.R
+
 format:
 	cp ${DUCKDB_DIRECTORY}/.clang-format .
 	find src/ -iname *.hpp -o -iname *.cpp | xargs clang-format --sort-includes=0 -style=file -i

@@ -192,7 +192,8 @@ unique_ptr<ParsedExpression> SubstraitToDuckDB::TransformScalarFunctionExpr(cons
 		                                         std::move(children[1]));
 	} else if (function_name == "equal") {
 		D_ASSERT(children.size() == 2);
-		return make_unique<ComparisonExpression>(ExpressionType::COMPARE_EQUAL, std::move(children[0]), std::move(children[1]));
+		return make_unique<ComparisonExpression>(ExpressionType::COMPARE_EQUAL, std::move(children[0]),
+		                                         std::move(children[1]));
 	} else if (function_name == "not_equal") {
 		D_ASSERT(children.size() == 2);
 		return make_unique<ComparisonExpression>(ExpressionType::COMPARE_NOTEQUAL, std::move(children[0]),
@@ -405,7 +406,8 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformProjectOp(const substrait::Rel 
 	for (size_t i = 0; i < expressions.size(); i++) {
 		mock_aliases.push_back("expr_" + to_string(i));
 	}
-	return make_shared<ProjectionRelation>(TransformOp(sop.project().input()), std::move(expressions), std::move(mock_aliases));
+	return make_shared<ProjectionRelation>(TransformOp(sop.project().input()), std::move(expressions),
+	                                       std::move(mock_aliases));
 }
 
 shared_ptr<Relation> SubstraitToDuckDB::TransformAggregateOp(const substrait::Rel &sop) {
@@ -432,7 +434,8 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformAggregateOp(const substrait::Re
 		expressions.push_back(make_unique<FunctionExpression>(RemapFunctionName(function_name), std::move(children)));
 	}
 
-	return make_shared<AggregateRelation>(TransformOp(sop.aggregate().input()), std::move(expressions), std::move(groups));
+	return make_shared<AggregateRelation>(TransformOp(sop.aggregate().input()), std::move(expressions),
+	                                      std::move(groups));
 }
 
 shared_ptr<Relation> SubstraitToDuckDB::TransformReadOp(const substrait::Rel &sop) {

@@ -5,7 +5,7 @@ load_extension <- function() {
   # Change this when using a different build
   build_type = "release"
 
-  file_directory <- dirname(rstudioapi::getSourceEditorContext()$path)
+  file_directory <- getwd()
   con <- dbConnect(duckdb::duckdb(config=list("allow_unsigned_extensions"="true")))
   dbExecute(con, sprintf("LOAD '%s/../../build/%s/extension/substrait/substrait.duckdb_extension';", file_directory, build_type))
   return (con)
