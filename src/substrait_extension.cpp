@@ -44,7 +44,7 @@ static unique_ptr<FunctionData> ToSubstraitBind(ClientContext &context, TableFun
 	}
 	return_types.emplace_back(LogicalType::BLOB);
 	names.emplace_back("Plan Blob");
-	return move(result);
+	return std::move(result);
 }
 
 static unique_ptr<FunctionData> ToJsonBind(ClientContext &context, TableFunctionBindInput &input,
@@ -59,7 +59,7 @@ static unique_ptr<FunctionData> ToJsonBind(ClientContext &context, TableFunction
 	}
 	return_types.emplace_back(LogicalType::VARCHAR);
 	names.emplace_back("Json");
-	return move(result);
+	return std::move(result);
 }
 
 shared_ptr<Relation> SubstraitPlanToDuckDBRel(Connection &conn, const string &serialized, bool json = false) {
@@ -182,7 +182,7 @@ static unique_ptr<FunctionData> SubstraitBind(ClientContext &context, TableFunct
 		return_types.emplace_back(column.Type());
 		names.emplace_back(column.Name());
 	}
-	return move(result);
+	return std::move(result);
 }
 
 static unique_ptr<FunctionData> FromSubstraitBind(ClientContext &context, TableFunctionBindInput &input,

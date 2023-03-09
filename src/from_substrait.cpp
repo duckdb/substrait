@@ -183,49 +183,49 @@ unique_ptr<ParsedExpression> SubstraitToDuckDB::TransformScalarFunctionExpr(cons
 	// string compare galore
 	// TODO simplify this
 	if (function_name == "and") {
-		return make_unique<ConjunctionExpression>(ExpressionType::CONJUNCTION_AND, move(children));
+		return make_unique<ConjunctionExpression>(ExpressionType::CONJUNCTION_AND, std::move(children));
 	} else if (function_name == "or") {
-		return make_unique<ConjunctionExpression>(ExpressionType::CONJUNCTION_OR, move(children));
+		return make_unique<ConjunctionExpression>(ExpressionType::CONJUNCTION_OR, std::move(children));
 	} else if (function_name == "lt") {
 		D_ASSERT(children.size() == 2);
-		return make_unique<ComparisonExpression>(ExpressionType::COMPARE_LESSTHAN, move(children[0]),
-		                                         move(children[1]));
+		return make_unique<ComparisonExpression>(ExpressionType::COMPARE_LESSTHAN, std::move(children[0]),
+		                                         std::move(children[1]));
 	} else if (function_name == "equal") {
 		D_ASSERT(children.size() == 2);
-		return make_unique<ComparisonExpression>(ExpressionType::COMPARE_EQUAL, move(children[0]), move(children[1]));
+		return make_unique<ComparisonExpression>(ExpressionType::COMPARE_EQUAL, std::move(children[0]), std::move(children[1]));
 	} else if (function_name == "not_equal") {
 		D_ASSERT(children.size() == 2);
-		return make_unique<ComparisonExpression>(ExpressionType::COMPARE_NOTEQUAL, move(children[0]),
-		                                         move(children[1]));
+		return make_unique<ComparisonExpression>(ExpressionType::COMPARE_NOTEQUAL, std::move(children[0]),
+		                                         std::move(children[1]));
 	} else if (function_name == "lte") {
 		D_ASSERT(children.size() == 2);
-		return make_unique<ComparisonExpression>(ExpressionType::COMPARE_LESSTHANOREQUALTO, move(children[0]),
-		                                         move(children[1]));
+		return make_unique<ComparisonExpression>(ExpressionType::COMPARE_LESSTHANOREQUALTO, std::move(children[0]),
+		                                         std::move(children[1]));
 	} else if (function_name == "gte") {
 		D_ASSERT(children.size() == 2);
-		return make_unique<ComparisonExpression>(ExpressionType::COMPARE_GREATERTHANOREQUALTO, move(children[0]),
-		                                         move(children[1]));
+		return make_unique<ComparisonExpression>(ExpressionType::COMPARE_GREATERTHANOREQUALTO, std::move(children[0]),
+		                                         std::move(children[1]));
 	} else if (function_name == "gt") {
 		D_ASSERT(children.size() == 2);
-		return make_unique<ComparisonExpression>(ExpressionType::COMPARE_GREATERTHAN, move(children[0]),
-		                                         move(children[1]));
+		return make_unique<ComparisonExpression>(ExpressionType::COMPARE_GREATERTHAN, std::move(children[0]),
+		                                         std::move(children[1]));
 	} else if (function_name == "is_not_null") {
 		D_ASSERT(children.size() == 1);
-		return make_unique<OperatorExpression>(ExpressionType::OPERATOR_IS_NOT_NULL, move(children[0]));
+		return make_unique<OperatorExpression>(ExpressionType::OPERATOR_IS_NOT_NULL, std::move(children[0]));
 	} else if (function_name == "is_null") {
 		D_ASSERT(children.size() == 1);
-		return make_unique<OperatorExpression>(ExpressionType::OPERATOR_IS_NULL, move(children[0]));
+		return make_unique<OperatorExpression>(ExpressionType::OPERATOR_IS_NULL, std::move(children[0]));
 	} else if (function_name == "not") {
 		D_ASSERT(children.size() == 1);
-		return make_unique<OperatorExpression>(ExpressionType::OPERATOR_NOT, move(children[0]));
+		return make_unique<OperatorExpression>(ExpressionType::OPERATOR_NOT, std::move(children[0]));
 	} else if (function_name == "is_not_distinct_from") {
 		D_ASSERT(children.size() == 2);
-		return make_unique<ComparisonExpression>(ExpressionType::COMPARE_NOT_DISTINCT_FROM, move(children[0]),
-		                                         move(children[1]));
+		return make_unique<ComparisonExpression>(ExpressionType::COMPARE_NOT_DISTINCT_FROM, std::move(children[0]),
+		                                         std::move(children[1]));
 	} else if (function_name == "between") {
 		// FIXME: ADD between to substrait extension
 		D_ASSERT(children.size() == 3);
-		return make_unique<BetweenExpression>(move(children[0]), move(children[1]), move(children[2]));
+		return make_unique<BetweenExpression>(std::move(children[0]), std::move(children[1]), std::move(children[2]));
 	} else if (function_name == "extract") {
 		D_ASSERT(enum_expressions.size() == 1);
 		auto &subfield = enum_expressions[0];
@@ -234,7 +234,7 @@ unique_ptr<ParsedExpression> SubstraitToDuckDB::TransformScalarFunctionExpr(cons
 		children.insert(children.begin(), std::move(constant_expression));
 	}
 
-	return make_unique<FunctionExpression>(RemapFunctionName(function_name), move(children));
+	return make_unique<FunctionExpression>(RemapFunctionName(function_name), std::move(children));
 }
 
 unique_ptr<ParsedExpression> SubstraitToDuckDB::TransformIfThenExpr(const substrait::Expression &sexpr) {
@@ -244,10 +244,10 @@ unique_ptr<ParsedExpression> SubstraitToDuckDB::TransformIfThenExpr(const substr
 		CaseCheck dif;
 		dif.when_expr = TransformExpr(sif.if_());
 		dif.then_expr = TransformExpr(sif.then());
-		dcase->case_checks.push_back(move(dif));
+		dcase->case_checks.push_back(std::move(dif));
 	}
 	dcase->else_expr = TransformExpr(scase.else_());
-	return move(dcase);
+	return std::move(dcase);
 }
 
 LogicalType SubstraitToDuckDB::SubstraitToDuckType(const ::substrait::Type &s_type) {
@@ -278,7 +278,7 @@ unique_ptr<ParsedExpression> SubstraitToDuckDB::TransformCastExpr(const substrai
 	const auto &scast = sexpr.cast();
 	auto cast_type = SubstraitToDuckType(scast.type());
 	auto cast_child = TransformExpr(scast.input());
-	return make_unique<CastExpression>(cast_type, move(cast_child));
+	return make_unique<CastExpression>(cast_type, std::move(cast_child));
 }
 
 unique_ptr<ParsedExpression> SubstraitToDuckDB::TransformInExpr(const substrait::Expression &sexpr) {
@@ -291,7 +291,7 @@ unique_ptr<ParsedExpression> SubstraitToDuckDB::TransformInExpr(const substrait:
 		values.emplace_back(TransformExpr(substrait_in.options(i)));
 	}
 
-	return make_unique<OperatorExpression>(ExpressionType::COMPARE_IN, move(values));
+	return make_unique<OperatorExpression>(ExpressionType::COMPARE_IN, std::move(values));
 }
 
 unique_ptr<ParsedExpression> SubstraitToDuckDB::TransformExpr(const substrait::Expression &sexpr) {
@@ -375,7 +375,7 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformJoinOp(const substrait::Rel &so
 	}
 	unique_ptr<ParsedExpression> join_condition = TransformExpr(sjoin.expression());
 	return make_shared<JoinRelation>(TransformOp(sjoin.left())->Alias("left"),
-	                                 TransformOp(sjoin.right())->Alias("right"), move(join_condition), djointype);
+	                                 TransformOp(sjoin.right())->Alias("right"), std::move(join_condition), djointype);
 }
 
 shared_ptr<Relation> SubstraitToDuckDB::TransformCrossProductOp(const substrait::Rel &sop) {
@@ -405,7 +405,7 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformProjectOp(const substrait::Rel 
 	for (size_t i = 0; i < expressions.size(); i++) {
 		mock_aliases.push_back("expr_" + to_string(i));
 	}
-	return make_shared<ProjectionRelation>(TransformOp(sop.project().input()), move(expressions), move(mock_aliases));
+	return make_shared<ProjectionRelation>(TransformOp(sop.project().input()), std::move(expressions), std::move(mock_aliases));
 }
 
 shared_ptr<Relation> SubstraitToDuckDB::TransformAggregateOp(const substrait::Rel &sop) {
@@ -429,10 +429,10 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformAggregateOp(const substrait::Re
 		if (function_name == "count" && children.empty()) {
 			function_name = "count_star";
 		}
-		expressions.push_back(make_unique<FunctionExpression>(RemapFunctionName(function_name), move(children)));
+		expressions.push_back(make_unique<FunctionExpression>(RemapFunctionName(function_name), std::move(children)));
 	}
 
-	return make_shared<AggregateRelation>(TransformOp(sop.aggregate().input()), move(expressions), move(groups));
+	return make_shared<AggregateRelation>(TransformOp(sop.aggregate().input()), std::move(expressions), std::move(groups));
 }
 
 shared_ptr<Relation> SubstraitToDuckDB::TransformReadOp(const substrait::Rel &sop) {
@@ -468,7 +468,7 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformReadOp(const substrait::Rel &so
 	}
 
 	if (sget.has_filter()) {
-		scan = make_shared<FilterRelation>(move(scan), TransformExpr(sget.filter()));
+		scan = make_shared<FilterRelation>(std::move(scan), TransformExpr(sget.filter()));
 	}
 
 	if (sget.has_projection()) {
@@ -482,7 +482,7 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformReadOp(const substrait::Rel &so
 			expressions.push_back(make_unique<PositionalReferenceExpression>(sproj.field() + 1));
 		}
 
-		scan = make_shared<ProjectionRelation>(move(scan), move(expressions), move(aliases));
+		scan = make_shared<ProjectionRelation>(std::move(scan), std::move(expressions), std::move(aliases));
 	}
 
 	return scan;
@@ -493,7 +493,7 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformSortOp(const substrait::Rel &so
 	for (auto &sordf : sop.sort().sorts()) {
 		order_nodes.push_back(TransformOrder(sordf));
 	}
-	return make_shared<OrderRelation>(TransformOp(sop.sort().input()), move(order_nodes));
+	return make_shared<OrderRelation>(TransformOp(sop.sort().input()), std::move(order_nodes));
 }
 shared_ptr<Relation> SubstraitToDuckDB::TransformOp(const substrait::Rel &sop) {
 	switch (sop.rel_type_case()) {
@@ -527,7 +527,7 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformRootOp(const substrait::RelRoot
 		aliases.push_back(column_name);
 		expressions.push_back(make_unique<PositionalReferenceExpression>(id++));
 	}
-	return make_shared<ProjectionRelation>(TransformOp(sop.input()), move(expressions), aliases);
+	return make_shared<ProjectionRelation>(TransformOp(sop.input()), std::move(expressions), aliases);
 }
 
 shared_ptr<Relation> SubstraitToDuckDB::TransformPlan() {
