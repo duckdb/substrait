@@ -23,14 +23,16 @@ jobs:
       with:
         python-version: '3.9'
 
-    - name: Install R Dependencies
-      run: |
-        (cd test/r && R -f dependencies.R)
-
     - name: Update DuckDB submodule
       run: |
         git config --global --add safe.directory '*'
         make pull
+
+    - name: Install R Dependencies
+      env:
+        GITHUB_PAT: ${{ github.token }}
+      run: |
+        (cd duckdb/tools/rpkg && R -f dependencies.R)
 
     - name: Build Extension
       run: |
