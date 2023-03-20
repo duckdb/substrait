@@ -1,0 +1,3 @@
+pandas
+ibis-framework>=5.0.0
+ibis-substrait>=2.26.0
