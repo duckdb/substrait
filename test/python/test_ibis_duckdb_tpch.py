@@ -10,8 +10,7 @@ get_tpch_query = pytest.importorskip('ibis_tpch_util')
 
 def unbound_from_duckdb(table):  # noqa: D103
     return ibis.table(
-        list(zip(table.columns, map(parse_type.parse_type, table.dtypes))), name=table.alias
-    )
+        list(zip(table.columns, map(parse_type.parse, table.dtypes))), name=table.alias)
 
 class TPCHBackend(BaseBackend.BaseBackend):  # noqa: D101
     def __init__(self,duck_con,  scale_factor=0.1):  # noqa: D107
@@ -42,6 +41,18 @@ class TPCHBackend(BaseBackend.BaseBackend):  # noqa: D101
         ...
 
     def list_tables(self):  # noqa: D102
+        ...
+
+    def create_table(self):  # noqa: D102
+        ...
+
+    def create_view(self):  # noqa: D102
+        ...
+
+    def drop_table(self):  # noqa: D102
+        ...
+
+    def drop_view(self):  # noqa: D102
         ...
 
     def version(self):  # noqa: D102
