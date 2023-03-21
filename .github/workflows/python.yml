@@ -18,6 +18,7 @@ jobs:
     - uses: actions/checkout@v2
       with:
         fetch-depth: 0
+        # fixme: why is `submodules: 'true'` not set?
 
     - uses: actions/setup-python@v2
       with:
@@ -29,9 +30,7 @@ jobs:
         make pull
 
     - name: Build DuckDB (Python)
-      run: |
-        cd duckdb/tools/pythonpkg
-        python3 -m pip install .
+      run: make release_python
 
     - name: Build Substrait
       run: make release
@@ -44,5 +43,4 @@ jobs:
         pip install --no-binary protobuf protobuf
 
     - name: Test Python
-      run: |
-        (cd test/python && python -m pytest)
+      run: make test_debug_python
