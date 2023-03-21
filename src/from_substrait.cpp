@@ -25,7 +25,11 @@ const std::unordered_map<std::string, std::string> SubstraitToDuckDB::function_n
     {"modulus", "mod"},      {"std_dev", "stddev"},     {"starts_with", "prefix"},
     {"ends_with", "suffix"}, {"substring", "substr"},   {"char_length", "length"},
     {"is_nan", "isnan"},     {"is_finite", "isfinite"}, {"is_infinite", "isinf"},
-    {"like", "~~"}};
+    {"like", "~~"},          {"extract", "date_part"}};
+
+const case_insensitive_set_t SubstraitToDuckDB::valid_extract_subfields = {
+    "year",    "month",       "day",          "decade", "century", "millenium",
+    "quarter", "microsecond", "milliseconds", "second", "minute",  "hour"};
 
 std::string &SubstraitToDuckDB::RemapFunctionName(std::string &function_name) {
 	auto it = function_names_remap.find(function_name);
@@ -153,11 +157,28 @@ unique_ptr<ParsedExpression> SubstraitToDuckDB::TransformSelectionExpr(const sub
 	return make_unique<PositionalReferenceExpression>(sexpr.selection().direct_reference().struct_field().field() + 1);
 }
 
+void SubstraitToDuckDB::VerifyCorrectExtractSubfield(const string &subfield) {
+	D_ASSERT(SubstraitToDuckDB::valid_extract_subfields.count(subfield));
+}
+
 unique_ptr<ParsedExpression> SubstraitToDuckDB::TransformScalarFunctionExpr(const substrait::Expression &sexpr) {
 	auto function_name = FindFunction(sexpr.scalar_function().function_reference());
 	vector<unique_ptr<ParsedExpression>> children;
-	for (auto &sarg : sexpr.scalar_function().arguments()) {
-		children.push_back(TransformExpr(sarg.value()));
+	vector<string> enum_expressions;
+	auto &function_arguments = sexpr.scalar_function().arguments();
+	for (auto &sarg : function_arguments) {
+		if (sarg.has_value()) {
+			// value expression
+			children.push_back(TransformExpr(sarg.value()));
+		} else if (sarg.has_type()) {
+			// type expression
+			throw NotImplementedException("Type arguments in Substrait expressions are not supported yet!");
+		} else {
+			// enum expression
+			D_ASSERT(sarg.has_enum_());
+			auto &enum_str = sarg.enum_();
+			enum_expressions.push_back(enum_str);
+		}
 	}
 	// string compare galore
 	// TODO simplify this
@@ -206,6 +227,12 @@ unique_ptr<ParsedExpression> SubstraitToDuckDB::TransformScalarFunctionExpr(cons
 		// FIXME: ADD between to substrait extension
 		D_ASSERT(children.size() == 3);
 		return make_unique<BetweenExpression>(std::move(children[0]), std::move(children[1]), std::move(children[2]));
+	} else if (function_name == "extract") {
+		D_ASSERT(enum_expressions.size() == 1);
+		auto &subfield = enum_expressions[0];
+		VerifyCorrectExtractSubfield(subfield);
+		auto constant_expression = make_unique<ConstantExpression>(Value(subfield));
+		children.insert(children.begin(), std::move(constant_expression));
 	}
 
 	return make_unique<FunctionExpression>(RemapFunctionName(function_name), std::move(children));
