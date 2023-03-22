@@ -18,22 +18,19 @@ jobs:
     - uses: actions/checkout@v2
       with:
         fetch-depth: 0
-        # fixme: why is `submodules: 'true'` not set?
+        submodules: 'true'
 
     - uses: actions/setup-python@v2
       with:
         python-version: '3.9'
 
-    - name: Update DuckDB submodule
-      run: |
-        git config --global --add safe.directory '*'
-        make pull
+    # MIGHT STILL BE NEEDED???
+    #- name: Update DuckDB submodule
+    #  run: |
+    # git config --global --add safe.directory '*'
 
     - name: Build DuckDB (Python)
-      run: make release_python
-
-    - name: Build Substrait
-      run: make release
+      run: make debug_python
 
     - name: Install Python Dependencies
       shell: bash
