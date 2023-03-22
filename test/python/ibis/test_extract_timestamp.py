@@ -11,7 +11,7 @@ def extract_component(ibis_db, named_component):
 	return expr
 
 class TestIbisExtractTimestamp(object):
-	def test_extract(self, tmp_path):
+	def test_extract(self, tmp_path, require):
 		# Create a disk-backed duckdb database
 		db_path = str(tmp_path / 'extract_db')
 
@@ -22,7 +22,7 @@ class TestIbisExtractTimestamp(object):
 			"""
 				insert into tbl values ('2021/09/21 12:02:21'::TIMESTAMP)
 			"""
-		])
+		], require)
 
 		timestamp_components = [
 			"day",

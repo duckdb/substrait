@@ -4,8 +4,8 @@ import pytest
 SubstraitCompiler = pytest.importorskip('ibis_substrait.compiler.core')
 ibis = pytest.importorskip('ibis')
 
-def initialize_db(path, queries):
-	con = duckdb.connect(path)
+def initialize_db(path, queries, require):
+	con = require('substrait', path)
 	# Initialize + populate the database
 	for query in queries:
 		con.sql(query)
@@ -15,12 +15,12 @@ class IbisDuckDBTester:
 	def __init__(self, path):
 		self.path = path
 
-	def initialize(self, queries):
-		initialize_db(self.path, queries)
+	def initialize(self, queries, require):
+		initialize_db(self.path, queries, require)
 		
-	def open(self):
+	def open(self, require):
 		# Create connections to the db
-		self.con = duckdb.connect(self.path, read_only=True)
+		self.con = require('substrait', self.path, read_only=True)
 		self.ibis_con = ibis.connect(f"duckdb://{self.path}", read_only=True)
 
 	def test(self, expression_producer, *args):
@@ -35,10 +35,10 @@ class IbisDuckDBTester:
 		assert duck_res == res
 
 class SQLIbisDuckDBTester(IbisDuckDBTester):
-	def create(path, queries):
+	def create(path, queries, require):
 		self = SQLIbisDuckDBTester(path)
-		self.initialize(queries)
-		self.open()
+		self.initialize(queries, require)
+		self.open(require)
 		return self
 
 	def generate_relation(self, expr):
@@ -53,10 +53,10 @@ class SQLIbisDuckDBTester(IbisDuckDBTester):
 		super(SQLIbisDuckDBTester, self).__init__(path)
 
 class SubstraitIbisDuckDBTester(IbisDuckDBTester):
-	def create(path, queries):
+	def create(path, queries, require):
 		self = SubstraitIbisDuckDBTester(path)
-		self.initialize(queries)
-		self.open()
+		self.initialize(queries, require)
+		self.open(require)
 		return self
 
 	def generate_relation(self, expr):
@@ -72,17 +72,17 @@ class SubstraitIbisDuckDBTester(IbisDuckDBTester):
 		super(SubstraitIbisDuckDBTester, self).__init__(path)
 
 class CombinedIbisDuckDBTester():
-	def __init__(self, path, queries):
+	def __init__(self, path, queries, require):
 		self.path = path
 
 		self.testers = []
 		self.testers += [SQLIbisDuckDBTester(self.path)]
 		self.testers += [SubstraitIbisDuckDBTester(self.path)]
 
-		initialize_db(self.path, queries)
+		initialize_db(self.path, queries, require)
 
 		for tester in self.testers:
-			tester.open()
+			tester.open(require)
 	
 	def test(self, expression_producer, *args):
 		for tester in self.testers:

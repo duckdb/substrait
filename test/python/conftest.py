@@ -18,8 +18,13 @@ def duckdb_empty_cursor(request):
 
 @pytest.fixture(scope="function")
 def require():
-    def _require(extension_name, db_name=''):
-        conn = duckdb.connect(db_name, config={'allow_unsigned_extensions' : 'true'})
+    def _require(extension_name, db_name='', read_only=None):
+        config = {};
+        config['allow_unsigned_extensions'] = 'true'
+        if (read_only == None):
+            conn = duckdb.connect(db_name, config=config)
+        else:
+            conn = duckdb.connect(db_name, config=config, read_only=read_only)
         conn.execute(f"LOAD '{dir}/../../build/{build_type}/extension/substrait/substrait.duckdb_extension'")
         return conn
 

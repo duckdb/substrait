@@ -10,7 +10,7 @@ def extract_component(ibis_db, named_component):
 	return expr
 
 class TestIbisExtractTime(object):
-	def test_extract_combined(self, tmp_path):
+	def test_extract_combined(self, tmp_path, require):
 		# Create a disk-backed duckdb database
 		db_path = str(tmp_path / 'extract_db')
 
@@ -21,7 +21,7 @@ class TestIbisExtractTime(object):
 			"""
 				insert into tbl values ('2021/09/21'::DATE)
 			"""
-		])
+		], require)
 
 		date_components = [
 			"day",
