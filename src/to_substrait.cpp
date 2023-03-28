@@ -10,7 +10,7 @@
 #include "duckdb/planner/joinside.hpp"
 #include "duckdb/planner/operator/list.hpp"
 #include "duckdb/planner/table_filter.hpp"
-#include "duckdb/storage/statistics/string_statistics.hpp"
+#include "duckdb/storage/statistics/base_statistics.hpp"
 #include "duckdb/catalog/catalog_entry/duck_table_entry.hpp"
 #include "google/protobuf/util/json_util.h"
 #include "substrait/algebra.pb.h"
@@ -23,6 +23,10 @@ const std::unordered_map<std::string, std::string> DuckDBToSubstrait::function_n
     {"mod", "modulus"},       {"stddev", "std_dev"},      {"prefix", "starts_with"}, {"suffix", "ends_with"},
     {"substr", "substring"},  {"length", "char_length"},  {"isnan", "is_nan"},       {"isfinite", "is_finite"},
     {"isinf", "is_infinite"}, {"sum_no_overflow", "sum"}, {"count_star", "count"},   {"~~", "like"}};
+
+const case_insensitive_set_t DuckDBToSubstrait::valid_extract_subfields = {
+    "year",    "month",       "day",          "decade", "century", "millenium",
+    "quarter", "microsecond", "milliseconds", "second", "minute",  "hour"};
 
 std::string &DuckDBToSubstrait::RemapFunctionName(std::string &function_name) {
 	auto it = function_names_remap.find(function_name);
@@ -281,12 +285,25 @@ void DuckDBToSubstrait::TransformCastExpression(Expression &dexpr, substrait::Ex
 	*scast->mutable_type() = DuckToSubstraitType(dcast.return_type);
 }
 
+bool DuckDBToSubstrait::IsExtractFunction(const string &function_name) const {
+	return DuckDBToSubstrait::valid_extract_subfields.count(function_name);
+}
+
 void DuckDBToSubstrait::TransformFunctionExpression(Expression &dexpr, substrait::Expression &sexpr,
                                                     uint64_t col_offset) {
 	auto &dfun = (BoundFunctionExpression &)dexpr;
 	auto sfun = sexpr.mutable_scalar_function();
 
-	sfun->set_function_reference(RegisterFunction(RemapFunctionName(dfun.function.name)));
+	auto function_name = dfun.function.name;
+	if (IsExtractFunction(function_name)) {
+		// Change the name to 'extract', and add an Enum argument containing the subfield
+		auto subfield = function_name;
+		function_name = "extract";
+		auto enum_arg = sfun->add_arguments();
+		*enum_arg->mutable_enum_() = subfield;
+	}
+
+	sfun->set_function_reference(RegisterFunction(RemapFunctionName(function_name)));
 
 	for (auto &darg : dfun.children) {
 		auto sarg = sfun->add_arguments();
@@ -936,12 +953,12 @@ substrait::Rel *DuckDBToSubstrait::TransformAggregateGroup(LogicalOperator &dop)
 	case LogicalTypeId::VARCHAR: {
 		auto varchar_type = new substrait::Type_VarChar;
 		varchar_type->set_nullability(type_nullability);
-		if (column_statistics) {
-			auto string_statistics = (StringStatistics *)column_statistics;
-			if (max_string_length < string_statistics->max_string_length) {
-				max_string_length = string_statistics->max_string_length;
+		if (column_statistics && StringStats::HasMaxStringLength(*column_statistics)) {
+			auto stats_max_len = StringStats::MaxStringLength(*column_statistics);
+			if (max_string_length < stats_max_len) {
+				max_string_length = stats_max_len;
 			}
-			varchar_type->set_length(string_statistics->max_string_length);
+			varchar_type->set_length(stats_max_len);
 		} else {
 			// FIXME: Have to propagate the statistics to here somehow
 			varchar_type->set_length(max_string_length);

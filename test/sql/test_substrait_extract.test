@@ -1,0 +1,22 @@
+# name: test/sql/test_substrait_function_name.test
+# description: Test conversion of DuckDB built-in function names to Substrait function names
+# group: [sql]
+
+require substrait
+
+statement ok
+PRAGMA enable_verification
+
+statement ok
+CREATE table dates (d TIMESTAMP);
+
+statement ok
+INSERT INTO dates VALUES ('1992-09-20 20:38:48'), ('1971-09-15 15:14:28'), ('2030-01-03 03:01:54');
+
+foreach component year month day decade century millenium quarter microsecond milliseconds second minute hour
+
+statement ok
+CALL get_substrait_json('SELECT extract(${component} FROM d) FROM dates');
+
+#component
+endloop

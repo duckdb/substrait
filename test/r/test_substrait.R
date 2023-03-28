@@ -2,8 +2,12 @@ library("DBI")
 library("testthat")
 
 load_extension <- function() {
+  # Change this when using a different build
+  build_type = "release"
+
+  file_directory <- getwd()
   con <- dbConnect(duckdb::duckdb(config=list("allow_unsigned_extensions"="true")))
-  dbExecute(con, "LOAD '../../build/release/extension/substrait/substrait.duckdb_extension';")
+  dbExecute(con, sprintf("LOAD '%s/../../build/%s/extension/substrait/substrait.duckdb_extension';", file_directory, build_type))
   return (con)
 }
 

@@ -2,12 +2,12 @@
 # description: Test conversion of DuckDB types to Substrait and vice versa
 # group: [sql]
 
-statement ok
-PRAGMA enable_verification
-
 require substrait
 
 require json
+
+statement ok
+PRAGMA enable_verification
 
 statement ok
 CREATE TYPE color AS ENUM ('red', 'black');
@@ -322,11 +322,9 @@ INSERT INTO enums VALUES ('red'), ('black');
 statement ok
 CALL get_substrait('SELECT e FROM enums WHERE e = ''red'' ');
 
-
 # Nested types are not yet integrated
 # statement ok
 # create table all_types AS SELECT * FROM test_all_types();
 
 # statement ok
 # CALL get_substrait('SELECT * FROM all_types')
-

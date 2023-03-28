@@ -9,7 +9,7 @@
 namespace duckdb {
 class SubstraitToDuckDB {
 public:
-	SubstraitToDuckDB(Connection &con_p, string &serialized, bool json = false);
+	SubstraitToDuckDB(Connection &con_p, const string &serialized, bool json = false);
 	//! Transforms Substrait Plan to DuckDB Relation
 	shared_ptr<Relation> TransformPlan();
 
@@ -36,6 +36,7 @@ private:
 	unique_ptr<ParsedExpression> TransformCastExpr(const substrait::Expression &sexpr);
 	unique_ptr<ParsedExpression> TransformInExpr(const substrait::Expression &sexpr);
 
+	void VerifyCorrectExtractSubfield(const string &subfield);
 	std::string &RemapFunctionName(std::string &function_name);
 	LogicalType SubstraitToDuckType(const ::substrait::Type &s_type);
 	//! Looks up for aggregation function in functions_map
@@ -52,5 +53,6 @@ private:
 	//! Remapped functions with differing names to the correct DuckDB functions
 	//! names
 	static const unordered_map<std::string, std::string> function_names_remap;
+	static const case_insensitive_set_t valid_extract_subfields;
 };
 } // namespace duckdb

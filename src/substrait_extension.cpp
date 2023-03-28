@@ -22,6 +22,16 @@ struct ToSubstraitFunctionData : public TableFunctionData {
 	bool finished = false;
 };
 
+static void ToJsonFunctionInternal(ClientContext &context, ToSubstraitFunctionData &data, DataChunk &output,
+                                   Connection &new_conn, unique_ptr<LogicalOperator> &query_plan, string &serialized);
+static void ToSubFunctionInternal(ClientContext &context, ToSubstraitFunctionData &data, DataChunk &output,
+                                  Connection &new_conn, unique_ptr<LogicalOperator> &query_plan, string &serialized);
+
+static void VerifyJSONRoundtrip(unique_ptr<LogicalOperator> &query_plan, Connection &con, ToSubstraitFunctionData &data,
+                                const string &serialized);
+static void VerifyBlobRoundtrip(unique_ptr<LogicalOperator> &query_plan, Connection &con, ToSubstraitFunctionData &data,
+                                const string &serialized);
+
 static unique_ptr<FunctionData> ToSubstraitBind(ClientContext &context, TableFunctionBindInput &input,
                                                 vector<LogicalType> &return_types, vector<string> &names) {
 	auto result = make_uniq<ToSubstraitFunctionData>();
@@ -52,9 +62,46 @@ static unique_ptr<FunctionData> ToJsonBind(ClientContext &context, TableFunction
 	return std::move(result);
 }
 
-shared_ptr<Relation> SubstraitPlanToDuckDBRel(Connection &conn, string &serialized, bool json = false) {
+shared_ptr<Relation> SubstraitPlanToDuckDBRel(Connection &conn, const string &serialized, bool json = false) {
 	SubstraitToDuckDB transformer_s2d(conn, serialized, json);
 	return transformer_s2d.TransformPlan();
+}
+
+static void VerifySubstraitRoundtrip(unique_ptr<LogicalOperator> &query_plan, Connection &con,
+                                     ToSubstraitFunctionData &data, const string &serialized, bool json) {
+	// We round-trip the generated json and verify if the result is the same
+	auto actual_result = con.Query(data.query);
+	auto sub_relation = SubstraitPlanToDuckDBRel(con, serialized, json);
+	auto substrait_result = sub_relation->Execute();
+	substrait_result->names = actual_result->names;
+	if (!actual_result->Equals(*substrait_result)) {
+		query_plan->Print();
+		sub_relation->Print();
+		throw InternalException("The query result of DuckDB's query plan does not match Substrait");
+	}
+}
+
+static void VerifyBlobRoundtrip(unique_ptr<LogicalOperator> &query_plan, Connection &con, ToSubstraitFunctionData &data,
+                                const string &serialized) {
+	VerifySubstraitRoundtrip(query_plan, con, data, serialized, false);
+}
+
+static void VerifyJSONRoundtrip(unique_ptr<LogicalOperator> &query_plan, Connection &con, ToSubstraitFunctionData &data,
+                                const string &serialized) {
+	VerifySubstraitRoundtrip(query_plan, con, data, serialized, true);
+}
+
+static void ToSubFunctionInternal(ClientContext &context, ToSubstraitFunctionData &data, DataChunk &output,
+                                  Connection &new_conn, unique_ptr<LogicalOperator> &query_plan, string &serialized) {
+	output.SetCardinality(1);
+	// We might want to disable the optimizer of our new connection
+	new_conn.context->config.enable_optimizer = data.enable_optimizer;
+	new_conn.context->config.use_replacement_scans = false;
+	query_plan = new_conn.context->ExtractPlan(data.query);
+	DuckDBToSubstrait transformer_d2s(context, *query_plan);
+	serialized = transformer_d2s.SerializeToString();
+
+	output.SetValue(0, 0, Value::BLOB_RAW(serialized));
 }
 
 static void ToSubFunction(ClientContext &context, TableFunctionInput &data_p, DataChunk &output) {
@@ -62,29 +109,36 @@ static void ToSubFunction(ClientContext &context, TableFunctionInput &data_p, Da
 	if (data.finished) {
 		return;
 	}
-	output.SetCardinality(1);
 	auto new_conn = Connection(*context.db);
+
+	unique_ptr<LogicalOperator> query_plan;
+	string serialized;
+	ToSubFunctionInternal(context, data, output, new_conn, query_plan, serialized);
+
+	data.finished = true;
+
+	if (!context.config.query_verification_enabled) {
+		return;
+	}
+	VerifyBlobRoundtrip(query_plan, new_conn, data, serialized);
+	// Also run the ToJson path and verify round-trip for that
+	DataChunk other_output;
+	other_output.Initialize(context, {LogicalType::VARCHAR});
+	ToJsonFunctionInternal(context, data, other_output, new_conn, query_plan, serialized);
+	VerifyJSONRoundtrip(query_plan, new_conn, data, serialized);
+}
+
+static void ToJsonFunctionInternal(ClientContext &context, ToSubstraitFunctionData &data, DataChunk &output,
+                                   Connection &new_conn, unique_ptr<LogicalOperator> &query_plan, string &serialized) {
+	output.SetCardinality(1);
 	// We might want to disable the optimizer of our new connection
 	new_conn.context->config.enable_optimizer = data.enable_optimizer;
 	new_conn.context->config.use_replacement_scans = false;
-	auto query_plan = new_conn.context->ExtractPlan(data.query);
+	query_plan = new_conn.context->ExtractPlan(data.query);
 	DuckDBToSubstrait transformer_d2s(context, *query_plan);
-	auto serialized = transformer_d2s.SerializeToString();
+	serialized = transformer_d2s.SerializeToJson();
 
-	output.SetValue(0, 0, Value::BLOB_RAW(serialized));
-	data.finished = true;
-	if (context.config.query_verification_enabled) {
-		// We round-trip the generated blob and verify if the result is the same
-		auto actual_result = new_conn.Query(data.query);
-		auto sub_relation = SubstraitPlanToDuckDBRel(new_conn, serialized);
-		auto substrait_result = sub_relation->Execute();
-		substrait_result->names = actual_result->names;
-		if (!actual_result->Equals(*substrait_result)) {
-			query_plan->Print();
-			sub_relation->Print();
-			throw InternalException("The query result of DuckDB's query plan does not match Substrait");
-		}
-	}
+	output.SetValue(0, 0, serialized);
 }
 
 static void ToJsonFunction(ClientContext &context, TableFunctionInput &data_p, DataChunk &output) {
@@ -92,17 +146,23 @@ static void ToJsonFunction(ClientContext &context, TableFunctionInput &data_p, D
 	if (data.finished) {
 		return;
 	}
-	output.SetCardinality(1);
 	auto new_conn = Connection(*context.db);
-	// We might want to disable the optimizer of our new connection
-	new_conn.context->config.enable_optimizer = data.enable_optimizer;
-	new_conn.context->config.use_replacement_scans = false;
-	auto query_plan = new_conn.context->ExtractPlan(data.query);
-	DuckDBToSubstrait transformer_d2s(context, *query_plan);
-	auto serialized = transformer_d2s.SerializeToJson();
 
-	output.SetValue(0, 0, serialized);
+	unique_ptr<LogicalOperator> query_plan;
+	string serialized;
+	ToJsonFunctionInternal(context, data, output, new_conn, query_plan, serialized);
+
 	data.finished = true;
+
+	if (!context.config.query_verification_enabled) {
+		return;
+	}
+	VerifyJSONRoundtrip(query_plan, new_conn, data, serialized);
+	// Also run the ToJson path and verify round-trip for that
+	DataChunk other_output;
+	other_output.Initialize(context, {LogicalType::BLOB});
+	ToSubFunctionInternal(context, data, other_output, new_conn, query_plan, serialized);
+	VerifyBlobRoundtrip(query_plan, new_conn, data, serialized);
 }
 
 struct FromSubstraitFunctionData : public TableFunctionData {
