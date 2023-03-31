@@ -173,11 +173,11 @@ void DuckDBToSubstrait::TransformInterval(Value &dval, substrait::Expression &se
 	auto &sval = *sexpr.mutable_literal();
 	auto months = dval.GetValue<interval_t>().months;
 	if (months != 0) {
-		auto interval_year = make_unique<substrait::Expression_Literal_IntervalYearToMonth>();
+		auto interval_year = make_uniq<substrait::Expression_Literal_IntervalYearToMonth>();
 		interval_year->set_months(months);
 		sval.set_allocated_interval_year_to_month(interval_year.release());
 	} else {
-		auto interval_day = make_unique<substrait::Expression_Literal_IntervalDayToSecond>();
+		auto interval_day = make_uniq<substrait::Expression_Literal_IntervalDayToSecond>();
 		interval_day->set_days(dval.GetValue<interval_t>().days);
 		interval_day->set_microseconds(dval.GetValue<interval_t>().micros);
 		sval.set_allocated_interval_day_to_second(interval_day.release());
