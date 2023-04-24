@@ -1001,12 +1001,13 @@ set<idx_t> GetNotNullConstraintCol(TableCatalogEntry &tbl) {
 }
 
 void DuckDBToSubstrait::TransformTableScanToSubstrait(LogicalGet &dget, substrait::ReadRel *sget) {
-	auto &table_scan_bind_data = (TableScanBindData &)*dget.bind_data;
-	sget->mutable_named_table()->add_names(table_scan_bind_data.table->name);
+	auto &table_scan_bind_data = dget.bind_data->Cast<TableScanBindData>();
+	auto &table = table_scan_bind_data.table;
+	sget->mutable_named_table()->add_names(table.name);
 	auto base_schema = new ::substrait::NamedStruct();
 	auto type_info = new substrait::Type_Struct();
 	type_info->set_nullability(substrait::Type_Nullability_NULLABILITY_REQUIRED);
-	auto not_null_constraint = GetNotNullConstraintCol(*table_scan_bind_data.table);
+	auto not_null_constraint = GetNotNullConstraintCol(table);
 	for (idx_t i = 0; i < dget.names.size(); i++) {
 		auto cur_type = dget.returned_types[i];
 		if (cur_type.id() == LogicalTypeId::STRUCT) {
