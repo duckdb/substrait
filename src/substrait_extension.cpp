@@ -215,7 +215,7 @@ void InitializeGetSubstrait(Connection &con) {
 	TableFunction to_sub_func("get_substrait", {LogicalType::VARCHAR}, ToSubFunction, ToSubstraitBind);
 	to_sub_func.named_parameters["enable_optimizer"] = LogicalType::BOOLEAN;
 	CreateTableFunctionInfo to_sub_info(to_sub_func);
-	catalog.CreateTableFunction(*con.context, &to_sub_info);
+	catalog.CreateTableFunction(*con.context, to_sub_info);
 }
 
 void InitializeGetSubstraitJSON(Connection &con) {
@@ -227,7 +227,7 @@ void InitializeGetSubstraitJSON(Connection &con) {
 
 	get_substrait_json.named_parameters["enable_optimizer"] = LogicalType::BOOLEAN;
 	CreateTableFunctionInfo get_substrait_json_info(get_substrait_json);
-	catalog.CreateTableFunction(*con.context, &get_substrait_json_info);
+	catalog.CreateTableFunction(*con.context, get_substrait_json_info);
 }
 
 void InitializeFromSubstrait(Connection &con) {
@@ -237,7 +237,7 @@ void InitializeFromSubstrait(Connection &con) {
 	// result from a substrait plan
 	TableFunction from_sub_func("from_substrait", {LogicalType::BLOB}, FromSubFunction, FromSubstraitBind);
 	CreateTableFunctionInfo from_sub_info(from_sub_func);
-	catalog.CreateTableFunction(*con.context, &from_sub_info);
+	catalog.CreateTableFunction(*con.context, from_sub_info);
 }
 
 void InitializeFromSubstraitJSON(Connection &con) {
@@ -248,7 +248,7 @@ void InitializeFromSubstraitJSON(Connection &con) {
 	TableFunction from_sub_func_json("from_substrait_json", {LogicalType::VARCHAR}, FromSubFunction,
 	                                 FromSubstraitBindJSON);
 	CreateTableFunctionInfo from_sub_info_json(from_sub_func_json);
-	catalog.CreateTableFunction(*con.context, &from_sub_info_json);
+	catalog.CreateTableFunction(*con.context, from_sub_info_json);
 }
 
 void SubstraitExtension::Load(DuckDB &db) {
