@@ -1,0 +1,16 @@
+# name: test/sql/test_substrait_httpfs.test
+# description: Test Substrait via HTTPFS
+# group: [sql]
+
+require substrait
+
+require httpfs
+
+require parquet
+
+statement ok
+PRAGMA enable_verification
+
+statement ok
+CALL get_substrait('SELECT * FROM parquet_scan(''https://raw.githubusercontent.com/cwida/duckdb/master/data/parquet-testing/userdata1.parquet'')')
+
