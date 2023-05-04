@@ -46,7 +46,6 @@ release:
 
 # Client builds
 %_js: export BUILD_NODE=1
-%_js: export BUILD_JSON=1
 debug_js: debug
 release_js: release
 
