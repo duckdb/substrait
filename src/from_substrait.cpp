@@ -19,6 +19,8 @@
 
 #include "substrait/plan.pb.h"
 #include "google/protobuf/util/json_util.h"
+#include "duckdb/main/client_data.hpp"
+#include "duckdb/common/http_state.hpp"
 
 namespace duckdb {
 const std::unordered_map<std::string, std::string> SubstraitToDuckDB::function_names_remap = {
@@ -40,6 +42,10 @@ std::string &SubstraitToDuckDB::RemapFunctionName(std::string &function_name) {
 }
 
 SubstraitToDuckDB::SubstraitToDuckDB(Connection &con_p, const string &serialized, bool json) : con(con_p) {
+	if (con_p.context->client_data->http_state) {
+		con_p.context->client_data->http_state->Reset();
+	}
+	con_p.context->client_data->http_state = make_uniq<HTTPState>();
 	if (!json) {
 		if (!plan.ParseFromString(serialized)) {
 			throw std::runtime_error("Was not possible to convert binary into Substrait plan");
@@ -189,27 +195,27 @@ unique_ptr<ParsedExpression> SubstraitToDuckDB::TransformScalarFunctionExpr(cons
 	} else if (function_name == "lt") {
 		D_ASSERT(children.size() == 2);
 		return make_uniq<ComparisonExpression>(ExpressionType::COMPARE_LESSTHAN, std::move(children[0]),
-		                                         std::move(children[1]));
+		                                       std::move(children[1]));
 	} else if (function_name == "equal") {
 		D_ASSERT(children.size() == 2);
 		return make_uniq<ComparisonExpression>(ExpressionType::COMPARE_EQUAL, std::move(children[0]),
-		                                         std::move(children[1]));
+		                                       std::move(children[1]));
 	} else if (function_name == "not_equal") {
 		D_ASSERT(children.size() == 2);
 		return make_uniq<ComparisonExpression>(ExpressionType::COMPARE_NOTEQUAL, std::move(children[0]),
-		                                         std::move(children[1]));
+		                                       std::move(children[1]));
 	} else if (function_name == "lte") {
 		D_ASSERT(children.size() == 2);
 		return make_uniq<ComparisonExpression>(ExpressionType::COMPARE_LESSTHANOREQUALTO, std::move(children[0]),
-		                                         std::move(children[1]));
+		                                       std::move(children[1]));
 	} else if (function_name == "gte") {
 		D_ASSERT(children.size() == 2);
 		return make_uniq<ComparisonExpression>(ExpressionType::COMPARE_GREATERTHANOREQUALTO, std::move(children[0]),
-		                                         std::move(children[1]));
+		                                       std::move(children[1]));
 	} else if (function_name == "gt") {
 		D_ASSERT(children.size() == 2);
 		return make_uniq<ComparisonExpression>(ExpressionType::COMPARE_GREATERTHAN, std::move(children[0]),
-		                                         std::move(children[1]));
+		                                       std::move(children[1]));
 	} else if (function_name == "is_not_null") {
 		D_ASSERT(children.size() == 1);
 		return make_uniq<OperatorExpression>(ExpressionType::OPERATOR_IS_NOT_NULL, std::move(children[0]));
@@ -222,7 +228,7 @@ unique_ptr<ParsedExpression> SubstraitToDuckDB::TransformScalarFunctionExpr(cons
 	} else if (function_name == "is_not_distinct_from") {
 		D_ASSERT(children.size() == 2);
 		return make_uniq<ComparisonExpression>(ExpressionType::COMPARE_NOT_DISTINCT_FROM, std::move(children[0]),
-		                                         std::move(children[1]));
+		                                       std::move(children[1]));
 	} else if (function_name == "between") {
 		// FIXME: ADD between to substrait extension
 		D_ASSERT(children.size() == 3);
