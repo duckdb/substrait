@@ -9,14 +9,14 @@ EXTENSION_STATIC_BUILD=1
 BUILD_TPCH=1
 BUILD_JSON=1
 
-## These flags will make DuckDB build the extension
-#DUCKDB_OOT_EXTENSION_NAMES=substrait
-#BUILD_OUT_OF_TREE_EXTENSIONS=substrait
+# These flags will make DuckDB build the extension
+DUCKDB_OOT_EXTENSION_NAMES=substrait
+BUILD_OUT_OF_TREE_EXTENSIONS=substrait
 
-#EXTRA_CMAKE_VARIABLES :=
-#EXTRA_CMAKE_VARIABLES += -DDUCKDB_OOT_EXTENSION_SUBSTRAIT_PATH=$(PROJ_DIR)
-#EXTRA_CMAKE_VARIABLES += -DDUCKDB_OOT_EXTENSION_SUBSTRAIT_SHOULD_LINK=TRUE
-#EXTRA_CMAKE_VARIABLES += -DDUCKDB_OOT_EXTENSION_SUBSTRAIT_INCLUDE_PATH=$(PROJ_DIR)src/include
+EXTRA_CMAKE_VARIABLES :=
+EXTRA_CMAKE_VARIABLES += -DDUCKDB_OOT_EXTENSION_SUBSTRAIT_PATH=$(PROJ_DIR)
+EXTRA_CMAKE_VARIABLES += -DDUCKDB_OOT_EXTENSION_SUBSTRAIT_SHOULD_LINK=TRUE
+EXTRA_CMAKE_VARIABLES += -DDUCKDB_OOT_EXTENSION_SUBSTRAIT_INCLUDE_PATH=$(PROJ_DIR)src/include
 export
 
 DUCKDB_DIRECTORY=
@@ -35,50 +35,30 @@ clean:
 	rm -rf testext
 	cd ${DUCKDB_DIRECTORY} && make clean
 
-# Main build
+# Main builds
 debug:
-	cd ${DUCKDB_DIRECTORY} && make debug
+# Have to actually cd here because the makefile assumes it's called from within duckdb
+	cd ${DUCKDB_DIRECTORY} && $(MAKE) -C . debug
 
 release:
-# Have to actually cd there
-	cd ${DUCKDB_DIRECTORY} && make release
+# Have to actually cd here because the makefile assumes it's called from within duckdb
+	cd ${DUCKDB_DIRECTORY} && $(MAKE) -C . release
 
-# Client build
-debug_js:
-BUILD_NODE=1
-BUILD_JSON=1
-export
+# Client builds
+%_js: export BUILD_NODE=1
+%_js: export BUILD_JSON=1
 debug_js: debug
-
-debug_r:
-BUILD_R=1
-export
-debug_r: debug
-
-debug_python:
-BUILD_PYTHON=1
-BUILD_FTS=1
-BUILD_VISUALIZER=1
-BUILD_TPCDS=1
-export
-debug_python: debug
-
-release_js:
-BUILD_NODE=1
-export
 release_js: release
 
-release_r:
-BUILD_R=1
-export
+%_r: export BUILD_R=1
+debug_r: debug
 release_r: release
 
-release_python:
-BUILD_PYTHON=1
-BUILD_FTS=1
-BUILD_VISUALIZER=1
-BUILD_TPCDS=1
-export
+%_python: export BUILD_PYTHON=1
+%_python: export BUILD_FTS=1
+%_python: export BUILD_VISUALIZER=1
+%_python: export BUILD_TPCDS=1
+debug_python: debug
 release_python: release
 
 # Main tests
