@@ -21,7 +21,7 @@ class IbisDuckDBTester:
 	def open(self, require):
 		# Create connections to the db
 		self.con = require('substrait', self.path, read_only=True)
-		self.ibis_con = ibis.connect(f"duckdb://{self.path}", read_only=True)
+		self.ibis_con = ibis.connect(f"duckdb://{self.path}", read_only='True')
 
 	def test(self, expression_producer, *args):
 		expr = expression_producer(self.ibis_con, *args)
@@ -30,8 +30,6 @@ class IbisDuckDBTester:
 		# Verify that the expressions produce the same result
 		res = expr.to_pyarrow()
 		duck_res = relation.arrow()
-		#print(res)
-		#print(duck_res)
 		assert duck_res == res
 
 class SQLIbisDuckDBTester(IbisDuckDBTester):
