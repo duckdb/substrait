@@ -26,6 +26,7 @@ private:
 	shared_ptr<Relation> TransformAggregateOp(const substrait::Rel &sop);
 	shared_ptr<Relation> TransformReadOp(const substrait::Rel &sop);
 	shared_ptr<Relation> TransformSortOp(const substrait::Rel &sop);
+	shared_ptr<Relation> TransformSetOp(const substrait::Rel &sop);
 
 	//! Transform Substrait Expressions to DuckDB Expressions
 	unique_ptr<ParsedExpression> TransformExpr(const substrait::Expression &sexpr);
