@@ -173,11 +173,11 @@ void DuckDBToSubstrait::TransformInterval(Value &dval, substrait::Expression &se
 	auto &sval = *sexpr.mutable_literal();
 	auto months = dval.GetValue<interval_t>().months;
 	if (months != 0) {
-		auto interval_year = make_unique<substrait::Expression_Literal_IntervalYearToMonth>();
+		auto interval_year = make_uniq<substrait::Expression_Literal_IntervalYearToMonth>();
 		interval_year->set_months(months);
 		sval.set_allocated_interval_year_to_month(interval_year.release());
 	} else {
-		auto interval_day = make_unique<substrait::Expression_Literal_IntervalDayToSecond>();
+		auto interval_day = make_uniq<substrait::Expression_Literal_IntervalDayToSecond>();
 		interval_day->set_days(dval.GetValue<interval_t>().days);
 		interval_day->set_microseconds(dval.GetValue<interval_t>().micros);
 		sval.set_allocated_interval_day_to_second(interval_day.release());
@@ -1001,12 +1001,13 @@ set<idx_t> GetNotNullConstraintCol(TableCatalogEntry &tbl) {
 }
 
 void DuckDBToSubstrait::TransformTableScanToSubstrait(LogicalGet &dget, substrait::ReadRel *sget) {
-	auto &table_scan_bind_data = (TableScanBindData &)*dget.bind_data;
-	sget->mutable_named_table()->add_names(table_scan_bind_data.table->name);
+	auto &table_scan_bind_data = dget.bind_data->Cast<TableScanBindData>();
+	auto &table = table_scan_bind_data.table;
+	sget->mutable_named_table()->add_names(table.name);
 	auto base_schema = new ::substrait::NamedStruct();
 	auto type_info = new substrait::Type_Struct();
 	type_info->set_nullability(substrait::Type_Nullability_NULLABILITY_REQUIRED);
-	auto not_null_constraint = GetNotNullConstraintCol(*table_scan_bind_data.table);
+	auto not_null_constraint = GetNotNullConstraintCol(table);
 	for (idx_t i = 0; i < dget.names.size(); i++) {
 		auto cur_type = dget.returned_types[i];
 		if (cur_type.id() == LogicalTypeId::STRUCT) {

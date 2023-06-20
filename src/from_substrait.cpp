@@ -19,6 +19,8 @@
 
 #include "substrait/plan.pb.h"
 #include "google/protobuf/util/json_util.h"
+#include "duckdb/main/client_data.hpp"
+#include "duckdb/common/http_state.hpp"
 
 namespace duckdb {
 const std::unordered_map<std::string, std::string> SubstraitToDuckDB::function_names_remap = {
@@ -40,6 +42,10 @@ std::string &SubstraitToDuckDB::RemapFunctionName(std::string &function_name) {
 }
 
 SubstraitToDuckDB::SubstraitToDuckDB(Connection &con_p, const string &serialized, bool json) : con(con_p) {
+	if (con_p.context->client_data->http_state) {
+		con_p.context->client_data->http_state->Reset();
+	}
+	con_p.context->client_data->http_state = make_uniq<HTTPState>();
 	if (!json) {
 		if (!plan.ParseFromString(serialized)) {
 			throw std::runtime_error("Was not possible to convert binary into Substrait plan");
@@ -63,7 +69,7 @@ unique_ptr<ParsedExpression> SubstraitToDuckDB::TransformLiteralExpr(const subst
 	Value dval;
 	if (slit.has_null()) {
 		dval = Value(LogicalType::SQLNULL);
-		return make_unique<ConstantExpression>(dval);
+		return make_uniq<ConstantExpression>(dval);
 	}
 	switch (slit.literal_type_case()) {
 	case substrait::Expression_Literal::LiteralTypeCase::kFp64:
@@ -147,14 +153,14 @@ unique_ptr<ParsedExpression> SubstraitToDuckDB::TransformLiteralExpr(const subst
 	default:
 		throw InternalException(to_string(slit.literal_type_case()));
 	}
-	return make_unique<ConstantExpression>(dval);
+	return make_uniq<ConstantExpression>(dval);
 }
 
 unique_ptr<ParsedExpression> SubstraitToDuckDB::TransformSelectionExpr(const substrait::Expression &sexpr) {
 	if (!sexpr.selection().has_direct_reference() || !sexpr.selection().direct_reference().has_struct_field()) {
 		throw InternalException("Can only have direct struct references in selections");
 	}
-	return make_unique<PositionalReferenceExpression>(sexpr.selection().direct_reference().struct_field().field() + 1);
+	return make_uniq<PositionalReferenceExpression>(sexpr.selection().direct_reference().struct_field().field() + 1);
 }
 
 void SubstraitToDuckDB::VerifyCorrectExtractSubfield(const string &subfield) {
@@ -183,64 +189,64 @@ unique_ptr<ParsedExpression> SubstraitToDuckDB::TransformScalarFunctionExpr(cons
 	// string compare galore
 	// TODO simplify this
 	if (function_name == "and") {
-		return make_unique<ConjunctionExpression>(ExpressionType::CONJUNCTION_AND, std::move(children));
+		return make_uniq<ConjunctionExpression>(ExpressionType::CONJUNCTION_AND, std::move(children));
 	} else if (function_name == "or") {
-		return make_unique<ConjunctionExpression>(ExpressionType::CONJUNCTION_OR, std::move(children));
+		return make_uniq<ConjunctionExpression>(ExpressionType::CONJUNCTION_OR, std::move(children));
 	} else if (function_name == "lt") {
 		D_ASSERT(children.size() == 2);
-		return make_unique<ComparisonExpression>(ExpressionType::COMPARE_LESSTHAN, std::move(children[0]),
-		                                         std::move(children[1]));
+		return make_uniq<ComparisonExpression>(ExpressionType::COMPARE_LESSTHAN, std::move(children[0]),
+		                                       std::move(children[1]));
 	} else if (function_name == "equal") {
 		D_ASSERT(children.size() == 2);
-		return make_unique<ComparisonExpression>(ExpressionType::COMPARE_EQUAL, std::move(children[0]),
-		                                         std::move(children[1]));
+		return make_uniq<ComparisonExpression>(ExpressionType::COMPARE_EQUAL, std::move(children[0]),
+		                                       std::move(children[1]));
 	} else if (function_name == "not_equal") {
 		D_ASSERT(children.size() == 2);
-		return make_unique<ComparisonExpression>(ExpressionType::COMPARE_NOTEQUAL, std::move(children[0]),
-		                                         std::move(children[1]));
+		return make_uniq<ComparisonExpression>(ExpressionType::COMPARE_NOTEQUAL, std::move(children[0]),
+		                                       std::move(children[1]));
 	} else if (function_name == "lte") {
 		D_ASSERT(children.size() == 2);
-		return make_unique<ComparisonExpression>(ExpressionType::COMPARE_LESSTHANOREQUALTO, std::move(children[0]),
-		                                         std::move(children[1]));
+		return make_uniq<ComparisonExpression>(ExpressionType::COMPARE_LESSTHANOREQUALTO, std::move(children[0]),
+		                                       std::move(children[1]));
 	} else if (function_name == "gte") {
 		D_ASSERT(children.size() == 2);
-		return make_unique<ComparisonExpression>(ExpressionType::COMPARE_GREATERTHANOREQUALTO, std::move(children[0]),
-		                                         std::move(children[1]));
+		return make_uniq<ComparisonExpression>(ExpressionType::COMPARE_GREATERTHANOREQUALTO, std::move(children[0]),
+		                                       std::move(children[1]));
 	} else if (function_name == "gt") {
 		D_ASSERT(children.size() == 2);
-		return make_unique<ComparisonExpression>(ExpressionType::COMPARE_GREATERTHAN, std::move(children[0]),
-		                                         std::move(children[1]));
+		return make_uniq<ComparisonExpression>(ExpressionType::COMPARE_GREATERTHAN, std::move(children[0]),
+		                                       std::move(children[1]));
 	} else if (function_name == "is_not_null") {
 		D_ASSERT(children.size() == 1);
-		return make_unique<OperatorExpression>(ExpressionType::OPERATOR_IS_NOT_NULL, std::move(children[0]));
+		return make_uniq<OperatorExpression>(ExpressionType::OPERATOR_IS_NOT_NULL, std::move(children[0]));
 	} else if (function_name == "is_null") {
 		D_ASSERT(children.size() == 1);
-		return make_unique<OperatorExpression>(ExpressionType::OPERATOR_IS_NULL, std::move(children[0]));
+		return make_uniq<OperatorExpression>(ExpressionType::OPERATOR_IS_NULL, std::move(children[0]));
 	} else if (function_name == "not") {
 		D_ASSERT(children.size() == 1);
-		return make_unique<OperatorExpression>(ExpressionType::OPERATOR_NOT, std::move(children[0]));
+		return make_uniq<OperatorExpression>(ExpressionType::OPERATOR_NOT, std::move(children[0]));
 	} else if (function_name == "is_not_distinct_from") {
 		D_ASSERT(children.size() == 2);
-		return make_unique<ComparisonExpression>(ExpressionType::COMPARE_NOT_DISTINCT_FROM, std::move(children[0]),
-		                                         std::move(children[1]));
+		return make_uniq<ComparisonExpression>(ExpressionType::COMPARE_NOT_DISTINCT_FROM, std::move(children[0]),
+		                                       std::move(children[1]));
 	} else if (function_name == "between") {
 		// FIXME: ADD between to substrait extension
 		D_ASSERT(children.size() == 3);
-		return make_unique<BetweenExpression>(std::move(children[0]), std::move(children[1]), std::move(children[2]));
+		return make_uniq<BetweenExpression>(std::move(children[0]), std::move(children[1]), std::move(children[2]));
 	} else if (function_name == "extract") {
 		D_ASSERT(enum_expressions.size() == 1);
 		auto &subfield = enum_expressions[0];
 		VerifyCorrectExtractSubfield(subfield);
-		auto constant_expression = make_unique<ConstantExpression>(Value(subfield));
+		auto constant_expression = make_uniq<ConstantExpression>(Value(subfield));
 		children.insert(children.begin(), std::move(constant_expression));
 	}
 
-	return make_unique<FunctionExpression>(RemapFunctionName(function_name), std::move(children));
+	return make_uniq<FunctionExpression>(RemapFunctionName(function_name), std::move(children));
 }
 
 unique_ptr<ParsedExpression> SubstraitToDuckDB::TransformIfThenExpr(const substrait::Expression &sexpr) {
 	const auto &scase = sexpr.if_then();
-	auto dcase = make_unique<CaseExpression>();
+	auto dcase = make_uniq<CaseExpression>();
 	for (const auto &sif : scase.ifs()) {
 		CaseCheck dif;
 		dif.when_expr = TransformExpr(sif.if_());
@@ -279,7 +285,7 @@ unique_ptr<ParsedExpression> SubstraitToDuckDB::TransformCastExpr(const substrai
 	const auto &scast = sexpr.cast();
 	auto cast_type = SubstraitToDuckType(scast.type());
 	auto cast_child = TransformExpr(scast.input());
-	return make_unique<CastExpression>(cast_type, std::move(cast_child));
+	return make_uniq<CastExpression>(cast_type, std::move(cast_child));
 }
 
 unique_ptr<ParsedExpression> SubstraitToDuckDB::TransformInExpr(const substrait::Expression &sexpr) {
@@ -292,7 +298,7 @@ unique_ptr<ParsedExpression> SubstraitToDuckDB::TransformInExpr(const substrait:
 		values.emplace_back(TransformExpr(substrait_in.options(i)));
 	}
 
-	return make_unique<OperatorExpression>(ExpressionType::COMPARE_IN, std::move(values));
+	return make_uniq<OperatorExpression>(ExpressionType::COMPARE_IN, std::move(values));
 }
 
 unique_ptr<ParsedExpression> SubstraitToDuckDB::TransformExpr(const substrait::Expression &sexpr) {
@@ -431,7 +437,7 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformAggregateOp(const substrait::Re
 		if (function_name == "count" && children.empty()) {
 			function_name = "count_star";
 		}
-		expressions.push_back(make_unique<FunctionExpression>(RemapFunctionName(function_name), std::move(children)));
+		expressions.push_back(make_uniq<FunctionExpression>(RemapFunctionName(function_name), std::move(children)));
 	}
 
 	return make_shared<AggregateRelation>(TransformOp(sop.aggregate().input()), std::move(expressions),
@@ -482,7 +488,7 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformReadOp(const substrait::Rel &so
 			// FIXME how to get actually alias?
 			aliases.push_back("expr_" + to_string(expr_idx++));
 			// TODO make sure nothing else is in there
-			expressions.push_back(make_unique<PositionalReferenceExpression>(sproj.field() + 1));
+			expressions.push_back(make_uniq<PositionalReferenceExpression>(sproj.field() + 1));
 		}
 
 		scan = make_shared<ProjectionRelation>(std::move(scan), std::move(expressions), std::move(aliases));
@@ -528,7 +534,7 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformRootOp(const substrait::RelRoot
 	int id = 1;
 	for (auto &column_name : column_names) {
 		aliases.push_back(column_name);
-		expressions.push_back(make_unique<PositionalReferenceExpression>(id++));
+		expressions.push_back(make_uniq<PositionalReferenceExpression>(id++));
 	}
 	return make_shared<ProjectionRelation>(TransformOp(sop.input()), std::move(expressions), aliases);
 }

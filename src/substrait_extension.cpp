@@ -34,7 +34,7 @@ static void VerifyBlobRoundtrip(unique_ptr<LogicalOperator> &query_plan, Connect
 
 static unique_ptr<FunctionData> ToSubstraitBind(ClientContext &context, TableFunctionBindInput &input,
                                                 vector<LogicalType> &return_types, vector<string> &names) {
-	auto result = make_unique<ToSubstraitFunctionData>();
+	auto result = make_uniq<ToSubstraitFunctionData>();
 	result->query = input.inputs[0].ToString();
 	if (input.named_parameters.size() == 1) {
 		auto loption = StringUtil::Lower(input.named_parameters.begin()->first);
@@ -49,7 +49,7 @@ static unique_ptr<FunctionData> ToSubstraitBind(ClientContext &context, TableFun
 
 static unique_ptr<FunctionData> ToJsonBind(ClientContext &context, TableFunctionBindInput &input,
                                            vector<LogicalType> &return_types, vector<string> &names) {
-	auto result = make_unique<ToSubstraitFunctionData>();
+	auto result = make_uniq<ToSubstraitFunctionData>();
 	result->query = input.inputs[0].ToString();
 	if (input.named_parameters.size() == 1) {
 		auto loption = StringUtil::Lower(input.named_parameters.begin()->first);
@@ -174,8 +174,8 @@ struct FromSubstraitFunctionData : public TableFunctionData {
 
 static unique_ptr<FunctionData> SubstraitBind(ClientContext &context, TableFunctionBindInput &input,
                                               vector<LogicalType> &return_types, vector<string> &names, bool is_json) {
-	auto result = make_unique<FromSubstraitFunctionData>();
-	result->conn = make_unique<Connection>(*context.db);
+	auto result = make_uniq<FromSubstraitFunctionData>();
+	result->conn = make_uniq<Connection>(*context.db);
 	string serialized = input.inputs[0].GetValueUnsafe<string>();
 	result->plan = SubstraitPlanToDuckDBRel(*result->conn, serialized, is_json);
 	for (auto &column : result->plan->Columns()) {
@@ -215,7 +215,7 @@ void InitializeGetSubstrait(Connection &con) {
 	TableFunction to_sub_func("get_substrait", {LogicalType::VARCHAR}, ToSubFunction, ToSubstraitBind);
 	to_sub_func.named_parameters["enable_optimizer"] = LogicalType::BOOLEAN;
 	CreateTableFunctionInfo to_sub_info(to_sub_func);
-	catalog.CreateTableFunction(*con.context, &to_sub_info);
+	catalog.CreateTableFunction(*con.context, to_sub_info);
 }
 
 void InitializeGetSubstraitJSON(Connection &con) {
@@ -227,7 +227,7 @@ void InitializeGetSubstraitJSON(Connection &con) {
 
 	get_substrait_json.named_parameters["enable_optimizer"] = LogicalType::BOOLEAN;
 	CreateTableFunctionInfo get_substrait_json_info(get_substrait_json);
-	catalog.CreateTableFunction(*con.context, &get_substrait_json_info);
+	catalog.CreateTableFunction(*con.context, get_substrait_json_info);
 }
 
 void InitializeFromSubstrait(Connection &con) {
@@ -237,7 +237,7 @@ void InitializeFromSubstrait(Connection &con) {
 	// result from a substrait plan
 	TableFunction from_sub_func("from_substrait", {LogicalType::BLOB}, FromSubFunction, FromSubstraitBind);
 	CreateTableFunctionInfo from_sub_info(from_sub_func);
-	catalog.CreateTableFunction(*con.context, &from_sub_info);
+	catalog.CreateTableFunction(*con.context, from_sub_info);
 }
 
 void InitializeFromSubstraitJSON(Connection &con) {
@@ -248,7 +248,7 @@ void InitializeFromSubstraitJSON(Connection &con) {
 	TableFunction from_sub_func_json("from_substrait_json", {LogicalType::VARCHAR}, FromSubFunction,
 	                                 FromSubstraitBindJSON);
 	CreateTableFunctionInfo from_sub_info_json(from_sub_func_json);
-	catalog.CreateTableFunction(*con.context, &from_sub_info_json);
+	catalog.CreateTableFunction(*con.context, from_sub_info_json);
 }
 
 void SubstraitExtension::Load(DuckDB &db) {
