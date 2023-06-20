@@ -455,14 +455,14 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformReadOp(const substrait::Rel &so
 			scan = con.View(sget.named_table().names(0));
 		}
 	} else if (sget.has_local_files()) {
-		vector<string> parquet_files;
+		vector<Value> parquet_files;
 		auto local_file_items = sget.local_files().items();
 		for (auto &current_file : local_file_items) {
 			if (current_file.has_parquet()) {
 				if (current_file.has_uri_file()) {
 					parquet_files.emplace_back(current_file.uri_file());
 				} else if (current_file.has_uri_path()) {
-					parquet_files.emplace_back(current_file.uri_file());
+					parquet_files.emplace_back(current_file.uri_path());
 				} else {
 					throw NotImplementedException("Unsupported type for file path, Only uri_file and uri_path are "
 					                              "currently supported");
@@ -471,7 +471,9 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformReadOp(const substrait::Rel &so
 				throw NotImplementedException("Unsupported type of local file for read operator on substrait");
 			}
 		}
-		scan = con.ReadParquetFiles(parquet_files, false);
+		string name = "parquet_" + StringUtil::GenerateRandomName();
+		named_parameter_map_t named_parameters({{"binary_as_string", Value::BOOLEAN(false)}});
+		scan = con.TableFunction("parquet_scan", {Value::LIST(parquet_files)}, named_parameters)->Alias(name);
 	} else {
 		throw NotImplementedException("Unsupported type of read operator for substrait");
 	}
