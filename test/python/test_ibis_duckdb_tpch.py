@@ -6,11 +6,10 @@ ibis = pytest.importorskip('ibis')
 BaseBackend = pytest.importorskip('ibis.backends.base')
 parse_type = pytest.importorskip('ibis.backends.duckdb.datatypes')
 get_tpch_query = pytest.importorskip('ibis_tpch_util')
-
+pandas = pytest.importorskip("pandas")
 
 def unbound_from_duckdb(table):  # noqa: D103
-    return ibis.table(
-        list(zip(table.columns, map(parse_type.parse, table.dtypes))), name=table.alias)
+    return ibis.table(list(zip(table.columns, map(parse_type.parse, [str(x) for x in table.dtypes]))), name=table.alias)
 
 class TPCHBackend(BaseBackend.BaseBackend):  # noqa: D101
     def __init__(self,duck_con,  scale_factor=0.1):  # noqa: D107
@@ -33,6 +32,18 @@ class TPCHBackend(BaseBackend.BaseBackend):  # noqa: D101
 
     def table(self, table):  # noqa: D102
         return self.tables.get(table)
+
+    def create_table(self):
+        ...
+
+    def create_view(self):
+        ...
+
+    def drop_table(self):
+        ...
+
+    def drop_view(self):
+        ...
 
     def current_database(self):  # noqa: D102
         ...
@@ -79,8 +90,7 @@ def ibis_to_duck(duck_con, query_number):
     result = result.df().sort_index(ascending=False, axis=1)
     query = duck_con.con.execute("select query from tpch_queries() where query_nr="+str(query_number)).fetchone()[0]
     answer = duck_con.con.execute(query).df().sort_index(ascending=False, axis=1)
-    assert result.equals(answer)
-
+    pandas.testing.assert_frame_equal(answer, result)
 
 def run_query(require, query_number):
     connection = require('substrait', 'test.db')

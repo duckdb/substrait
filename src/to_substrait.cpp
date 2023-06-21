@@ -1026,16 +1026,14 @@ void DuckDBToSubstrait::TransformTableScanToSubstrait(LogicalGet &dget, substrai
 void DuckDBToSubstrait::TransformParquetScanToSubstrait(LogicalGet &dget, substrait::ReadRel *sget, BindInfo &bind_info,
                                                         FunctionData &bind_data) {
 	auto files_path = bind_info.GetOptionList<string>("file_path");
-	if (files_path.size() != 1) {
-		throw NotImplementedException("Substrait Parquet Reader only supports single file");
+	for (auto &file_path : files_path) {
+		auto parquet_item = sget->mutable_local_files()->add_items();
+		// FIXME: should this be uri or file ogw
+		auto *path = new string();
+		*path = file_path;
+		parquet_item->set_allocated_uri_file(path);
+		parquet_item->mutable_parquet();
 	}
-
-	auto parquet_item = sget->mutable_local_files()->add_items();
-	// FIXME: should this be uri or file ogw
-	auto *path = new string();
-	*path = files_path[0];
-	parquet_item->set_allocated_uri_file(path);
-	parquet_item->mutable_parquet();
 
 	auto base_schema = new ::substrait::NamedStruct();
 	auto type_info = new substrait::Type_Struct();
@@ -1043,7 +1041,7 @@ void DuckDBToSubstrait::TransformParquetScanToSubstrait(LogicalGet &dget, substr
 	for (idx_t i = 0; i < dget.names.size(); i++) {
 		auto cur_type = dget.returned_types[i];
 		if (cur_type.id() == LogicalTypeId::STRUCT) {
-			throw std::runtime_error("Structs are not yet accepted in table scans");
+			throw NotImplementedException("Structs are not yet accepted in table scans");
 		}
 		base_schema->add_names(dget.names[i]);
 		auto column_statistics = dget.function.statistics(context, &bind_data, i);
