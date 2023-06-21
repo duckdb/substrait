@@ -457,23 +457,25 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformReadOp(const substrait::Rel &so
 			scan = con.View(sget.named_table().names(0));
 		}
 	} else if (sget.has_local_files()) {
+		vector<Value> parquet_files;
 		auto local_file_items = sget.local_files().items();
-		if (local_file_items.size() > 1) {
-			throw NotImplementedException("Can't handle more than one file in the read operator of substrait");
-		}
-		auto current_file = local_file_items[0];
-		if (current_file.has_parquet()) {
-			if (current_file.has_uri_file()) {
-				scan = con.ReadParquet(local_file_items[0].uri_file(), false);
-			} else if (current_file.has_uri_path()) {
-				scan = con.ReadParquet(local_file_items[0].uri_path(), false);
+		for (auto &current_file : local_file_items) {
+			if (current_file.has_parquet()) {
+				if (current_file.has_uri_file()) {
+					parquet_files.emplace_back(current_file.uri_file());
+				} else if (current_file.has_uri_path()) {
+					parquet_files.emplace_back(current_file.uri_path());
+				} else {
+					throw NotImplementedException("Unsupported type for file path, Only uri_file and uri_path are "
+					                              "currently supported");
+				}
 			} else {
-				throw NotImplementedException("Unsupported type for file path, Only uri_file and uri_path are "
-				                              "currently supported");
+				throw NotImplementedException("Unsupported type of local file for read operator on substrait");
 			}
-		} else {
-			throw NotImplementedException("Unsupported type of local file for read operator on substrait");
 		}
+		string name = "parquet_" + StringUtil::GenerateRandomName();
+		named_parameter_map_t named_parameters({{"binary_as_string", Value::BOOLEAN(false)}});
+		scan = con.TableFunction("parquet_scan", {Value::LIST(parquet_files)}, named_parameters)->Alias(name);
 	} else {
 		throw NotImplementedException("Unsupported type of read operator for substrait");
 	}
