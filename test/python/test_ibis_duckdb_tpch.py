@@ -54,6 +54,18 @@ class TPCHBackend(BaseBackend.BaseBackend):  # noqa: D101
     def list_tables(self):  # noqa: D102
         ...
 
+    def create_table(self):  # noqa: D102
+        ...
+
+    def create_view(self):  # noqa: D102
+        ...
+
+    def drop_table(self):  # noqa: D102
+        ...
+
+    def drop_view(self):  # noqa: D102
+        ...
+
     def version(self):  # noqa: D102
         return "awesome"
 
