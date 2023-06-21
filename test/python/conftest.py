@@ -19,8 +19,9 @@ def duckdb_empty_cursor(request):
 @pytest.fixture(scope="function")
 def require():
     def _require(extension_name, db_name=''):
-        conn = duckdb.connect(db_name, config={'allow_unsigned_extensions' : 'true'})
-        conn.execute(f"LOAD '{dir}/../../build/{build_type}/extension/substrait/substrait.duckdb_extension'")
+        # This is completely unnecessary now that we statically link substrait into the build
+        # but this function is kept so we don't have to change every existing test
+        conn = duckdb.connect(db_name)
         return conn
 
     return _require

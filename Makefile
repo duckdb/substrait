@@ -64,10 +64,10 @@ release_python: release
 test: test_release
 
 test_release: release
-	./build/release/test/unittest --test-dir . "[sql]"
+	${DUCKDB_DIRECTORY}/build/release/test/unittest --test-dir . "[sql]"
 
 test_debug: debug
-	./build/debug/test/unittest --test-dir . "[sql]"
+	${DUCKDB_DIRECTORY}/build/debug/test/unittest --test-dir . "[sql]"
 
 # Client tests
 test_js: test_debug_js
