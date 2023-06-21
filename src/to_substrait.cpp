@@ -12,6 +12,7 @@
 #include "duckdb/planner/table_filter.hpp"
 #include "duckdb/storage/statistics/base_statistics.hpp"
 #include "duckdb/catalog/catalog_entry/duck_table_entry.hpp"
+#include "duckdb/planner/operator/logical_set_operation.hpp"
 #include "google/protobuf/util/json_util.h"
 #include "substrait/algebra.pb.h"
 #include "substrait/plan.pb.h"
@@ -1118,6 +1119,22 @@ substrait::Rel *DuckDBToSubstrait::TransformCrossProduct(LogicalOperator &dop) {
 	return rel;
 }
 
+substrait::Rel *DuckDBToSubstrait::TransformUnion(LogicalOperator &dop) {
+	auto rel = new substrait::Rel();
+
+	auto set_op = rel->mutable_set();
+	auto &dunion = (LogicalSetOperation &)dop;
+	D_ASSERT(dunion.type == LogicalOperatorType::LOGICAL_UNION);
+
+	set_op->set_op(substrait::SetRel_SetOp::SetRel_SetOp_SET_OP_UNION_ALL);
+	auto inputs = set_op->mutable_inputs();
+
+	inputs->AddAllocated(TransformOp(*dop.children[0]));
+	inputs->AddAllocated(TransformOp(*dop.children[1]));
+	auto bindings = dunion.GetColumnBindings();
+	return rel;
+}
+
 substrait::Rel *DuckDBToSubstrait::TransformOp(LogicalOperator &dop) {
 	switch (dop.type) {
 	case LogicalOperatorType::LOGICAL_FILTER:
@@ -1138,6 +1155,8 @@ substrait::Rel *DuckDBToSubstrait::TransformOp(LogicalOperator &dop) {
 		return TransformGet(dop);
 	case LogicalOperatorType::LOGICAL_CROSS_PRODUCT:
 		return TransformCrossProduct(dop);
+	case LogicalOperatorType::LOGICAL_UNION:
+		return TransformUnion(dop);
 	default:
 		throw InternalException(LogicalOperatorToString(dop.type));
 	}
@@ -1156,6 +1175,12 @@ substrait::RelRoot *DuckDBToSubstrait::TransformRootOp(LogicalOperator &dop) {
 	// If the root operator is not a projection, we must go down until we find the
 	// first projection to get the aliases
 	while (current_op->type != LogicalOperatorType::LOGICAL_PROJECTION) {
+		if (current_op->type == LogicalOperatorType::LOGICAL_UNION) {
+			// Take the projection from the first child of the union
+			D_ASSERT(current_op->children.size() == 2);
+			current_op = current_op->children[1].get();
+			continue;
+		}
 		if (current_op->children.size() != 1) {
 			throw InternalException("Root node has more than 1, or 0 children (%d) up to "
 			                        "reaching a projection node. Type %d",
