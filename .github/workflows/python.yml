@@ -28,11 +28,6 @@ jobs:
         git config --global --add safe.directory '*'
         make pull
 
-    - name: Build DuckDB (Python)
-      run: |
-        cd duckdb/tools/pythonpkg
-        python3 -m pip install .
-
     - name: Build Substrait
       run: make release_python
 
