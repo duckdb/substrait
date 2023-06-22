@@ -34,7 +34,7 @@ jobs:
         python3 -m pip install .
 
     - name: Build Substrait
-      run: make release
+      run: make release_python
 
     - name: Install Python Dependencies
       shell: bash
