@@ -48,6 +48,8 @@ private:
 	substrait::Rel *TransformAggregateGroup(duckdb::LogicalOperator &dop);
 	substrait::Rel *TransformGet(duckdb::LogicalOperator &dop);
 	substrait::Rel *TransformCrossProduct(duckdb::LogicalOperator &dop);
+	substrait::Rel *TransformUnion(duckdb::LogicalOperator &dop);
+	substrait::Rel *TransformDistinct(duckdb::LogicalOperator &dop);
 
 	//! Methods to transform different LogicalGet Types (e.g., Table, Parquet)
 	//! To Substrait;

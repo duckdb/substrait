@@ -12,6 +12,7 @@
 #include "duckdb/planner/table_filter.hpp"
 #include "duckdb/storage/statistics/base_statistics.hpp"
 #include "duckdb/catalog/catalog_entry/duck_table_entry.hpp"
+#include "duckdb/planner/operator/logical_set_operation.hpp"
 #include "google/protobuf/util/json_util.h"
 #include "substrait/algebra.pb.h"
 #include "substrait/plan.pb.h"
@@ -1116,6 +1117,50 @@ substrait::Rel *DuckDBToSubstrait::TransformCrossProduct(LogicalOperator &dop) {
 	return rel;
 }
 
+substrait::Rel *DuckDBToSubstrait::TransformUnion(LogicalOperator &dop) {
+	auto rel = new substrait::Rel();
+
+	auto set_op = rel->mutable_set();
+	auto &dunion = (LogicalSetOperation &)dop;
+	D_ASSERT(dunion.type == LogicalOperatorType::LOGICAL_UNION);
+
+	set_op->set_op(substrait::SetRel_SetOp::SetRel_SetOp_SET_OP_UNION_ALL);
+	auto inputs = set_op->mutable_inputs();
+
+	inputs->AddAllocated(TransformOp(*dop.children[0]));
+	inputs->AddAllocated(TransformOp(*dop.children[1]));
+	auto bindings = dunion.GetColumnBindings();
+	return rel;
+}
+
+substrait::Rel *DuckDBToSubstrait::TransformDistinct(LogicalOperator &dop) {
+	auto rel = new substrait::Rel();
+
+	auto set_op = rel->mutable_set();
+
+	D_ASSERT(dop.children.size() == 1);
+	auto &set_operation_p = dop.children[0];
+
+	switch (set_operation_p->type) {
+	case LogicalOperatorType::LOGICAL_EXCEPT:
+		set_op->set_op(substrait::SetRel_SetOp::SetRel_SetOp_SET_OP_MINUS_PRIMARY);
+		break;
+	case LogicalOperatorType::LOGICAL_INTERSECT:
+		set_op->set_op(substrait::SetRel_SetOp::SetRel_SetOp_SET_OP_INTERSECTION_PRIMARY);
+		break;
+	default:
+		throw NotImplementedException("Found unexpected child type in Distinct operator");
+	}
+	auto &set_operation = (LogicalSetOperation &)*set_operation_p;
+
+	auto inputs = set_op->mutable_inputs();
+
+	inputs->AddAllocated(TransformOp(*set_operation.children[0]));
+	inputs->AddAllocated(TransformOp(*set_operation.children[1]));
+	auto bindings = dop.GetColumnBindings();
+	return rel;
+}
+
 substrait::Rel *DuckDBToSubstrait::TransformOp(LogicalOperator &dop) {
 	switch (dop.type) {
 	case LogicalOperatorType::LOGICAL_FILTER:
@@ -1136,9 +1181,18 @@ substrait::Rel *DuckDBToSubstrait::TransformOp(LogicalOperator &dop) {
 		return TransformGet(dop);
 	case LogicalOperatorType::LOGICAL_CROSS_PRODUCT:
 		return TransformCrossProduct(dop);
+	case LogicalOperatorType::LOGICAL_UNION:
+		return TransformUnion(dop);
+	case LogicalOperatorType::LOGICAL_DISTINCT:
+		return TransformDistinct(dop);
 	default:
 		throw InternalException(LogicalOperatorToString(dop.type));
 	}
+}
+
+static bool IsSetOperation(LogicalOperator &op) {
+	return op.type == LogicalOperatorType::LOGICAL_UNION || op.type == LogicalOperatorType::LOGICAL_EXCEPT ||
+	       op.type == LogicalOperatorType::LOGICAL_INTERSECT;
 }
 
 substrait::RelRoot *DuckDBToSubstrait::TransformRootOp(LogicalOperator &dop) {
@@ -1154,6 +1208,12 @@ substrait::RelRoot *DuckDBToSubstrait::TransformRootOp(LogicalOperator &dop) {
 	// If the root operator is not a projection, we must go down until we find the
 	// first projection to get the aliases
 	while (current_op->type != LogicalOperatorType::LOGICAL_PROJECTION) {
+		if (IsSetOperation(*current_op)) {
+			// Take the projection from the first child of the set operation
+			D_ASSERT(current_op->children.size() == 2);
+			current_op = current_op->children[1].get();
+			continue;
+		}
 		if (current_op->children.size() != 1) {
 			throw InternalException("Root node has more than 1, or 0 children (%d) up to "
 			                        "reaching a projection node. Type %d",

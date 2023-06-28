@@ -7,7 +7,7 @@ load_extension <- function() {
 
   file_directory <- getwd()
   con <- dbConnect(duckdb::duckdb(config=list("allow_unsigned_extensions"="true")))
-  dbExecute(con, sprintf("LOAD '%s/../../build/%s/extension/substrait/substrait.duckdb_extension';", file_directory, build_type))
+  dbExecute(con, sprintf("LOAD '%s/../../duckdb/build/%s/extension/substrait/substrait.duckdb_extension';", file_directory, build_type))
   return (con)
 }
 

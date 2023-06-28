@@ -1,0 +1,25 @@
+# name: test/sql/test_except.test
+# description: Test the EXCEPT set operation
+# group: [substrait]
+
+require substrait
+
+statement ok
+PRAGMA enable_verification
+
+# Create two tables to use in the EXCEPT
+
+statement ok
+create table tbl1 as select * from (VALUES
+	(1, 2, 3, 4),
+	(2, 3, 4, 5)
+) as tbl(A, B, C, D)
+
+statement ok
+create table tbl2 as select * from (VALUES
+	(2, 3, 4, 5),
+	(3, 4, 5, 6)
+) as tbl(B, C, D, A)
+
+statement ok
+CALL get_substrait('select * from tbl1 EXCEPT (select * from tbl2)')

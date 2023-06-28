@@ -7,6 +7,7 @@
 
 #include "duckdb/main/relation/limit_relation.hpp"
 #include "duckdb/main/relation/projection_relation.hpp"
+#include "duckdb/main/relation/setop_relation.hpp"
 #include "duckdb/main/relation/aggregate_relation.hpp"
 #include "duckdb/main/relation/filter_relation.hpp"
 #include "duckdb/main/relation/order_relation.hpp"
@@ -14,6 +15,7 @@
 #include "duckdb/parser/parser.hpp"
 #include "duckdb/common/exception.hpp"
 #include "duckdb/common/types.hpp"
+#include "duckdb/common/enums/set_operation_type.hpp"
 
 #include "duckdb/parser/expression/comparison_expression.hpp"
 
@@ -506,6 +508,42 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformSortOp(const substrait::Rel &so
 	}
 	return make_shared<OrderRelation>(TransformOp(sop.sort().input()), std::move(order_nodes));
 }
+
+static duckdb::SetOperationType TransformSetOperationType(substrait::SetRel_SetOp setop) {
+	switch (setop) {
+	case substrait::SetRel_SetOp::SetRel_SetOp_SET_OP_UNION_ALL: {
+		return duckdb::SetOperationType::UNION;
+	}
+	case substrait::SetRel_SetOp::SetRel_SetOp_SET_OP_MINUS_PRIMARY: {
+		return duckdb::SetOperationType::EXCEPT;
+	}
+	case substrait::SetRel_SetOp::SetRel_SetOp_SET_OP_INTERSECTION_PRIMARY: {
+		return duckdb::SetOperationType::INTERSECT;
+	}
+	default: {
+		throw duckdb::NotImplementedException("SetOperationType transform not implemented for SetRel_SetOp type %d",
+		                                      setop);
+	}
+	}
+}
+
+shared_ptr<Relation> SubstraitToDuckDB::TransformSetOp(const substrait::Rel &sop) {
+	D_ASSERT(sop.has_set());
+	auto &set = sop.set();
+	auto set_op_type = set.op();
+	auto type = TransformSetOperationType(set_op_type);
+
+	auto &inputs = set.inputs();
+	auto input_count = set.inputs_size();
+	if (input_count > 2) {
+		throw NotImplementedException("The amount of inputs (%d) is not supported for this set operation", input_count);
+	}
+	auto lhs = TransformOp(inputs[0]);
+	auto rhs = TransformOp(inputs[1]);
+
+	return make_shared<SetOpRelation>(std::move(lhs), std::move(rhs), type);
+}
+
 shared_ptr<Relation> SubstraitToDuckDB::TransformOp(const substrait::Rel &sop) {
 	switch (sop.rel_type_case()) {
 	case substrait::Rel::RelTypeCase::kJoin:
@@ -524,6 +562,8 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformOp(const substrait::Rel &sop) {
 		return TransformReadOp(sop);
 	case substrait::Rel::RelTypeCase::kSort:
 		return TransformSortOp(sop);
+	case substrait::Rel::RelTypeCase::kSet:
+		return TransformSetOp(sop);
 	default:
 		throw InternalException("Unsupported relation type " + to_string(sop.rel_type_case()));
 	}

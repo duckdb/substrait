@@ -2,6 +2,23 @@
 
 all: release
 
+MKFILE_PATH := $(abspath $(lastword $(MAKEFILE_LIST)))
+PROJ_DIR := $(dir $(MKFILE_PATH))
+
+EXTENSION_STATIC_BUILD=1
+BUILD_TPCH=1
+BUILD_JSON=1
+
+# These flags will make DuckDB build the extension
+DUCKDB_OOT_EXTENSION_NAMES=substrait
+BUILD_OUT_OF_TREE_EXTENSIONS=substrait
+
+EXTRA_CMAKE_VARIABLES :=
+EXTRA_CMAKE_VARIABLES += -DDUCKDB_OOT_EXTENSION_SUBSTRAIT_PATH=$(PROJ_DIR)
+EXTRA_CMAKE_VARIABLES += -DDUCKDB_OOT_EXTENSION_SUBSTRAIT_SHOULD_LINK=TRUE
+EXTRA_CMAKE_VARIABLES += -DDUCKDB_OOT_EXTENSION_SUBSTRAIT_INCLUDE_PATH=$(PROJ_DIR)src/include
+export
+
 DUCKDB_DIRECTORY=
 ifndef DUCKDB_DIR
 	DUCKDB_DIRECTORY=./duckdb
@@ -9,76 +26,48 @@ else
 	DUCKDB_DIRECTORY=${DUCKDB_DIR}
 endif
 
-MKFILE_PATH := $(abspath $(lastword $(MAKEFILE_LIST)))
-PROJ_DIR := $(dir $(MKFILE_PATH))
-
-OSX_BUILD_UNIVERSAL_FLAG=
-ifeq (${OSX_BUILD_UNIVERSAL}, 1)
-	OSX_BUILD_UNIVERSAL_FLAG=-DOSX_BUILD_UNIVERSAL=1
-endif
-ifeq (${STATIC_LIBCPP}, 1)
-	STATIC_LIBCPP=-DSTATIC_LIBCPP=TRUE
-endif
-
-ifeq ($(GEN),ninja)
-	GENERATOR=-G "Ninja"
-	FORCE_COLOR=-DFORCE_COLORED_OUTPUT=1
-endif
-
-BUILD_FLAGS=-DEXTENSION_STATIC_BUILD=1 -DBUILD_TPCH_EXTENSION=1 -DBUILD_PARQUET_EXTENSION=1 ${OSX_BUILD_UNIVERSAL_FLAG} ${STATIC_LIBCPP}
-
-CLIENT_FLAGS :=
-
-# These flags will make DuckDB build the extension
-EXTENSION_FLAGS=-DDUCKDB_OOT_EXTENSION_NAMES="substrait" -DDUCKDB_OOT_EXTENSION_SUBSTRAIT_PATH="$(PROJ_DIR)" -DDUCKDB_OOT_EXTENSION_SUBSTRAIT_SHOULD_LINK="TRUE" -DDUCKDB_OOT_EXTENSION_SUBSTRAIT_INCLUDE_PATH="$(PROJ_DIR)src/include"
-
 pull:
 	git submodule init
 	git submodule update --recursive --remote
 
 clean:
-	rm -rf build
+	rm -rf ${DUCKDB_DIRECTORY}/build
 	rm -rf testext
 	cd ${DUCKDB_DIRECTORY} && make clean
 
-# Main build
+# Main builds
 debug:
-	mkdir -p  build/debug && \
-	cmake $(GENERATOR) $(FORCE_COLOR) $(EXTENSION_FLAGS) ${CLIENT_FLAGS} -DEXTENSION_STATIC_BUILD=1 -DBUILD_JSON_EXTENSION=1 -DCMAKE_BUILD_TYPE=Debug ${BUILD_FLAGS} -S ${DUCKDB_DIRECTORY} -B build/debug && \
-	cmake --build build/debug --config Debug
+# Have to actually cd here because the makefile assumes it's called from within duckdb
+	cd ${DUCKDB_DIRECTORY} && $(MAKE) -C . debug
 
 release:
-	mkdir -p build/release && \
-	cmake $(GENERATOR) $(FORCE_COLOR) $(EXTENSION_FLAGS) ${CLIENT_FLAGS} -DEXTENSION_STATIC_BUILD=1 -DBUILD_JSON_EXTENSION=1 -DCMAKE_BUILD_TYPE=Release ${BUILD_FLAGS} -S ${DUCKDB_DIRECTORY} -B build/release && \
-	cmake --build build/release --config Release
+# Have to actually cd here because the makefile assumes it's called from within duckdb
+	cd ${DUCKDB_DIRECTORY} && $(MAKE) -C . release
 
-# Client build
-debug_js: CLIENT_FLAGS=-DBUILD_NODE=1 -DBUILD_JSON_EXTENSION=1
+# Client builds
+%_js: export BUILD_NODE=1
 debug_js: debug
-
-debug_r: CLIENT_FLAGS=-DBUILD_R=1
-debug_r: debug
-
-debug_python: CLIENT_FLAGS=-DBUILD_PYTHON=1 -DBUILD_JSON_EXTENSION=1 -DBUILD_FTS_EXTENSION=1 -DBUILD_TPCH_EXTENSION=1 -DBUILD_VISUALIZER_EXTENSION=1 -DBUILD_TPCDS_EXTENSION=1
-debug_python: debug
-
-release_js: CLIENT_FLAGS=-DBUILD_NODE=1 -DBUILD_JSON_EXTENSION=1
 release_js: release
 
-release_r: CLIENT_FLAGS=-DBUILD_R=1
+%_r: export BUILD_R=1
+debug_r: debug
 release_r: release
 
-release_python: CLIENT_FLAGS=-DBUILD_PYTHON=1 -DBUILD_JSON_EXTENSION=1 -DBUILD_FTS_EXTENSION=1 -DBUILD_TPCH_EXTENSION=1 -DBUILD_VISUALIZER_EXTENSION=1 -DBUILD_TPCDS_EXTENSION=1
+%_python: export BUILD_PYTHON=1
+%_python: export BUILD_FTS=1
+%_python: export BUILD_VISUALIZER=1
+%_python: export BUILD_TPCDS=1
+debug_python: debug
 release_python: release
 
 # Main tests
 test: test_release
 
 test_release: release
-	./build/release/test/unittest --test-dir . "[sql]"
+	${DUCKDB_DIRECTORY}/build/release/test/unittest --test-dir . "[sql]"
 
 test_debug: debug
-	./build/debug/test/unittest --test-dir . "[sql]"
+	${DUCKDB_DIRECTORY}/build/debug/test/unittest --test-dir . "[sql]"
 
 # Client tests
 test_js: test_debug_js
