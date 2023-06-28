@@ -1,0 +1,31 @@
+# name: test/sql/test_union.test
+# description: Test the UNION set operation
+# group: [substrait]
+
+require substrait
+
+statement ok
+PRAGMA enable_verification
+
+# Create two tables to use in UNION
+
+statement ok
+create table tbl1 as select * from (VALUES
+	(1, 2, 3, 4),
+	(2, 3, 4, 5),
+	(3, 4, 5, 6)) as tbl(A, B, C, D);
+
+statement ok
+create table tbl2 as select * from (VALUES
+	(11, 12, 13, 14, 15),
+	(12, 13, 14, 15, 16),
+	(13, 14, 15, 16, 17)) as tbl (A, B, C, D, E);
+
+statement ok
+CALL get_substrait('
+select * from(
+	select A, B, C, D, 0 as E from tbl1
+)
+union all (
+	select * from tbl2
+)')
