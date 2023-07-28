@@ -9,7 +9,7 @@ PRAGMA enable_verification
 
 # Create two tables to use in the INTERSECTx
 
-# FIXME: currently broken
+# FIXME: currently broken with:
 mode skip
 
 statement ok

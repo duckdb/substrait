@@ -12,7 +12,6 @@ EXTRA_CMAKE_VARIABLES += -DEXTENSION_STATIC_BUILD=1 -DBUILD_EXTENSIONS="tpch;jso
 EXTRA_CMAKE_VARIABLES += -DDUCKDB_EXTENSION_NAMES="substrait"
 EXTRA_CMAKE_VARIABLES += -DDUCKDB_EXTENSION_SUBSTRAIT_SHOULD_LINK=1
 EXTRA_CMAKE_VARIABLES += -DDUCKDB_EXTENSION_SUBSTRAIT_LOAD_TESTS=1
-EXTRA_CMAKE_VARIABLES += -DDUCKDB_EXTENSION_SUBSTRAIT_TESTS=1
 EXTRA_CMAKE_VARIABLES += -DDUCKDB_EXTENSION_SUBSTRAIT_PATH=$(PROJ_DIR)
 EXTRA_CMAKE_VARIABLES += -DDUCKDB_EXTENSION_SUBSTRAIT_TEST_PATH=$(PROJ_DIR)test
 EXTRA_CMAKE_VARIABLES += -DDUCKDB_EXTENSION_SUBSTRAIT_INCLUDE_PATH="$(PROJ_DIR)src/include"
@@ -69,13 +68,6 @@ test_debug: debug
 	${DUCKDB_DIRECTORY}/build/debug/test/unittest "$(PROJ_DIR)test/*"
 
 # Client tests
-test_js: test_debug_js
-test_debug_js: debug_js
-	cd ${DUCKDB_DIRECTORY}/tools/nodejs && npm run test-path -- "../../../test/nodejs/**/*.js"
-
-test_release_js: release_js
-	cd ${DUCKDB_DIRECTORY}/tools/nodejs && npm run test-path -- "../../../test/nodejs/**/*.js"
-
 test_python: test_debug_python
 test_debug_python: debug_python
 	cd test/python && python3 -m pytest
