@@ -23,6 +23,11 @@ jobs:
       with:
         fetch-depth: 0
 
+    - name: Update DuckDB submodule
+      run: |
+        git config --global --add safe.directory '*'
+        make pull
+
     - name: Install
       env:
         GITHUB_PAT: ${{ github.token }}
@@ -31,11 +36,6 @@ jobs:
         sudo apt-get update -y -qq && sudo apt-get install -y -qq ninja-build libcurl4-openssl-dev
         mkdir -p $HOME/.R
         (cd duckdb/tools/rpkg && R -f dependencies.R)
-
-    - name: Update DuckDB submodule
-      run: |
-        git config --global --add safe.directory '*'
-        make pull
 
     - name: Build Extension
       run: |
