@@ -5,18 +5,16 @@ all: release
 MKFILE_PATH := $(abspath $(lastword $(MAKEFILE_LIST)))
 PROJ_DIR := $(dir $(MKFILE_PATH))
 
-EXTENSION_STATIC_BUILD=1
-BUILD_TPCH=1
-BUILD_JSON=1
+EXTRA_CMAKE_VARIABLES :=
 
 # These flags will make DuckDB build the extension
-DUCKDB_OOT_EXTENSION_NAMES=substrait
-BUILD_OUT_OF_TREE_EXTENSIONS=substrait
-
-EXTRA_CMAKE_VARIABLES :=
-EXTRA_CMAKE_VARIABLES += -DDUCKDB_OOT_EXTENSION_SUBSTRAIT_PATH=$(PROJ_DIR)
-EXTRA_CMAKE_VARIABLES += -DDUCKDB_OOT_EXTENSION_SUBSTRAIT_SHOULD_LINK=TRUE
-EXTRA_CMAKE_VARIABLES += -DDUCKDB_OOT_EXTENSION_SUBSTRAIT_INCLUDE_PATH=$(PROJ_DIR)src/include
+EXTRA_CMAKE_VARIABLES += -DEXTENSION_STATIC_BUILD=1 -DBUILD_EXTENSIONS="tpch;json" ${OSX_ARCH_FLAG}
+EXTRA_CMAKE_VARIABLES += -DDUCKDB_EXTENSION_NAMES="substrait"
+EXTRA_CMAKE_VARIABLES += -DDUCKDB_EXTENSION_SUBSTRAIT_SHOULD_LINK=1
+EXTRA_CMAKE_VARIABLES += -DDUCKDB_EXTENSION_SUBSTRAIT_LOAD_TESTS=1
+EXTRA_CMAKE_VARIABLES += -DDUCKDB_EXTENSION_SUBSTRAIT_PATH=$(PROJ_DIR)
+EXTRA_CMAKE_VARIABLES += -DDUCKDB_EXTENSION_SUBSTRAIT_TEST_PATH=$(PROJ_DIR)test
+EXTRA_CMAKE_VARIABLES += -DDUCKDB_EXTENSION_SUBSTRAIT_INCLUDE_PATH="$(PROJ_DIR)src/include"
 export
 
 DUCKDB_DIRECTORY=
@@ -64,19 +62,12 @@ release_python: release
 test: test_release
 
 test_release: release
-	${DUCKDB_DIRECTORY}/build/release/test/unittest --test-dir . "[sql]"
+	${DUCKDB_DIRECTORY}/build/release/test/unittest "$(PROJ_DIR)test/*"
 
 test_debug: debug
-	${DUCKDB_DIRECTORY}/build/debug/test/unittest --test-dir . "[sql]"
+	${DUCKDB_DIRECTORY}/build/debug/test/unittest "$(PROJ_DIR)test/*"
 
 # Client tests
-test_js: test_debug_js
-test_debug_js: debug_js
-	cd ${DUCKDB_DIRECTORY}/tools/nodejs && npm run test-path -- "../../../test/nodejs/**/*.js"
-
-test_release_js: release_js
-	cd ${DUCKDB_DIRECTORY}/tools/nodejs && npm run test-path -- "../../../test/nodejs/**/*.js"
-
 test_python: test_debug_python
 test_debug_python: debug_python
 	cd test/python && python3 -m pytest
