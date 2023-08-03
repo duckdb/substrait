@@ -7,9 +7,6 @@ require substrait
 statement ok
 PRAGMA enable_verification
 
-# FIXME: currently broken
-mode skip
-
 statement ok
 CREATE TABLE integers (i integer);
 

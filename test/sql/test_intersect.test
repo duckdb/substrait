@@ -7,11 +7,7 @@ require substrait
 statement ok
 PRAGMA enable_verification
 
-# Create two tables to use in the INTERSECTx
-
-# FIXME: currently broken with:
-mode skip
-
+# Create two tables to use in the INTERSECT
 statement ok
 create table tbl1 as select * from (VALUES
 	(1, 2, 3, 4),

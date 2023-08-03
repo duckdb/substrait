@@ -46,15 +46,14 @@ class TestSetOperation(object):
 				(3, 4, 5, 6)
 			) as tbl(B, C, D, A)
 		""")
-		# FIXME: test currently fails
-		# query = """
-		# 	select * from tbl1 EXCEPT (select * from tbl2);
-		# """
-		# expected = connection.sql(query).fetchall()
-		# json = connection.get_substrait_json(query).fetchall()[0][0]
-		# rel = connection.from_substrait_json(json)
-		# actual = rel.fetchall()
-		# assert expected == actual
+		query = """
+			select * from tbl1 EXCEPT (select * from tbl2);
+		"""
+		expected = connection.sql(query).fetchall()
+		json = connection.get_substrait_json(query).fetchall()[0][0]
+		rel = connection.from_substrait_json(json)
+		actual = rel.fetchall()
+		assert expected == actual
 
 	def test_intersect(self, connection):
 		connection.execute("""
@@ -69,12 +68,11 @@ class TestSetOperation(object):
 				(3, 4, 5, 6)
 			) as tbl(B, C, D, A)
 		""")
-		# FIXME: test currently fails
-		# query = """
-		# 	select * from tbl1 INTERSECT (select * from tbl2);
-		# """
-		# expected = connection.sql(query).fetchall()
-		# json = connection.get_substrait_json(query).fetchall()[0][0]
-		# rel = connection.from_substrait_json(json)
-		# actual = rel.fetchall()
-		# assert expected == actual
+		query = """
+			select * from tbl1 INTERSECT (select * from tbl2);
+		"""
+		expected = connection.sql(query).fetchall()
+		json = connection.get_substrait_json(query).fetchall()[0][0]
+		rel = connection.from_substrait_json(json)
+		actual = rel.fetchall()
+		assert expected == actual
