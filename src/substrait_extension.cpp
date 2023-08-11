@@ -74,7 +74,16 @@ static void VerifySubstraitRoundtrip(unique_ptr<LogicalOperator> &query_plan, Co
 	auto sub_relation = SubstraitPlanToDuckDBRel(con, serialized, json);
 	auto substrait_result = sub_relation->Execute();
 	substrait_result->names = actual_result->names;
-	if (!actual_result->Equals(*substrait_result)) {
+	unique_ptr<QueryResult> substrait_materialized;
+
+	if (substrait_result->type == QueryResultType::STREAM_RESULT) {
+		auto &stream_query = substrait_result->Cast<duckdb::StreamQueryResult>();
+		substrait_materialized = stream_query.Materialize();
+	} else {
+		substrait_materialized = std::move(substrait_result);
+	}
+
+	if (!actual_result->Equals(*substrait_materialized)) {
 		query_plan->Print();
 		sub_relation->Print();
 		throw InternalException("The query result of DuckDB's query plan does not match Substrait");
