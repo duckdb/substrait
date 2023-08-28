@@ -110,6 +110,9 @@ static void ToSubFunctionInternal(ClientContext &context, ToSubstraitFunctionDat
 	// We might want to disable the optimizer of our new connection
 	new_conn.context->config.enable_optimizer = data.enable_optimizer;
 	new_conn.context->config.use_replacement_scans = false;
+	// We want for sure to disable the internal compression optimizations
+	// These are DuckDB specific, no other system implements these
+	new_conn.Query("SET disabled_optimizers to 'compressed_materialization';");
 	query_plan = new_conn.context->ExtractPlan(data.query);
 	DuckDBToSubstrait transformer_d2s(context, *query_plan);
 	serialized = transformer_d2s.SerializeToString();
@@ -147,6 +150,9 @@ static void ToJsonFunctionInternal(ClientContext &context, ToSubstraitFunctionDa
 	// We might want to disable the optimizer of our new connection
 	new_conn.context->config.enable_optimizer = data.enable_optimizer;
 	new_conn.context->config.use_replacement_scans = false;
+	// We want for sure to disable the internal compression optimizations
+	// These are DuckDB specific, no other system implements these
+	new_conn.Query("SET disabled_optimizers to 'compressed_materialization';");
 	query_plan = new_conn.context->ExtractPlan(data.query);
 	DuckDBToSubstrait transformer_d2s(context, *query_plan);
 	serialized = transformer_d2s.SerializeToJson();
