@@ -5,7 +5,7 @@ import os
 import shutil
 from os import walk
 
-GITHUB_TAG = "335a4dc74ccb3ef88769878d36c35e511e47ef70" # V0.24
+GITHUB_TAG = "9e39067e49f453f1df998c3c4a821e53dd7a1e8f" # V0.35
 # Change to substrait folder
 sub_folder  = os.path.join(os.path.dirname(os.path.realpath(__file__)),'..','third_party','substrait')
 os.chdir(sub_folder)
@@ -35,6 +35,7 @@ proto_sub_list = next(walk(substrait_proto_folder), (None, None, []))[2]
 
 proto_sub_extensions = next(walk(substrait_extensions_proto_folder), (None, None, []))[2]
 
+# /usr/local/bin/protoc
 print("Protoc version" + os.popen('protoc --version').read())
 
 for proto in proto_sub_list:
