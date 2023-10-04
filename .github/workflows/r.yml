@@ -59,7 +59,7 @@ jobs:
     - name: update duckdb-r src code with PR code
       shell: bash
       working-directory: ${{ env.DUCKDB_R_SRC }}
-      run: ./vendor.sh duckdb
+      run:  (cd duckdb-r && ./vendor.sh duckdb)
 
     - name: Build Extension
       run: |
