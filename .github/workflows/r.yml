@@ -35,7 +35,31 @@ jobs:
       run: |
         sudo apt-get update -y -qq && sudo apt-get install -y -qq ninja-build libcurl4-openssl-dev
         mkdir -p $HOME/.R
-        (cd duckdb/tools/rpkg && R -f dependencies.R)
+        (cd scripts && R -f dependencies.R)
+
+    - uses: actions/checkout@v3
+      with:
+        path: ${{ env.DUCKDB_SRC }}
+
+    - uses: actions/checkout@v3
+      with:
+        repository: ${{ env.DUCKDB_R_REPO }}
+        path: ${{ env.DUCKDB_R_SRC }}
+
+      # needed so we can run git commit in vendor.sh
+    - name: setup github and create parallel builds
+      shell: bash
+      run: |
+        git config --global user.email "duck@duck.com"
+        git config --global user.name "mr. duck"
+        mkdir -p ~/.R
+        echo 'MAKEFLAGS = -j2' >> ~/.R/Makevars
+
+     # error is from git_dev_version() but does not affect this workflow
+    - name: update duckdb-r src code with PR code
+      shell: bash
+      working-directory: ${{ env.DUCKDB_R_SRC }}
+      run:  (cd duckdb-r && ./vendor.sh duckdb)
 
     - name: Build Extension
       run: |
@@ -43,10 +67,8 @@ jobs:
 
     - name: Build DuckDB (R)
       run: |
-        cd duckdb/tools/rpkg
-        ./configure
-        R CMD build .
-        R CMD INSTALL -d duckdb_*.tar.gz
+        cd duckdb-r
+        R CMD INSTALL .
 
     - name: Test R
       run: |
