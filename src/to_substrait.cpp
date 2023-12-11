@@ -1058,11 +1058,11 @@ substrait::Rel *DuckDBToSubstrait::TransformGet(LogicalOperator &dop) {
 	substrait::Rel *rel = get_rel;
 	auto &dget = (LogicalGet &)dop;
 
-	if (!dget.function.get_batch_info) {
+	if (!dget.function.get_bind_info) {
 		throw NotImplementedException("This Scanner Type can't be used in substrait because a get batch info "
 		                              "is not yet implemented");
 	}
-	auto bind_info = dget.function.get_batch_info(dget.bind_data.get());
+	auto bind_info = dget.function.get_bind_info(dget.bind_data.get());
 	auto sget = get_rel->mutable_read();
 
 	if (!dget.table_filters.filters.empty()) {
@@ -1161,6 +1161,30 @@ substrait::Rel *DuckDBToSubstrait::TransformDistinct(LogicalOperator &dop) {
 	return rel;
 }
 
+substrait::Rel *DuckDBToSubstrait::TransformExcept(LogicalOperator &dop) {
+	auto rel = new substrait::Rel();
+	auto set_op = rel->mutable_set();
+	set_op->set_op(substrait::SetRel_SetOp::SetRel_SetOp_SET_OP_MINUS_PRIMARY);
+	auto &set_operation = (LogicalSetOperation &)dop;
+	auto inputs = set_op->mutable_inputs();
+	inputs->AddAllocated(TransformOp(*set_operation.children[0]));
+	inputs->AddAllocated(TransformOp(*set_operation.children[1]));
+	auto bindings = dop.GetColumnBindings();
+	return rel;
+}
+
+substrait::Rel *DuckDBToSubstrait::TransformIntersect(LogicalOperator &dop) {
+	auto rel = new substrait::Rel();
+	auto set_op = rel->mutable_set();
+	set_op->set_op(substrait::SetRel_SetOp::SetRel_SetOp_SET_OP_INTERSECTION_PRIMARY);
+	auto &set_operation = (LogicalSetOperation &)dop;
+	auto inputs = set_op->mutable_inputs();
+	inputs->AddAllocated(TransformOp(*set_operation.children[0]));
+	inputs->AddAllocated(TransformOp(*set_operation.children[1]));
+	auto bindings = dop.GetColumnBindings();
+	return rel;
+}
+
 substrait::Rel *DuckDBToSubstrait::TransformOp(LogicalOperator &dop) {
 	switch (dop.type) {
 	case LogicalOperatorType::LOGICAL_FILTER:
@@ -1185,6 +1209,10 @@ substrait::Rel *DuckDBToSubstrait::TransformOp(LogicalOperator &dop) {
 		return TransformUnion(dop);
 	case LogicalOperatorType::LOGICAL_DISTINCT:
 		return TransformDistinct(dop);
+	case LogicalOperatorType::LOGICAL_EXCEPT:
+		return TransformExcept(dop);
+	case LogicalOperatorType::LOGICAL_INTERSECT:
+		return TransformIntersect(dop);
 	default:
 		throw InternalException(LogicalOperatorToString(dop.type));
 	}
