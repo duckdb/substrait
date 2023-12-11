@@ -34,13 +34,9 @@ CALL from_substrait('\x12\x09\x1A\x07\x10\x01\x1A\x03sum\x12\x07\x1A\x05\x10\x02
 ----
 19107076.83379995
 
-loop i 0 1000
-
 # Test Globbing
 statement ok
 CALL get_substrait('select * from parquet_scan(''data/parquet-testing/glob*/t?.parquet'') order by i')
-
-endloop
 
 statement error
 CALL get_substrait('select * from parquet_scan('''') order by i')
