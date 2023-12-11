@@ -1,0 +1,10 @@
+# name: test/sql/test_intersect.test
+# description: Test the INTERSECT set operation
+# group: [substrait]
+
+require substrait
+
+statement ok
+PRAGMA enable_verification
+
+#CALL get_substrait_json('select * from integers limit 5')

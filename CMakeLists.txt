@@ -95,7 +95,7 @@ set(SUBSTRAIT_SOURCES
     third_party/substrait/substrait/extensions/extensions.pb.cc)
 
 set(EXTENSION_SOURCES
-    src/to_substrait.cpp src/from_substrait.cpp src/substrait_extension.cpp
+    src/to_substrait.cpp src/from_substrait.cpp src/substrait_extension.cpp src/custom_extensions.cpp
     ${SUBSTRAIT_SOURCES} ${PROTOBUF_SOURCES})
 
 add_library(${EXTENSION_NAME} STATIC ${EXTENSION_SOURCES})
