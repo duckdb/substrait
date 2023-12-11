@@ -17,6 +17,7 @@ struct SubstraitCustomFunction {
 public:
 	SubstraitCustomFunction(string name_p, vector<string> arg_types_p)
 	    : name(std::move(name_p)), arg_types(std::move(arg_types_p)) {};
+
 	SubstraitCustomFunction() = default;
 	bool operator==(const SubstraitCustomFunction &other) const {
 		return name == other.name && arg_types == other.arg_types;
@@ -34,7 +35,6 @@ public:
 	string extension_path;
 };
 
-//! Hash function used in out state machine cache, it hashes and combines all options used to generate a state machine
 struct HashSubstraitFunctions {
 	size_t operator()(SubstraitCustomFunction const &custom_function) const noexcept {
 		// Hash Name
@@ -59,6 +59,7 @@ public:
 		auto types = std::move(types_p);
 		custom_functions[{name, types}] = {{name, types}, std::move(file_path)};
 	}
+	string Get(const string &name, const vector<LogicalType> &types);
 	void Initialize();
 };
 
