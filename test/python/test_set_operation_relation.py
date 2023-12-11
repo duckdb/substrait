@@ -25,7 +25,7 @@ class TestSetOperation(object):
 				)
 			union all (
 				select * from tbl2
-			)
+			) order by all
 		"""
 		expected = connection.sql(query).fetchall()
 		json = connection.get_substrait_json(query).fetchall()[0][0]
