@@ -63,14 +63,6 @@ std::string SubstraitToDuckDB::RemoveExtension(std::string &function_name) {
 	return name;
 }
 
-// std::string &SubstraitToDuckDB::RemapFunctionName(std::string &function_name) {
-//	auto it = function_names_remap.find(function_name);
-//	if (it != function_names_remap.end()) {
-//		function_name = it->second;
-//	}
-//	return function_name;
-//}
-
 SubstraitToDuckDB::SubstraitToDuckDB(Connection &con_p, const string &serialized, bool json) : con(con_p) {
 	if (con_p.context->client_data->http_state) {
 		con_p.context->client_data->http_state->Reset();
