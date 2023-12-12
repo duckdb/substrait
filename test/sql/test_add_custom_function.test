@@ -8,12 +8,50 @@ statement ok
 PRAGMA enable_verification
 
 statement ok
-create table t (a integer)
+create table t (a double)
 
 statement ok
 insert into t values (1)
 
+# This should emit extension information
+query I
+CALL get_substrait_json('select sin(a) from t')
+----
+<REGEX>:.*https://github.com/substrait-io/substrait/blob/main/extensions/functions_arithmetic.yaml.*
+
+query I
+CALL get_substrait_json('select sin(a) from t')
+----
+<REGEX>:.*sin:fp64.*
+
+# Test one with two arguments
+query I
+CALL get_substrait_json('select atan2(a,a) from t')
+----
+<REGEX>:.*atan2:fp64_fp64.*
+
+# Test string
+statement ok
+create table t_2 (a varchar)
+
+statement ok
+insert into t_2 values (' Oogie ')
+
+query I
+CALL get_substrait_json('select trim(a) from t_2')
+----
+<REGEX>:.*https://github.com/substrait-io/substrait/blob/main/extensions/functions_arithmetic.yaml.*
+
+
+# Test native functionality does not return extensions or arguments
 query I
 CALL get_substrait_json('select sum(a) from t')
 ----
-{"extensions":[{"extensionFunction":{"functionAnchor":1,"name":"sum"}}],"relations":[{"root":{"input":{"project":{"input":{"aggregate":{"input":{"read":{"baseSchema":{"names":["a"],"struct":{"types":[{"i32":{"nullability":"NULLABILITY_NULLABLE"}}],"nullability":"NULLABILITY_REQUIRED"}},"projection":{"select":{"structItems":[{}]},"maintainSingularStruct":true},"namedTable":{"names":["t"]}}},"groupings":[{}],"measures":[{"measure":{"functionReference":1,"outputType":{"decimal":{"precision":38,"nullability":"NULLABILITY_NULLABLE"}},"arguments":[{"value":{"selection":{"directReference":{"structField":{}},"rootReference":{}}}}]}}]}},"expressions":[{"selection":{"directReference":{"structField":{}},"rootReference":{}}}]}},"names":["sum(a)"]}}],"version":{"minorNumber":24,"producer":"DuckDB"}}
+<!REGEX>:.*https://github.com/substrait-io/substrait/blob/main/extensions/functions_arithmetic.yaml.*
+
+query I
+CALL get_substrait_json('select sum(a) from t')
+----
+<REGEX>:.*"sum".*
+
+

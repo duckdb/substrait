@@ -111,7 +111,7 @@ private:
 	void TransformOrder(duckdb::BoundOrderByNode &dordf, substrait::SortField &sordf);
 
 	void AllocateFunctionArgument(substrait::Expression_ScalarFunction *scalar_fun, substrait::Expression *value);
-	std::string &RemapFunctionName(std::string &function_name);
+	static std::string &RemapFunctionName(std::string &function_name);
 	bool IsExtractFunction(const string &function_name) const;
 
 	//! Creates a Conjuction
@@ -148,7 +148,10 @@ private:
 	//! Remapped DuckDB functions names to Substrait compatible function names
 	static const unordered_map<std::string, std::string> function_names_remap;
 	static const case_insensitive_set_t valid_extract_subfields;
+	//! Variable that holds information about yaml function extensions
+	static const SubstraitCustomFunctions custom_functions;
 	uint64_t last_function_id = 1;
+	uint64_t last_extension_id = 1;
 
 	//! The substrait Plan
 	substrait::Plan plan;

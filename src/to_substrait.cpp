@@ -29,6 +29,8 @@ const case_insensitive_set_t DuckDBToSubstrait::valid_extract_subfields = {
     "year",    "month",       "day",          "decade", "century", "millenium",
     "quarter", "microsecond", "milliseconds", "second", "minute",  "hour"};
 
+const SubstraitCustomFunctions DuckDBToSubstrait::custom_functions {};
+
 std::string &DuckDBToSubstrait::RemapFunctionName(std::string &function_name) {
 	auto it = function_names_remap.find(function_name);
 	if (it != function_names_remap.end()) {
@@ -64,7 +66,7 @@ void DuckDBToSubstrait::AllocateFunctionArgument(substrait::Expression_ScalarFun
 string GetRawValue(hugeint_t value) {
 	std::string str;
 	str.reserve(16);
-	uint8_t *byte = (uint8_t *)&value.lower;
+	auto *byte = (uint8_t *)&value.lower;
 	for (idx_t i = 0; i < 8; i++) {
 		str.push_back(byte[i]);
 	}
@@ -515,20 +517,32 @@ uint64_t DuckDBToSubstrait::RegisterFunction(const string &name, vector<::substr
 	if (name.empty()) {
 		throw InternalException("Missing function name");
 	}
-	if (functions_map.find(name) == functions_map.end()) {
+	// FIXME: For now I'm ignoring DuckDB functions that are either not mapped to native substrait or custom substrait
+	// extensions
+	auto function = custom_functions.Get(name, args_types);
+	idx_t uri_reference = 0;
+	if (!function.IsNative()) {
+		auto extensionURI = function.GetExtensionURI();
+		auto it = extension_uri_map.find(extensionURI);
+		if (it == extension_uri_map.end()) {
+			// We have to add this extension
+			auto allocated_string = new string();
+			*allocated_string = extensionURI;
+			auto uri = plan.add_extension_uris();
+			uri->set_allocated_uri(allocated_string);
+			uri->set_extension_uri_anchor(last_extension_id++);
+		}
+		uri_reference = extension_uri_map[extensionURI];
+	}
+	if (functions_map.find(function.function.GetName()) == functions_map.end()) {
 		auto function_id = last_function_id++;
-		// FIXME: We have to do some URI YAML File shenanigans
-		//		auto uri = plan.add_extension_uris();
-		//		uri->set_extension_uri_anchor(function_id);
 		auto sfun = plan.add_extensions()->mutable_extension_function();
 		sfun->set_function_anchor(function_id);
-		sfun->set_name(name);
-
-		//		sfun->set_extension_uri_reference(function_id);
-
-		functions_map[name] = function_id;
+		sfun->set_name(function.function.GetName());
+		sfun->set_extension_uri_reference(uri_reference);
+		functions_map[function.function.GetName()] = function_id;
 	}
-	return functions_map[name];
+	return functions_map[function.function.GetName()];
 }
 
 void DuckDBToSubstrait::CreateFieldRef(substrait::Expression *expr, uint64_t col_idx) {
@@ -865,10 +879,6 @@ substrait::Rel *DuckDBToSubstrait::TransformAggregateGroup(LogicalOperator &dop)
 			args_types.emplace_back(DuckToSubstraitType(darg->return_type));
 			TransformExpr(*darg, *s_arg->mutable_value());
 		}
-		//                const google::protobuf::Reflection *reflection =  args_types[0].GetReflection();
-		//                reflection-
-		//                auto descriptor = args_types[0].kind_case().
-		//                auto str_v = descriptor->DebugString();
 		smeas->set_function_reference(RegisterFunction(RemapFunctionName(daexpr.function.name), args_types));
 	}
 	return res;

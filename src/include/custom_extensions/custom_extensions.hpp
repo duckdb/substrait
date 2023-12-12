@@ -9,6 +9,7 @@
 #pragma once
 
 #include "duckdb/common/types/hash.hpp"
+#include <substrait/type.pb.h>
 #include <unordered_map>
 
 namespace duckdb {
@@ -22,6 +23,7 @@ public:
 	bool operator==(const SubstraitCustomFunction &other) const {
 		return name == other.name && arg_types == other.arg_types;
 	}
+	string GetName();
 	string name;
 	vector<string> arg_types;
 };
@@ -32,9 +34,8 @@ public:
 	    : function(std::move(function_p)), extension_path(std::move(extension_path_p)) {};
 	SubstraitFunctionExtensions() = default;
 
-	string Stringfy();
-
 	string GetExtensionURI();
+	bool IsNative();
 
 	SubstraitCustomFunction function;
 	string extension_path;
@@ -57,7 +58,8 @@ struct HashSubstraitFunctions {
 
 class SubstraitCustomFunctions {
 public:
-	SubstraitFunctionExtensions Get(const string &name, const vector<LogicalType> &types);
+	SubstraitCustomFunctions();
+	SubstraitFunctionExtensions Get(const string &name, const vector<::substrait::Type> &types) const;
 	void Initialize();
 
 private:

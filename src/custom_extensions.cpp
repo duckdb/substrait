@@ -3,42 +3,17 @@
 
 namespace duckdb {
 
-// 'geometry'  'u!geometry' fixedchar<L2>'  'interval_year' 'interval_day' 'unknown' 'T' "string"
-string TransformTypes(const LogicalTypeId &type) {
-	switch (type) {
-	case LogicalTypeId::DATE:
-		return "date";
-	case LogicalTypeId::LIST:
-		return "List<T>"; // FIXME: gotta template this.
-	case LogicalTypeId::VARCHAR:
-		return "varchar<L2>"; // FIXME What is L2?
-	case LogicalTypeId::ANY:
-		return "any1";
-	case LogicalTypeId::TIMESTAMP_TZ:
-		return "timestamp_tz";
-	case LogicalTypeId::TIME:
-		return "time";
-	case LogicalTypeId::DECIMAL:
-		return "decimal<P1,S1>'"; // FIXME: gotta fix precision and scale
-	case LogicalTypeId::BOOLEAN:
-		return "boolean?"; // FIXME: why this has a question mark?
-	case LogicalTypeId::TIMESTAMP:
-		return "timestamp";
-	case LogicalTypeId::TINYINT:
-		return "i8";
-	case LogicalTypeId::SMALLINT:
-		return "i16";
-	case LogicalTypeId::INTEGER:
-		return "i32";
-	case LogicalTypeId::BIGINT:
-		return "i64";
-	case LogicalTypeId::FLOAT:
-		return "fp32";
-	case LogicalTypeId::DOUBLE:
-		return "fp64";
-	default:
-		return "";
+// FIXME: This cannot be the best way of getting string names of the types
+string TransformTypes(const ::substrait::Type &type) {
+	auto str = type.DebugString();
+	string str_type;
+	for (auto &c : str) {
+		if (c == ' ') {
+			return str_type;
+		}
+		str_type += c;
 	}
+	return str_type;
 }
 
 void SubstraitCustomFunctions::InsertCustomFunction(string name_p, vector<string> types_p, string file_path) {
@@ -47,26 +22,42 @@ void SubstraitCustomFunctions::InsertCustomFunction(string name_p, vector<string
 	custom_functions[{name, types}] = {{name, types}, std::move(file_path)};
 }
 
-string SubstraitFunctionExtensions::Stringfy() {
-	return "";
-	//    string function_signature = name + ":";
-	//        for (auto& type: transformed_types){
-	//          function_signature += type + "_";
-	//        }
-	//        function_signature.pop_back();
+string SubstraitCustomFunction::GetName() {
+	if (arg_types.empty()) {
+		return name;
+	}
+	string function_signature = name + ":";
+	for (auto &type : arg_types) {
+		function_signature += type + "_";
+	}
+	function_signature.pop_back();
+	return function_signature;
 }
 
-string GetExtensionURI() {
+string SubstraitFunctionExtensions::GetExtensionURI() {
+	if (IsNative()) {
+		return "";
+	}
+	return "https://github.com/substrait-io/substrait/blob/main/extensions/" + extension_path;
 }
 
-SubstraitFunctionExtensions SubstraitCustomFunctions::Get(const string &name, const vector<LogicalType> &types) {
+bool SubstraitFunctionExtensions::IsNative() {
+	return extension_path == "native";
+}
+
+SubstraitCustomFunctions::SubstraitCustomFunctions() {
+	Initialize();
+};
+
+// FIXME: We might have to do DuckDB extensions at some point
+SubstraitFunctionExtensions SubstraitCustomFunctions::Get(const string &name,
+                                                          const vector<::substrait::Type> &types) const {
 	vector<string> transformed_types;
 	for (auto &type : types) {
-		transformed_types.emplace_back(TransformTypes(type.id()));
+		transformed_types.emplace_back(TransformTypes(type));
 		if (transformed_types.back().empty()) {
 			// If it is empty it means we did not find a yaml extension, we return the function name
-			// FIXME: I think that we need to output a DuckDB Extension YAML here
-			return {{name, {""}}, "duckdb_extension"};
+			return {{name, {}}, "native"};
 		}
 	}
 	SubstraitCustomFunction custom_function {name, {transformed_types}};
@@ -75,8 +66,9 @@ SubstraitFunctionExtensions SubstraitCustomFunctions::Get(const string &name, co
 		// We found it in our substrait custom map, return that
 		return it->second;
 	}
-	// we did not find it, return it as a duckdb extension
-	return {{name, {""}}, "duckdb_extension"};
+	// TODO: check if this should also print the arg types or not
+	// we did not find it, return it as a native substrait function
+	return {{name, {}}, "native"};
 }
 
 } // namespace duckdb
