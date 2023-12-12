@@ -1,5 +1,5 @@
-# name: test/sql/test_add_custom_function.test
-# description: Test that using ADD gives the correct extension info
+# name: test/sql/test_custom_function.test
+# description: Test that using custom functions gives the correct extension info
 # group: [substrait]
 
 require substrait
