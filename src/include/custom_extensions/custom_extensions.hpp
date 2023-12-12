@@ -31,6 +31,11 @@ public:
 	SubstraitFunctionExtensions(SubstraitCustomFunction function_p, string extension_path_p)
 	    : function(std::move(function_p)), extension_path(std::move(extension_path_p)) {};
 	SubstraitFunctionExtensions() = default;
+
+	string Stringfy();
+
+	string GetExtensionURI();
+
 	SubstraitCustomFunction function;
 	string extension_path;
 };
@@ -52,15 +57,12 @@ struct HashSubstraitFunctions {
 
 class SubstraitCustomFunctions {
 public:
-	std::unordered_map<SubstraitCustomFunction, SubstraitFunctionExtensions, HashSubstraitFunctions> custom_functions;
-
-	void InsertCustomFunction(string name_p, vector<string> types_p, string file_path) {
-		auto name = std::move(name_p);
-		auto types = std::move(types_p);
-		custom_functions[{name, types}] = {{name, types}, std::move(file_path)};
-	}
-	string Get(const string &name, const vector<LogicalType> &types);
+	SubstraitFunctionExtensions Get(const string &name, const vector<LogicalType> &types);
 	void Initialize();
+
+private:
+	std::unordered_map<SubstraitCustomFunction, SubstraitFunctionExtensions, HashSubstraitFunctions> custom_functions;
+	void InsertCustomFunction(string name_p, vector<string> types_p, string file_path);
 };
 
 } // namespace duckdb
