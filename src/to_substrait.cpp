@@ -920,7 +920,7 @@ substrait::Rel *DuckDBToSubstrait::TransformAggregateGroup(LogicalOperator &dop)
 	case LogicalTypeId::USMALLINT:
 	case LogicalTypeId::INTEGER: {
 		auto integral_type = new substrait::Type_I32;
-		//		integral_type->set_nullability(type_nullability);
+		integral_type->set_nullability(type_nullability);
 		s_type.set_allocated_i32(integral_type);
 		return s_type;
 	}
