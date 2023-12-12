@@ -650,6 +650,9 @@ substrait::Expression *DuckDBToSubstrait::TransformJoinCond(JoinCondition &dcond
 	case ExpressionType::COMPARE_LESSTHANOREQUALTO:
 		join_comparision = "lte";
 		break;
+	case ExpressionType::COMPARE_LESSTHAN:
+		join_comparision = "lt";
+		break;
 	default:
 		throw InternalException("Unsupported join comparison: " + ExpressionTypeToOperator(dcond.comparison));
 	}
