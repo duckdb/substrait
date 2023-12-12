@@ -28,7 +28,7 @@ def run_substrait_validator(con, query):
     substrait_validator.check_plan_valid(proto, config=c)
     
 def run_tpch_validator(require, query_number):
-    con = require('/Users/holanda/Documents/Projects/duckdblabs/substrait/build/release/extension/substrait/substrait.duckdb_extension', 'test.db')
+    con = require('substrait', 'test.db')
     if not con:
         return
     query = con.execute("select query from tpch_queries() where query_nr="+str(query_number)).fetchone()[0]
