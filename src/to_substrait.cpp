@@ -651,7 +651,7 @@ substrait::Expression *DuckDBToSubstrait::TransformJoinCond(JoinCondition &dcond
 		join_comparision = "lte";
 		break;
 	default:
-		throw InternalException("Unsupported join comparison");
+		throw InternalException("Unsupported join comparison: " + ExpressionTypeToOperator(dcond.comparison));
 	}
 	vector<::substrait::Type> args_types;
 	auto scalar_fun = expr->mutable_scalar_function();
