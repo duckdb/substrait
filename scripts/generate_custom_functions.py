@@ -1,7 +1,7 @@
 import os
 from os import walk
 import yaml
-
+import regex
 
 def parse_yaml(file_path):
 	with open(file_path, 'r') as file:
@@ -38,7 +38,7 @@ def get_custom_functions():
 			for impls_args in function["impls_args"]:
 				type_str = "{"
 				for args in impls_args: 
-					type_value = args["value"]
+					type_value = regex.sub(r'<[^>]*>', '', args["value"])
 					type_set.add(type_value)
 					type_str += f"\"{type_value}\","
 				type_str = type_str[:-1]

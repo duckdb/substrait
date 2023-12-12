@@ -35,15 +35,20 @@ statement ok
 create table t_2 (a varchar)
 
 statement ok
-insert into t_2 values (' Oogie ')
+insert into t_2 values ('<Oogie<')
 
 query I
-CALL get_substrait_json('select trim(a) from t_2')
+CALL get_substrait_json('select trim(a, ''<'') from t_2')
 ----
-<REGEX>:.*https://github.com/substrait-io/substrait/blob/main/extensions/functions_arithmetic.yaml.*
+<REGEX>:.*https://github.com/substrait-io/substrait/blob/main/extensions/functions_string.yaml.*
 
+query I
+CALL get_substrait_json('select trim(a, ''<'') from t_2')
+----
+<REGEX>:.*trim:varchar_varchar.*
 
 # Test native functionality does not return extensions or arguments
+
 query I
 CALL get_substrait_json('select sum(a) from t')
 ----
@@ -53,5 +58,22 @@ query I
 CALL get_substrait_json('select sum(a) from t')
 ----
 <REGEX>:.*"sum".*
+
+# Test mix
+
+query I
+CALL get_substrait_json('select  a+a, sin(a) from t')
+----
+<REGEX>:.*https://github.com/substrait-io/substrait/blob/main/extensions/functions_arithmetic.yaml.*
+
+query I
+CALL get_substrait_json('select sin(t.a), trim(t_2.a, ''<'') from t,t_2')
+----
+<REGEX>:.*https://github.com/substrait-io/substrait/blob/main/extensions/functions_arithmetic.yaml.*
+
+query I
+CALL get_substrait_json('select sin(t.a), trim(t_2.a, ''<'') from t,t_2')
+----
+<REGEX>:.*https://github.com/substrait-io/substrait/blob/main/extensions/functions_string.yaml.*
 
 

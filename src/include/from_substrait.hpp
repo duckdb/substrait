@@ -39,6 +39,7 @@ private:
 
 	void VerifyCorrectExtractSubfield(const string &subfield);
 	std::string RemapFunctionName(std::string &function_name);
+	std::string RemoveExtension(std::string &function_name);
 	LogicalType SubstraitToDuckType(const ::substrait::Type &s_type);
 	//! Looks up for aggregation function in functions_map
 	string FindFunction(uint64_t id);

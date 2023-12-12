@@ -46,10 +46,30 @@ std::string SubstraitToDuckDB::RemapFunctionName(std::string &function_name) {
 	}
 	auto it = function_names_remap.find(name);
 	if (it != function_names_remap.end()) {
-		function_name = it->second;
+		name = it->second;
 	}
 	return name;
 }
+
+std::string SubstraitToDuckDB::RemoveExtension(std::string &function_name) {
+	// Lets first drop any extension id
+	string name;
+	for (auto &c : function_name) {
+		if (c == ':') {
+			break;
+		}
+		name += c;
+	}
+	return name;
+}
+
+// std::string &SubstraitToDuckDB::RemapFunctionName(std::string &function_name) {
+//	auto it = function_names_remap.find(function_name);
+//	if (it != function_names_remap.end()) {
+//		function_name = it->second;
+//	}
+//	return function_name;
+//}
 
 SubstraitToDuckDB::SubstraitToDuckDB(Connection &con_p, const string &serialized, bool json) : con(con_p) {
 	if (con_p.context->client_data->http_state) {
@@ -179,6 +199,7 @@ void SubstraitToDuckDB::VerifyCorrectExtractSubfield(const string &subfield) {
 
 unique_ptr<ParsedExpression> SubstraitToDuckDB::TransformScalarFunctionExpr(const substrait::Expression &sexpr) {
 	auto function_name = FindFunction(sexpr.scalar_function().function_reference());
+	function_name = RemoveExtension(function_name);
 	vector<unique_ptr<ParsedExpression>> children;
 	vector<string> enum_expressions;
 	auto &function_arguments = sexpr.scalar_function().arguments();

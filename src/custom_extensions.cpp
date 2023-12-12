@@ -53,6 +53,9 @@ SubstraitCustomFunctions::SubstraitCustomFunctions() {
 SubstraitFunctionExtensions SubstraitCustomFunctions::Get(const string &name,
                                                           const vector<::substrait::Type> &types) const {
 	vector<string> transformed_types;
+	if (types.empty()) {
+		return {{name, {}}, "native"};
+	}
 	for (auto &type : types) {
 		transformed_types.emplace_back(TransformTypes(type));
 		if (transformed_types.back().empty()) {
