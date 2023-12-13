@@ -29,6 +29,8 @@ const case_insensitive_set_t DuckDBToSubstrait::valid_extract_subfields = {
     "year",    "month",       "day",          "decade", "century", "millenium",
     "quarter", "microsecond", "milliseconds", "second", "minute",  "hour"};
 
+const SubstraitCustomFunctions DuckDBToSubstrait::custom_functions {};
+
 std::string &DuckDBToSubstrait::RemapFunctionName(std::string &function_name) {
 	auto it = function_names_remap.find(function_name);
 	if (it != function_names_remap.end()) {
@@ -64,7 +66,7 @@ void DuckDBToSubstrait::AllocateFunctionArgument(substrait::Expression_ScalarFun
 string GetRawValue(hugeint_t value) {
 	std::string str;
 	str.reserve(16);
-	uint8_t *byte = (uint8_t *)&value.lower;
+	auto *byte = (uint8_t *)&value.lower;
 	for (idx_t i = 0; i < 8; i++) {
 		str.push_back(byte[i]);
 	}
@@ -303,13 +305,14 @@ void DuckDBToSubstrait::TransformFunctionExpression(Expression &dexpr, substrait
 		auto enum_arg = sfun->add_arguments();
 		*enum_arg->mutable_enum_() = subfield;
 	}
-
-	sfun->set_function_reference(RegisterFunction(RemapFunctionName(function_name)));
-
+	vector<::substrait::Type> args_types;
 	for (auto &darg : dfun.children) {
 		auto sarg = sfun->add_arguments();
 		TransformExpr(*darg, *sarg->mutable_value(), col_offset);
+		args_types.emplace_back(DuckToSubstraitType(darg->return_type));
 	}
+	sfun->set_function_reference(RegisterFunction(RemapFunctionName(function_name), args_types));
+
 	auto output_type = sfun->mutable_output_type();
 	*output_type = DuckToSubstraitType(dfun.return_type);
 }
@@ -350,7 +353,10 @@ void DuckDBToSubstrait::TransformComparisonExpression(Expression &dexpr, substra
 	}
 
 	auto scalar_fun = sexpr.mutable_scalar_function();
-	scalar_fun->set_function_reference(RegisterFunction(fname));
+	vector<::substrait::Type> args_types;
+	args_types.emplace_back(DuckToSubstraitType(dcomp.left->return_type));
+	args_types.emplace_back(DuckToSubstraitType(dcomp.right->return_type));
+	scalar_fun->set_function_reference(RegisterFunction(fname, args_types));
 	auto sarg = scalar_fun->add_arguments();
 	TransformExpr(*dcomp.left, *sarg->mutable_value(), 0);
 	sarg = scalar_fun->add_arguments();
@@ -374,11 +380,14 @@ void DuckDBToSubstrait::TransformConjunctionExpression(Expression &dexpr, substr
 	}
 
 	auto scalar_fun = sexpr.mutable_scalar_function();
-	scalar_fun->set_function_reference(RegisterFunction(fname));
+	vector<::substrait::Type> args_types;
 	for (auto &child : dconj.children) {
 		auto s_arg = scalar_fun->add_arguments();
 		TransformExpr(*child, *s_arg->mutable_value(), col_offset);
+		args_types.emplace_back(DuckToSubstraitType(child->return_type));
 	}
+	scalar_fun->set_function_reference(RegisterFunction(fname, args_types));
+
 	*scalar_fun->mutable_output_type() = DuckToSubstraitType(dconj.return_type);
 }
 
@@ -386,7 +395,9 @@ void DuckDBToSubstrait::TransformNotNullExpression(Expression &dexpr, substrait:
                                                    uint64_t col_offset) {
 	auto &dop = (BoundOperatorExpression &)dexpr;
 	auto scalar_fun = sexpr.mutable_scalar_function();
-	scalar_fun->set_function_reference(RegisterFunction("is_not_null"));
+	vector<::substrait::Type> args_types;
+	args_types.emplace_back(DuckToSubstraitType(dop.children[0]->return_type));
+	scalar_fun->set_function_reference(RegisterFunction("is_not_null", args_types));
 	auto s_arg = scalar_fun->add_arguments();
 	TransformExpr(*dop.children[0], *s_arg->mutable_value(), col_offset);
 	*scalar_fun->mutable_output_type() = DuckToSubstraitType(dop.return_type);
@@ -436,7 +447,9 @@ void DuckDBToSubstrait::TransformIsNullExpression(Expression &dexpr, substrait::
                                                   uint64_t col_offset) {
 	auto &dop = (BoundOperatorExpression &)dexpr;
 	auto scalar_fun = sexpr.mutable_scalar_function();
-	scalar_fun->set_function_reference(RegisterFunction("is_null"));
+	vector<::substrait::Type> args_types;
+	args_types.emplace_back(DuckToSubstraitType(dop.children[0]->return_type));
+	scalar_fun->set_function_reference(RegisterFunction("is_null", args_types));
 	auto s_arg = scalar_fun->add_arguments();
 	TransformExpr(*dop.children[0], *s_arg->mutable_value(), col_offset);
 	*scalar_fun->mutable_output_type() = DuckToSubstraitType(dop.return_type);
@@ -445,7 +458,9 @@ void DuckDBToSubstrait::TransformIsNullExpression(Expression &dexpr, substrait::
 void DuckDBToSubstrait::TransformNotExpression(Expression &dexpr, substrait::Expression &sexpr, uint64_t col_offset) {
 	auto &dop = (BoundOperatorExpression &)dexpr;
 	auto scalar_fun = sexpr.mutable_scalar_function();
-	scalar_fun->set_function_reference(RegisterFunction("not"));
+	vector<::substrait::Type> args_types;
+	args_types.emplace_back(DuckToSubstraitType(dop.children[0]->return_type));
+	scalar_fun->set_function_reference(RegisterFunction("not", args_types));
 	auto s_arg = scalar_fun->add_arguments();
 	TransformExpr(*dop.children[0], *s_arg->mutable_value(), col_offset);
 	*scalar_fun->mutable_output_type() = DuckToSubstraitType(dop.return_type);
@@ -498,23 +513,36 @@ void DuckDBToSubstrait::TransformExpr(Expression &dexpr, substrait::Expression &
 	}
 }
 
-uint64_t DuckDBToSubstrait::RegisterFunction(const string &name) {
+uint64_t DuckDBToSubstrait::RegisterFunction(const string &name, vector<::substrait::Type> &args_types) {
 	if (name.empty()) {
 		throw InternalException("Missing function name");
 	}
-	if (functions_map.find(name) == functions_map.end()) {
+	// FIXME: For now I'm ignoring DuckDB functions that are either not mapped to native substrait or custom substrait
+	// extensions
+	auto function = custom_functions.Get(name, args_types);
+	idx_t uri_reference = 0;
+	if (!function.IsNative()) {
+		auto extensionURI = function.GetExtensionURI();
+		auto it = extension_uri_map.find(extensionURI);
+		if (it == extension_uri_map.end()) {
+			// We have to add this extension
+			auto allocated_string = new string();
+			*allocated_string = extensionURI;
+			auto uri = plan.add_extension_uris();
+			uri->set_allocated_uri(allocated_string);
+			uri->set_extension_uri_anchor(last_extension_id++);
+		}
+		uri_reference = extension_uri_map[extensionURI];
+	}
+	if (functions_map.find(function.function.GetName()) == functions_map.end()) {
 		auto function_id = last_function_id++;
-		// FIXME: We have to do some URI YAML File shenanigans
-		//		auto uri = plan.add_extension_uris();
-		//		uri->set_extension_uri_anchor(function_id);
 		auto sfun = plan.add_extensions()->mutable_extension_function();
 		sfun->set_function_anchor(function_id);
-		sfun->set_name(name);
-		//		sfun->set_extension_uri_reference(function_id);
-
-		functions_map[name] = function_id;
+		sfun->set_name(function.function.GetName());
+		sfun->set_extension_uri_reference(uri_reference);
+		functions_map[function.function.GetName()] = function_id;
 	}
-	return functions_map[name];
+	return functions_map[function.function.GetName()];
 }
 
 void DuckDBToSubstrait::CreateFieldRef(substrait::Expression *expr, uint64_t col_idx) {
@@ -527,25 +555,31 @@ void DuckDBToSubstrait::CreateFieldRef(substrait::Expression *expr, uint64_t col
 	D_ASSERT(expr->has_selection());
 }
 
-substrait::Expression *DuckDBToSubstrait::TransformIsNotNullFilter(uint64_t col_idx, TableFilter &dfilter,
-                                                                   LogicalType &return_type) {
+substrait::Expression *DuckDBToSubstrait::TransformIsNotNullFilter(uint64_t col_idx, LogicalType &column_type,
+                                                                   TableFilter &dfilter, LogicalType &return_type) {
 	auto s_expr = new substrait::Expression();
 	auto scalar_fun = s_expr->mutable_scalar_function();
-	scalar_fun->set_function_reference(RegisterFunction("is_not_null"));
+	vector<::substrait::Type> args_types;
+
+	args_types.emplace_back(DuckToSubstraitType(column_type));
+
+	scalar_fun->set_function_reference(RegisterFunction("is_not_null", args_types));
 	auto s_arg = scalar_fun->add_arguments();
 	CreateFieldRef(s_arg->mutable_value(), col_idx);
 	*scalar_fun->mutable_output_type() = DuckToSubstraitType(return_type);
 	return s_expr;
 }
 
-substrait::Expression *DuckDBToSubstrait::TransformConjuctionAndFilter(uint64_t col_idx, TableFilter &dfilter,
-                                                                       LogicalType &return_type) {
+substrait::Expression *DuckDBToSubstrait::TransformConjuctionAndFilter(uint64_t col_idx, LogicalType &column_type,
+                                                                       TableFilter &dfilter, LogicalType &return_type) {
 	auto &conjunction_filter = (ConjunctionAndFilter &)dfilter;
-	return CreateConjunction(conjunction_filter.child_filters,
-	                         [&](unique_ptr<TableFilter> &in) { return TransformFilter(col_idx, *in, return_type); });
+	return CreateConjunction(conjunction_filter.child_filters, [&](unique_ptr<TableFilter> &in) {
+		return TransformFilter(col_idx, column_type, *in, return_type);
+	});
 }
 
-substrait::Expression *DuckDBToSubstrait::TransformConstantComparisonFilter(uint64_t col_idx, TableFilter &dfilter,
+substrait::Expression *DuckDBToSubstrait::TransformConstantComparisonFilter(uint64_t col_idx, LogicalType &column_type,
+                                                                            TableFilter &dfilter,
                                                                             LogicalType &return_type) {
 	auto s_expr = new substrait::Expression();
 	auto s_scalar = s_expr->mutable_scalar_function();
@@ -556,21 +590,25 @@ substrait::Expression *DuckDBToSubstrait::TransformConstantComparisonFilter(uint
 	s_arg = s_scalar->add_arguments();
 	TransformConstant(constant_filter.constant, *s_arg->mutable_value());
 	uint64_t function_id;
+	vector<::substrait::Type> args_types;
+	args_types.emplace_back(DuckToSubstraitType(column_type));
+
+	args_types.emplace_back(DuckToSubstraitType(constant_filter.constant.type()));
 	switch (constant_filter.comparison_type) {
 	case ExpressionType::COMPARE_EQUAL:
-		function_id = RegisterFunction("equal");
+		function_id = RegisterFunction("equal", args_types);
 		break;
 	case ExpressionType::COMPARE_LESSTHANOREQUALTO:
-		function_id = RegisterFunction("lte");
+		function_id = RegisterFunction("lte", args_types);
 		break;
 	case ExpressionType::COMPARE_LESSTHAN:
-		function_id = RegisterFunction("lt");
+		function_id = RegisterFunction("lt", args_types);
 		break;
 	case ExpressionType::COMPARE_GREATERTHAN:
-		function_id = RegisterFunction("gt");
+		function_id = RegisterFunction("gt", args_types);
 		break;
 	case ExpressionType::COMPARE_GREATERTHANOREQUALTO:
-		function_id = RegisterFunction("gte");
+		function_id = RegisterFunction("gte", args_types);
 		break;
 	default:
 		throw InternalException(ExpressionTypeToString(constant_filter.comparison_type));
@@ -579,15 +617,15 @@ substrait::Expression *DuckDBToSubstrait::TransformConstantComparisonFilter(uint
 	return s_expr;
 }
 
-substrait::Expression *DuckDBToSubstrait::TransformFilter(uint64_t col_idx, TableFilter &dfilter,
-                                                          LogicalType &return_type) {
+substrait::Expression *DuckDBToSubstrait::TransformFilter(uint64_t col_idx, LogicalType &column_type,
+                                                          TableFilter &dfilter, LogicalType &return_type) {
 	switch (dfilter.filter_type) {
 	case TableFilterType::IS_NOT_NULL:
-		return TransformIsNotNullFilter(col_idx, dfilter, return_type);
+		return TransformIsNotNullFilter(col_idx, column_type, dfilter, return_type);
 	case TableFilterType::CONJUNCTION_AND:
-		return TransformConjuctionAndFilter(col_idx, dfilter, return_type);
+		return TransformConjuctionAndFilter(col_idx, column_type, dfilter, return_type);
 	case TableFilterType::CONSTANT_COMPARISON:
-		return TransformConstantComparisonFilter(col_idx, dfilter, return_type);
+		return TransformConstantComparisonFilter(col_idx, column_type, dfilter, return_type);
 	default:
 		throw InternalException("Unsupported table filter type");
 	}
@@ -612,17 +650,26 @@ substrait::Expression *DuckDBToSubstrait::TransformJoinCond(JoinCondition &dcond
 	case ExpressionType::COMPARE_LESSTHANOREQUALTO:
 		join_comparision = "lte";
 		break;
+	case ExpressionType::COMPARE_LESSTHAN:
+		join_comparision = "lt";
+		break;
 	default:
-		throw InternalException("Unsupported join comparison");
+		throw InternalException("Unsupported join comparison: " + ExpressionTypeToOperator(dcond.comparison));
 	}
+	vector<::substrait::Type> args_types;
 	auto scalar_fun = expr->mutable_scalar_function();
-	scalar_fun->set_function_reference(RegisterFunction(join_comparision));
 	auto s_arg = scalar_fun->add_arguments();
 	TransformExpr(*dcond.left, *s_arg->mutable_value());
+	args_types.emplace_back(DuckToSubstraitType(dcond.left->return_type));
+
 	s_arg = scalar_fun->add_arguments();
 	TransformExpr(*dcond.right, *s_arg->mutable_value(), left_ncol);
+	args_types.emplace_back(DuckToSubstraitType(dcond.right->return_type));
+
 	LogicalType bool_type = LogicalType::BOOLEAN;
 	*scalar_fun->mutable_output_type() = DuckToSubstraitType(bool_type);
+	scalar_fun->set_function_reference(RegisterFunction(join_comparision, args_types));
+
 	return expr;
 }
 
@@ -828,13 +875,14 @@ substrait::Rel *DuckDBToSubstrait::TransformAggregateGroup(LogicalOperator &dop)
 		}
 		auto &daexpr = (BoundAggregateExpression &)*dmeas;
 
-		smeas->set_function_reference(RegisterFunction(RemapFunctionName(daexpr.function.name)));
-
 		*smeas->mutable_output_type() = DuckToSubstraitType(daexpr.return_type);
+		vector<::substrait::Type> args_types;
 		for (auto &darg : daexpr.children) {
 			auto s_arg = smeas->add_arguments();
+			args_types.emplace_back(DuckToSubstraitType(darg->return_type));
 			TransformExpr(*darg, *s_arg->mutable_value());
 		}
+		smeas->set_function_reference(RegisterFunction(RemapFunctionName(daexpr.function.name), args_types));
 	}
 	return res;
 }
@@ -1072,7 +1120,7 @@ substrait::Rel *DuckDBToSubstrait::TransformGet(LogicalOperator &dop) {
 			    auto col_idx = in.first;
 			    auto return_type = dget.returned_types[col_idx];
 			    auto &filter = *in.second;
-			    return TransformFilter(col_idx, filter, return_type);
+			    return TransformFilter(col_idx, return_type, filter, return_type);
 		    });
 		sget->set_allocated_filter(filter);
 	}
@@ -1270,7 +1318,7 @@ void DuckDBToSubstrait::TransformPlan(LogicalOperator &dop) {
 	plan.add_relations()->set_allocated_root(TransformRootOp(dop));
 	auto version = plan.mutable_version();
 	version->set_major_number(0);
-	version->set_minor_number(24);
+	version->set_minor_number(39);
 	version->set_patch_number(0);
 	auto *producer_name = new string();
 	*producer_name = "DuckDB";

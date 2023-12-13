@@ -35,12 +35,32 @@ const case_insensitive_set_t SubstraitToDuckDB::valid_extract_subfields = {
     "year",    "month",       "day",          "decade", "century", "millenium",
     "quarter", "microsecond", "milliseconds", "second", "minute",  "hour"};
 
-std::string &SubstraitToDuckDB::RemapFunctionName(std::string &function_name) {
-	auto it = function_names_remap.find(function_name);
-	if (it != function_names_remap.end()) {
-		function_name = it->second;
+std::string SubstraitToDuckDB::RemapFunctionName(std::string &function_name) {
+	// Lets first drop any extension id
+	string name;
+	for (auto &c : function_name) {
+		if (c == ':') {
+			break;
+		}
+		name += c;
 	}
-	return function_name;
+	auto it = function_names_remap.find(name);
+	if (it != function_names_remap.end()) {
+		name = it->second;
+	}
+	return name;
+}
+
+std::string SubstraitToDuckDB::RemoveExtension(std::string &function_name) {
+	// Lets first drop any extension id
+	string name;
+	for (auto &c : function_name) {
+		if (c == ':') {
+			break;
+		}
+		name += c;
+	}
+	return name;
 }
 
 SubstraitToDuckDB::SubstraitToDuckDB(Connection &con_p, const string &serialized, bool json) : con(con_p) {
@@ -171,6 +191,7 @@ void SubstraitToDuckDB::VerifyCorrectExtractSubfield(const string &subfield) {
 
 unique_ptr<ParsedExpression> SubstraitToDuckDB::TransformScalarFunctionExpr(const substrait::Expression &sexpr) {
 	auto function_name = FindFunction(sexpr.scalar_function().function_reference());
+	function_name = RemoveExtension(function_name);
 	vector<unique_ptr<ParsedExpression>> children;
 	vector<string> enum_expressions;
 	auto &function_arguments = sexpr.scalar_function().arguments();

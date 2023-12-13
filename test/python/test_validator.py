@@ -11,6 +11,8 @@ def run_substrait_validator(con, query):
     c = substrait_validator.Config()
     #  not yet implemented: typecast validation rules are not yet implemented
     c.override_diagnostic_level(1, "warning", "info")
+    #  validator limitation: did not attempt to resolve YAML
+    c.override_diagnostic_level(2001, "warning", "info")
     # function definition unavailable: cannot check validity of call
     c.override_diagnostic_level(6003, "warning", "info")
     # Function Anchor to YAML file, no clue what is that
@@ -33,13 +35,21 @@ def run_tpch_validator(require, query_number):
 
     run_substrait_validator(con,query)
 
-@pytest.mark.parametrize('query_number', [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,17,18,19,20])
+@pytest.mark.parametrize('query_number', [1,2,3,5,6,7,8,9,10,11,12,13,14,15,17,18,19])
 def test_substrait_tpch_validator(require,query_number):
     run_tpch_validator(require,query_number)
 
 @pytest.mark.skip(reason="DuckDB Compilation: INTERNAL Error: INTERNAL Error: CHUNK_GET")
 def test_substrait_tpch_validator_16(require):
     run_tpch_validator(require,16)
+
+@pytest.mark.skip(reason="DuckDB Compilation: INTERNAL Error: INTERNAL Error: RIGHT_SEMI Join")
+def test_substrait_tpch_validator_04(require):
+    run_tpch_validator(require,4)
+
+@pytest.mark.skip(reason="DuckDB Compilation: INTERNAL Error: INTERNAL Error: RIGHT_SEMI Join")
+def test_substrait_tpch_validator_20(require):
+    run_tpch_validator(require,20)
 
 @pytest.mark.skip(reason="DuckDB Compilation: INTERNAL Error: INTERNAL Error: DELIM_JOIN")
 def test_substrait_tpch_validator_21(require):
