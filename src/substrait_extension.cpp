@@ -195,6 +195,9 @@ static unique_ptr<FunctionData> SubstraitBind(ClientContext &context, TableFunct
                                               vector<LogicalType> &return_types, vector<string> &names, bool is_json) {
 	auto result = make_uniq<FromSubstraitFunctionData>();
 	result->conn = make_uniq<Connection>(*context.db);
+	if (input.inputs[0].IsNull()) {
+		throw BinderException("from_substrait cannot be called with a NULL parameter");
+	}
 	string serialized = input.inputs[0].GetValueUnsafe<string>();
 	result->plan = SubstraitPlanToDuckDBRel(*result->conn, serialized, is_json);
 	for (auto &column : result->plan->Columns()) {

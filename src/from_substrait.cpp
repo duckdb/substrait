@@ -64,10 +64,9 @@ std::string SubstraitToDuckDB::RemoveExtension(std::string &function_name) {
 }
 
 SubstraitToDuckDB::SubstraitToDuckDB(Connection &con_p, const string &serialized, bool json) : con(con_p) {
-	if (con_p.context->client_data->http_state) {
-		con_p.context->client_data->http_state->Reset();
-	}
-	con_p.context->client_data->http_state = make_uniq<HTTPState>();
+        auto http_state = HTTPState::TryGetState(*con_p.context);
+        http_state->Reset();
+
 	if (!json) {
 		if (!plan.ParseFromString(serialized)) {
 			throw std::runtime_error("Was not possible to convert binary into Substrait plan");

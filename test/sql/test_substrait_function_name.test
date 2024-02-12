@@ -35,10 +35,10 @@ statement ok
 CALL get_substrait('SELECT abs(i) FROM ints');
 
 statement ok
-CALL get_substrait('SELECT prefix(i, ''1'') FROM ints');
+CALL get_substrait('SELECT prefix(i, ''1'') FROM varchars');
 
 statement ok
-CALL get_substrait('SELECT suffix(i, ''3'') FROM ints');
+CALL get_substrait('SELECT suffix(i, ''3'') FROM varchars');
 
 statement ok
 CALL get_substrait('SELECT substr(v, 1, 1) FROM varchars');
