@@ -68,14 +68,18 @@ for explicitly enabling or disabling query optimization when parsing the provide
 
 ```sql
 CALL get_substrait('select count(exercise) as exercise from crossfit', enable_optimizer=false);
-CALL get_substrait_json('select count(exercise) as exercise from crossfit', enable_optimizer=false);
+CALL get_substrait_json('select count(exercise) as exercise from crossfit', enable_optimizer=true);
 ```
 
-If `enable_optimizer` is not specified, it is inferred based on the connection-level settings:
-  - If query optimization is disabled at the connection level (e.g. using `PRAGMA disable_optimizer`),
-    the Substrait generation functions will not optimize the query. Otherwise, they will.
-  - If any specific optimizers are disabled at the connection level (e.g. using `SET disabled_optimizers TO '...'`),
-    they will also be disabled when generating Substrait.
+If `enable_optimizer` is not specified, it is inferred from the connection-level settings: if query optimization
+is disabled at the connection level (e.g. using `PRAGMA disable_optimizer`), the Substrait generation functions
+will not optimize the query; otherwise, they will.
+
+If any specific optimizers are disabled at the connection level (e.g. using `SET disabled_optimizers TO '...'`),
+they will also be disabled when generating Substrait.
+
+The `from_substrait(blob)` function **always** respects the connection-level settings when deciding whether to
+optimize a Substrait plan.
 
 ### Python
 Before using the extension you must remember to properly load it. To load an extension in python, you must execute the sql commands within a connection.
@@ -86,6 +90,11 @@ con = duckdb.connect()
 con.install_extension("substrait")
 con.load_extension("substrait")
 ```
+
+> [!TIP]
+> See [Controlling Query Optimization](#controlling-query-optimization) for more information on how to
+> enable, disable, or tune the optimizer when generating Substrait.
+
 1) Blob Generation
      
      To generate a substrait blob the ```get_substrait(SQL)``` function must be called, from a connection, with a valid SQL select query.
@@ -115,6 +124,11 @@ con <- dbConnect(duckdb::duckdb(config=list("allow_unsigned_extensions"="true"))
 dbExecute(con, "LOAD('substrait')")
 dbExecute(con, "INSTALL('substrait')"))
 ```
+
+> [!TIP]
+> See [Controlling Query Optimization](#controlling-query-optimization) for more information on how to
+> enable, disable, or tune the optimizer when generating Substrait.
+
 1) Blob Generation
      
      To generate a substrait blob the ```duckdb_get_substrait(con,SQL)``` function must be called, with a connection and a valid SQL select query.
