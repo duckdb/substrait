@@ -72,8 +72,9 @@ SubstraitToDuckDB::SubstraitToDuckDB(Connection &con_p, const string &serialized
 			throw std::runtime_error("Was not possible to convert binary into Substrait plan");
 		}
 	} else {
-		if (!google::protobuf::util::JsonStringToMessage(serialized, &plan).ok()) {
-			throw std::runtime_error("Was not possible to convert binary into Substrait plan");
+		google::protobuf::util::Status status = google::protobuf::util::JsonStringToMessage(serialized, &plan);
+		if (!status.ok()) {
+			throw std::runtime_error("Was not possible to convert JSON into Substrait plan: " + status.ToString());
 		}
 	}
 
