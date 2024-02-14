@@ -64,7 +64,7 @@ LOAD substrait;
 #### Controlling Query Optimization
 
 The `get_substrait(SQL)` and `get_substrait_json(SQL)` functions accept an optional parameter, `enable_optimizer`,
-for explicitly enabling or disabling query optimization when parsing the provided SQL query:
+to explicitly enable or disable query optimization when generating Substrait:
 
 ```sql
 CALL get_substrait('select count(exercise) as exercise from crossfit', enable_optimizer=false);
@@ -79,7 +79,7 @@ If any specific optimizers are disabled at the connection level (e.g. using `SET
 they will also be disabled when generating Substrait.
 
 The `from_substrait(blob)` function **always** respects the connection-level settings when deciding whether to
-optimize a Substrait plan.
+optimize a Substrait plan before executing it.
 
 ### Python
 Before using the extension you must remember to properly load it. To load an extension in python, you must execute the sql commands within a connection.
