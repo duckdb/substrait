@@ -93,7 +93,8 @@ con.load_extension("substrait")
 
 > [!TIP]
 > See [Controlling Query Optimization](#controlling-query-optimization) for more information on how to
-> enable or disable the optimizer when generating Substrait.
+> enable or disable the optimizer when generating Substrait. The Substrait generation functions below
+> support an `enable_optimizer=bool` keyword argument for convenience.
 
 1) Blob Generation
      
@@ -127,7 +128,8 @@ dbExecute(con, "INSTALL('substrait')"))
 
 > [!TIP]
 > See [Controlling Query Optimization](#controlling-query-optimization) for more information on how to
-> enable or disable the optimizer when generating Substrait.
+> enable or disable the optimizer when generating Substrait. The Substrait generation functions below
+> support an `enable_optimizer=bool` keyword argument for convenience.
 
 1) Blob Generation
      
