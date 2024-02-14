@@ -5,10 +5,12 @@
 #include "to_substrait.hpp"
 
 #ifndef DUCKDB_AMALGAMATION
+#include "duckdb/common/enums/optimizer_type.hpp"
 #include "duckdb/function/table_function.hpp"
 #include "duckdb/parser/parsed_data/create_table_function_info.hpp"
 #include "duckdb/parser/parsed_data/create_pragma_function_info.hpp"
 #include "duckdb/main/client_context.hpp"
+#include "duckdb/main/config.hpp"
 #include "duckdb/main/connection.hpp"
 #endif
 
@@ -118,15 +120,22 @@ static void VerifyJSONRoundtrip(unique_ptr<LogicalOperator> &query_plan, Connect
 
 static DuckDBToSubstrait InitPlanExtractor(ClientContext &context, ToSubstraitFunctionData &data, Connection &new_conn,
                                            unique_ptr<LogicalOperator> &query_plan) {
-	// We might want to disable the optimizer of our new connection
+	// The user might want to disable the optimizer of the new connection
 	new_conn.context->config.enable_optimizer = data.enable_optimizer;
 	new_conn.context->config.use_replacement_scans = false;
+
 	// We want for sure to disable the internal compression optimizations.
+	// These are DuckDB specific, no other system implements these. Also,
+	// respect the user's settings if they chose to disable any specific optimizers.
+	//
 	// The InClauseRewriter optimization converts large `IN` clauses to a
 	// "mark join" against a `ColumnDataCollection`, which may not make
 	// sense in other systems and would complicate the conversion to Substrait.
-	// These are DuckDB specific, no other system implements these.
-	new_conn.Query("SET disabled_optimizers to 'compressed_materialization,in_clause';");
+	set<OptimizerType> disabled_optimizers = DBConfig::GetConfig(context).options.disabled_optimizers;
+	disabled_optimizers.insert(OptimizerType::IN_CLAUSE);
+	disabled_optimizers.insert(OptimizerType::COMPRESSED_MATERIALIZATION);
+	DBConfig::GetConfig(*new_conn.context).options.disabled_optimizers = disabled_optimizers;
+
 	query_plan = new_conn.context->ExtractPlan(data.query);
 	return DuckDBToSubstrait(context, *query_plan);
 }

@@ -64,8 +64,8 @@ std::string SubstraitToDuckDB::RemoveExtension(std::string &function_name) {
 }
 
 SubstraitToDuckDB::SubstraitToDuckDB(Connection &con_p, const string &serialized, bool json) : con(con_p) {
-        auto http_state = HTTPState::TryGetState(*con_p.context);
-        http_state->Reset();
+	auto http_state = HTTPState::TryGetState(*con_p.context);
+	http_state->Reset();
 
 	if (!json) {
 		if (!plan.ParseFromString(serialized)) {
