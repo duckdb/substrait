@@ -38,7 +38,7 @@ static bool ShouldGenerateOptimizedSubstrait(const ClientConfig &config,
                                              const duckdb::named_parameter_map_t &named_params) {
 	for (const auto &param : named_params) {
 		auto loption = StringUtil::Lower(param.first);
-		// If the user has explicitly request to enable/disable the optimizer when
+		// If the user has explicitly requested to enable/disable the optimizer when
 		// generating Substrait, then that takes precedence.
 		if (loption == "enable_optimizer") {
 			return BooleanValue::Get(param.second);
