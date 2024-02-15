@@ -110,12 +110,12 @@ static void VerifySubstraitRoundtrip(unique_ptr<LogicalOperator> &query_plan, Co
 
 static void VerifyBlobRoundtrip(unique_ptr<LogicalOperator> &query_plan, Connection &con, ToSubstraitFunctionData &data,
                                 const string &serialized) {
-	VerifySubstraitRoundtrip(query_plan, con, data, serialized, /*is_json=*/false);
+	VerifySubstraitRoundtrip(query_plan, con, data, serialized, false);
 }
 
 static void VerifyJSONRoundtrip(unique_ptr<LogicalOperator> &query_plan, Connection &con, ToSubstraitFunctionData &data,
                                 const string &serialized) {
-	VerifySubstraitRoundtrip(query_plan, con, data, serialized, /*is_json=*/true);
+	VerifySubstraitRoundtrip(query_plan, con, data, serialized, true);
 }
 
 static DuckDBToSubstrait InitPlanExtractor(ClientContext &context, ToSubstraitFunctionData &data, Connection &new_conn,
