@@ -34,8 +34,7 @@ static void VerifyJSONRoundtrip(unique_ptr<LogicalOperator> &query_plan, Connect
 static void VerifyBlobRoundtrip(unique_ptr<LogicalOperator> &query_plan, Connection &con, ToSubstraitFunctionData &data,
                                 const string &serialized);
 
-static bool ShouldGenerateOptimizedSubstrait(const ClientConfig &config,
-                                             const duckdb::named_parameter_map_t &named_params) {
+static bool SetOptimizationOption(const ClientConfig &config, const duckdb::named_parameter_map_t &named_params) {
 	for (const auto &param : named_params) {
 		auto loption = StringUtil::Lower(param.first);
 		// If the user has explicitly requested to enable/disable the optimizer when
@@ -56,7 +55,7 @@ static unique_ptr<ToSubstraitFunctionData> InitToSubstraitFunctionData(const Cli
                                                                        TableFunctionBindInput &input) {
 	auto result = make_uniq<ToSubstraitFunctionData>();
 	result->query = input.inputs[0].ToString();
-	result->enable_optimizer = ShouldGenerateOptimizedSubstrait(config, input.named_parameters);
+	result->enable_optimizer = SetOptimizationOption(config, input.named_parameters);
 	return std::move(result);
 }
 
