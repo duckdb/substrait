@@ -13,8 +13,6 @@ def run_substrait_validator(con, query):
     c.override_diagnostic_level(1, "warning", "info")
     #  validator limitation: did not attempt to resolve YAML
     c.override_diagnostic_level(2001, "warning", "info")
-    # function definition unavailable: cannot check validity of call
-    c.override_diagnostic_level(6003, "warning", "info")
     # Function Anchor to YAML file, no clue what is that
     c.override_diagnostic_level(3001, "error", "info")
     # too few field names
@@ -39,7 +37,7 @@ def run_tpch_validator(require, query_number):
 def test_substrait_tpch_validator(require,query_number):
     run_tpch_validator(require,query_number)
 
-@pytest.mark.skip(reason="DuckDB Compilation: INTERNAL Error: INTERNAL Error: CHUNK_GET")
+@pytest.mark.skip(reason="DuckDB Compilation: INTERNAL Error: Unsupported join type MARK")
 def test_substrait_tpch_validator_16(require):
     run_tpch_validator(require,16)
 
@@ -54,11 +52,12 @@ def test_substrait_tpch_validator_2(require):
 @pytest.mark.skip(reason="Skipping this test for now because it is part of the big posref refactoring")
 def test_substrait_tpch_validator_17(require):
     run_tpch_validator(require,17)
-@pytest.mark.skip(reason="DuckDB Compilation: INTERNAL Error: INTERNAL Error: RIGHT_SEMI Join")
+
+@pytest.mark.skip(reason="DuckDB Compilation: INTERNAL Error: INTERNAL Error: DELIM_JOIN")
 def test_substrait_tpch_validator_04(require):
     run_tpch_validator(require,4)
 
-@pytest.mark.skip(reason="DuckDB Compilation: INTERNAL Error: INTERNAL Error: RIGHT_SEMI Join")
+@pytest.mark.skip(reason="DuckDB Compilation: INTERNAL Error: INTERNAL Error: DELIM_JOIN")
 def test_substrait_tpch_validator_20(require):
     run_tpch_validator(require,20)
 
@@ -66,6 +65,6 @@ def test_substrait_tpch_validator_20(require):
 def test_substrait_tpch_validator_21(require):
     run_tpch_validator(require,21)
 
-@pytest.mark.skip(reason="DuckDB Compilation: INTERNAL Error: INTERNAL Error: CHUNK_GET")
+@pytest.mark.skip(reason="DuckDB Compilation: INTERNAL Error: INTERNAL Error: DELIM_JOIN")
 def test_substrait_tpch_validator_22(require):
     run_tpch_validator(require,22)
