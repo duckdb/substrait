@@ -1000,19 +1000,9 @@ substrait::Rel *DuckDBToSubstrait::TransformAggregateGroup(LogicalOperator &dop)
 		return s_type;
 	}
 	case LogicalTypeId::VARCHAR: {
-		auto varchar_type = new substrait::Type_VarChar;
-		varchar_type->set_nullability(type_nullability);
-		if (column_statistics && StringStats::HasMaxStringLength(*column_statistics)) {
-			auto stats_max_len = StringStats::MaxStringLength(*column_statistics);
-			if (max_string_length < stats_max_len) {
-				max_string_length = stats_max_len;
-			}
-			varchar_type->set_length(stats_max_len);
-		} else {
-			// FIXME: Have to propagate the statistics to here somehow
-			varchar_type->set_length(max_string_length);
-		}
-		s_type.set_allocated_varchar(varchar_type);
+		auto string_type = new substrait::Type_String;
+		string_type->set_nullability(type_nullability);
+		s_type.set_allocated_string(string_type);
 		return s_type;
 	}
 	case LogicalTypeId::BLOB: {

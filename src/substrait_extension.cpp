@@ -5,10 +5,12 @@
 #include "to_substrait.hpp"
 
 #ifndef DUCKDB_AMALGAMATION
+#include "duckdb/common/enums/optimizer_type.hpp"
 #include "duckdb/function/table_function.hpp"
 #include "duckdb/parser/parsed_data/create_table_function_info.hpp"
 #include "duckdb/parser/parsed_data/create_pragma_function_info.hpp"
 #include "duckdb/main/client_context.hpp"
+#include "duckdb/main/config.hpp"
 #include "duckdb/main/connection.hpp"
 #endif
 
@@ -18,7 +20,7 @@ struct ToSubstraitFunctionData : public TableFunctionData {
 	ToSubstraitFunctionData() {
 	}
 	string query;
-	bool enable_optimizer = true;
+	bool enable_optimizer;
 	bool finished = false;
 };
 
@@ -32,33 +34,44 @@ static void VerifyJSONRoundtrip(unique_ptr<LogicalOperator> &query_plan, Connect
 static void VerifyBlobRoundtrip(unique_ptr<LogicalOperator> &query_plan, Connection &con, ToSubstraitFunctionData &data,
                                 const string &serialized);
 
-static unique_ptr<FunctionData> ToSubstraitBind(ClientContext &context, TableFunctionBindInput &input,
-                                                vector<LogicalType> &return_types, vector<string> &names) {
-	auto result = make_uniq<ToSubstraitFunctionData>();
-	result->query = input.inputs[0].ToString();
-	if (input.named_parameters.size() == 1) {
-		auto loption = StringUtil::Lower(input.named_parameters.begin()->first);
+static bool SetOptimizationOption(const ClientConfig &config, const duckdb::named_parameter_map_t &named_params) {
+	for (const auto &param : named_params) {
+		auto loption = StringUtil::Lower(param.first);
+		// If the user has explicitly requested to enable/disable the optimizer when
+		// generating Substrait, then that takes precedence.
 		if (loption == "enable_optimizer") {
-			result->enable_optimizer = BooleanValue::Get(input.named_parameters.begin()->second);
+			return BooleanValue::Get(param.second);
 		}
 	}
+
+	// If the user has not specified what they want, fall back to the settings
+	// on the connection (e.g. if the optimizer was disabled by the user at
+	// the connection level, it would be surprising to enable the optimizer
+	// when generating Substrait).
+	return config.enable_optimizer;
+}
+
+static unique_ptr<ToSubstraitFunctionData> InitToSubstraitFunctionData(const ClientConfig &config,
+                                                                       TableFunctionBindInput &input) {
+	auto result = make_uniq<ToSubstraitFunctionData>();
+	result->query = input.inputs[0].ToString();
+	result->enable_optimizer = SetOptimizationOption(config, input.named_parameters);
+	return std::move(result);
+}
+
+static unique_ptr<FunctionData> ToSubstraitBind(ClientContext &context, TableFunctionBindInput &input,
+                                                vector<LogicalType> &return_types, vector<string> &names) {
 	return_types.emplace_back(LogicalType::BLOB);
 	names.emplace_back("Plan Blob");
+	auto result = InitToSubstraitFunctionData(context.config, input);
 	return std::move(result);
 }
 
 static unique_ptr<FunctionData> ToJsonBind(ClientContext &context, TableFunctionBindInput &input,
                                            vector<LogicalType> &return_types, vector<string> &names) {
-	auto result = make_uniq<ToSubstraitFunctionData>();
-	result->query = input.inputs[0].ToString();
-	if (input.named_parameters.size() == 1) {
-		auto loption = StringUtil::Lower(input.named_parameters.begin()->first);
-		if (loption == "enable_optimizer") {
-			result->enable_optimizer = BooleanValue::Get(input.named_parameters.begin()->second);
-		}
-	}
 	return_types.emplace_back(LogicalType::VARCHAR);
 	names.emplace_back("Json");
+	auto result = InitToSubstraitFunctionData(context.config, input);
 	return std::move(result);
 }
 
@@ -68,11 +81,11 @@ shared_ptr<Relation> SubstraitPlanToDuckDBRel(Connection &conn, const string &se
 }
 
 static void VerifySubstraitRoundtrip(unique_ptr<LogicalOperator> &query_plan, Connection &con,
-                                     ToSubstraitFunctionData &data, const string &serialized, bool json) {
+                                     ToSubstraitFunctionData &data, const string &serialized, bool is_json) {
 	// We round-trip the generated json and verify if the result is the same
 	auto actual_result = con.Query(data.query);
 
-	auto sub_relation = SubstraitPlanToDuckDBRel(con, serialized, json);
+	auto sub_relation = SubstraitPlanToDuckDBRel(con, serialized, is_json);
 	auto substrait_result = sub_relation->Execute();
 	substrait_result->names = actual_result->names;
 	unique_ptr<MaterializedQueryResult> substrait_materialized;
@@ -104,19 +117,33 @@ static void VerifyJSONRoundtrip(unique_ptr<LogicalOperator> &query_plan, Connect
 	VerifySubstraitRoundtrip(query_plan, con, data, serialized, true);
 }
 
+static DuckDBToSubstrait InitPlanExtractor(ClientContext &context, ToSubstraitFunctionData &data, Connection &new_conn,
+                                           unique_ptr<LogicalOperator> &query_plan) {
+	// The user might want to disable the optimizer of the new connection
+	new_conn.context->config.enable_optimizer = data.enable_optimizer;
+	new_conn.context->config.use_replacement_scans = false;
+
+	// We want for sure to disable the internal compression optimizations.
+	// These are DuckDB specific, no other system implements these. Also,
+	// respect the user's settings if they chose to disable any specific optimizers.
+	//
+	// The InClauseRewriter optimization converts large `IN` clauses to a
+	// "mark join" against a `ColumnDataCollection`, which may not make
+	// sense in other systems and would complicate the conversion to Substrait.
+	set<OptimizerType> disabled_optimizers = DBConfig::GetConfig(context).options.disabled_optimizers;
+	disabled_optimizers.insert(OptimizerType::IN_CLAUSE);
+	disabled_optimizers.insert(OptimizerType::COMPRESSED_MATERIALIZATION);
+	DBConfig::GetConfig(*new_conn.context).options.disabled_optimizers = disabled_optimizers;
+
+	query_plan = new_conn.context->ExtractPlan(data.query);
+	return DuckDBToSubstrait(context, *query_plan);
+}
+
 static void ToSubFunctionInternal(ClientContext &context, ToSubstraitFunctionData &data, DataChunk &output,
                                   Connection &new_conn, unique_ptr<LogicalOperator> &query_plan, string &serialized) {
 	output.SetCardinality(1);
-	// We might want to disable the optimizer of our new connection
-	new_conn.context->config.enable_optimizer = data.enable_optimizer;
-	new_conn.context->config.use_replacement_scans = false;
-	// We want for sure to disable the internal compression optimizations
-	// These are DuckDB specific, no other system implements these
-	new_conn.Query("SET disabled_optimizers to 'compressed_materialization';");
-	query_plan = new_conn.context->ExtractPlan(data.query);
-	DuckDBToSubstrait transformer_d2s(context, *query_plan);
+	auto transformer_d2s = InitPlanExtractor(context, data, new_conn, query_plan);
 	serialized = transformer_d2s.SerializeToString();
-
 	output.SetValue(0, 0, Value::BLOB_RAW(serialized));
 }
 
@@ -147,16 +174,8 @@ static void ToSubFunction(ClientContext &context, TableFunctionInput &data_p, Da
 static void ToJsonFunctionInternal(ClientContext &context, ToSubstraitFunctionData &data, DataChunk &output,
                                    Connection &new_conn, unique_ptr<LogicalOperator> &query_plan, string &serialized) {
 	output.SetCardinality(1);
-	// We might want to disable the optimizer of our new connection
-	new_conn.context->config.enable_optimizer = data.enable_optimizer;
-	new_conn.context->config.use_replacement_scans = false;
-	// We want for sure to disable the internal compression optimizations
-	// These are DuckDB specific, no other system implements these
-	new_conn.Query("SET disabled_optimizers to 'compressed_materialization';");
-	query_plan = new_conn.context->ExtractPlan(data.query);
-	DuckDBToSubstrait transformer_d2s(context, *query_plan);
+	auto transformer_d2s = InitPlanExtractor(context, data, new_conn, query_plan);
 	serialized = transformer_d2s.SerializeToJson();
-
 	output.SetValue(0, 0, serialized);
 }
 

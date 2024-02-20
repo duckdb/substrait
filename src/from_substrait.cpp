@@ -64,16 +64,17 @@ std::string SubstraitToDuckDB::RemoveExtension(std::string &function_name) {
 }
 
 SubstraitToDuckDB::SubstraitToDuckDB(Connection &con_p, const string &serialized, bool json) : con(con_p) {
-        auto http_state = HTTPState::TryGetState(*con_p.context);
-        http_state->Reset();
+	auto http_state = HTTPState::TryGetState(*con_p.context);
+	http_state->Reset();
 
 	if (!json) {
 		if (!plan.ParseFromString(serialized)) {
 			throw std::runtime_error("Was not possible to convert binary into Substrait plan");
 		}
 	} else {
-		if (!google::protobuf::util::JsonStringToMessage(serialized, &plan).ok()) {
-			throw std::runtime_error("Was not possible to convert binary into Substrait plan");
+		google::protobuf::util::Status status = google::protobuf::util::JsonStringToMessage(serialized, &plan);
+		if (!status.ok()) {
+			throw std::runtime_error("Was not possible to convert JSON into Substrait plan: " + status.ToString());
 		}
 	}
 
