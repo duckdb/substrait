@@ -1,4 +1,4 @@
-## The substrait integration is experimental. Support is currently only available [on request.](https://duckdblabs.com/contact/) 
+## The substrait integration is experimental. The source code is publicly available and you are free to use it under the licensing terms - but the source code is provided as-is. We do not have the capacity to engage with issues or pull requests from external contributors at present. Support for the extension is currently only available [on request.](https://duckdblabs.com/contact/) 
 
 # Substrait - DuckDB
 Substrait - DuckDB is an extension that provides substrait support to [DuckDB](https://www.duckdb.org).
