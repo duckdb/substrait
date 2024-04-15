@@ -780,7 +780,7 @@ substrait::Rel *DuckDBToSubstrait::TransformLimit(LogicalOperator &dop) {
 	idx_t limit_val;
 	idx_t offset_val;
 
-	switch(dlimit.limit_val.Type()) {
+	switch (dlimit.limit_val.Type()) {
 	case LimitNodeType::CONSTANT_VALUE:
 		limit_val = dlimit.limit_val.GetConstantValue();
 		break;
@@ -790,7 +790,7 @@ substrait::Rel *DuckDBToSubstrait::TransformLimit(LogicalOperator &dop) {
 	default:
 		throw InternalException("Unsupported limit value type");
 	}
-	switch(dlimit.offset_val.Type()) {
+	switch (dlimit.offset_val.Type()) {
 	case LimitNodeType::CONSTANT_VALUE:
 		offset_val = dlimit.offset_val.GetConstantValue();
 		break;
