@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-20.04
     env:
       GEN: ninja
-      DUCKDB_PATH: ./duckdb/
+      DUCKDB_PATH: ../duckdb/
 
     steps:
     - uses: r-lib/actions/setup-r@v2
