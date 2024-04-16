@@ -53,8 +53,8 @@ def duck_conn():
     with adbc_driver_manager.connect(driver=driver_path, entrypoint="duckdb_adbc_init", db_kwargs={"allow_unsigned_extensions": "true"}) as conn:
         yield conn
 
-# file_path = os.path.dirname(os.path.abspath(__file__))
-# file_path = os.path.join(file_path,data,'somefile.parquet')
+file_path = os.path.dirname(os.path.abspath(__file__))
+file_path = os.path.join(file_path,'data','somefile.parquet')
 
 PLAN_PROTOTEXT = '''{
   "relations":[
@@ -101,7 +101,7 @@ PLAN_PROTOTEXT = '''{
                 "localFiles":{
                   "items":[
                     {
-                      "uriFile":" data/somefile.parquet",
+                      "uriFile":" ''' + file_path + '''",
                       "parquet":{
                         
                       }
