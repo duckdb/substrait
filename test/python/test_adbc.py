@@ -101,7 +101,7 @@ PLAN_PROTOTEXT = '''{
                 "localFiles":{
                   "items":[
                     {
-                      "uriFile":" ''' + file_path + '''",
+                      "uriFile":"''' + file_path + '''",
                       "parquet":{
                         
                       }
