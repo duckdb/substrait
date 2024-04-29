@@ -218,7 +218,10 @@ static unique_ptr<FunctionData> SubstraitBind(ClientContext &context, TableFunct
 		throw BinderException("from_substrait cannot be called with a NULL parameter");
 	}
 	string serialized = input.inputs[0].GetValueUnsafe<string>();
+    Printer::Print("in SubstraitBind");
+    Printer::Print(serialized);
 	result->plan = SubstraitPlanToDuckDBRel(*result->conn, serialized, is_json);
+    result->plan->Print();
 	for (auto &column : result->plan->Columns()) {
 		return_types.emplace_back(column.Type());
 		names.emplace_back(column.Name());
@@ -292,6 +295,71 @@ void InitializeFromSubstraitJSON(Connection &con) {
 	catalog.CreateTableFunction(*con.context, from_sub_info_json);
 }
 
+static void QuerySplit(ClientContext &context, TableFunctionInput &data_p, DataChunk &output) {
+    // from `ToJsonFunction`
+    auto &data = (ToSubstraitFunctionData &)*data_p.bind_data;
+	if (data.finished) {
+		return;
+	}
+	auto new_conn = Connection(*context.db);
+
+	unique_ptr<LogicalOperator> query_plan;
+	string serialized;
+	ToJsonFunctionInternal(context, data, output, new_conn, query_plan, serialized);
+
+	data.finished = true;
+
+    // debug
+    Printer::Print("serialized");
+    Printer::Print(serialized);
+
+    // execute it
+	auto sub_relation = SubstraitPlanToDuckDBRel(new_conn, serialized, true);
+
+    // todo: split the `serialized` JSON or `sub_relation`
+
+    // debug
+    Printer::Print("sub_relation");
+    sub_relation->Print();
+
+	auto substrait_result = sub_relation->Execute();
+    // debug
+    unique_ptr<DataChunk> result_chunk;
+    ErrorData error;
+    if (substrait_result->TryFetch(result_chunk, error)) {
+        Printer::Print("substrait_result");
+        result_chunk->Print();
+    }
+
+	unique_ptr<MaterializedQueryResult> substrait_materialized;
+
+	if (substrait_result->type == QueryResultType::STREAM_RESULT) {
+		auto &stream_query = substrait_result->Cast<duckdb::StreamQueryResult>();
+
+		substrait_materialized = stream_query.Materialize();
+	} else if (substrait_result->type == QueryResultType::MATERIALIZED_RESULT) {
+		substrait_materialized = unique_ptr_cast<QueryResult, MaterializedQueryResult>(std::move(substrait_result));
+	}
+	auto subs_col_coll = substrait_materialized->Collection();
+    // debug
+    Printer::Print("subs_col_coll");
+    subs_col_coll.Print();
+
+    // todo: merge the previous result
+}
+
+void InitializeQuerySplit(Connection &con) {
+    auto &catalog = Catalog::GetSystemCatalog(*con.context);
+
+	// create the from_substrait table function that allows us to get a query
+	// result from a substrait plan
+	TableFunction query_split("query_split", {LogicalType::VARCHAR}, QuerySplit, ToJsonBind);
+
+	query_split.named_parameters["enable_optimizer"] = LogicalType::BOOLEAN;
+	CreateTableFunctionInfo query_split_info(query_split);
+	catalog.CreateTableFunction(*con.context, query_split_info);
+}
+
 void SubstraitExtension::Load(DuckDB &db) {
 	Connection con(db);
 	con.BeginTransaction();
@@ -301,6 +369,8 @@ void SubstraitExtension::Load(DuckDB &db) {
 
 	InitializeFromSubstrait(con);
 	InitializeFromSubstraitJSON(con);
+
+    InitializeQuerySplit(con);
 
 	con.Commit();
 }
