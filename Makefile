@@ -42,6 +42,10 @@ release:
 # Have to actually cd here because the makefile assumes it's called from within duckdb
 	cd ${DUCKDB_DIRECTORY} && $(MAKE) -C . release
 
+reldebug:
+# Have to actually cd here because the makefile assumes it's called from within duckdb
+	cd ${DUCKDB_DIRECTORY} && $(MAKE) -C . reldebug
+
 # Client builds
 %_js: export BUILD_NODE=1
 debug_js: debug
