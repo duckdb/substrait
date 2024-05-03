@@ -21,11 +21,22 @@
 
 namespace duckdb {
 const std::unordered_map<std::string, std::string> DuckDBToSubstrait::function_names_remap = {
-    {"mod", "modulus"},         {"stddev", "std_dev"},     {"prefix", "starts_with"},
-    {"suffix", "ends_with"},    {"substr", "substring"},   {"length", "char_length"},
-    {"isnan", "is_nan"},        {"isfinite", "is_finite"}, {"isinf", "is_infinite"},
-    {"sum_no_overflow", "sum"}, {"count_star", "count"},   {"~~", "like"},
-    {"*", "multiply"},          {"-", "subtract"},         {"+", "add"}};
+    {"mod", "modulus"},
+    {"stddev", "std_dev"},
+    {"prefix", "starts_with"},
+    {"suffix", "ends_with"},
+    {"substr", "substring"},
+    {"length", "char_length"},
+    {"isnan", "is_nan"},
+    {"isfinite", "is_finite"},
+    {"isinf", "is_infinite"},
+    {"sum_no_overflow", "sum"},
+    {"count_star", "count"},
+    {"~~", "like"},
+    {"*", "multiply"},
+    {"-", "subtract"},
+    {"+", "add"},
+    {"/", "divide"}};
 
 const case_insensitive_set_t DuckDBToSubstrait::valid_extract_subfields = {
     "year",    "month",       "day",          "decade", "century", "millenium",

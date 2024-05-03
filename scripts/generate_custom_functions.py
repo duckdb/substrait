@@ -43,8 +43,9 @@ def get_custom_functions():
 				type_str = "{"
 				for args in impls_args: 
 					type_value = regex.sub(r'<[^>]*>', '', args["value"])
-					type_set.add(type_value)
-					type_str += f"\"{type_value}\","
+					if (len(type_value) != 0):
+						type_set.add(type_value)
+						type_str += f"\"{type_value}\","
 				type_str = type_str[:-1]
 				type_str += "}"
 				function_name = function["name"]

@@ -130,6 +130,7 @@ SubstraitFunctionExtensions SubstraitCustomFunctions::Get(const string &name,
 		}
 		return {{name, {}}, "native"};
 	}
+
 	for (auto &type : types) {
 		transformed_types.emplace_back(TransformTypes(type));
 		if (transformed_types.back().empty()) {
@@ -137,6 +138,7 @@ SubstraitFunctionExtensions SubstraitCustomFunctions::Get(const string &name,
 			return {{name, {}}, "native"};
 		}
 	}
+
 	SubstraitCustomFunction custom_function {name, {transformed_types}};
 	auto it = custom_functions.find(custom_function);
 	if (it != custom_functions.end()) {

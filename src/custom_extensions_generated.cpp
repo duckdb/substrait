@@ -5,20 +5,20 @@
 namespace duckdb {
 
 void SubstraitCustomFunctions::Initialize() {
-	InsertCustomFunction("extract", {"", "timestamp_tz", "string"}, "functions_datetime.yaml");
-	InsertCustomFunction("extract", {"", "precision_timestamp_tz", "string"}, "functions_datetime.yaml");
-	InsertCustomFunction("extract", {"", "timestamp"}, "functions_datetime.yaml");
-	InsertCustomFunction("extract", {"", "precision_timestamp"}, "functions_datetime.yaml");
-	InsertCustomFunction("extract", {"", "date"}, "functions_datetime.yaml");
-	InsertCustomFunction("extract", {"", "time"}, "functions_datetime.yaml");
-	InsertCustomFunction("extract", {"", "", "timestamp_tz", "string"}, "functions_datetime.yaml");
-	InsertCustomFunction("extract", {"", "", "precision_timestamp_tz", "string"}, "functions_datetime.yaml");
-	InsertCustomFunction("extract", {"", "", "timestamp"}, "functions_datetime.yaml");
-	InsertCustomFunction("extract", {"", "", "precision_timestamp"}, "functions_datetime.yaml");
-	InsertCustomFunction("extract", {"", "", "date"}, "functions_datetime.yaml");
-	InsertCustomFunction("extract_boolean", {"", "timestamp"}, "functions_datetime.yaml");
-	InsertCustomFunction("extract_boolean", {"", "timestamp_tz", "string"}, "functions_datetime.yaml");
-	InsertCustomFunction("extract_boolean", {"", "date"}, "functions_datetime.yaml");
+	InsertCustomFunction("extract", {"timestamp_tz", "string"}, "functions_datetime.yaml");
+	InsertCustomFunction("extract", {"precision_timestamp_tz", "string"}, "functions_datetime.yaml");
+	InsertCustomFunction("extract", {"timestamp"}, "functions_datetime.yaml");
+	InsertCustomFunction("extract", {"precision_timestamp"}, "functions_datetime.yaml");
+	InsertCustomFunction("extract", {"date"}, "functions_datetime.yaml");
+	InsertCustomFunction("extract", {"time"}, "functions_datetime.yaml");
+	InsertCustomFunction("extract", {"timestamp_tz", "string"}, "functions_datetime.yaml");
+	InsertCustomFunction("extract", {"precision_timestamp_tz", "string"}, "functions_datetime.yaml");
+	InsertCustomFunction("extract", {"timestamp"}, "functions_datetime.yaml");
+	InsertCustomFunction("extract", {"precision_timestamp"}, "functions_datetime.yaml");
+	InsertCustomFunction("extract", {"date"}, "functions_datetime.yaml");
+	InsertCustomFunction("extract_boolean", {"timestamp"}, "functions_datetime.yaml");
+	InsertCustomFunction("extract_boolean", {"timestamp_tz", "string"}, "functions_datetime.yaml");
+	InsertCustomFunction("extract_boolean", {"date"}, "functions_datetime.yaml");
 	InsertCustomFunction("add", {"timestamp", "interval_year"}, "functions_datetime.yaml");
 	InsertCustomFunction("add", {"timestamp_tz", "interval_year", "string"}, "functions_datetime.yaml");
 	InsertCustomFunction("add", {"date", "interval_year"}, "functions_datetime.yaml");
@@ -73,15 +73,15 @@ void SubstraitCustomFunctions::Initialize() {
 	InsertCustomFunction("strftime", {"timestamp_tz", "string", "string"}, "functions_datetime.yaml");
 	InsertCustomFunction("strftime", {"date", "string"}, "functions_datetime.yaml");
 	InsertCustomFunction("strftime", {"time", "string"}, "functions_datetime.yaml");
-	InsertCustomFunction("round_temporal", {"timestamp", "", "", "i64", "timestamp"}, "functions_datetime.yaml");
-	InsertCustomFunction("round_temporal", {"timestamp_tz", "", "", "i64", "string", "timestamp_tz"},
+	InsertCustomFunction("round_temporal", {"timestamp", "i64", "timestamp"}, "functions_datetime.yaml");
+	InsertCustomFunction("round_temporal", {"timestamp_tz", "i64", "string", "timestamp_tz"},
 	                     "functions_datetime.yaml");
-	InsertCustomFunction("round_temporal", {"date", "", "", "i64", "date"}, "functions_datetime.yaml");
-	InsertCustomFunction("round_temporal", {"time", "", "", "i64", "time"}, "functions_datetime.yaml");
-	InsertCustomFunction("round_calendar", {"timestamp", "", "", "", "i64"}, "functions_datetime.yaml");
-	InsertCustomFunction("round_calendar", {"timestamp_tz", "", "", "", "i64", "string"}, "functions_datetime.yaml");
-	InsertCustomFunction("round_calendar", {"date", "", "", "", "i64", "date"}, "functions_datetime.yaml");
-	InsertCustomFunction("round_calendar", {"time", "", "", "", "i64", "time"}, "functions_datetime.yaml");
+	InsertCustomFunction("round_temporal", {"date", "i64", "date"}, "functions_datetime.yaml");
+	InsertCustomFunction("round_temporal", {"time", "i64", "time"}, "functions_datetime.yaml");
+	InsertCustomFunction("round_calendar", {"timestamp", "i64"}, "functions_datetime.yaml");
+	InsertCustomFunction("round_calendar", {"timestamp_tz", "i64", "string"}, "functions_datetime.yaml");
+	InsertCustomFunction("round_calendar", {"date", "i64", "date"}, "functions_datetime.yaml");
+	InsertCustomFunction("round_calendar", {"time", "i64", "time"}, "functions_datetime.yaml");
 	InsertCustomFunction("min", {"date"}, "functions_datetime.yaml");
 	InsertCustomFunction("min", {"time"}, "functions_datetime.yaml");
 	InsertCustomFunction("min", {"timestamp"}, "functions_datetime.yaml");
@@ -423,13 +423,13 @@ void SubstraitCustomFunctions::Initialize() {
 	InsertCustomFunction("mode", {"i64"}, "functions_arithmetic.yaml");
 	InsertCustomFunction("mode", {"fp32"}, "functions_arithmetic.yaml");
 	InsertCustomFunction("mode", {"fp64"}, "functions_arithmetic.yaml");
-	InsertCustomFunction("median", {"", "i8"}, "functions_arithmetic.yaml");
-	InsertCustomFunction("median", {"", "i16"}, "functions_arithmetic.yaml");
-	InsertCustomFunction("median", {"", "i32"}, "functions_arithmetic.yaml");
-	InsertCustomFunction("median", {"", "i64"}, "functions_arithmetic.yaml");
-	InsertCustomFunction("median", {"", "fp32"}, "functions_arithmetic.yaml");
-	InsertCustomFunction("median", {"", "fp64"}, "functions_arithmetic.yaml");
-	InsertCustomFunction("quantile", {"", "", "i64", "any"}, "functions_arithmetic.yaml");
+	InsertCustomFunction("median", {"i8"}, "functions_arithmetic.yaml");
+	InsertCustomFunction("median", {"i16"}, "functions_arithmetic.yaml");
+	InsertCustomFunction("median", {"i32"}, "functions_arithmetic.yaml");
+	InsertCustomFunction("median", {"i64"}, "functions_arithmetic.yaml");
+	InsertCustomFunction("median", {"fp32"}, "functions_arithmetic.yaml");
+	InsertCustomFunction("median", {"fp64"}, "functions_arithmetic.yaml");
+	InsertCustomFunction("quantile", {"i64", "any"}, "functions_arithmetic.yaml");
 	InsertCustomFunction("ceil", {"fp32"}, "functions_rounding.yaml");
 	InsertCustomFunction("ceil", {"fp64"}, "functions_rounding.yaml");
 	InsertCustomFunction("floor", {"fp32"}, "functions_rounding.yaml");
