@@ -43,10 +43,6 @@ def get_custom_functions():
 				type_str = "{"
 				for args in impls_args: 
 					type_value = regex.sub(r'<[^>]*>', '', args["value"])
-					if type_value.endswith('?'):
-						type_value = type_value[:-1]
-					if type_value == "boolean":
-						type_value = "bool"
 					type_set.add(type_value)
 					type_str += f"\"{type_value}\","
 				type_str = type_str[:-1]

@@ -48,7 +48,12 @@ void SubstraitCustomFunctions::InsertAllFunctions(const vector<vector<string>> &
 		for (idx_t i = 0; i < indices.size(); i++) {
 			types.push_back(all_types[i][indices[i]]);
 		}
-		custom_functions[{name, types}] = {{name, types}, std::move(file_path)};
+		if (types.empty()) {
+			any_arg_functions[{name, types}] = {{name, types}, std::move(file_path)};
+		} else {
+			custom_functions[{name, types}] = {{name, types}, std::move(file_path)};
+		}
+
 		return;
 	}
 	for (int i = 0; i < all_types[depth].size(); ++i) {
@@ -117,6 +122,12 @@ SubstraitFunctionExtensions SubstraitCustomFunctions::Get(const string &name,
                                                           const vector<::substrait::Type> &types) const {
 	vector<string> transformed_types;
 	if (types.empty()) {
+		SubstraitCustomFunction custom_function {name, {}};
+		auto it = any_arg_functions.find(custom_function);
+		if (it != custom_functions.end()) {
+			// We found it in our substrait custom map, return that
+			return it->second;
+		}
 		return {{name, {}}, "native"};
 	}
 	for (auto &type : types) {

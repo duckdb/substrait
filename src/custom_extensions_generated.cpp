@@ -441,17 +441,15 @@ void SubstraitCustomFunctions::Initialize() {
 	InsertCustomFunction("round", {"fp32", "i32"}, "functions_rounding.yaml");
 	InsertCustomFunction("round", {"fp64", "i32"}, "functions_rounding.yaml");
 	InsertCustomFunction("count", {"any"}, "functions_aggregate_generic.yaml");
+	InsertCustomFunction("count", {}, "functions_aggregate_generic.yaml");
 	InsertCustomFunction("any_value", {"any"}, "functions_aggregate_generic.yaml");
-	InsertCustomFunction("or",
-	                     {"bool"
-	                      "bool"},
-	                     "functions_boolean.yaml");
-	InsertCustomFunction("and", {"bool", "bool"}, "functions_boolean.yaml");
-	InsertCustomFunction("and_not", {"bool", "bool"}, "functions_boolean.yaml");
-	InsertCustomFunction("xor", {"bool", "bool"}, "functions_boolean.yaml");
-	InsertCustomFunction("not", {"bool"}, "functions_boolean.yaml");
-	InsertCustomFunction("bool_and", {"bool"}, "functions_boolean.yaml");
-	InsertCustomFunction("bool_or", {"bool"}, "functions_boolean.yaml");
+	InsertCustomFunction("or", {"boolean?"}, "functions_boolean.yaml");
+	InsertCustomFunction("and", {"boolean?"}, "functions_boolean.yaml");
+	InsertCustomFunction("and_not", {"boolean?", "boolean?"}, "functions_boolean.yaml");
+	InsertCustomFunction("xor", {"boolean?", "boolean?"}, "functions_boolean.yaml");
+	InsertCustomFunction("not", {"boolean?"}, "functions_boolean.yaml");
+	InsertCustomFunction("bool_and", {"boolean"}, "functions_boolean.yaml");
+	InsertCustomFunction("bool_or", {"boolean"}, "functions_boolean.yaml");
 	InsertCustomFunction("add", {"decimal", "decimal"}, "functions_arithmetic_decimal.yaml");
 	InsertCustomFunction("subtract", {"decimal", "decimal"}, "functions_arithmetic_decimal.yaml");
 	InsertCustomFunction("multiply", {"decimal", "decimal"}, "functions_arithmetic_decimal.yaml");

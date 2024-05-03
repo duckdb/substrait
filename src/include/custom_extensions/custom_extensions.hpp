@@ -56,6 +56,13 @@ struct HashSubstraitFunctions {
 	}
 };
 
+struct HashSubstraitFunctionsName {
+	size_t operator()(SubstraitCustomFunction const &custom_function) const noexcept {
+		// Hash Name
+		return Hash(custom_function.name.c_str());
+	}
+};
+
 class SubstraitCustomFunctions {
 public:
 	SubstraitCustomFunctions();
@@ -64,7 +71,15 @@ public:
 	void Initialize();
 
 private:
+	// For Regular Functions
 	std::unordered_map<SubstraitCustomFunction, SubstraitFunctionExtensions, HashSubstraitFunctions> custom_functions;
+	// For * Functions
+	std::unordered_map<SubstraitCustomFunction, SubstraitFunctionExtensions, HashSubstraitFunctionsName>
+	    any_arg_functions;
+	// For generic number of argument functions
+	std::unordered_map<SubstraitCustomFunction, SubstraitFunctionExtensions, HashSubstraitFunctions>
+	    generic_argument_functions;
+
 	void InsertCustomFunction(string name_p, vector<string> types_p, string file_path);
 	void InsertAllFunctions(const vector<vector<string>> &all_types, vector<idx_t> &indices, int depth, string &name_p,
 	                        string &file_path);
