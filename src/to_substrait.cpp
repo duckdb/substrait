@@ -517,29 +517,34 @@ uint64_t DuckDBToSubstrait::RegisterFunction(const string &name, vector<::substr
 	if (name.empty()) {
 		throw InternalException("Missing function name");
 	}
-	// FIXME: For now I'm ignoring DuckDB functions that are either not mapped to native substrait or custom substrait
-	// extensions
 	auto function = custom_functions.Get(name, args_types);
-	idx_t uri_reference = 0;
+	auto substrait_extensions = plan.mutable_extension_uris();
 	if (!function.IsNative()) {
 		auto extensionURI = function.GetExtensionURI();
 		auto it = extension_uri_map.find(extensionURI);
 		if (it == extension_uri_map.end()) {
 			// We have to add this extension
+			extension_uri_map[extensionURI] = last_uri_id;
 			auto allocated_string = new string();
 			*allocated_string = extensionURI;
-			auto uri = plan.add_extension_uris();
+			auto uri = new ::substrait::extensions::SimpleExtensionURI();
 			uri->set_allocated_uri(allocated_string);
-			uri->set_extension_uri_anchor(last_extension_id++);
+			uri->set_extension_uri_anchor(last_uri_id);
+			substrait_extensions->AddAllocated(uri);
+			last_uri_id++;
 		}
-		uri_reference = extension_uri_map[extensionURI];
 	}
 	if (functions_map.find(function.function.GetName()) == functions_map.end()) {
 		auto function_id = last_function_id++;
 		auto sfun = plan.add_extensions()->mutable_extension_function();
 		sfun->set_function_anchor(function_id);
 		sfun->set_name(function.function.GetName());
-		sfun->set_extension_uri_reference(uri_reference);
+		if (!function.IsNative()) {
+			// We only define URI if not native
+			sfun->set_extension_uri_reference(extension_uri_map[function.GetExtensionURI()]);
+		} else {
+			sfun->set_extension_uri_reference(100);
+		}
 		functions_map[function.function.GetName()] = function_id;
 	}
 	return functions_map[function.function.GetName()];

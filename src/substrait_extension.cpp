@@ -17,10 +17,9 @@
 namespace duckdb {
 
 struct ToSubstraitFunctionData : public TableFunctionData {
-	ToSubstraitFunctionData() {
-	}
+	ToSubstraitFunctionData() = default;
 	string query;
-	bool enable_optimizer;
+	bool enable_optimizer = false;
 	bool finished = false;
 };
 
@@ -56,23 +55,21 @@ static unique_ptr<ToSubstraitFunctionData> InitToSubstraitFunctionData(const Cli
 	auto result = make_uniq<ToSubstraitFunctionData>();
 	result->query = input.inputs[0].ToString();
 	result->enable_optimizer = SetOptimizationOption(config, input.named_parameters);
-	return std::move(result);
+	return result;
 }
 
 static unique_ptr<FunctionData> ToSubstraitBind(ClientContext &context, TableFunctionBindInput &input,
                                                 vector<LogicalType> &return_types, vector<string> &names) {
 	return_types.emplace_back(LogicalType::BLOB);
 	names.emplace_back("Plan Blob");
-	auto result = InitToSubstraitFunctionData(context.config, input);
-	return std::move(result);
+	return InitToSubstraitFunctionData(context.config, input);
 }
 
 static unique_ptr<FunctionData> ToJsonBind(ClientContext &context, TableFunctionBindInput &input,
                                            vector<LogicalType> &return_types, vector<string> &names) {
 	return_types.emplace_back(LogicalType::VARCHAR);
 	names.emplace_back("Json");
-	auto result = InitToSubstraitFunctionData(context.config, input);
-	return std::move(result);
+	return InitToSubstraitFunctionData(context.config, input);
 }
 
 shared_ptr<Relation> SubstraitPlanToDuckDBRel(Connection &conn, const string &serialized, bool json = false) {

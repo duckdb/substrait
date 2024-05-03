@@ -151,8 +151,7 @@ private:
 	//! Variable that holds information about yaml function extensions
 	static const SubstraitCustomFunctions custom_functions;
 	uint64_t last_function_id = 1;
-	uint64_t last_extension_id = 1;
-
+	uint64_t last_uri_id = 1;
 	//! The substrait Plan
 	substrait::Plan plan;
 	ClientContext &context;

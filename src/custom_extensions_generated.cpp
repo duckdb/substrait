@@ -5,6 +5,7 @@
 namespace duckdb {
 
 void SubstraitCustomFunctions::Initialize() {
+	InsertCustomFunction("lt", {"any1", "any1"}, "functions_comparison.yaml");
 	InsertCustomFunction("extract", {"", "timestamp_tz", "string"}, "functions_datetime.yaml");
 	InsertCustomFunction("extract", {"", "timestamp"}, "functions_datetime.yaml");
 	InsertCustomFunction("extract", {"", "date"}, "functions_datetime.yaml");
@@ -73,7 +74,7 @@ void SubstraitCustomFunctions::Initialize() {
 	InsertCustomFunction("not_equal", {"any1", "any1"}, "functions_comparison.yaml");
 	InsertCustomFunction("equal", {"any1", "any1"}, "functions_comparison.yaml");
 	InsertCustomFunction("is_not_distinct_from", {"any1", "any1"}, "functions_comparison.yaml");
-	InsertCustomFunction("lt", {"any1", "any1"}, "functions_comparison.yaml");
+
 	InsertCustomFunction("gt", {"any1", "any1"}, "functions_comparison.yaml");
 	InsertCustomFunction("lte", {"any1", "any1"}, "functions_comparison.yaml");
 	InsertCustomFunction("gte", {"any1", "any1"}, "functions_comparison.yaml");
@@ -350,11 +351,11 @@ void SubstraitCustomFunctions::Initialize() {
 	InsertCustomFunction("round", {"i64", "i32"}, "functions_rounding.yaml");
 	InsertCustomFunction("round", {"fp32", "i32"}, "functions_rounding.yaml");
 	InsertCustomFunction("round", {"fp64", "i32"}, "functions_rounding.yaml");
-	InsertCustomFunction("or", {"boolean?"}, "functions_boolean.yaml");
-	InsertCustomFunction("and", {"boolean?"}, "functions_boolean.yaml");
-	InsertCustomFunction("and_not", {"boolean?", "boolean?"}, "functions_boolean.yaml");
-	InsertCustomFunction("xor", {"boolean?", "boolean?"}, "functions_boolean.yaml");
-	InsertCustomFunction("not", {"boolean?"}, "functions_boolean.yaml");
+	InsertCustomFunction("or", {"bool", "bool"}, "functions_boolean.yaml");
+	InsertCustomFunction("and", {"bool", "bool"}, "functions_boolean.yaml");
+	InsertCustomFunction("and_not", {"bool", "bool"}, "functions_boolean.yaml");
+	InsertCustomFunction("xor", {"bool", "bool"}, "functions_boolean.yaml");
+	InsertCustomFunction("not", {"bool"}, "functions_boolean.yaml");
 	InsertCustomFunction("add", {"decimal", "decimal"}, "functions_arithmetic_decimal.yaml");
 	InsertCustomFunction("subtract", {"decimal", "decimal"}, "functions_arithmetic_decimal.yaml");
 	InsertCustomFunction("multiply", {"decimal", "decimal"}, "functions_arithmetic_decimal.yaml");

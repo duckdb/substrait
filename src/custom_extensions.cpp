@@ -16,10 +16,65 @@ string TransformTypes(const ::substrait::Type &type) {
 	return str_type;
 }
 
+vector<string> GetAllTypes() {
+	return {{"bool"},
+	        {"i8"},
+	        {"i16"},
+	        {"i32"},
+	        {"i64"},
+	        {"fp32"},
+	        {"fp64"},
+	        {"string"},
+	        {"binary"},
+	        {"timestamp"},
+	        {"date"},
+	        {"time"},
+	        {"interval_year"},
+	        {"interval_day"},
+	        {"timestamp_tz"},
+	        {"uuid"},
+	        {"varchar"},
+	        {"fixed_binary"},
+	        {"decimal"},
+	        {"precision_timestamp"},
+	        {"precision_timestamp_tz"}};
+}
+
+// Recurse over the whole shebang
+void SubstraitCustomFunctions::InsertAllFunctions(const vector<vector<string>> &all_types, vector<idx_t> &indices,
+                                                  int depth, string &name, string &file_path) {
+	if (depth == indices.size()) {
+		vector<string> types;
+		for (idx_t i = 0; i < indices.size(); i++) {
+			types.push_back(all_types[i][indices[i]]);
+		}
+		custom_functions[{name, types}] = {{name, types}, std::move(file_path)};
+		return;
+	}
+	for (int i = 0; i < all_types[depth].size(); ++i) {
+		indices[depth] = i;
+		InsertAllFunctions(all_types, indices, depth + 1, name, file_path);
+	}
+}
+
 void SubstraitCustomFunctions::InsertCustomFunction(string name_p, vector<string> types_p, string file_path) {
-	auto name = std::move(name_p);
 	auto types = std::move(types_p);
-	custom_functions[{name, types}] = {{name, types}, std::move(file_path)};
+	vector<vector<string>> all_types;
+	for (auto &t : types) {
+		if (t == "any1") {
+			all_types.emplace_back(GetAllTypes());
+		} else {
+			all_types.push_back({t});
+		}
+	}
+	// Get the number of dimensions
+	idx_t num_arguments = all_types.size();
+
+	// Create a vector to hold the indices
+	vector<idx_t> idx(num_arguments, 0);
+
+	// Call the helper function with initial depth 0
+	InsertAllFunctions(all_types, idx, 0, name_p, file_path);
 }
 
 string SubstraitCustomFunction::GetName() {
