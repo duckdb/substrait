@@ -61,7 +61,7 @@ void SubstraitCustomFunctions::InsertCustomFunction(string name_p, vector<string
 	auto types = std::move(types_p);
 	vector<vector<string>> all_types;
 	for (auto &t : types) {
-		if (t == "any1") {
+		if (t == "any1" || t == "unknown") {
 			all_types.emplace_back(GetAllTypes());
 		} else {
 			all_types.push_back({t});
@@ -103,6 +103,14 @@ bool SubstraitFunctionExtensions::IsNative() {
 SubstraitCustomFunctions::SubstraitCustomFunctions() {
 	Initialize();
 };
+
+vector<string> SubstraitCustomFunctions::GetTypes(const vector<::substrait::Type> &types) const {
+	vector<string> transformed_types;
+	for (auto &type : types) {
+		transformed_types.emplace_back(TransformTypes(type));
+	}
+	return transformed_types;
+}
 
 // FIXME: We might have to do DuckDB extensions at some point
 SubstraitFunctionExtensions SubstraitCustomFunctions::Get(const string &name,

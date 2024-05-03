@@ -21,9 +21,11 @@
 
 namespace duckdb {
 const std::unordered_map<std::string, std::string> DuckDBToSubstrait::function_names_remap = {
-    {"mod", "modulus"},       {"stddev", "std_dev"},      {"prefix", "starts_with"}, {"suffix", "ends_with"},
-    {"substr", "substring"},  {"length", "char_length"},  {"isnan", "is_nan"},       {"isfinite", "is_finite"},
-    {"isinf", "is_infinite"}, {"sum_no_overflow", "sum"}, {"count_star", "count"},   {"~~", "like"}};
+    {"mod", "modulus"},         {"stddev", "std_dev"},     {"prefix", "starts_with"},
+    {"suffix", "ends_with"},    {"substr", "substring"},   {"length", "char_length"},
+    {"isnan", "is_nan"},        {"isfinite", "is_finite"}, {"isinf", "is_infinite"},
+    {"sum_no_overflow", "sum"}, {"count_star", "count"},   {"~~", "like"},
+    {"*", "multiply"},          {"-", "subtract"},         {"+", "add"}};
 
 const case_insensitive_set_t DuckDBToSubstrait::valid_extract_subfields = {
     "year",    "month",       "day",          "decade", "century", "millenium",
@@ -543,6 +545,12 @@ uint64_t DuckDBToSubstrait::RegisterFunction(const string &name, vector<::substr
 			// We only define URI if not native
 			sfun->set_extension_uri_reference(extension_uri_map[function.GetExtensionURI()]);
 		} else {
+			std::cout << function.function.GetName() << std::endl;
+			auto types = custom_functions.GetTypes(args_types);
+			for (auto &t : types) {
+				std::cout << t << "\t";
+			}
+			std::cout << std::endl;
 			sfun->set_extension_uri_reference(100);
 		}
 		functions_map[function.function.GetName()] = function_id;

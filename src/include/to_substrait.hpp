@@ -155,7 +155,5 @@ private:
 	//! The substrait Plan
 	substrait::Plan plan;
 	ClientContext &context;
-
-	uint64_t max_string_length = 1;
 };
 } // namespace duckdb

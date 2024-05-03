@@ -60,6 +60,7 @@ class SubstraitCustomFunctions {
 public:
 	SubstraitCustomFunctions();
 	SubstraitFunctionExtensions Get(const string &name, const vector<::substrait::Type> &types) const;
+	vector<string> GetTypes(const vector<::substrait::Type> &types) const;
 	void Initialize();
 
 private:

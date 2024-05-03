@@ -3,13 +3,10 @@ from os import walk
 import yaml
 import regex
 
-def parse_yaml(file_path):
-	with open(file_path, 'r') as file:
-		yaml_data = yaml.safe_load(file)
 
-	functions = []
 
-	for function_data in yaml_data.get('scalar_functions', []):
+def parse_function_data(functions,yaml_data,function_type):
+	for function_data in yaml_data.get(function_type, []):
 		function = {
 			'name': function_data['name'],
 			'impls_args': []
@@ -24,7 +21,14 @@ def parse_yaml(file_path):
 			function['impls_args'].append(args)
 
 		functions.append(function)
+	return functions
 
+def parse_yaml(file_path):
+	with open(file_path, 'r') as file:
+		yaml_data = yaml.safe_load(file)
+	functions = []
+	functions = parse_function_data(functions,yaml_data,'scalar_functions')
+	functions = parse_function_data(functions,yaml_data,'aggregate_functions')
 	return functions
 
 def get_custom_functions():
@@ -39,6 +43,10 @@ def get_custom_functions():
 				type_str = "{"
 				for args in impls_args: 
 					type_value = regex.sub(r'<[^>]*>', '', args["value"])
+					if type_value.endswith('?'):
+						type_value = type_value[:-1]
+					if type_value == "boolean":
+						type_value = "bool"
 					type_set.add(type_value)
 					type_str += f"\"{type_value}\","
 				type_str = type_str[:-1]
