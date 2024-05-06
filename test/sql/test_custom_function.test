@@ -52,12 +52,12 @@ CALL get_substrait_json('select trim(a, ''<'') from t_2')
 query I
 CALL get_substrait_json('select sum(a) from t')
 ----
-<!REGEX>:.*https://github.com/substrait-io/substrait/blob/main/extensions/functions_arithmetic.yaml.*
+<REGEX>:.*https://github.com/substrait-io/substrait/blob/main/extensions/functions_arithmetic.yaml.*
 
 query I
 CALL get_substrait_json('select sum(a) from t')
 ----
-<REGEX>:.*"sum".*
+<REGEX>:.*"sum:fp64".*
 
 # Test mix
 

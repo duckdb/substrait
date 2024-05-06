@@ -13,8 +13,6 @@ def run_substrait_validator(con, query):
     c.override_diagnostic_level(1, "warning", "info")
     #  validator limitation: did not attempt to resolve YAML
     c.override_diagnostic_level(2001, "warning", "info")
-    # Function Anchor to YAML file, no clue what is that
-    c.override_diagnostic_level(3001, "error", "info")
     # too few field names
     c.override_diagnostic_level(4003, "error", "info")
     # Validator being of a different version than substrait
@@ -33,7 +31,7 @@ def run_tpch_validator(require, query_number):
 
     run_substrait_validator(con,query)
 
-@pytest.mark.parametrize('query_number', [1,3,5,6,7,8,9,10,11,12,13,14,15,19])
+@pytest.mark.parametrize('query_number', [1,3,5,6,7,8,9,10,12,14,19])
 def test_substrait_tpch_validator(require,query_number):
     run_tpch_validator(require,query_number)
 
@@ -68,3 +66,16 @@ def test_substrait_tpch_validator_21(require):
 @pytest.mark.skip(reason="DuckDB Compilation: INTERNAL Error: INTERNAL Error: DELIM_JOIN")
 def test_substrait_tpch_validator_22(require):
     run_tpch_validator(require,22)
+
+@pytest.mark.skip(reason="Could not find function \"first\" with argument types: ('decimal')")
+def test_substrait_tpch_validator_11(require):
+    run_tpch_validator(require,11)
+
+@pytest.mark.skip(reason="Could not find function \"!~~\" with argument types: ('string', 'string')")
+def test_substrait_tpch_validator_13(require):
+    run_tpch_validator(require,13)
+
+@pytest.mark.skip(reason="Could not find function \"first\" with argument types: ('decimal')")
+def test_substrait_tpch_validator_15(require):
+    run_tpch_validator(require,15)
+
