@@ -1,5 +1,6 @@
 #include "custom_extensions/custom_extensions.hpp"
 #include "duckdb/common/types.hpp"
+#include "duckdb/common/string_util.hpp"
 
 namespace duckdb {
 
@@ -46,12 +47,26 @@ void SubstraitCustomFunctions::InsertAllFunctions(const vector<vector<string>> &
 	if (depth == indices.size()) {
 		vector<string> types;
 		for (idx_t i = 0; i < indices.size(); i++) {
-			types.push_back(all_types[i][indices[i]]);
+			auto type = all_types[i][indices[i]];
+			type = StringUtil::Replace(type, "boolean", "bool");
+			types.push_back(type);
 		}
 		if (types.empty()) {
 			any_arg_functions[{name, types}] = {{name, types}, std::move(file_path)};
 		} else {
-			custom_functions[{name, types}] = {{name, types}, std::move(file_path)};
+			bool many_arg = false;
+			string type = types[0];
+			for (auto &t : types) {
+				if (!t.empty() && t[t.size() - 1] == '?') {
+					// If all types are equal and they end with ? we have a many_argument function
+					many_arg = type == t;
+				}
+			}
+			if (many_arg) {
+				many_arg_functions[{name, types}] = {{name, types}, std::move(file_path)};
+			} else {
+				custom_functions[{name, types}] = {{name, types}, std::move(file_path)};
+			}
 		}
 
 		return;
@@ -138,12 +153,28 @@ SubstraitFunctionExtensions SubstraitCustomFunctions::Get(const string &name,
 			return {{name, {}}, "native"};
 		}
 	}
+	{
+		SubstraitCustomFunction custom_function {name, {transformed_types}};
+		auto it = custom_functions.find(custom_function);
+		if (it != custom_functions.end()) {
+			// We found it in our substrait custom map, return that
+			return it->second;
+		}
+	}
 
-	SubstraitCustomFunction custom_function {name, {transformed_types}};
-	auto it = custom_functions.find(custom_function);
-	if (it != custom_functions.end()) {
-		// We found it in our substrait custom map, return that
-		return it->second;
+	// check if it's a many argument fit
+	bool possibly_many_arg = true;
+	string type = transformed_types[0];
+	for (auto &t : transformed_types) {
+		possibly_many_arg = possibly_many_arg && type == t;
+	}
+	if (possibly_many_arg) {
+		type += '?';
+		SubstraitCustomFunction custom_many_function {name, {{type}}};
+		auto many_it = many_arg_functions.find(custom_many_function);
+		if (many_it != many_arg_functions.end()) {
+			return many_it->second;
+		}
 	}
 	// TODO: check if this should also print the arg types or not
 	// we did not find it, return it as a native substrait function

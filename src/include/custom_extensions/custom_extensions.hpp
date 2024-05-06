@@ -76,9 +76,9 @@ private:
 	// For * Functions
 	std::unordered_map<SubstraitCustomFunction, SubstraitFunctionExtensions, HashSubstraitFunctionsName>
 	    any_arg_functions;
-	// For generic number of argument functions
-	std::unordered_map<SubstraitCustomFunction, SubstraitFunctionExtensions, HashSubstraitFunctions>
-	    generic_argument_functions;
+	// For ? Functions
+	// When we have an argument ending with ? it means this argument can repeat many times
+	std::unordered_map<SubstraitCustomFunction, SubstraitFunctionExtensions, HashSubstraitFunctions> many_arg_functions;
 
 	void InsertCustomFunction(string name_p, vector<string> types_p, string file_path);
 	void InsertAllFunctions(const vector<vector<string>> &all_types, vector<idx_t> &indices, int depth, string &name_p,
