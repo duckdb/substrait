@@ -21,9 +21,22 @@
 
 namespace duckdb {
 const std::unordered_map<std::string, std::string> DuckDBToSubstrait::function_names_remap = {
-    {"mod", "modulus"},       {"stddev", "std_dev"},      {"prefix", "starts_with"}, {"suffix", "ends_with"},
-    {"substr", "substring"},  {"length", "char_length"},  {"isnan", "is_nan"},       {"isfinite", "is_finite"},
-    {"isinf", "is_infinite"}, {"sum_no_overflow", "sum"}, {"count_star", "count"},   {"~~", "like"}};
+    {"mod", "modulus"},
+    {"stddev", "std_dev"},
+    {"prefix", "starts_with"},
+    {"suffix", "ends_with"},
+    {"substr", "substring"},
+    {"length", "char_length"},
+    {"isnan", "is_nan"},
+    {"isfinite", "is_finite"},
+    {"isinf", "is_infinite"},
+    {"sum_no_overflow", "sum"},
+    {"count_star", "count"},
+    {"~~", "like"},
+    {"*", "multiply"},
+    {"-", "subtract"},
+    {"+", "add"},
+    {"/", "divide"}};
 
 const case_insensitive_set_t DuckDBToSubstrait::valid_extract_subfields = {
     "year",    "month",       "day",          "decade", "century", "millenium",
@@ -517,29 +530,50 @@ uint64_t DuckDBToSubstrait::RegisterFunction(const string &name, vector<::substr
 	if (name.empty()) {
 		throw InternalException("Missing function name");
 	}
-	// FIXME: For now I'm ignoring DuckDB functions that are either not mapped to native substrait or custom substrait
-	// extensions
 	auto function = custom_functions.Get(name, args_types);
-	idx_t uri_reference = 0;
+	auto substrait_extensions = plan.mutable_extension_uris();
 	if (!function.IsNative()) {
 		auto extensionURI = function.GetExtensionURI();
 		auto it = extension_uri_map.find(extensionURI);
 		if (it == extension_uri_map.end()) {
 			// We have to add this extension
+			extension_uri_map[extensionURI] = last_uri_id;
 			auto allocated_string = new string();
 			*allocated_string = extensionURI;
-			auto uri = plan.add_extension_uris();
+			auto uri = new ::substrait::extensions::SimpleExtensionURI();
 			uri->set_allocated_uri(allocated_string);
-			uri->set_extension_uri_anchor(last_extension_id++);
+			uri->set_extension_uri_anchor(last_uri_id);
+			substrait_extensions->AddAllocated(uri);
+			last_uri_id++;
 		}
-		uri_reference = extension_uri_map[extensionURI];
 	}
 	if (functions_map.find(function.function.GetName()) == functions_map.end()) {
 		auto function_id = last_function_id++;
 		auto sfun = plan.add_extensions()->mutable_extension_function();
 		sfun->set_function_anchor(function_id);
 		sfun->set_name(function.function.GetName());
-		sfun->set_extension_uri_reference(uri_reference);
+		if (!function.IsNative()) {
+			// We only define URI if not native
+			sfun->set_extension_uri_reference(extension_uri_map[function.GetExtensionURI()]);
+		} else {
+			// Function was not found in the yaml files
+			sfun->set_extension_uri_reference(0);
+			if (strict) {
+				// Produce warning message
+				std::ostringstream error;
+				// Casting Error Message
+				error << "Could not find function \"" << function.function.GetName() << "\" with argument types: (";
+				auto types = custom_functions.GetTypes(args_types);
+				for (idx_t i = 0; i < types.size(); i++) {
+					error << "\'" << types[i] << "\'";
+					if (i != types.size() - 1) {
+						error << ", ";
+					}
+				}
+				error << ")" << std::endl;
+				errors += error.str();
+			}
+		}
 		functions_map[function.function.GetName()] = function_id;
 	}
 	return functions_map[function.function.GetName()];
@@ -1329,6 +1363,10 @@ substrait::RelRoot *DuckDBToSubstrait::TransformRootOp(LogicalOperator &dop) {
 
 void DuckDBToSubstrait::TransformPlan(LogicalOperator &dop) {
 	plan.add_relations()->set_allocated_root(TransformRootOp(dop));
+	if (strict && !errors.empty()) {
+		throw InvalidInputException("Strict Mode is set to true, and the following warnings/errors happened. \n" +
+		                            errors);
+	}
 	auto version = plan.mutable_version();
 	version->set_major_number(0);
 	version->set_minor_number(39);

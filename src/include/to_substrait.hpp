@@ -16,7 +16,8 @@
 namespace duckdb {
 class DuckDBToSubstrait {
 public:
-	explicit DuckDBToSubstrait(ClientContext &context, duckdb::LogicalOperator &dop) : context(context) {
+	explicit DuckDBToSubstrait(ClientContext &context, duckdb::LogicalOperator &dop, bool strict_p)
+	    : context(context), strict(strict_p) {
 		TransformPlan(dop);
 	};
 
@@ -151,12 +152,13 @@ private:
 	//! Variable that holds information about yaml function extensions
 	static const SubstraitCustomFunctions custom_functions;
 	uint64_t last_function_id = 1;
-	uint64_t last_extension_id = 1;
-
+	uint64_t last_uri_id = 1;
 	//! The substrait Plan
 	substrait::Plan plan;
 	ClientContext &context;
-
-	uint64_t max_string_length = 1;
+	//! If we are generating a query plan on strict mode we will error if
+	//! things don't go perfectly shiny
+	bool strict;
+	string errors;
 };
 } // namespace duckdb

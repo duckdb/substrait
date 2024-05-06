@@ -17,10 +17,11 @@
 namespace duckdb {
 
 struct ToSubstraitFunctionData : public TableFunctionData {
-	ToSubstraitFunctionData() {
-	}
+	ToSubstraitFunctionData() = default;
 	string query;
-	bool enable_optimizer;
+	bool enable_optimizer = false;
+	//! We will fail the conversion on possible warnings
+	bool strict = false;
 	bool finished = false;
 };
 
@@ -34,45 +35,50 @@ static void VerifyJSONRoundtrip(unique_ptr<LogicalOperator> &query_plan, Connect
 static void VerifyBlobRoundtrip(unique_ptr<LogicalOperator> &query_plan, Connection &con, ToSubstraitFunctionData &data,
                                 const string &serialized);
 
-static bool SetOptimizationOption(const ClientConfig &config, const duckdb::named_parameter_map_t &named_params) {
+static void SetOptions(ToSubstraitFunctionData &function, const ClientConfig &config,
+                       const duckdb::named_parameter_map_t &named_params) {
+	bool optimizer_option_set = false;
 	for (const auto &param : named_params) {
 		auto loption = StringUtil::Lower(param.first);
 		// If the user has explicitly requested to enable/disable the optimizer when
 		// generating Substrait, then that takes precedence.
 		if (loption == "enable_optimizer") {
-			return BooleanValue::Get(param.second);
+			function.enable_optimizer = BooleanValue::Get(param.second);
+			optimizer_option_set = true;
+		}
+		if (loption == "strict") {
+			function.strict = BooleanValue::Get(param.second);
 		}
 	}
-
-	// If the user has not specified what they want, fall back to the settings
-	// on the connection (e.g. if the optimizer was disabled by the user at
-	// the connection level, it would be surprising to enable the optimizer
-	// when generating Substrait).
-	return config.enable_optimizer;
+	if (!optimizer_option_set) {
+		// If the user has not specified what they want, fall back to the settings
+		// on the connection (e.g. if the optimizer was disabled by the user at
+		// the connection level, it would be surprising to enable the optimizer
+		// when generating Substrait).
+		function.enable_optimizer = config.enable_optimizer;
+	}
 }
 
 static unique_ptr<ToSubstraitFunctionData> InitToSubstraitFunctionData(const ClientConfig &config,
                                                                        TableFunctionBindInput &input) {
 	auto result = make_uniq<ToSubstraitFunctionData>();
 	result->query = input.inputs[0].ToString();
-	result->enable_optimizer = SetOptimizationOption(config, input.named_parameters);
-	return std::move(result);
+	SetOptions(*result, config, input.named_parameters);
+	return result;
 }
 
 static unique_ptr<FunctionData> ToSubstraitBind(ClientContext &context, TableFunctionBindInput &input,
                                                 vector<LogicalType> &return_types, vector<string> &names) {
 	return_types.emplace_back(LogicalType::BLOB);
 	names.emplace_back("Plan Blob");
-	auto result = InitToSubstraitFunctionData(context.config, input);
-	return std::move(result);
+	return InitToSubstraitFunctionData(context.config, input);
 }
 
 static unique_ptr<FunctionData> ToJsonBind(ClientContext &context, TableFunctionBindInput &input,
                                            vector<LogicalType> &return_types, vector<string> &names) {
 	return_types.emplace_back(LogicalType::VARCHAR);
 	names.emplace_back("Json");
-	auto result = InitToSubstraitFunctionData(context.config, input);
-	return std::move(result);
+	return InitToSubstraitFunctionData(context.config, input);
 }
 
 shared_ptr<Relation> SubstraitPlanToDuckDBRel(Connection &conn, const string &serialized, bool json = false) {
@@ -136,7 +142,7 @@ static DuckDBToSubstrait InitPlanExtractor(ClientContext &context, ToSubstraitFu
 	DBConfig::GetConfig(*new_conn.context).options.disabled_optimizers = disabled_optimizers;
 
 	query_plan = new_conn.context->ExtractPlan(data.query);
-	return DuckDBToSubstrait(context, *query_plan);
+	return DuckDBToSubstrait(context, *query_plan, data.strict);
 }
 
 static void ToSubFunctionInternal(ClientContext &context, ToSubstraitFunctionData &data, DataChunk &output,
@@ -255,6 +261,7 @@ void InitializeGetSubstrait(Connection &con) {
 	// binary from a valid SQL Query
 	TableFunction to_sub_func("get_substrait", {LogicalType::VARCHAR}, ToSubFunction, ToSubstraitBind);
 	to_sub_func.named_parameters["enable_optimizer"] = LogicalType::BOOLEAN;
+	to_sub_func.named_parameters["strict"] = LogicalType::BOOLEAN;
 	CreateTableFunctionInfo to_sub_info(to_sub_func);
 	catalog.CreateTableFunction(*con.context, to_sub_info);
 }
