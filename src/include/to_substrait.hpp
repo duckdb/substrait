@@ -16,7 +16,8 @@
 namespace duckdb {
 class DuckDBToSubstrait {
 public:
-	explicit DuckDBToSubstrait(ClientContext &context, duckdb::LogicalOperator &dop) : context(context) {
+	explicit DuckDBToSubstrait(ClientContext &context, duckdb::LogicalOperator &dop, bool strict_p)
+	    : context(context), strict(strict_p) {
 		TransformPlan(dop);
 	};
 
@@ -155,5 +156,9 @@ private:
 	//! The substrait Plan
 	substrait::Plan plan;
 	ClientContext &context;
+	//! If we are generating a query plan on strict mode we will error if
+	//! things don't go perfectly shiny
+	bool strict;
+	string errors;
 };
 } // namespace duckdb

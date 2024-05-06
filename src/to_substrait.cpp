@@ -556,13 +556,23 @@ uint64_t DuckDBToSubstrait::RegisterFunction(const string &name, vector<::substr
 			// We only define URI if not native
 			sfun->set_extension_uri_reference(extension_uri_map[function.GetExtensionURI()]);
 		} else {
-			std::cout << function.function.GetName() << std::endl;
-			auto types = custom_functions.GetTypes(args_types);
-			for (auto &t : types) {
-				std::cout << t << "\t";
+			// Function was not found in the yaml files
+			sfun->set_extension_uri_reference(0);
+			if (strict) {
+				// Produce warning message
+				std::ostringstream error;
+				// Casting Error Message
+				error << "Could not find function \"" << function.function.GetName() << "\" with argument types: (";
+				auto types = custom_functions.GetTypes(args_types);
+				for (idx_t i = 0; i < types.size(); i++) {
+					error << "\'" << types[i] << "\'";
+					if (i != types.size() - 1) {
+						error << ", ";
+					}
+				}
+				error << ")" << std::endl;
+				errors += error.str();
 			}
-			std::cout << std::endl;
-			sfun->set_extension_uri_reference(100);
 		}
 		functions_map[function.function.GetName()] = function_id;
 	}
@@ -1353,6 +1363,10 @@ substrait::RelRoot *DuckDBToSubstrait::TransformRootOp(LogicalOperator &dop) {
 
 void DuckDBToSubstrait::TransformPlan(LogicalOperator &dop) {
 	plan.add_relations()->set_allocated_root(TransformRootOp(dop));
+	if (strict && !errors.empty()) {
+		throw InvalidInputException("Strict Mode is set to true, and the following warnings/errors happened. \n" +
+		                            errors);
+	}
 	auto version = plan.mutable_version();
 	version->set_major_number(0);
 	version->set_minor_number(39);
