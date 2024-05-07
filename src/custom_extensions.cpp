@@ -81,7 +81,7 @@ void SubstraitCustomFunctions::InsertCustomFunction(string name_p, vector<string
 	auto types = std::move(types_p);
 	vector<vector<string>> all_types;
 	for (auto &t : types) {
-		if (t == "any1" || t == "unknown") {
+		if (t == "any1" || t == "unknown" || t == "any") {
 			all_types.emplace_back(GetAllTypes());
 		} else {
 			all_types.push_back({t});
