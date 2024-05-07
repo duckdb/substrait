@@ -31,7 +31,7 @@ def run_tpch_validator(require, query_number):
 
     run_substrait_validator(con,query)
 
-@pytest.mark.parametrize('query_number', [1,3,5,6,7,8,9,10,12,14,19])
+@pytest.mark.parametrize('query_number', [1,3,5,6,7,8,9,10,11,12,14,15,19])
 def test_substrait_tpch_validator(require,query_number):
     run_tpch_validator(require,query_number)
 
@@ -67,15 +67,6 @@ def test_substrait_tpch_validator_21(require):
 def test_substrait_tpch_validator_22(require):
     run_tpch_validator(require,22)
 
-@pytest.mark.skip(reason="Could not find function \"first\" with argument types: ('decimal')")
-def test_substrait_tpch_validator_11(require):
-    run_tpch_validator(require,11)
-
 @pytest.mark.skip(reason="Could not find function \"!~~\" with argument types: ('string', 'string')")
 def test_substrait_tpch_validator_13(require):
     run_tpch_validator(require,13)
-
-@pytest.mark.skip(reason="Could not find function \"first\" with argument types: ('decimal')")
-def test_substrait_tpch_validator_15(require):
-    run_tpch_validator(require,15)
-
