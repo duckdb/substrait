@@ -221,10 +221,7 @@ static unique_ptr<FunctionData> SubstraitBind(ClientContext &context, TableFunct
 		throw BinderException("from_substrait cannot be called with a NULL parameter");
 	}
 	string serialized = input.inputs[0].GetValueUnsafe<string>();
-    Printer::Print("in SubstraitBind");
-    Printer::Print(serialized);
 	result->plan = SubstraitPlanToDuckDBRel(*result->conn, serialized, is_json);
-    result->plan->Print();
 	for (auto &column : result->plan->Columns()) {
 		return_types.emplace_back(column.Type());
 		names.emplace_back(column.Name());
