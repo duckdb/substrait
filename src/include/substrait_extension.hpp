@@ -9,6 +9,7 @@
 #pragma once
 
 #include "duckdb.hpp"
+#include "duckdb/optimizer/timer_util.h"
 
 #include <queue>
 

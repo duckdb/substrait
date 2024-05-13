@@ -139,6 +139,8 @@ static DuckDBToSubstrait InitPlanExtractor(ClientContext &context, ToSubstraitFu
 	DBConfig::GetConfig(*new_conn.context).options.disabled_optimizers = disabled_optimizers;
 
 	query_plan = new_conn.context->ExtractPlan(data.query);
+    Printer::Print("query plan");
+    query_plan->Print();
 	return DuckDBToSubstrait(context, *query_plan);
 }
 
@@ -241,6 +243,7 @@ static unique_ptr<FunctionData> FromSubstraitBindJSON(ClientContext &context, Ta
 
 static void FromSubFunction(ClientContext &context, TableFunctionInput &data_p, DataChunk &output) {
 	auto &data = (FromSubstraitFunctionData &)*data_p.bind_data;
+    timespec timer = tic();
 	if (!data.res) {
 		data.res = data.plan->Execute();
 	}
@@ -248,6 +251,7 @@ static void FromSubFunction(ClientContext &context, TableFunctionInput &data_p, 
 	if (!result_chunk) {
 		return;
 	}
+    toc(&timer, "Duckdb::Relation execution time is\n");
 	output.Move(*result_chunk);
 }
 
@@ -298,7 +302,9 @@ void InitializeFromSubstraitJSON(Connection &con) {
 substrait::RelRoot *root_rel_test;
 substrait::Rel *proj_head;
 //substrait::Rel *res;
-std::queue<substrait::Rel > subquery;
+substrait::Expression_FieldReference *selection;
+substrait::Expression_FieldReference_RootReference *root_reference;
+std::queue<substrait::Rel > subquery_queue;
 
 bool VisitPlanRel(const substrait::Rel& plan_rel) {
     bool split = false;
@@ -320,7 +326,7 @@ bool VisitPlanRel(const substrait::Rel& plan_rel) {
             break;
         case substrait::Rel::RelTypeCase::kProject:
             if (VisitPlanRel(plan_rel.project().input())) {
-                subquery.emplace(plan_rel);
+                subquery_queue.emplace(plan_rel);
             }
             break;
         case substrait::Rel::RelTypeCase::kAggregate:
@@ -341,6 +347,20 @@ bool VisitPlanRel(const substrait::Rel& plan_rel) {
     return split;
 }
 
+void ExecuteSQL(Connection &conn, const std::string& sql_command) {
+    auto sql_query_plan = conn.context->ExtractPlan(sql_command);
+    Printer::Print("sql_query_plan");
+    sql_query_plan->Print();
+    auto sql_json = DuckDBToSubstrait(*conn.context, *sql_query_plan).SerializeToJson();
+    // debug
+    Printer::Print("sql_json");
+    Printer::Print(sql_json);
+    auto sql_relation = SubstraitPlanToDuckDBRel(conn, sql_json, true);
+    Printer::Print("sql_relation");
+    sql_relation->Print();
+    auto sql_result = sql_relation->Execute();
+}
+
 void PlanTest(const std::string& serialized, Connection &new_conn) {
     // parse `serialized` json
     substrait::Plan plan;
@@ -349,7 +369,6 @@ void PlanTest(const std::string& serialized, Connection &new_conn) {
         throw std::runtime_error("Was not possible to convert JSON into Substrait plan: " + status.ToString());
     }
 
-    // todo: split plan
     Printer::Print("plan");
     plan.PrintDebugString();
     auto root_rel = plan.relations(0).root();
@@ -366,64 +385,97 @@ void PlanTest(const std::string& serialized, Connection &new_conn) {
     else
         root_rel_test->clear_input();
     // debug test
-    auto test_rel = subquery.front().project();
+    auto subquery_rel = subquery_queue.front().project();
+    subquery_queue.pop();
 
-    auto test_plan = plan;
-    test_plan.clear_relations();
+    auto subquery_plan = plan;
+    subquery_plan.clear_relations();
 
     // add projection head
-    auto sproj = proj_head->mutable_project();
-    sproj->mutable_input()->set_allocated_project(&test_rel);
-//    sproj->set_allocated_input(res);
+//    auto sproj = proj_head->mutable_project();
+//    sproj->mutable_input()->set_allocated_project(&subquery_rel);
+    proj_head->mutable_project()->set_allocated_input(subquery_rel.mutable_input());
     // add projection expressions for the next subquery
-    auto selection = new ::substrait::Expression_FieldReference();
-    // todo: get index
+    if (nullptr == selection)
+        selection = new ::substrait::Expression_FieldReference();
+    else
+        selection->clear_direct_reference();
+    // todo: get column index
     selection->mutable_direct_reference()->mutable_struct_field()->set_field((int32_t)1);
-    auto root_reference = new ::substrait::Expression_FieldReference_RootReference();
+    if (nullptr == root_reference)
+        root_reference = new ::substrait::Expression_FieldReference_RootReference();
     selection->set_allocated_root_reference(root_reference);
     D_ASSERT(selection->root_type_case() == substrait::Expression_FieldReference::RootTypeCase::kRootReference);
-    sproj->add_expressions()->set_allocated_selection(selection);
+    proj_head->mutable_project()->add_expressions()->set_allocated_selection(selection);
     D_ASSERT(expr->has_selection());
 
     // add to root_rel_test
     root_rel_test->set_allocated_input(proj_head);
     // add names for the next subquery
-    // todo: get names
+    // todo: get column names
     root_rel_test->add_names("movie_id");
-    test_plan.add_relations()->set_allocated_root(root_rel_test);
-    Printer::Print("test_plan");
-    test_plan.PrintDebugString();
-    auto sub_query_str = test_plan.SerializeAsString();
-    auto sub_relation = SubstraitPlanToDuckDBRel(new_conn, sub_query_str, false);
-    auto test_create_rel = sub_relation->CreateRel(INVALID_SCHEMA, "test_create_rel");
-    Printer::Print("test_create_rel");
-    test_create_rel->Print();
-    auto test_create_view = sub_relation->CreateView("test_create_view");
-    Printer::Print("test_create_view");
-    test_create_view->Print();
-//    }
+    subquery_plan.add_relations()->set_allocated_root(root_rel_test);
+    Printer::Print("subquery_plan");
+    subquery_plan.PrintDebugString();
+    std::string sub_query_str;
+    google::protobuf::util::MessageToJsonString(subquery_plan, &sub_query_str);
+    Printer::Print("sub_query_str");
+    Printer::Print(sub_query_str);
+    auto sub_relation = SubstraitPlanToDuckDBRel(new_conn, sub_query_str, true);
 
-//    auto sub_serialized = plan.SerializeAsString();
-//    // execute it
-//    auto relation = SubstraitPlanToDuckDBRel(new_conn, sub_serialized, false);
-//
-//    auto substrait_result = relation->Execute();
+    sub_relation->Create("test_create_rel");
+
+    Printer::Print("6");
+
+    // debug
+    ExecuteSQL(new_conn, "select * from test_create_rel;");
+    Printer::Print("7");
+
+
+    // test the last subquery
+
+
+    // debug
+    ExecuteSQL(new_conn, "drop table test_create_rel;");
+
+    // release
+    if (proj_head) {
+        proj_head->clear_project();
+        delete proj_head;
+    }
+    if (root_rel_test) {
+        root_rel_test->clear_input();
+        delete root_rel_test;
+    }
+    if (selection) {
+        selection->clear_direct_reference();
+        delete selection;
+    }
+    delete root_reference;
+
+
+
+
+//    auto test_create_view = sub_relation->CreateView("test_create_view");
+//    Printer::Print("test_create_view");
+//    test_create_view->Print();
+//    auto sub_result = sub_relation->Execute();
 //    // debug
-//    vector<LogicalType> types = substrait_result->types;
+//    vector<LogicalType> types = sub_result->types;
 //
 //    unique_ptr<MaterializedQueryResult> result_materialized;
 //    auto collection = make_uniq<ColumnDataCollection>(Allocator::DefaultAllocator(), types);
-//    if (substrait_result->type == QueryResultType::STREAM_RESULT) {
-//        auto &stream_query = substrait_result->Cast<duckdb::StreamQueryResult>();
+//    if (sub_result->type == QueryResultType::STREAM_RESULT) {
+//        auto &stream_query = sub_result->Cast<duckdb::StreamQueryResult>();
 //        result_materialized = stream_query.Materialize();
 //        collection = make_uniq<ColumnDataCollection>(result_materialized->Collection());
-//    } else if (substrait_result->type == QueryResultType::MATERIALIZED_RESULT) {
+//    } else if (sub_result->type == QueryResultType::MATERIALIZED_RESULT) {
 //        ColumnDataAppendState append_state;
 //        collection->InitializeAppend(append_state);
 //        while (true) {
 //            unique_ptr<DataChunk> chunk;
 //            ErrorData error;
-//            substrait_result->TryFetch(chunk, error);
+//            sub_result->TryFetch(chunk, error);
 //            // todo
 //            // chunk->SetCardinality(chunk->size());
 //            if (!chunk || chunk->size() == 0) {
@@ -435,14 +487,16 @@ void PlanTest(const std::string& serialized, Connection &new_conn) {
 //    // debug
 //    Printer::Print("collection");
 //    collection->Print();
-//
+
 //    // todo: merge the previous result
-//    auto test_create_rel = relation->CreateRel(INVALID_SCHEMA, "test_create_rel");
+//    auto test_create_rel = sub_relation->CreateRel(INVALID_SCHEMA, "test_create_rel");
 //    Printer::Print("test_create_rel");
 //    test_create_rel->Print();
-//    auto test_create_view = relation->CreateView("test_create_view");
+//    auto test_create_view = sub_relation->CreateView("test_create_view");
 //    Printer::Print("test_create_view");
 //    test_create_view->Print();
+
+//    }
 }
 
 void RelationTest(const shared_ptr<Relation>& relation) {
