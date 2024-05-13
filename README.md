@@ -161,3 +161,8 @@ Now to fix your project path go to `tools->CMake->Change Project Root`([docs](ht
 
 Now to configure the build targets, copy the CMake variables specified in the Makefile and ensure
 the build directory is set to `../build/<build_mode>`.
+
+## Updating the Substrait version
+Use the script in `scripts/update_substrait.py` to update the substrait version. It requires [protoc 3.19.4](https://github.com/protocolbuffers/protobuf/releases/tag/v3.19.4), GitHub, and Python. 
+To update the substrait code, simply change [the git commit tag in the script](https://github.com/duckdb/substrait/blob/main/scripts/update_substrait.py#L8) to the desired substrait release version. 
+Then, execute the script by running `python scripts/update_substrait.py`.
