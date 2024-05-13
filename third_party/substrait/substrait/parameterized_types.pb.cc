@@ -117,6 +117,36 @@ struct ParameterizedType_ParameterizedDecimalDefaultTypeInternal {
   };
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT ParameterizedType_ParameterizedDecimalDefaultTypeInternal _ParameterizedType_ParameterizedDecimal_default_instance_;
+constexpr ParameterizedType_ParameterizedPrecisionTimestamp::ParameterizedType_ParameterizedPrecisionTimestamp(
+  ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized)
+  : precision_(nullptr)
+  , variation_pointer_(0u)
+  , nullability_(0)
+{}
+struct ParameterizedType_ParameterizedPrecisionTimestampDefaultTypeInternal {
+  constexpr ParameterizedType_ParameterizedPrecisionTimestampDefaultTypeInternal()
+    : _instance(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized{}) {}
+  ~ParameterizedType_ParameterizedPrecisionTimestampDefaultTypeInternal() {}
+  union {
+    ParameterizedType_ParameterizedPrecisionTimestamp _instance;
+  };
+};
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT ParameterizedType_ParameterizedPrecisionTimestampDefaultTypeInternal _ParameterizedType_ParameterizedPrecisionTimestamp_default_instance_;
+constexpr ParameterizedType_ParameterizedPrecisionTimestampTZ::ParameterizedType_ParameterizedPrecisionTimestampTZ(
+  ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized)
+  : precision_(nullptr)
+  , variation_pointer_(0u)
+  , nullability_(0)
+{}
+struct ParameterizedType_ParameterizedPrecisionTimestampTZDefaultTypeInternal {
+  constexpr ParameterizedType_ParameterizedPrecisionTimestampTZDefaultTypeInternal()
+    : _instance(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized{}) {}
+  ~ParameterizedType_ParameterizedPrecisionTimestampTZDefaultTypeInternal() {}
+  union {
+    ParameterizedType_ParameterizedPrecisionTimestampTZ _instance;
+  };
+};
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT ParameterizedType_ParameterizedPrecisionTimestampTZDefaultTypeInternal _ParameterizedType_ParameterizedPrecisionTimestampTZ_default_instance_;
 constexpr ParameterizedType_ParameterizedStruct::ParameterizedType_ParameterizedStruct(
   ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized)
   : types_()
@@ -216,7 +246,7 @@ struct ParameterizedTypeDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT ParameterizedTypeDefaultTypeInternal _ParameterizedType_default_instance_;
 }  // namespace substrait
-static ::PROTOBUF_NAMESPACE_ID::Metadata file_level_metadata_substrait_2fparameterized_5ftypes_2eproto[14];
+static ::PROTOBUF_NAMESPACE_ID::Metadata file_level_metadata_substrait_2fparameterized_5ftypes_2eproto[16];
 static constexpr ::PROTOBUF_NAMESPACE_ID::EnumDescriptor const** file_level_enum_descriptors_substrait_2fparameterized_5ftypes_2eproto = nullptr;
 static constexpr ::PROTOBUF_NAMESPACE_ID::ServiceDescriptor const** file_level_service_descriptors_substrait_2fparameterized_5ftypes_2eproto = nullptr;
 
@@ -282,6 +312,24 @@ const uint32_t TableStruct_substrait_2fparameterized_5ftypes_2eproto::offsets[] 
   PROTOBUF_FIELD_OFFSET(::substrait::ParameterizedType_ParameterizedDecimal, precision_),
   PROTOBUF_FIELD_OFFSET(::substrait::ParameterizedType_ParameterizedDecimal, variation_pointer_),
   PROTOBUF_FIELD_OFFSET(::substrait::ParameterizedType_ParameterizedDecimal, nullability_),
+  ~0u,  // no _has_bits_
+  PROTOBUF_FIELD_OFFSET(::substrait::ParameterizedType_ParameterizedPrecisionTimestamp, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  ~0u,  // no _inlined_string_donated_
+  PROTOBUF_FIELD_OFFSET(::substrait::ParameterizedType_ParameterizedPrecisionTimestamp, precision_),
+  PROTOBUF_FIELD_OFFSET(::substrait::ParameterizedType_ParameterizedPrecisionTimestamp, variation_pointer_),
+  PROTOBUF_FIELD_OFFSET(::substrait::ParameterizedType_ParameterizedPrecisionTimestamp, nullability_),
+  ~0u,  // no _has_bits_
+  PROTOBUF_FIELD_OFFSET(::substrait::ParameterizedType_ParameterizedPrecisionTimestampTZ, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  ~0u,  // no _inlined_string_donated_
+  PROTOBUF_FIELD_OFFSET(::substrait::ParameterizedType_ParameterizedPrecisionTimestampTZ, precision_),
+  PROTOBUF_FIELD_OFFSET(::substrait::ParameterizedType_ParameterizedPrecisionTimestampTZ, variation_pointer_),
+  PROTOBUF_FIELD_OFFSET(::substrait::ParameterizedType_ParameterizedPrecisionTimestampTZ, nullability_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::substrait::ParameterizedType_ParameterizedStruct, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -368,6 +416,8 @@ const uint32_t TableStruct_substrait_2fparameterized_5ftypes_2eproto::offsets[] 
   ::PROTOBUF_NAMESPACE_ID::internal::kInvalidFieldOffsetTag,
   ::PROTOBUF_NAMESPACE_ID::internal::kInvalidFieldOffsetTag,
   ::PROTOBUF_NAMESPACE_ID::internal::kInvalidFieldOffsetTag,
+  ::PROTOBUF_NAMESPACE_ID::internal::kInvalidFieldOffsetTag,
+  ::PROTOBUF_NAMESPACE_ID::internal::kInvalidFieldOffsetTag,
   PROTOBUF_FIELD_OFFSET(::substrait::ParameterizedType, kind_),
 };
 static const ::PROTOBUF_NAMESPACE_ID::internal::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
@@ -378,13 +428,15 @@ static const ::PROTOBUF_NAMESPACE_ID::internal::MigrationSchema schemas[] PROTOB
   { 33, -1, -1, sizeof(::substrait::ParameterizedType_ParameterizedVarChar)},
   { 42, -1, -1, sizeof(::substrait::ParameterizedType_ParameterizedFixedBinary)},
   { 51, -1, -1, sizeof(::substrait::ParameterizedType_ParameterizedDecimal)},
-  { 61, -1, -1, sizeof(::substrait::ParameterizedType_ParameterizedStruct)},
-  { 70, -1, -1, sizeof(::substrait::ParameterizedType_ParameterizedNamedStruct)},
-  { 78, -1, -1, sizeof(::substrait::ParameterizedType_ParameterizedList)},
-  { 87, -1, -1, sizeof(::substrait::ParameterizedType_ParameterizedMap)},
-  { 97, -1, -1, sizeof(::substrait::ParameterizedType_ParameterizedUserDefined)},
-  { 106, -1, -1, sizeof(::substrait::ParameterizedType_IntegerOption)},
-  { 115, -1, -1, sizeof(::substrait::ParameterizedType)},
+  { 61, -1, -1, sizeof(::substrait::ParameterizedType_ParameterizedPrecisionTimestamp)},
+  { 70, -1, -1, sizeof(::substrait::ParameterizedType_ParameterizedPrecisionTimestampTZ)},
+  { 79, -1, -1, sizeof(::substrait::ParameterizedType_ParameterizedStruct)},
+  { 88, -1, -1, sizeof(::substrait::ParameterizedType_ParameterizedNamedStruct)},
+  { 96, -1, -1, sizeof(::substrait::ParameterizedType_ParameterizedList)},
+  { 105, -1, -1, sizeof(::substrait::ParameterizedType_ParameterizedMap)},
+  { 115, -1, -1, sizeof(::substrait::ParameterizedType_ParameterizedUserDefined)},
+  { 124, -1, -1, sizeof(::substrait::ParameterizedType_IntegerOption)},
+  { 133, -1, -1, sizeof(::substrait::ParameterizedType)},
 };
 
 static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] = {
@@ -395,6 +447,8 @@ static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] =
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::substrait::_ParameterizedType_ParameterizedVarChar_default_instance_),
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::substrait::_ParameterizedType_ParameterizedFixedBinary_default_instance_),
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::substrait::_ParameterizedType_ParameterizedDecimal_default_instance_),
+  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::substrait::_ParameterizedType_ParameterizedPrecisionTimestamp_default_instance_),
+  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::substrait::_ParameterizedType_ParameterizedPrecisionTimestampTZ_default_instance_),
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::substrait::_ParameterizedType_ParameterizedStruct_default_instance_),
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::substrait::_ParameterizedType_ParameterizedNamedStruct_default_instance_),
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::substrait::_ParameterizedType_ParameterizedList_default_instance_),
@@ -406,7 +460,7 @@ static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] =
 
 const char descriptor_table_protodef_substrait_2fparameterized_5ftypes_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) =
   "\n#substrait/parameterized_types.proto\022\ts"
-  "ubstrait\032\024substrait/type.proto\"\213\031\n\021Param"
+  "ubstrait\032\024substrait/type.proto\"\264\035\n\021Param"
   "eterizedType\022\'\n\004bool\030\001 \001(\0132\027.substrait.T"
   "ype.BooleanH\000\022 \n\002i8\030\002 \001(\0132\022.substrait.Ty"
   "pe.I8H\000\022\"\n\003i16\030\003 \001(\0132\023.substrait.Type.I1"
@@ -415,89 +469,103 @@ const char descriptor_table_protodef_substrait_2fparameterized_5ftypes_2eproto[]
   "p32\030\n \001(\0132\024.substrait.Type.FP32H\000\022$\n\004fp6"
   "4\030\013 \001(\0132\024.substrait.Type.FP64H\000\022(\n\006strin"
   "g\030\014 \001(\0132\026.substrait.Type.StringH\000\022(\n\006bin"
-  "ary\030\r \001(\0132\026.substrait.Type.BinaryH\000\022.\n\tt"
+  "ary\030\r \001(\0132\026.substrait.Type.BinaryH\000\0222\n\tt"
   "imestamp\030\016 \001(\0132\031.substrait.Type.Timestam"
-  "pH\000\022$\n\004date\030\020 \001(\0132\024.substrait.Type.DateH"
-  "\000\022$\n\004time\030\021 \001(\0132\024.substrait.Type.TimeH\000\022"
-  "5\n\rinterval_year\030\023 \001(\0132\034.substrait.Type."
-  "IntervalYearH\000\0223\n\014interval_day\030\024 \001(\0132\033.s"
-  "ubstrait.Type.IntervalDayH\000\0223\n\014timestamp"
-  "_tz\030\035 \001(\0132\033.substrait.Type.TimestampTZH\000"
-  "\022$\n\004uuid\030  \001(\0132\024.substrait.Type.UUIDH\000\022I"
-  "\n\nfixed_char\030\025 \001(\01323.substrait.Parameter"
-  "izedType.ParameterizedFixedCharH\000\022D\n\007var"
-  "char\030\026 \001(\01321.substrait.ParameterizedType"
-  ".ParameterizedVarCharH\000\022M\n\014fixed_binary\030"
-  "\027 \001(\01325.substrait.ParameterizedType.Para"
-  "meterizedFixedBinaryH\000\022D\n\007decimal\030\030 \001(\0132"
-  "1.substrait.ParameterizedType.Parameteri"
-  "zedDecimalH\000\022B\n\006struct\030\031 \001(\01320.substrait"
-  ".ParameterizedType.ParameterizedStructH\000"
-  "\022>\n\004list\030\033 \001(\0132..substrait.Parameterized"
-  "Type.ParameterizedListH\000\022<\n\003map\030\034 \001(\0132-."
-  "substrait.ParameterizedType.Parameterize"
-  "dMapH\000\022M\n\014user_defined\030\036 \001(\01325.substrait"
-  ".ParameterizedType.ParameterizedUserDefi"
-  "nedH\000\022\"\n\024user_defined_pointer\030\037 \001(\rB\002\030\001H"
-  "\000\022D\n\016type_parameter\030! \001(\0132*.substrait.Pa"
-  "rameterizedType.TypeParameterH\000\032K\n\rTypeP"
-  "arameter\022\014\n\004name\030\001 \001(\t\022,\n\006bounds\030\002 \003(\0132\034"
-  ".substrait.ParameterizedType\032\270\001\n\020Integer"
-  "Parameter\022\014\n\004name\030\001 \001(\t\022K\n\025range_start_i"
-  "nclusive\030\002 \001(\0132,.substrait.Parameterized"
-  "Type.NullableInteger\022I\n\023range_end_exclus"
-  "ive\030\003 \001(\0132,.substrait.ParameterizedType."
-  "NullableInteger\032 \n\017NullableInteger\022\r\n\005va"
-  "lue\030\001 \001(\003\032\241\001\n\026ParameterizedFixedChar\022:\n\006"
-  "length\030\001 \001(\0132*.substrait.ParameterizedTy"
-  "pe.IntegerOption\022\031\n\021variation_pointer\030\002 "
-  "\001(\r\0220\n\013nullability\030\003 \001(\0162\033.substrait.Typ"
-  "e.Nullability\032\237\001\n\024ParameterizedVarChar\022:"
-  "\n\006length\030\001 \001(\0132*.substrait.Parameterized"
-  "Type.IntegerOption\022\031\n\021variation_pointer\030"
-  "\002 \001(\r\0220\n\013nullability\030\003 \001(\0162\033.substrait.T"
-  "ype.Nullability\032\243\001\n\030ParameterizedFixedBi"
-  "nary\022:\n\006length\030\001 \001(\0132*.substrait.Paramet"
-  "erizedType.IntegerOption\022\031\n\021variation_po"
-  "inter\030\002 \001(\r\0220\n\013nullability\030\003 \001(\0162\033.subst"
-  "rait.Type.Nullability\032\335\001\n\024ParameterizedD"
-  "ecimal\0229\n\005scale\030\001 \001(\0132*.substrait.Parame"
-  "terizedType.IntegerOption\022=\n\tprecision\030\002"
-  " \001(\0132*.substrait.ParameterizedType.Integ"
-  "erOption\022\031\n\021variation_pointer\030\003 \001(\r\0220\n\013n"
-  "ullability\030\004 \001(\0162\033.substrait.Type.Nullab"
-  "ility\032\217\001\n\023ParameterizedStruct\022+\n\005types\030\001"
-  " \003(\0132\034.substrait.ParameterizedType\022\031\n\021va"
-  "riation_pointer\030\002 \001(\r\0220\n\013nullability\030\003 \001"
-  "(\0162\033.substrait.Type.Nullability\032k\n\030Param"
-  "eterizedNamedStruct\022\r\n\005names\030\001 \003(\t\022@\n\006st"
-  "ruct\030\002 \001(\01320.substrait.ParameterizedType"
-  ".ParameterizedStruct\032\214\001\n\021ParameterizedLi"
-  "st\022*\n\004type\030\001 \001(\0132\034.substrait.Parameteriz"
-  "edType\022\031\n\021variation_pointer\030\002 \001(\r\0220\n\013nul"
-  "lability\030\003 \001(\0162\033.substrait.Type.Nullabil"
-  "ity\032\267\001\n\020ParameterizedMap\022)\n\003key\030\001 \001(\0132\034."
-  "substrait.ParameterizedType\022+\n\005value\030\002 \001"
-  "(\0132\034.substrait.ParameterizedType\022\031\n\021vari"
-  "ation_pointer\030\003 \001(\r\0220\n\013nullability\030\004 \001(\016"
-  "2\033.substrait.Type.Nullability\032}\n\030Paramet"
-  "erizedUserDefined\022\024\n\014type_pointer\030\001 \001(\r\022"
+  "pB\002\030\001H\000\022$\n\004date\030\020 \001(\0132\024.substrait.Type.D"
+  "ateH\000\022$\n\004time\030\021 \001(\0132\024.substrait.Type.Tim"
+  "eH\000\0225\n\rinterval_year\030\023 \001(\0132\034.substrait.T"
+  "ype.IntervalYearH\000\0223\n\014interval_day\030\024 \001(\013"
+  "2\033.substrait.Type.IntervalDayH\000\0227\n\014times"
+  "tamp_tz\030\035 \001(\0132\033.substrait.Type.Timestamp"
+  "TZB\002\030\001H\000\022$\n\004uuid\030  \001(\0132\024.substrait.Type."
+  "UUIDH\000\022I\n\nfixed_char\030\025 \001(\01323.substrait.P"
+  "arameterizedType.ParameterizedFixedCharH"
+  "\000\022D\n\007varchar\030\026 \001(\01321.substrait.Parameter"
+  "izedType.ParameterizedVarCharH\000\022M\n\014fixed"
+  "_binary\030\027 \001(\01325.substrait.ParameterizedT"
+  "ype.ParameterizedFixedBinaryH\000\022D\n\007decima"
+  "l\030\030 \001(\01321.substrait.ParameterizedType.Pa"
+  "rameterizedDecimalH\000\022[\n\023precision_timest"
+  "amp\030\" \001(\0132<.substrait.ParameterizedType."
+  "ParameterizedPrecisionTimestampH\000\022`\n\026pre"
+  "cision_timestamp_tz\030# \001(\0132>.substrait.Pa"
+  "rameterizedType.ParameterizedPrecisionTi"
+  "mestampTZH\000\022B\n\006struct\030\031 \001(\01320.substrait."
+  "ParameterizedType.ParameterizedStructH\000\022"
+  ">\n\004list\030\033 \001(\0132..substrait.ParameterizedT"
+  "ype.ParameterizedListH\000\022<\n\003map\030\034 \001(\0132-.s"
+  "ubstrait.ParameterizedType.Parameterized"
+  "MapH\000\022M\n\014user_defined\030\036 \001(\01325.substrait."
+  "ParameterizedType.ParameterizedUserDefin"
+  "edH\000\022\"\n\024user_defined_pointer\030\037 \001(\rB\002\030\001H\000"
+  "\022D\n\016type_parameter\030! \001(\0132*.substrait.Par"
+  "ameterizedType.TypeParameterH\000\032K\n\rTypePa"
+  "rameter\022\014\n\004name\030\001 \001(\t\022,\n\006bounds\030\002 \003(\0132\034."
+  "substrait.ParameterizedType\032\270\001\n\020IntegerP"
+  "arameter\022\014\n\004name\030\001 \001(\t\022K\n\025range_start_in"
+  "clusive\030\002 \001(\0132,.substrait.ParameterizedT"
+  "ype.NullableInteger\022I\n\023range_end_exclusi"
+  "ve\030\003 \001(\0132,.substrait.ParameterizedType.N"
+  "ullableInteger\032 \n\017NullableInteger\022\r\n\005val"
+  "ue\030\001 \001(\003\032\241\001\n\026ParameterizedFixedChar\022:\n\006l"
+  "ength\030\001 \001(\0132*.substrait.ParameterizedTyp"
+  "e.IntegerOption\022\031\n\021variation_pointer\030\002 \001"
+  "(\r\0220\n\013nullability\030\003 \001(\0162\033.substrait.Type"
+  ".Nullability\032\237\001\n\024ParameterizedVarChar\022:\n"
+  "\006length\030\001 \001(\0132*.substrait.ParameterizedT"
+  "ype.IntegerOption\022\031\n\021variation_pointer\030\002"
+  " \001(\r\0220\n\013nullability\030\003 \001(\0162\033.substrait.Ty"
+  "pe.Nullability\032\243\001\n\030ParameterizedFixedBin"
+  "ary\022:\n\006length\030\001 \001(\0132*.substrait.Paramete"
+  "rizedType.IntegerOption\022\031\n\021variation_poi"
+  "nter\030\002 \001(\r\0220\n\013nullability\030\003 \001(\0162\033.substr"
+  "ait.Type.Nullability\032\335\001\n\024ParameterizedDe"
+  "cimal\0229\n\005scale\030\001 \001(\0132*.substrait.Paramet"
+  "erizedType.IntegerOption\022=\n\tprecision\030\002 "
+  "\001(\0132*.substrait.ParameterizedType.Intege"
+  "rOption\022\031\n\021variation_pointer\030\003 \001(\r\0220\n\013nu"
+  "llability\030\004 \001(\0162\033.substrait.Type.Nullabi"
+  "lity\032\255\001\n\037ParameterizedPrecisionTimestamp"
+  "\022=\n\tprecision\030\001 \001(\0132*.substrait.Paramete"
+  "rizedType.IntegerOption\022\031\n\021variation_poi"
+  "nter\030\002 \001(\r\0220\n\013nullability\030\003 \001(\0162\033.substr"
+  "ait.Type.Nullability\032\257\001\n!ParameterizedPr"
+  "ecisionTimestampTZ\022=\n\tprecision\030\001 \001(\0132*."
+  "substrait.ParameterizedType.IntegerOptio"
+  "n\022\031\n\021variation_pointer\030\002 \001(\r\0220\n\013nullabil"
+  "ity\030\003 \001(\0162\033.substrait.Type.Nullability\032\217"
+  "\001\n\023ParameterizedStruct\022+\n\005types\030\001 \003(\0132\034."
+  "substrait.ParameterizedType\022\031\n\021variation"
+  "_pointer\030\002 \001(\r\0220\n\013nullability\030\003 \001(\0162\033.su"
+  "bstrait.Type.Nullability\032k\n\030Parameterize"
+  "dNamedStruct\022\r\n\005names\030\001 \003(\t\022@\n\006struct\030\002 "
+  "\001(\01320.substrait.ParameterizedType.Parame"
+  "terizedStruct\032\214\001\n\021ParameterizedList\022*\n\004t"
+  "ype\030\001 \001(\0132\034.substrait.ParameterizedType\022"
   "\031\n\021variation_pointer\030\002 \001(\r\0220\n\013nullabilit"
-  "y\030\003 \001(\0162\033.substrait.Type.Nullability\032v\n\r"
-  "IntegerOption\022\021\n\007literal\030\001 \001(\005H\000\022B\n\tpara"
-  "meter\030\002 \001(\0132-.substrait.ParameterizedTyp"
-  "e.IntegerParameterH\000B\016\n\014integer_typeB\006\n\004"
-  "kindBW\n\022io.substrait.protoP\001Z*github.com"
-  "/substrait-io/substrait-go/proto\252\002\022Subst"
-  "rait.Protobufb\006proto3"
+  "y\030\003 \001(\0162\033.substrait.Type.Nullability\032\267\001\n"
+  "\020ParameterizedMap\022)\n\003key\030\001 \001(\0132\034.substra"
+  "it.ParameterizedType\022+\n\005value\030\002 \001(\0132\034.su"
+  "bstrait.ParameterizedType\022\031\n\021variation_p"
+  "ointer\030\003 \001(\r\0220\n\013nullability\030\004 \001(\0162\033.subs"
+  "trait.Type.Nullability\032}\n\030ParameterizedU"
+  "serDefined\022\024\n\014type_pointer\030\001 \001(\r\022\031\n\021vari"
+  "ation_pointer\030\002 \001(\r\0220\n\013nullability\030\003 \001(\016"
+  "2\033.substrait.Type.Nullability\032v\n\rInteger"
+  "Option\022\021\n\007literal\030\001 \001(\005H\000\022B\n\tparameter\030\002"
+  " \001(\0132-.substrait.ParameterizedType.Integ"
+  "erParameterH\000B\016\n\014integer_typeB\006\n\004kindBW\n"
+  "\022io.substrait.protoP\001Z*github.com/substr"
+  "ait-io/substrait-go/proto\252\002\022Substrait.Pr"
+  "otobufb\006proto3"
   ;
 static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor_table_substrait_2fparameterized_5ftypes_2eproto_deps[1] = {
   &::descriptor_table_substrait_2ftype_2eproto,
 };
 static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_substrait_2fparameterized_5ftypes_2eproto_once;
 const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_substrait_2fparameterized_5ftypes_2eproto = {
-  false, false, 3381, descriptor_table_protodef_substrait_2fparameterized_5ftypes_2eproto, "substrait/parameterized_types.proto", 
-  &descriptor_table_substrait_2fparameterized_5ftypes_2eproto_once, descriptor_table_substrait_2fparameterized_5ftypes_2eproto_deps, 1, 14,
+  false, false, 3934, descriptor_table_protodef_substrait_2fparameterized_5ftypes_2eproto, "substrait/parameterized_types.proto", 
+  &descriptor_table_substrait_2fparameterized_5ftypes_2eproto_once, descriptor_table_substrait_2fparameterized_5ftypes_2eproto_deps, 1, 16,
   schemas, file_default_instances, TableStruct_substrait_2fparameterized_5ftypes_2eproto::offsets,
   file_level_metadata_substrait_2fparameterized_5ftypes_2eproto, file_level_enum_descriptors_substrait_2fparameterized_5ftypes_2eproto, file_level_service_descriptors_substrait_2fparameterized_5ftypes_2eproto,
 };
@@ -2285,6 +2353,518 @@ void ParameterizedType_ParameterizedDecimal::InternalSwap(ParameterizedType_Para
 
 // ===================================================================
 
+class ParameterizedType_ParameterizedPrecisionTimestamp::_Internal {
+ public:
+  static const ::substrait::ParameterizedType_IntegerOption& precision(const ParameterizedType_ParameterizedPrecisionTimestamp* msg);
+};
+
+const ::substrait::ParameterizedType_IntegerOption&
+ParameterizedType_ParameterizedPrecisionTimestamp::_Internal::precision(const ParameterizedType_ParameterizedPrecisionTimestamp* msg) {
+  return *msg->precision_;
+}
+ParameterizedType_ParameterizedPrecisionTimestamp::ParameterizedType_ParameterizedPrecisionTimestamp(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                         bool is_message_owned)
+  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
+  SharedCtor();
+  if (!is_message_owned) {
+    RegisterArenaDtor(arena);
+  }
+  // @@protoc_insertion_point(arena_constructor:substrait.ParameterizedType.ParameterizedPrecisionTimestamp)
+}
+ParameterizedType_ParameterizedPrecisionTimestamp::ParameterizedType_ParameterizedPrecisionTimestamp(const ParameterizedType_ParameterizedPrecisionTimestamp& from)
+  : ::PROTOBUF_NAMESPACE_ID::Message() {
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  if (from._internal_has_precision()) {
+    precision_ = new ::substrait::ParameterizedType_IntegerOption(*from.precision_);
+  } else {
+    precision_ = nullptr;
+  }
+  ::memcpy(&variation_pointer_, &from.variation_pointer_,
+    static_cast<size_t>(reinterpret_cast<char*>(&nullability_) -
+    reinterpret_cast<char*>(&variation_pointer_)) + sizeof(nullability_));
+  // @@protoc_insertion_point(copy_constructor:substrait.ParameterizedType.ParameterizedPrecisionTimestamp)
+}
+
+inline void ParameterizedType_ParameterizedPrecisionTimestamp::SharedCtor() {
+::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
+    reinterpret_cast<char*>(&precision_) - reinterpret_cast<char*>(this)),
+    0, static_cast<size_t>(reinterpret_cast<char*>(&nullability_) -
+    reinterpret_cast<char*>(&precision_)) + sizeof(nullability_));
+}
+
+ParameterizedType_ParameterizedPrecisionTimestamp::~ParameterizedType_ParameterizedPrecisionTimestamp() {
+  // @@protoc_insertion_point(destructor:substrait.ParameterizedType.ParameterizedPrecisionTimestamp)
+  if (GetArenaForAllocation() != nullptr) return;
+  SharedDtor();
+  _internal_metadata_.Delete<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+}
+
+inline void ParameterizedType_ParameterizedPrecisionTimestamp::SharedDtor() {
+  GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
+  if (this != internal_default_instance()) delete precision_;
+}
+
+void ParameterizedType_ParameterizedPrecisionTimestamp::ArenaDtor(void* object) {
+  ParameterizedType_ParameterizedPrecisionTimestamp* _this = reinterpret_cast< ParameterizedType_ParameterizedPrecisionTimestamp* >(object);
+  (void)_this;
+}
+void ParameterizedType_ParameterizedPrecisionTimestamp::RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena*) {
+}
+void ParameterizedType_ParameterizedPrecisionTimestamp::SetCachedSize(int size) const {
+  _cached_size_.Set(size);
+}
+
+void ParameterizedType_ParameterizedPrecisionTimestamp::Clear() {
+// @@protoc_insertion_point(message_clear_start:substrait.ParameterizedType.ParameterizedPrecisionTimestamp)
+  uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  if (GetArenaForAllocation() == nullptr && precision_ != nullptr) {
+    delete precision_;
+  }
+  precision_ = nullptr;
+  ::memset(&variation_pointer_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&nullability_) -
+      reinterpret_cast<char*>(&variation_pointer_)) + sizeof(nullability_));
+  _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+}
+
+const char* ParameterizedType_ParameterizedPrecisionTimestamp::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
+#define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
+  while (!ctx->Done(&ptr)) {
+    uint32_t tag;
+    ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
+    switch (tag >> 3) {
+      // .substrait.ParameterizedType.IntegerOption precision = 1;
+      case 1:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 10)) {
+          ptr = ctx->ParseMessage(_internal_mutable_precision(), ptr);
+          CHK_(ptr);
+        } else
+          goto handle_unusual;
+        continue;
+      // uint32 variation_pointer = 2;
+      case 2:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 16)) {
+          variation_pointer_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+          CHK_(ptr);
+        } else
+          goto handle_unusual;
+        continue;
+      // .substrait.Type.Nullability nullability = 3;
+      case 3:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 24)) {
+          uint64_t val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          CHK_(ptr);
+          _internal_set_nullability(static_cast<::substrait::Type_Nullability>(val));
+        } else
+          goto handle_unusual;
+        continue;
+      default:
+        goto handle_unusual;
+    }  // switch
+  handle_unusual:
+    if ((tag == 0) || ((tag & 7) == 4)) {
+      CHK_(ptr);
+      ctx->SetLastTag(tag);
+      goto message_done;
+    }
+    ptr = UnknownFieldParse(
+        tag,
+        _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
+        ptr, ctx);
+    CHK_(ptr != nullptr);
+  }  // while
+message_done:
+  return ptr;
+failure:
+  ptr = nullptr;
+  goto message_done;
+#undef CHK_
+}
+
+uint8_t* ParameterizedType_ParameterizedPrecisionTimestamp::_InternalSerialize(
+    uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
+  // @@protoc_insertion_point(serialize_to_array_start:substrait.ParameterizedType.ParameterizedPrecisionTimestamp)
+  uint32_t cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // .substrait.ParameterizedType.IntegerOption precision = 1;
+  if (this->_internal_has_precision()) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+      InternalWriteMessage(
+        1, _Internal::precision(this), target, stream);
+  }
+
+  // uint32 variation_pointer = 2;
+  if (this->_internal_variation_pointer() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteUInt32ToArray(2, this->_internal_variation_pointer(), target);
+  }
+
+  // .substrait.Type.Nullability nullability = 3;
+  if (this->_internal_nullability() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteEnumToArray(
+      3, this->_internal_nullability(), target);
+  }
+
+  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
+        _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:substrait.ParameterizedType.ParameterizedPrecisionTimestamp)
+  return target;
+}
+
+size_t ParameterizedType_ParameterizedPrecisionTimestamp::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:substrait.ParameterizedType.ParameterizedPrecisionTimestamp)
+  size_t total_size = 0;
+
+  uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  // .substrait.ParameterizedType.IntegerOption precision = 1;
+  if (this->_internal_has_precision()) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
+        *precision_);
+  }
+
+  // uint32 variation_pointer = 2;
+  if (this->_internal_variation_pointer() != 0) {
+    total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::UInt32SizePlusOne(this->_internal_variation_pointer());
+  }
+
+  // .substrait.Type.Nullability nullability = 3;
+  if (this->_internal_nullability() != 0) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::EnumSize(this->_internal_nullability());
+  }
+
+  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
+}
+
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData ParameterizedType_ParameterizedPrecisionTimestamp::_class_data_ = {
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    ParameterizedType_ParameterizedPrecisionTimestamp::MergeImpl
+};
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*ParameterizedType_ParameterizedPrecisionTimestamp::GetClassData() const { return &_class_data_; }
+
+void ParameterizedType_ParameterizedPrecisionTimestamp::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
+                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
+  static_cast<ParameterizedType_ParameterizedPrecisionTimestamp *>(to)->MergeFrom(
+      static_cast<const ParameterizedType_ParameterizedPrecisionTimestamp &>(from));
+}
+
+
+void ParameterizedType_ParameterizedPrecisionTimestamp::MergeFrom(const ParameterizedType_ParameterizedPrecisionTimestamp& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:substrait.ParameterizedType.ParameterizedPrecisionTimestamp)
+  GOOGLE_DCHECK_NE(&from, this);
+  uint32_t cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  if (from._internal_has_precision()) {
+    _internal_mutable_precision()->::substrait::ParameterizedType_IntegerOption::MergeFrom(from._internal_precision());
+  }
+  if (from._internal_variation_pointer() != 0) {
+    _internal_set_variation_pointer(from._internal_variation_pointer());
+  }
+  if (from._internal_nullability() != 0) {
+    _internal_set_nullability(from._internal_nullability());
+  }
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+}
+
+void ParameterizedType_ParameterizedPrecisionTimestamp::CopyFrom(const ParameterizedType_ParameterizedPrecisionTimestamp& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:substrait.ParameterizedType.ParameterizedPrecisionTimestamp)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool ParameterizedType_ParameterizedPrecisionTimestamp::IsInitialized() const {
+  return true;
+}
+
+void ParameterizedType_ParameterizedPrecisionTimestamp::InternalSwap(ParameterizedType_ParameterizedPrecisionTimestamp* other) {
+  using std::swap;
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  ::PROTOBUF_NAMESPACE_ID::internal::memswap<
+      PROTOBUF_FIELD_OFFSET(ParameterizedType_ParameterizedPrecisionTimestamp, nullability_)
+      + sizeof(ParameterizedType_ParameterizedPrecisionTimestamp::nullability_)
+      - PROTOBUF_FIELD_OFFSET(ParameterizedType_ParameterizedPrecisionTimestamp, precision_)>(
+          reinterpret_cast<char*>(&precision_),
+          reinterpret_cast<char*>(&other->precision_));
+}
+
+::PROTOBUF_NAMESPACE_ID::Metadata ParameterizedType_ParameterizedPrecisionTimestamp::GetMetadata() const {
+  return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
+      &descriptor_table_substrait_2fparameterized_5ftypes_2eproto_getter, &descriptor_table_substrait_2fparameterized_5ftypes_2eproto_once,
+      file_level_metadata_substrait_2fparameterized_5ftypes_2eproto[7]);
+}
+
+// ===================================================================
+
+class ParameterizedType_ParameterizedPrecisionTimestampTZ::_Internal {
+ public:
+  static const ::substrait::ParameterizedType_IntegerOption& precision(const ParameterizedType_ParameterizedPrecisionTimestampTZ* msg);
+};
+
+const ::substrait::ParameterizedType_IntegerOption&
+ParameterizedType_ParameterizedPrecisionTimestampTZ::_Internal::precision(const ParameterizedType_ParameterizedPrecisionTimestampTZ* msg) {
+  return *msg->precision_;
+}
+ParameterizedType_ParameterizedPrecisionTimestampTZ::ParameterizedType_ParameterizedPrecisionTimestampTZ(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                         bool is_message_owned)
+  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
+  SharedCtor();
+  if (!is_message_owned) {
+    RegisterArenaDtor(arena);
+  }
+  // @@protoc_insertion_point(arena_constructor:substrait.ParameterizedType.ParameterizedPrecisionTimestampTZ)
+}
+ParameterizedType_ParameterizedPrecisionTimestampTZ::ParameterizedType_ParameterizedPrecisionTimestampTZ(const ParameterizedType_ParameterizedPrecisionTimestampTZ& from)
+  : ::PROTOBUF_NAMESPACE_ID::Message() {
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  if (from._internal_has_precision()) {
+    precision_ = new ::substrait::ParameterizedType_IntegerOption(*from.precision_);
+  } else {
+    precision_ = nullptr;
+  }
+  ::memcpy(&variation_pointer_, &from.variation_pointer_,
+    static_cast<size_t>(reinterpret_cast<char*>(&nullability_) -
+    reinterpret_cast<char*>(&variation_pointer_)) + sizeof(nullability_));
+  // @@protoc_insertion_point(copy_constructor:substrait.ParameterizedType.ParameterizedPrecisionTimestampTZ)
+}
+
+inline void ParameterizedType_ParameterizedPrecisionTimestampTZ::SharedCtor() {
+::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
+    reinterpret_cast<char*>(&precision_) - reinterpret_cast<char*>(this)),
+    0, static_cast<size_t>(reinterpret_cast<char*>(&nullability_) -
+    reinterpret_cast<char*>(&precision_)) + sizeof(nullability_));
+}
+
+ParameterizedType_ParameterizedPrecisionTimestampTZ::~ParameterizedType_ParameterizedPrecisionTimestampTZ() {
+  // @@protoc_insertion_point(destructor:substrait.ParameterizedType.ParameterizedPrecisionTimestampTZ)
+  if (GetArenaForAllocation() != nullptr) return;
+  SharedDtor();
+  _internal_metadata_.Delete<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+}
+
+inline void ParameterizedType_ParameterizedPrecisionTimestampTZ::SharedDtor() {
+  GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
+  if (this != internal_default_instance()) delete precision_;
+}
+
+void ParameterizedType_ParameterizedPrecisionTimestampTZ::ArenaDtor(void* object) {
+  ParameterizedType_ParameterizedPrecisionTimestampTZ* _this = reinterpret_cast< ParameterizedType_ParameterizedPrecisionTimestampTZ* >(object);
+  (void)_this;
+}
+void ParameterizedType_ParameterizedPrecisionTimestampTZ::RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena*) {
+}
+void ParameterizedType_ParameterizedPrecisionTimestampTZ::SetCachedSize(int size) const {
+  _cached_size_.Set(size);
+}
+
+void ParameterizedType_ParameterizedPrecisionTimestampTZ::Clear() {
+// @@protoc_insertion_point(message_clear_start:substrait.ParameterizedType.ParameterizedPrecisionTimestampTZ)
+  uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  if (GetArenaForAllocation() == nullptr && precision_ != nullptr) {
+    delete precision_;
+  }
+  precision_ = nullptr;
+  ::memset(&variation_pointer_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&nullability_) -
+      reinterpret_cast<char*>(&variation_pointer_)) + sizeof(nullability_));
+  _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+}
+
+const char* ParameterizedType_ParameterizedPrecisionTimestampTZ::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
+#define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
+  while (!ctx->Done(&ptr)) {
+    uint32_t tag;
+    ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
+    switch (tag >> 3) {
+      // .substrait.ParameterizedType.IntegerOption precision = 1;
+      case 1:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 10)) {
+          ptr = ctx->ParseMessage(_internal_mutable_precision(), ptr);
+          CHK_(ptr);
+        } else
+          goto handle_unusual;
+        continue;
+      // uint32 variation_pointer = 2;
+      case 2:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 16)) {
+          variation_pointer_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+          CHK_(ptr);
+        } else
+          goto handle_unusual;
+        continue;
+      // .substrait.Type.Nullability nullability = 3;
+      case 3:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 24)) {
+          uint64_t val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          CHK_(ptr);
+          _internal_set_nullability(static_cast<::substrait::Type_Nullability>(val));
+        } else
+          goto handle_unusual;
+        continue;
+      default:
+        goto handle_unusual;
+    }  // switch
+  handle_unusual:
+    if ((tag == 0) || ((tag & 7) == 4)) {
+      CHK_(ptr);
+      ctx->SetLastTag(tag);
+      goto message_done;
+    }
+    ptr = UnknownFieldParse(
+        tag,
+        _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
+        ptr, ctx);
+    CHK_(ptr != nullptr);
+  }  // while
+message_done:
+  return ptr;
+failure:
+  ptr = nullptr;
+  goto message_done;
+#undef CHK_
+}
+
+uint8_t* ParameterizedType_ParameterizedPrecisionTimestampTZ::_InternalSerialize(
+    uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
+  // @@protoc_insertion_point(serialize_to_array_start:substrait.ParameterizedType.ParameterizedPrecisionTimestampTZ)
+  uint32_t cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // .substrait.ParameterizedType.IntegerOption precision = 1;
+  if (this->_internal_has_precision()) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+      InternalWriteMessage(
+        1, _Internal::precision(this), target, stream);
+  }
+
+  // uint32 variation_pointer = 2;
+  if (this->_internal_variation_pointer() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteUInt32ToArray(2, this->_internal_variation_pointer(), target);
+  }
+
+  // .substrait.Type.Nullability nullability = 3;
+  if (this->_internal_nullability() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteEnumToArray(
+      3, this->_internal_nullability(), target);
+  }
+
+  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
+        _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:substrait.ParameterizedType.ParameterizedPrecisionTimestampTZ)
+  return target;
+}
+
+size_t ParameterizedType_ParameterizedPrecisionTimestampTZ::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:substrait.ParameterizedType.ParameterizedPrecisionTimestampTZ)
+  size_t total_size = 0;
+
+  uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  // .substrait.ParameterizedType.IntegerOption precision = 1;
+  if (this->_internal_has_precision()) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
+        *precision_);
+  }
+
+  // uint32 variation_pointer = 2;
+  if (this->_internal_variation_pointer() != 0) {
+    total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::UInt32SizePlusOne(this->_internal_variation_pointer());
+  }
+
+  // .substrait.Type.Nullability nullability = 3;
+  if (this->_internal_nullability() != 0) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::EnumSize(this->_internal_nullability());
+  }
+
+  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
+}
+
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData ParameterizedType_ParameterizedPrecisionTimestampTZ::_class_data_ = {
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    ParameterizedType_ParameterizedPrecisionTimestampTZ::MergeImpl
+};
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*ParameterizedType_ParameterizedPrecisionTimestampTZ::GetClassData() const { return &_class_data_; }
+
+void ParameterizedType_ParameterizedPrecisionTimestampTZ::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
+                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
+  static_cast<ParameterizedType_ParameterizedPrecisionTimestampTZ *>(to)->MergeFrom(
+      static_cast<const ParameterizedType_ParameterizedPrecisionTimestampTZ &>(from));
+}
+
+
+void ParameterizedType_ParameterizedPrecisionTimestampTZ::MergeFrom(const ParameterizedType_ParameterizedPrecisionTimestampTZ& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:substrait.ParameterizedType.ParameterizedPrecisionTimestampTZ)
+  GOOGLE_DCHECK_NE(&from, this);
+  uint32_t cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  if (from._internal_has_precision()) {
+    _internal_mutable_precision()->::substrait::ParameterizedType_IntegerOption::MergeFrom(from._internal_precision());
+  }
+  if (from._internal_variation_pointer() != 0) {
+    _internal_set_variation_pointer(from._internal_variation_pointer());
+  }
+  if (from._internal_nullability() != 0) {
+    _internal_set_nullability(from._internal_nullability());
+  }
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+}
+
+void ParameterizedType_ParameterizedPrecisionTimestampTZ::CopyFrom(const ParameterizedType_ParameterizedPrecisionTimestampTZ& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:substrait.ParameterizedType.ParameterizedPrecisionTimestampTZ)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool ParameterizedType_ParameterizedPrecisionTimestampTZ::IsInitialized() const {
+  return true;
+}
+
+void ParameterizedType_ParameterizedPrecisionTimestampTZ::InternalSwap(ParameterizedType_ParameterizedPrecisionTimestampTZ* other) {
+  using std::swap;
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  ::PROTOBUF_NAMESPACE_ID::internal::memswap<
+      PROTOBUF_FIELD_OFFSET(ParameterizedType_ParameterizedPrecisionTimestampTZ, nullability_)
+      + sizeof(ParameterizedType_ParameterizedPrecisionTimestampTZ::nullability_)
+      - PROTOBUF_FIELD_OFFSET(ParameterizedType_ParameterizedPrecisionTimestampTZ, precision_)>(
+          reinterpret_cast<char*>(&precision_),
+          reinterpret_cast<char*>(&other->precision_));
+}
+
+::PROTOBUF_NAMESPACE_ID::Metadata ParameterizedType_ParameterizedPrecisionTimestampTZ::GetMetadata() const {
+  return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
+      &descriptor_table_substrait_2fparameterized_5ftypes_2eproto_getter, &descriptor_table_substrait_2fparameterized_5ftypes_2eproto_once,
+      file_level_metadata_substrait_2fparameterized_5ftypes_2eproto[8]);
+}
+
+// ===================================================================
+
 class ParameterizedType_ParameterizedStruct::_Internal {
  public:
 };
@@ -2528,7 +3108,7 @@ void ParameterizedType_ParameterizedStruct::InternalSwap(ParameterizedType_Param
 ::PROTOBUF_NAMESPACE_ID::Metadata ParameterizedType_ParameterizedStruct::GetMetadata() const {
   return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
       &descriptor_table_substrait_2fparameterized_5ftypes_2eproto_getter, &descriptor_table_substrait_2fparameterized_5ftypes_2eproto_once,
-      file_level_metadata_substrait_2fparameterized_5ftypes_2eproto[7]);
+      file_level_metadata_substrait_2fparameterized_5ftypes_2eproto[9]);
 }
 
 // ===================================================================
@@ -2761,7 +3341,7 @@ void ParameterizedType_ParameterizedNamedStruct::InternalSwap(ParameterizedType_
 ::PROTOBUF_NAMESPACE_ID::Metadata ParameterizedType_ParameterizedNamedStruct::GetMetadata() const {
   return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
       &descriptor_table_substrait_2fparameterized_5ftypes_2eproto_getter, &descriptor_table_substrait_2fparameterized_5ftypes_2eproto_once,
-      file_level_metadata_substrait_2fparameterized_5ftypes_2eproto[8]);
+      file_level_metadata_substrait_2fparameterized_5ftypes_2eproto[10]);
 }
 
 // ===================================================================
@@ -3017,7 +3597,7 @@ void ParameterizedType_ParameterizedList::InternalSwap(ParameterizedType_Paramet
 ::PROTOBUF_NAMESPACE_ID::Metadata ParameterizedType_ParameterizedList::GetMetadata() const {
   return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
       &descriptor_table_substrait_2fparameterized_5ftypes_2eproto_getter, &descriptor_table_substrait_2fparameterized_5ftypes_2eproto_once,
-      file_level_metadata_substrait_2fparameterized_5ftypes_2eproto[9]);
+      file_level_metadata_substrait_2fparameterized_5ftypes_2eproto[11]);
 }
 
 // ===================================================================
@@ -3314,7 +3894,7 @@ void ParameterizedType_ParameterizedMap::InternalSwap(ParameterizedType_Paramete
 ::PROTOBUF_NAMESPACE_ID::Metadata ParameterizedType_ParameterizedMap::GetMetadata() const {
   return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
       &descriptor_table_substrait_2fparameterized_5ftypes_2eproto_getter, &descriptor_table_substrait_2fparameterized_5ftypes_2eproto_once,
-      file_level_metadata_substrait_2fparameterized_5ftypes_2eproto[10]);
+      file_level_metadata_substrait_2fparameterized_5ftypes_2eproto[12]);
 }
 
 // ===================================================================
@@ -3551,7 +4131,7 @@ void ParameterizedType_ParameterizedUserDefined::InternalSwap(ParameterizedType_
 ::PROTOBUF_NAMESPACE_ID::Metadata ParameterizedType_ParameterizedUserDefined::GetMetadata() const {
   return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
       &descriptor_table_substrait_2fparameterized_5ftypes_2eproto_getter, &descriptor_table_substrait_2fparameterized_5ftypes_2eproto_once,
-      file_level_metadata_substrait_2fparameterized_5ftypes_2eproto[11]);
+      file_level_metadata_substrait_2fparameterized_5ftypes_2eproto[13]);
 }
 
 // ===================================================================
@@ -3825,7 +4405,7 @@ void ParameterizedType_IntegerOption::InternalSwap(ParameterizedType_IntegerOpti
 ::PROTOBUF_NAMESPACE_ID::Metadata ParameterizedType_IntegerOption::GetMetadata() const {
   return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
       &descriptor_table_substrait_2fparameterized_5ftypes_2eproto_getter, &descriptor_table_substrait_2fparameterized_5ftypes_2eproto_once,
-      file_level_metadata_substrait_2fparameterized_5ftypes_2eproto[12]);
+      file_level_metadata_substrait_2fparameterized_5ftypes_2eproto[14]);
 }
 
 // ===================================================================
@@ -3852,6 +4432,8 @@ class ParameterizedType::_Internal {
   static const ::substrait::ParameterizedType_ParameterizedVarChar& varchar(const ParameterizedType* msg);
   static const ::substrait::ParameterizedType_ParameterizedFixedBinary& fixed_binary(const ParameterizedType* msg);
   static const ::substrait::ParameterizedType_ParameterizedDecimal& decimal(const ParameterizedType* msg);
+  static const ::substrait::ParameterizedType_ParameterizedPrecisionTimestamp& precision_timestamp(const ParameterizedType* msg);
+  static const ::substrait::ParameterizedType_ParameterizedPrecisionTimestampTZ& precision_timestamp_tz(const ParameterizedType* msg);
   static const ::substrait::ParameterizedType_ParameterizedStruct& struct_(const ParameterizedType* msg);
   static const ::substrait::ParameterizedType_ParameterizedList& list(const ParameterizedType* msg);
   static const ::substrait::ParameterizedType_ParameterizedMap& map(const ParameterizedType* msg);
@@ -3938,6 +4520,14 @@ ParameterizedType::_Internal::fixed_binary(const ParameterizedType* msg) {
 const ::substrait::ParameterizedType_ParameterizedDecimal&
 ParameterizedType::_Internal::decimal(const ParameterizedType* msg) {
   return *msg->kind_.decimal_;
+}
+const ::substrait::ParameterizedType_ParameterizedPrecisionTimestamp&
+ParameterizedType::_Internal::precision_timestamp(const ParameterizedType* msg) {
+  return *msg->kind_.precision_timestamp_;
+}
+const ::substrait::ParameterizedType_ParameterizedPrecisionTimestampTZ&
+ParameterizedType::_Internal::precision_timestamp_tz(const ParameterizedType* msg) {
+  return *msg->kind_.precision_timestamp_tz_;
 }
 const ::substrait::ParameterizedType_ParameterizedStruct&
 ParameterizedType::_Internal::struct_(const ParameterizedType* msg) {
@@ -4419,6 +5009,36 @@ void ParameterizedType::set_allocated_decimal(::substrait::ParameterizedType_Par
   }
   // @@protoc_insertion_point(field_set_allocated:substrait.ParameterizedType.decimal)
 }
+void ParameterizedType::set_allocated_precision_timestamp(::substrait::ParameterizedType_ParameterizedPrecisionTimestamp* precision_timestamp) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
+  clear_kind();
+  if (precision_timestamp) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+      ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper<::substrait::ParameterizedType_ParameterizedPrecisionTimestamp>::GetOwningArena(precision_timestamp);
+    if (message_arena != submessage_arena) {
+      precision_timestamp = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, precision_timestamp, submessage_arena);
+    }
+    set_has_precision_timestamp();
+    kind_.precision_timestamp_ = precision_timestamp;
+  }
+  // @@protoc_insertion_point(field_set_allocated:substrait.ParameterizedType.precision_timestamp)
+}
+void ParameterizedType::set_allocated_precision_timestamp_tz(::substrait::ParameterizedType_ParameterizedPrecisionTimestampTZ* precision_timestamp_tz) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
+  clear_kind();
+  if (precision_timestamp_tz) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+      ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper<::substrait::ParameterizedType_ParameterizedPrecisionTimestampTZ>::GetOwningArena(precision_timestamp_tz);
+    if (message_arena != submessage_arena) {
+      precision_timestamp_tz = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, precision_timestamp_tz, submessage_arena);
+    }
+    set_has_precision_timestamp_tz();
+    kind_.precision_timestamp_tz_ = precision_timestamp_tz;
+  }
+  // @@protoc_insertion_point(field_set_allocated:substrait.ParameterizedType.precision_timestamp_tz)
+}
 void ParameterizedType::set_allocated_struct_(::substrait::ParameterizedType_ParameterizedStruct* struct_) {
   ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
   clear_kind();
@@ -4586,6 +5206,14 @@ ParameterizedType::ParameterizedType(const ParameterizedType& from)
     }
     case kDecimal: {
       _internal_mutable_decimal()->::substrait::ParameterizedType_ParameterizedDecimal::MergeFrom(from._internal_decimal());
+      break;
+    }
+    case kPrecisionTimestamp: {
+      _internal_mutable_precision_timestamp()->::substrait::ParameterizedType_ParameterizedPrecisionTimestamp::MergeFrom(from._internal_precision_timestamp());
+      break;
+    }
+    case kPrecisionTimestampTz: {
+      _internal_mutable_precision_timestamp_tz()->::substrait::ParameterizedType_ParameterizedPrecisionTimestampTZ::MergeFrom(from._internal_precision_timestamp_tz());
       break;
     }
     case kStruct: {
@@ -4770,6 +5398,18 @@ void ParameterizedType::clear_kind() {
       }
       break;
     }
+    case kPrecisionTimestamp: {
+      if (GetArenaForAllocation() == nullptr) {
+        delete kind_.precision_timestamp_;
+      }
+      break;
+    }
+    case kPrecisionTimestampTz: {
+      if (GetArenaForAllocation() == nullptr) {
+        delete kind_.precision_timestamp_tz_;
+      }
+      break;
+    }
     case kStruct: {
       if (GetArenaForAllocation() == nullptr) {
         delete kind_.struct__;
@@ -4900,7 +5540,7 @@ const char* ParameterizedType::_InternalParse(const char* ptr, ::PROTOBUF_NAMESP
         } else
           goto handle_unusual;
         continue;
-      // .substrait.Type.Timestamp timestamp = 14;
+      // .substrait.Type.Timestamp timestamp = 14 [deprecated = true];
       case 14:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 114)) {
           ptr = ctx->ParseMessage(_internal_mutable_timestamp(), ptr);
@@ -4996,7 +5636,7 @@ const char* ParameterizedType::_InternalParse(const char* ptr, ::PROTOBUF_NAMESP
         } else
           goto handle_unusual;
         continue;
-      // .substrait.Type.TimestampTZ timestamp_tz = 29;
+      // .substrait.Type.TimestampTZ timestamp_tz = 29 [deprecated = true];
       case 29:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 234)) {
           ptr = ctx->ParseMessage(_internal_mutable_timestamp_tz(), ptr);
@@ -5032,6 +5672,22 @@ const char* ParameterizedType::_InternalParse(const char* ptr, ::PROTOBUF_NAMESP
       case 33:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 10)) {
           ptr = ctx->ParseMessage(_internal_mutable_type_parameter(), ptr);
+          CHK_(ptr);
+        } else
+          goto handle_unusual;
+        continue;
+      // .substrait.ParameterizedType.ParameterizedPrecisionTimestamp precision_timestamp = 34;
+      case 34:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 18)) {
+          ptr = ctx->ParseMessage(_internal_mutable_precision_timestamp(), ptr);
+          CHK_(ptr);
+        } else
+          goto handle_unusual;
+        continue;
+      // .substrait.ParameterizedType.ParameterizedPrecisionTimestampTZ precision_timestamp_tz = 35;
+      case 35:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 26)) {
+          ptr = ctx->ParseMessage(_internal_mutable_precision_timestamp_tz(), ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -5137,7 +5793,7 @@ uint8_t* ParameterizedType::_InternalSerialize(
         13, _Internal::binary(this), target, stream);
   }
 
-  // .substrait.Type.Timestamp timestamp = 14;
+  // .substrait.Type.Timestamp timestamp = 14 [deprecated = true];
   if (_internal_has_timestamp()) {
     target = stream->EnsureSpace(target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
@@ -5233,7 +5889,7 @@ uint8_t* ParameterizedType::_InternalSerialize(
         28, _Internal::map(this), target, stream);
   }
 
-  // .substrait.Type.TimestampTZ timestamp_tz = 29;
+  // .substrait.Type.TimestampTZ timestamp_tz = 29 [deprecated = true];
   if (_internal_has_timestamp_tz()) {
     target = stream->EnsureSpace(target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
@@ -5269,6 +5925,22 @@ uint8_t* ParameterizedType::_InternalSerialize(
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
       InternalWriteMessage(
         33, _Internal::type_parameter(this), target, stream);
+  }
+
+  // .substrait.ParameterizedType.ParameterizedPrecisionTimestamp precision_timestamp = 34;
+  if (_internal_has_precision_timestamp()) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+      InternalWriteMessage(
+        34, _Internal::precision_timestamp(this), target, stream);
+  }
+
+  // .substrait.ParameterizedType.ParameterizedPrecisionTimestampTZ precision_timestamp_tz = 35;
+  if (_internal_has_precision_timestamp_tz()) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+      InternalWriteMessage(
+        35, _Internal::precision_timestamp_tz(this), target, stream);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -5351,7 +6023,7 @@ size_t ParameterizedType::ByteSizeLong() const {
           *kind_.binary_);
       break;
     }
-    // .substrait.Type.Timestamp timestamp = 14;
+    // .substrait.Type.Timestamp timestamp = 14 [deprecated = true];
     case kTimestamp: {
       total_size += 1 +
         ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
@@ -5386,7 +6058,7 @@ size_t ParameterizedType::ByteSizeLong() const {
           *kind_.interval_day_);
       break;
     }
-    // .substrait.Type.TimestampTZ timestamp_tz = 29;
+    // .substrait.Type.TimestampTZ timestamp_tz = 29 [deprecated = true];
     case kTimestampTz: {
       total_size += 2 +
         ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
@@ -5426,6 +6098,20 @@ size_t ParameterizedType::ByteSizeLong() const {
       total_size += 2 +
         ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
           *kind_.decimal_);
+      break;
+    }
+    // .substrait.ParameterizedType.ParameterizedPrecisionTimestamp precision_timestamp = 34;
+    case kPrecisionTimestamp: {
+      total_size += 2 +
+        ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
+          *kind_.precision_timestamp_);
+      break;
+    }
+    // .substrait.ParameterizedType.ParameterizedPrecisionTimestampTZ precision_timestamp_tz = 35;
+    case kPrecisionTimestampTz: {
+      total_size += 2 +
+        ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
+          *kind_.precision_timestamp_tz_);
       break;
     }
     // .substrait.ParameterizedType.ParameterizedStruct struct = 25;
@@ -5577,6 +6263,14 @@ void ParameterizedType::MergeFrom(const ParameterizedType& from) {
       _internal_mutable_decimal()->::substrait::ParameterizedType_ParameterizedDecimal::MergeFrom(from._internal_decimal());
       break;
     }
+    case kPrecisionTimestamp: {
+      _internal_mutable_precision_timestamp()->::substrait::ParameterizedType_ParameterizedPrecisionTimestamp::MergeFrom(from._internal_precision_timestamp());
+      break;
+    }
+    case kPrecisionTimestampTz: {
+      _internal_mutable_precision_timestamp_tz()->::substrait::ParameterizedType_ParameterizedPrecisionTimestampTZ::MergeFrom(from._internal_precision_timestamp_tz());
+      break;
+    }
     case kStruct: {
       _internal_mutable_struct_()->::substrait::ParameterizedType_ParameterizedStruct::MergeFrom(from._internal_struct_());
       break;
@@ -5629,7 +6323,7 @@ void ParameterizedType::InternalSwap(ParameterizedType* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata ParameterizedType::GetMetadata() const {
   return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
       &descriptor_table_substrait_2fparameterized_5ftypes_2eproto_getter, &descriptor_table_substrait_2fparameterized_5ftypes_2eproto_once,
-      file_level_metadata_substrait_2fparameterized_5ftypes_2eproto[13]);
+      file_level_metadata_substrait_2fparameterized_5ftypes_2eproto[15]);
 }
 
 // @@protoc_insertion_point(namespace_scope)
@@ -5655,6 +6349,12 @@ template<> PROTOBUF_NOINLINE ::substrait::ParameterizedType_ParameterizedFixedBi
 }
 template<> PROTOBUF_NOINLINE ::substrait::ParameterizedType_ParameterizedDecimal* Arena::CreateMaybeMessage< ::substrait::ParameterizedType_ParameterizedDecimal >(Arena* arena) {
   return Arena::CreateMessageInternal< ::substrait::ParameterizedType_ParameterizedDecimal >(arena);
+}
+template<> PROTOBUF_NOINLINE ::substrait::ParameterizedType_ParameterizedPrecisionTimestamp* Arena::CreateMaybeMessage< ::substrait::ParameterizedType_ParameterizedPrecisionTimestamp >(Arena* arena) {
+  return Arena::CreateMessageInternal< ::substrait::ParameterizedType_ParameterizedPrecisionTimestamp >(arena);
+}
+template<> PROTOBUF_NOINLINE ::substrait::ParameterizedType_ParameterizedPrecisionTimestampTZ* Arena::CreateMaybeMessage< ::substrait::ParameterizedType_ParameterizedPrecisionTimestampTZ >(Arena* arena) {
+  return Arena::CreateMessageInternal< ::substrait::ParameterizedType_ParameterizedPrecisionTimestampTZ >(arena);
 }
 template<> PROTOBUF_NOINLINE ::substrait::ParameterizedType_ParameterizedStruct* Arena::CreateMaybeMessage< ::substrait::ParameterizedType_ParameterizedStruct >(Arena* arena) {
   return Arena::CreateMessageInternal< ::substrait::ParameterizedType_ParameterizedStruct >(arena);
