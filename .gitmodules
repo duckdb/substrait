@@ -1,6 +1,7 @@
 [submodule "duckdb"]
 	path = duckdb
-	url = https://github.com/duckdb/duckdb
+	url = https://github.com/PeiMu/duckdb
+	branch = substrait
 [submodule "duckdb-r"]
 	path = duckdb-r
 	url = https://github.com/duckdb/duckdb-r

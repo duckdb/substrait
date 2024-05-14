@@ -139,8 +139,6 @@ static DuckDBToSubstrait InitPlanExtractor(ClientContext &context, ToSubstraitFu
 	DBConfig::GetConfig(*new_conn.context).options.disabled_optimizers = disabled_optimizers;
 
 	query_plan = new_conn.context->ExtractPlan(data.query);
-    Printer::Print("query plan");
-    query_plan->Print();
 	return DuckDBToSubstrait(context, *query_plan);
 }
 
@@ -299,20 +297,18 @@ void InitializeFromSubstraitJSON(Connection &con) {
 	catalog.CreateTableFunction(*con.context, from_sub_info_json);
 }
 
-substrait::RelRoot *root_rel_test;
-substrait::Rel *proj_head;
-//substrait::Rel *res;
-substrait::Expression_FieldReference *selection;
-substrait::Expression_FieldReference_RootReference *root_reference;
-std::queue<substrait::Rel > subquery_queue;
+std::queue<substrait::Rel *> subquery_queue;
 
-bool VisitPlanRel(const substrait::Rel& plan_rel) {
-    bool split = false;
+void VisitPlanRel(const substrait::Rel& plan_rel) {
     switch (plan_rel.rel_type_case()) {
         case substrait::Rel::RelTypeCase::kJoin:
             VisitPlanRel(plan_rel.join().left());
             VisitPlanRel(plan_rel.join().right());
-            split = true;
+            {
+                substrait::Rel *test_rel = new substrait::Rel();
+                test_rel->CopyFrom(plan_rel);
+                subquery_queue.emplace(test_rel);
+            }
             break;
         case substrait::Rel::RelTypeCase::kCross:
             VisitPlanRel(plan_rel.cross().left());
@@ -325,9 +321,7 @@ bool VisitPlanRel(const substrait::Rel& plan_rel) {
             VisitPlanRel(plan_rel.filter().input());
             break;
         case substrait::Rel::RelTypeCase::kProject:
-            if (VisitPlanRel(plan_rel.project().input())) {
-                subquery_queue.emplace(plan_rel);
-            }
+            VisitPlanRel(plan_rel.project().input());
             break;
         case substrait::Rel::RelTypeCase::kAggregate:
             VisitPlanRel(plan_rel.aggregate().input());
@@ -344,7 +338,6 @@ bool VisitPlanRel(const substrait::Rel& plan_rel) {
         default:
             throw InternalException("Unsupported relation type " + to_string(plan_rel.rel_type_case()));
     }
-    return split;
 }
 
 void ExecuteSQL(Connection &conn, const std::string& sql_command) {
@@ -369,59 +362,50 @@ void PlanTest(const std::string& serialized, Connection &new_conn) {
         throw std::runtime_error("Was not possible to convert JSON into Substrait plan: " + status.ToString());
     }
 
-    Printer::Print("plan");
-    plan.PrintDebugString();
-    auto root_rel = plan.relations(0).root();
     substrait::Rel temp_pointer;
-    temp_pointer = root_rel.input();
+    temp_pointer.CopyFrom(plan.relations(0).root().input());
     VisitPlanRel(temp_pointer);
-//    while (root_rel.has_input()) {
-    if (nullptr == proj_head)
-        proj_head = new substrait::Rel();
-    else
-        proj_head->clear_project();
-    if (nullptr == root_rel_test)
-        root_rel_test = new substrait::RelRoot();
-    else
-        root_rel_test->clear_input();
     // debug test
-    auto subquery_rel = subquery_queue.front().project();
-    subquery_queue.pop();
 
-    auto subquery_plan = plan;
+    substrait::Plan subquery_plan;
+    subquery_plan.CopyFrom(plan);
     subquery_plan.clear_relations();
 
     // add projection head
-//    auto sproj = proj_head->mutable_project();
-//    sproj->mutable_input()->set_allocated_project(&subquery_rel);
-    proj_head->mutable_project()->set_allocated_input(subquery_rel.mutable_input());
-    // add projection expressions for the next subquery
-    if (nullptr == selection)
-        selection = new ::substrait::Expression_FieldReference();
-    else
-        selection->clear_direct_reference();
-    // todo: get column index
-    selection->mutable_direct_reference()->mutable_struct_field()->set_field((int32_t)1);
-    if (nullptr == root_reference)
-        root_reference = new ::substrait::Expression_FieldReference_RootReference();
-    selection->set_allocated_root_reference(root_reference);
-    proj_head->mutable_project()->add_expressions()->set_allocated_selection(selection);
-
     // add to root_rel_test
-    root_rel_test->set_allocated_input(proj_head);
+    subquery_plan.add_relations()->mutable_root()->mutable_input()->mutable_project()->mutable_input()->CopyFrom(*subquery_queue.front());
+//    subquery_plan.add_relations()->mutable_root()->mutable_input()->mutable_project()->set_allocated_input(&subquery_rel);
+//    subquery_plan.mutable_relations(0)->mutable_root()->mutable_input()->mutable_project()->set_allocated_input(&subquery_rel);
+//    subquery_plan.mutable_relations(0)->mutable_root()->mutable_input()->mutable_project()->mutable_input()->CopyFrom(*subquery_queue.front());
+    delete subquery_queue.front();
+    subquery_queue.pop();
+    // todo: get column index
+    subquery_plan.mutable_relations(0)->mutable_root()->mutable_input()->mutable_project()->add_expressions()->mutable_selection()->mutable_direct_reference()->mutable_struct_field()->set_field(1);
+
+//    substrait::Expression_FieldReference_RootReference *root_reference = nullptr;
+//    if (nullptr == root_reference)
+//        root_reference = new ::substrait::Expression_FieldReference_RootReference();
+//    subquery_plan.mutable_relations(0)->mutable_root()->mutable_input()->mutable_project()->add_expressions()->mutable_selection()->set_allocated_root_reference(root_reference);
+
     // add names for the next subquery
     // todo: get column names
-    root_rel_test->add_names("movie_id");
-    subquery_plan.add_relations()->set_allocated_root(root_rel_test);
+    subquery_plan.mutable_relations(0)->mutable_root()->add_names("movie_id");
+
     Printer::Print("subquery_plan");
     subquery_plan.PrintDebugString();
     std::string sub_query_str;
     google::protobuf::util::MessageToJsonString(subquery_plan, &sub_query_str);
-    Printer::Print("sub_query_str");
-    Printer::Print(sub_query_str);
     auto sub_relation = SubstraitPlanToDuckDBRel(new_conn, sub_query_str, true);
 
     sub_relation->Create("test_create_rel");
+
+//    delete root_reference;
+
+    subquery_plan.Clear();
+    plan.Clear();
+
+    // debug
+    int a = 0;
 }
 
 void RelationTest(const shared_ptr<Relation>& relation) {
@@ -437,15 +421,9 @@ void RelationTest(const shared_ptr<Relation>& relation) {
 
             // debug
             auto view = join_rel.CreateView("debug_view");
-            Printer::Print("debug_view");
-            view->Print();
             auto sub_result = view->Execute();
-            Printer::Print("sub_result");
-            sub_result->Print();
 
 //            auto table_rel = join_rel.CreateRel(INVALID_SCHEMA, "debug_table");
-//            Printer::Print("debug_table");
-//            table_rel->Print();
             break;
         } else {
             sub_rel = child_rel;
@@ -499,26 +477,10 @@ static void QuerySplit(ClientContext &context, TableFunctionInput &data_p, DataC
     PlanTest(serialized, new_conn);
 //    RelationTest(SubstraitPlanToDuckDBRel(new_conn, serialized, false));
 
-    Printer::Print("6");
     // debug
     ExecuteSQL(new_conn, "select * from test_create_rel;");
     // debug
     ExecuteSQL(new_conn, "drop table test_create_rel;");
-
-    // release
-    if (proj_head) {
-        proj_head->clear_project();
-        delete proj_head;
-    }
-    if (root_rel_test) {
-        root_rel_test->clear_input();
-        delete root_rel_test;
-    }
-    if (selection) {
-        selection->clear_direct_reference();
-        delete selection;
-    }
-    delete root_reference;
 }
 
 void InitializeQuerySplit(Connection &con) {
