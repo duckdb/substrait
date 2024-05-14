@@ -405,9 +405,7 @@ void PlanTest(const std::string& serialized, Connection &new_conn) {
     if (nullptr == root_reference)
         root_reference = new ::substrait::Expression_FieldReference_RootReference();
     selection->set_allocated_root_reference(root_reference);
-    D_ASSERT(selection->root_type_case() == substrait::Expression_FieldReference::RootTypeCase::kRootReference);
     proj_head->mutable_project()->add_expressions()->set_allocated_selection(selection);
-    D_ASSERT(expr->has_selection());
 
     // add to root_rel_test
     root_rel_test->set_allocated_input(proj_head);
@@ -424,83 +422,10 @@ void PlanTest(const std::string& serialized, Connection &new_conn) {
     auto sub_relation = SubstraitPlanToDuckDBRel(new_conn, sub_query_str, true);
 
     sub_relation->Create("test_create_rel");
-
-    Printer::Print("6");
-
-    // debug
-    ExecuteSQL(new_conn, "select * from test_create_rel;");
-    Printer::Print("7");
-
-
-    // test the last subquery
-
-
-    // debug
-    ExecuteSQL(new_conn, "drop table test_create_rel;");
-
-    // release
-    if (proj_head) {
-        proj_head->clear_project();
-        delete proj_head;
-    }
-    if (root_rel_test) {
-        root_rel_test->clear_input();
-        delete root_rel_test;
-    }
-    if (selection) {
-        selection->clear_direct_reference();
-        delete selection;
-    }
-    delete root_reference;
-
-
-
-
-//    auto test_create_view = sub_relation->CreateView("test_create_view");
-//    Printer::Print("test_create_view");
-//    test_create_view->Print();
-//    auto sub_result = sub_relation->Execute();
-//    // debug
-//    vector<LogicalType> types = sub_result->types;
-//
-//    unique_ptr<MaterializedQueryResult> result_materialized;
-//    auto collection = make_uniq<ColumnDataCollection>(Allocator::DefaultAllocator(), types);
-//    if (sub_result->type == QueryResultType::STREAM_RESULT) {
-//        auto &stream_query = sub_result->Cast<duckdb::StreamQueryResult>();
-//        result_materialized = stream_query.Materialize();
-//        collection = make_uniq<ColumnDataCollection>(result_materialized->Collection());
-//    } else if (sub_result->type == QueryResultType::MATERIALIZED_RESULT) {
-//        ColumnDataAppendState append_state;
-//        collection->InitializeAppend(append_state);
-//        while (true) {
-//            unique_ptr<DataChunk> chunk;
-//            ErrorData error;
-//            sub_result->TryFetch(chunk, error);
-//            // todo
-//            // chunk->SetCardinality(chunk->size());
-//            if (!chunk || chunk->size() == 0) {
-//                break;
-//            }
-//            collection->Append(append_state, *chunk);
-//        }
-//    }
-//    // debug
-//    Printer::Print("collection");
-//    collection->Print();
-
-//    // todo: merge the previous result
-//    auto test_create_rel = sub_relation->CreateRel(INVALID_SCHEMA, "test_create_rel");
-//    Printer::Print("test_create_rel");
-//    test_create_rel->Print();
-//    auto test_create_view = sub_relation->CreateView("test_create_view");
-//    Printer::Print("test_create_view");
-//    test_create_view->Print();
-
-//    }
 }
 
 void RelationTest(const shared_ptr<Relation>& relation) {
-// todo: split the `relation`
+    // todo: split the `relation`
     auto &proj_rel = relation->Cast<ProjectionRelation>();
     proj_rel.VisitChildren();
     auto child_rel = proj_rel.ChildRelation();
@@ -573,6 +498,27 @@ static void QuerySplit(ClientContext &context, TableFunctionInput &data_p, DataC
     // execute it
     PlanTest(serialized, new_conn);
 //    RelationTest(SubstraitPlanToDuckDBRel(new_conn, serialized, false));
+
+    Printer::Print("6");
+    // debug
+    ExecuteSQL(new_conn, "select * from test_create_rel;");
+    // debug
+    ExecuteSQL(new_conn, "drop table test_create_rel;");
+
+    // release
+    if (proj_head) {
+        proj_head->clear_project();
+        delete proj_head;
+    }
+    if (root_rel_test) {
+        root_rel_test->clear_input();
+        delete root_rel_test;
+    }
+    if (selection) {
+        selection->clear_direct_reference();
+        delete selection;
+    }
+    delete root_reference;
 }
 
 void InitializeQuerySplit(Connection &con) {
