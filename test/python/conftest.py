@@ -23,8 +23,8 @@ def add_extension(extension_name, conn: Union[str, DuckDBPyConnection] = '') -> 
             'allow_unsigned_extensions' : 'true'
         }
         conn = duckdb.connect(conn or '', config=config)
-
-    conn.execute(f"LOAD '{dir}/../../duckdb/build/{build_type}/extension/{extension_name}/{extension_name}.duckdb_extension'")
+    file_path = f"'{dir}/../../duckdb/build/{build_type}/extension/{extension_name}/{extension_name}.duckdb_extension'"
+    conn.execute(f"LOAD {file_path}")
     return conn
 
 @pytest.fixture(scope="function")
