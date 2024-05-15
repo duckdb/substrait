@@ -900,9 +900,6 @@ substrait::Rel *DuckDBToSubstrait::TransformComparisonJoin(LogicalOperator &dop)
 	}
 	auto proj_rel = new substrait::Rel();
 	auto projection = proj_rel->mutable_project();
-	unordered_set<idx_t> already_projected;
-	auto column_bindings = djoin.GetColumnBindings();
-
 	for (auto left_idx : djoin.left_projection_map) {
 		CreateFieldRef(projection->add_expressions(), left_idx);
 	}
