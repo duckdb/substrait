@@ -903,10 +903,12 @@ substrait::Rel *DuckDBToSubstrait::TransformComparisonJoin(LogicalOperator &dop)
 	for (auto left_idx : djoin.left_projection_map) {
 		CreateFieldRef(projection->add_expressions(), left_idx);
 	}
-
-	for (auto right_idx : djoin.right_projection_map) {
-		CreateFieldRef(projection->add_expressions(), right_idx + left_col_count);
+	if (djoin.join_type != JoinType::SEMI) {
+		for (auto right_idx : djoin.right_projection_map) {
+			CreateFieldRef(projection->add_expressions(), right_idx + left_col_count);
+		}
 	}
+
 	projection->set_allocated_input(res);
 	return proj_rel;
 }
