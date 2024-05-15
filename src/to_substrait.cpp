@@ -900,13 +900,21 @@ substrait::Rel *DuckDBToSubstrait::TransformComparisonJoin(LogicalOperator &dop)
 	}
 	auto proj_rel = new substrait::Rel();
 	auto projection = proj_rel->mutable_project();
-	for (auto left_idx : djoin.left_projection_map) {
-		CreateFieldRef(projection->add_expressions(), left_idx);
-	}
-
-	for (auto right_idx : djoin.right_projection_map) {
-		CreateFieldRef(projection->add_expressions(), right_idx + left_col_count);
-	}
+        unordered_set<idx_t> already_projected;
+        auto column_bindings = djoin.GetColumnBindings();
+       if (djoin.join_type == JoinType::SEMI){
+         //FIXME: Figure out how to get the proper projections for SEMI-Joins
+         for (idx_t  i = 0; i < column_bindings.size(); i++){
+           CreateFieldRef(projection->add_expressions(), i );
+        }
+       } else{
+         for (auto left_idx : djoin.left_projection_map) {
+             CreateFieldRef(projection->add_expressions(), left_idx);
+          }
+          for (auto right_idx : djoin.right_projection_map) {
+                    CreateFieldRef(projection->add_expressions(),right_idx + left_col_count);
+          }
+       }
 	projection->set_allocated_input(res);
 	return proj_rel;
 }
