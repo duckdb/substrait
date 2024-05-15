@@ -31,7 +31,7 @@ def run_tpch_validator(require, query_number):
 
     run_substrait_validator(con,query)
 
-@pytest.mark.parametrize('query_number', [1,3,5,6,7,8,9,10,11,12,14,15,19])
+@pytest.mark.parametrize('query_number', [1,3,5,6,7,8,9,10,11,12,14,15,18,19])
 def test_substrait_tpch_validator(require,query_number):
     run_tpch_validator(require,query_number)
 
