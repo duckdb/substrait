@@ -27,7 +27,7 @@ class TestSetOperation(object):
 				select * from tbl2
 			) order by all
 		"""
-		expected = connection.sql(query).fetchall()
+		expected = connection.execute(query).fetchall()
 		json = connection.get_substrait_json(query).fetchall()[0][0]
 		rel = connection.from_substrait_json(json)
 		actual = rel.fetchall()
@@ -49,7 +49,7 @@ class TestSetOperation(object):
 		query = """
 			select * from tbl1 EXCEPT (select * from tbl2);
 		"""
-		expected = connection.sql(query).fetchall()
+		expected = connection.execute(query).fetchall()
 		json = connection.get_substrait_json(query).fetchall()[0][0]
 		rel = connection.from_substrait_json(json)
 		actual = rel.fetchall()
@@ -71,7 +71,7 @@ class TestSetOperation(object):
 		query = """
 			select * from tbl1 INTERSECT (select * from tbl2);
 		"""
-		expected = connection.sql(query).fetchall()
+		expected = connection.execute(query).fetchall()
 		json = connection.get_substrait_json(query).fetchall()[0][0]
 		rel = connection.from_substrait_json(json)
 		actual = rel.fetchall()
