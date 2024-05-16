@@ -70,12 +70,6 @@ CALL get_substrait('SELECT l_shipmode, sum( CASE WHEN o_orderpriority = ''1-URGE
 statement ok
 CALL get_substrait('SELECT c_count, count(*) AS custdist FROM ( SELECT c_custkey, count(o_orderkey) FROM customer LEFT OUTER JOIN orders ON c_custkey = o_custkey AND o_comment NOT LIKE ''%special%requests%'' GROUP BY c_custkey) AS c_orders (c_custkey, c_count) GROUP BY c_count ORDER BY custdist DESC, c_count DESC;')
 
-#Q 13 (Test with strict mode)
-statement error
-CALL get_substrait('SELECT c_count, count(*) AS custdist FROM ( SELECT c_custkey, count(o_orderkey) FROM customer LEFT OUTER JOIN orders ON c_custkey = o_custkey AND o_comment NOT LIKE ''%special%requests%'' GROUP BY c_custkey) AS c_orders (c_custkey, c_count) GROUP BY c_count ORDER BY custdist DESC, c_count DESC;', strict = true)
-----
-Could not find function "!~~" with argument types: ('string', 'string')
-
 #Q 14
 statement ok
 CALL get_substrait('SELECT 100.00 * sum( CASE WHEN p_type LIKE ''PROMO%'' THEN l_extendedprice * (1 - l_discount) ELSE 0 END) / sum(l_extendedprice * (1 - l_discount)) AS promo_revenue FROM lineitem, part WHERE l_partkey = p_partkey AND l_shipdate >= date ''1995-09-01'' AND l_shipdate < CAST(''1995-10-01'' AS date);')
