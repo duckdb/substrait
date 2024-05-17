@@ -6,6 +6,7 @@
 
 #ifndef DUCKDB_AMALGAMATION
 #include "duckdb/common/enums/optimizer_type.hpp"
+#include "duckdb/common/shared_ptr.hpp"
 #include "duckdb/function/table_function.hpp"
 #include "duckdb/parser/parsed_data/create_table_function_info.hpp"
 #include "duckdb/parser/parsed_data/create_pragma_function_info.hpp"
