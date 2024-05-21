@@ -29,7 +29,7 @@ public:
 //    };
 //    ~QuerySplit() = default;
 //
-//    bool VisitPlanRel(const substrait::Rel& plan_rel);
+//    bool GetSubQueries(const substrait::Rel& plan_rel);
 //
 //public:
 //    substrait::RelRoot *root_rel_test;

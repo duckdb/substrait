@@ -9841,6 +9841,12 @@ class Rel final :
   uint32_t _oneof_case_[1];
 
   friend struct ::TableStruct_substrait_2falgebra_2eproto;
+
+ public:
+  bool split_point = false;
+  void set_split_point() {
+      split_point = true;
+  }
 };
 // -------------------------------------------------------------------
 

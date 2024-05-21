@@ -1330,6 +1330,8 @@ substrait::RelRoot *DuckDBToSubstrait::TransformRootOp(LogicalOperator &dop) {
 void DuckDBToSubstrait::TransformPlan(LogicalOperator &dop) {
 	plan.add_relations()->set_allocated_root(TransformRootOp(dop));
 	auto version = plan.mutable_version();
+    Printer::Print("Init plan");
+    Printer::Print(plan.DebugString());
 	version->set_major_number(0);
 	version->set_minor_number(39);
 	version->set_patch_number(0);

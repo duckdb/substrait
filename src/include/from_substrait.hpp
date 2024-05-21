@@ -12,6 +12,7 @@ public:
 	SubstraitToDuckDB(Connection &con_p, const string &serialized, bool json = false);
 	//! Transforms Substrait Plan to DuckDB Relation
 	shared_ptr<Relation> TransformPlan();
+    ~SubstraitToDuckDB() {plan.Clear();}
 
 private:
 	//! Transforms Substrait Plan Root To a DuckDB Relation

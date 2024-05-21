@@ -27,6 +27,10 @@ public:
 	string SerializeToString();
 	string SerializeToJson();
 
+    substrait::Plan GetPlan() {
+        return plan;
+    }
+
 private:
 	//! Transform DuckDB Plan to Substrait Plan
 	void TransformPlan(duckdb::LogicalOperator &dop);
