@@ -301,15 +301,13 @@ void InitializeFromSubstraitJSON(Connection &con) {
 
 std::queue<substrait::Rel > subquery_queue;
 
-void GetSubQueries(substrait::Rel *plan_rel) {
+bool GetSubQueries(substrait::Rel *plan_rel) {
+    bool can_split = false;
     switch (plan_rel->rel_type_case()) {
         case substrait::Rel::RelTypeCase::kJoin:
             GetSubQueries(plan_rel->mutable_join()->mutable_left());
             GetSubQueries(plan_rel->mutable_join()->mutable_right());
-            {
-                plan_rel->set_split_point();
-                subquery_queue.emplace(*plan_rel);
-            }
+            can_split = true;
             break;
         case substrait::Rel::RelTypeCase::kCross:
             GetSubQueries(plan_rel->mutable_cross()->mutable_left());
@@ -322,7 +320,10 @@ void GetSubQueries(substrait::Rel *plan_rel) {
             GetSubQueries(plan_rel->mutable_filter()->mutable_input());
             break;
         case substrait::Rel::RelTypeCase::kProject:
-            GetSubQueries(plan_rel->mutable_project()->mutable_input());
+            if (GetSubQueries(plan_rel->mutable_project()->mutable_input())) {
+                plan_rel->set_split_point();
+                subquery_queue.emplace(*plan_rel);
+            }
             break;
         case substrait::Rel::RelTypeCase::kAggregate:
             GetSubQueries(plan_rel->mutable_aggregate()->mutable_input());
@@ -339,6 +340,7 @@ void GetSubQueries(substrait::Rel *plan_rel) {
         default:
             throw InternalException("Unsupported relation type " + to_string(plan_rel->rel_type_case()));
     }
+    return can_split;
 }
 
 // debug
@@ -380,8 +382,6 @@ bool GetMergedPlan(substrait::Rel *plan_rel, substrait::ReadRel *temp_table) {
         case substrait::Rel::RelTypeCase::kProject:
             if (GetMergedPlan(plan_rel->mutable_project()->mutable_input(), temp_table)) {
                 plan_rel->clear_project();
-                Printer::Print("before plan_rel");
-                Printer::Print(plan_rel->DebugString());
                 // merge with the temp table
                 plan_rel->set_allocated_read(temp_table);
             }
@@ -442,7 +442,7 @@ void PlanTest(ClientContext &context, const std::string &serialized, Connection 
     // debug
     std::queue<std::vector<int32_t>> column_indexes;
     column_indexes.emplace(std::vector<int32_t>{1, 3});
-    column_indexes.emplace(std::vector<int32_t>{1, 2, 3});
+    column_indexes.emplace(std::vector<int32_t>{0, 3, 0, 1});
     std::queue<std::vector<std::string>> expr_names;
     expr_names.emplace(std::vector<std::string>{"movie_id", "keyword"});
     expr_names.emplace(std::vector<std::string>{"id", "title", "movie_id", "keyword"});
@@ -454,6 +454,9 @@ void PlanTest(ClientContext &context, const std::string &serialized, Connection 
     while (!subquery_queue.empty()) {
         subquery_plan.clear_relations();
 
+        Printer::Print("before adaption");
+        Printer::Print(subquery_queue.front().DebugString());
+
         // add projection head
         // add to root_rel_test
         subquery_plan.add_relations()->mutable_root()->mutable_input()->mutable_project()->mutable_input()
@@ -461,17 +464,13 @@ void PlanTest(ClientContext &context, const std::string &serialized, Connection 
         // add column indexes
         // todo: get column indexes
         subquery_plan.mutable_relations(0)->mutable_root()->mutable_input()->mutable_project()->clear_expressions();
-        for (const auto &column_index : column_indexes.front()) {
+        for (size_t idx = 0; idx < column_indexes.front().size(); idx++) {
             subquery_plan.mutable_relations(0)->mutable_root()->mutable_input()->mutable_project()->add_expressions()
-                    ->mutable_selection()->mutable_direct_reference()->mutable_struct_field()->set_field(column_index);
+                    ->mutable_selection()->mutable_direct_reference()->mutable_struct_field()->set_field(column_indexes.front()[idx]);
+            subquery_plan.mutable_relations(0)->mutable_root()->mutable_input()->mutable_project()->mutable_expressions(idx)
+                    ->mutable_selection()->mutable_root_reference();
         }
         column_indexes.pop();
-
-//    substrait::Expression_FieldReference_RootReference *root_reference = nullptr;
-//    if (nullptr == root_reference)
-//        root_reference = new ::substrait::Expression_FieldReference_RootReference();
-//    subquery_plan.mutable_relations(0)->mutable_root()->mutable_input()->mutable_project()->add_expressions()
-//    ->mutable_selection()->set_allocated_root_reference(root_reference);
 
         // add names for the next subquery
         // todo: get column names
@@ -526,6 +525,16 @@ void PlanTest(ClientContext &context, const std::string &serialized, Connection 
 
         GetMergedPlan(&subquery_queue.front(), temp_table_substrait_plan.mutable_relations(0)->mutable_root()
             ->mutable_input()->mutable_project()->mutable_input()->mutable_read());
+
+        // todo: update the index of the second subquery
+        subquery_queue.front().mutable_project()->mutable_input()->mutable_join()
+                ->mutable_expression()->mutable_scalar_function()->mutable_arguments(1)->mutable_value()
+                ->mutable_selection()->mutable_direct_reference()->mutable_struct_field()->set_field(2);
+
+        // todo: update expression indexes
+        subquery_queue.front().mutable_project()->mutable_expressions()->RemoveLast();
+        subquery_queue.front().mutable_project()->mutable_expressions()->RemoveLast();
+
         Printer::Print("after GetMergedPlan");
         Printer::Print(subquery_queue.front().DebugString());
     }

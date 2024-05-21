@@ -566,8 +566,6 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformSetOp(const substrait::Rel &sop
 }
 
 shared_ptr<Relation> SubstraitToDuckDB::TransformOp(const substrait::Rel &sop) {
-    Printer::Print("debug");
-    Printer::Print(sop.DebugString());
 	switch (sop.rel_type_case()) {
 	case substrait::Rel::RelTypeCase::kJoin:
 		return TransformJoinOp(sop);
