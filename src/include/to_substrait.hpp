@@ -115,7 +115,7 @@ private:
 	static std::string &RemapFunctionName(std::string &function_name);
 	bool IsExtractFunction(const string &function_name) const;
 
-	//! Creates a Conjuction
+	//! Creates a Conjunction
 	template <typename T, typename FUNC>
 	substrait::Expression *CreateConjunction(T &source, FUNC f) {
 		substrait::Expression *res = nullptr;
