@@ -383,7 +383,7 @@ bool GetMergedPlan(substrait::Rel *plan_rel, substrait::ReadRel *temp_table) {
             if (GetMergedPlan(plan_rel->mutable_project()->mutable_input(), temp_table)) {
                 plan_rel->clear_project();
                 // merge with the temp table
-                plan_rel->set_allocated_read(temp_table);
+                plan_rel->mutable_read()->CopyFrom(*temp_table);
             }
             break;
         case substrait::Rel::RelTypeCase::kAggregate:
@@ -432,9 +432,7 @@ void PlanTest(ClientContext &context, const std::string &serialized, Connection 
         throw std::runtime_error("Was not possible to convert JSON into Substrait plan: " + status.ToString());
     }
 
-    substrait::Rel temp_pointer;
-    temp_pointer.CopyFrom(plan.relations(0).root().input());
-    GetSubQueries(&temp_pointer);
+    GetSubQueries(plan.mutable_relations(0)->mutable_root()->mutable_input());
 
     substrait::Plan subquery_plan;
     subquery_plan.CopyFrom(plan);
@@ -448,8 +446,7 @@ void PlanTest(ClientContext &context, const std::string &serialized, Connection 
     expr_names.emplace(std::vector<std::string>{"id", "title", "movie_id", "keyword"});
 
     substrait::Plan temp_table_substrait_plan;
-//    shared_ptr<Relation> sub_relation;
-    unique_ptr<QueryResult> result;
+    unique_ptr<QueryResult> substrait_result;
 
     while (!subquery_queue.empty()) {
         subquery_plan.clear_relations();
@@ -490,10 +487,9 @@ void PlanTest(ClientContext &context, const std::string &serialized, Connection 
 
         auto sub_relation = SubstraitPlanToDuckDBRel(new_conn, sub_query_str, true);
 
-        temp_table_substrait_plan.Clear();
         subquery_queue.pop();
         if (subquery_queue.empty()) {
-            result = sub_relation->Execute();
+            substrait_result = sub_relation->Execute();
             break;
         }
 
@@ -517,9 +513,7 @@ void PlanTest(ClientContext &context, const std::string &serialized, Connection 
 
         auto temp_table_plan = new_conn.context->ExtractPlan(test_select_temp_table);
 
-        auto temp_plan = DuckDBToSubstrait(context, *temp_table_plan).GetPlan();
-        temp_table_substrait_plan.CopyFrom(temp_plan);
-        temp_plan.Clear();
+        temp_table_substrait_plan = DuckDBToSubstrait(context, *temp_table_plan).GetPlan();
         Printer::Print("temp_table_substrait_plan");
         Printer::Print(temp_table_substrait_plan.DebugString());
 
@@ -539,9 +533,32 @@ void PlanTest(ClientContext &context, const std::string &serialized, Connection 
         Printer::Print(subquery_queue.front().DebugString());
     }
 
-//    auto result = sub_relation->Execute();
-    Printer::Print("result");
-    result->Print();
+    // debug
+    vector<LogicalType> types = substrait_result->types;
+	unique_ptr<MaterializedQueryResult> result_materialized;
+    auto collection = make_uniq<ColumnDataCollection>(Allocator::DefaultAllocator(), types);
+    if (substrait_result->type == QueryResultType::STREAM_RESULT) {
+        auto &stream_query = substrait_result->Cast<duckdb::StreamQueryResult>();
+        result_materialized = stream_query.Materialize();
+        collection = make_uniq<ColumnDataCollection>(result_materialized->Collection());
+    } else if (substrait_result->type == QueryResultType::MATERIALIZED_RESULT) {
+        ColumnDataAppendState append_state;
+        collection->InitializeAppend(append_state);
+        unique_ptr<DataChunk> chunk;
+        ErrorData error;
+        while (true) {
+            substrait_result->TryFetch(chunk, error);
+            if (!chunk || chunk->size() == 0) {
+                break;
+            }
+            // set chunk cardinality
+            chunk->SetCardinality(chunk->size());
+            collection->Append(append_state, *chunk);
+        }
+    }
+    // debug
+    Printer::Print("subs_col_coll");
+    collection->Print();
 
     subquery_plan.Clear();
     plan.Clear();
@@ -616,6 +633,7 @@ static void QuerySplit(ClientContext &context, TableFunctionInput &data_p, DataC
     // execute it
     PlanTest(context, serialized, new_conn);
 //    RelationTest(SubstraitPlanToDuckDBRel(new_conn, serialized, false));
+    Printer::Print("done");
 }
 
 void InitializeQuerySplit(Connection &con) {
