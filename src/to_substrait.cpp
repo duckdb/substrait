@@ -944,6 +944,9 @@ substrait::Rel *DuckDBToSubstrait::TransformAggregateGroup(LogicalOperator &dop)
 			TransformExpr(*darg, *s_arg->mutable_value());
 		}
 		smeas->set_function_reference(RegisterFunction(RemapFunctionName(daexpr.function.name), args_types));
+		if (daexpr.aggr_type == AggregateType::DISTINCT) {
+			smeas->set_invocation(substrait::AggregateFunction_AggregationInvocation_AGGREGATION_INVOCATION_DISTINCT);
+		}
 	}
 	return res;
 }

@@ -104,12 +104,14 @@ static void VerifySubstraitRoundtrip(unique_ptr<LogicalOperator> &query_plan, Co
 	} else if (substrait_result->type == QueryResultType::MATERIALIZED_RESULT) {
 		substrait_materialized = unique_ptr_cast<QueryResult, MaterializedQueryResult>(std::move(substrait_result));
 	}
-	auto actual_col_coll = actual_result->Collection();
-	auto subs_col_coll = substrait_materialized->Collection();
+	auto &actual_col_coll = actual_result->Collection();
+	auto &subs_col_coll = substrait_materialized->Collection();
 	string error_message;
 	if (!ColumnDataCollection::ResultEquals(actual_col_coll, subs_col_coll, error_message)) {
 		query_plan->Print();
 		sub_relation->Print();
+		actual_col_coll.Print();
+		subs_col_coll.Print();
 		throw InternalException("The query result of DuckDB's query plan does not match Substrait : " + error_message);
 	}
 }

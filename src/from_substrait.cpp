@@ -227,8 +227,25 @@ unique_ptr<ParsedExpression> SubstraitToDuckDB::TransformScalarFunctionExpr(cons
 		                                       std::move(children[1]));
 	} else if (function_name == "not_equal") {
 		D_ASSERT(children.size() == 2);
-		return make_uniq<ComparisonExpression>(ExpressionType::COMPARE_NOTEQUAL, std::move(children[0]),
-		                                       std::move(children[1]));
+		// FIXME: We do a not_like if we are doing a string comparison
+		// This is due to substrait not supporting !~~
+		bool is_it_string = false;
+		for (idx_t child_idx = 0; child_idx < 2; child_idx++) {
+			if (children[child_idx]->GetExpressionClass() == ExpressionClass::CONSTANT) {
+				auto &constant = children[child_idx]->Cast<ConstantExpression>();
+				if (constant.value.type() == LogicalType::VARCHAR) {
+					is_it_string = true;
+				}
+			}
+		}
+		if (is_it_string) {
+			string not_equal = "!~~";
+			return make_uniq<FunctionExpression>(not_equal, std::move(children));
+		} else {
+			return make_uniq<ComparisonExpression>(ExpressionType::COMPARE_NOTEQUAL, std::move(children[0]),
+			                                       std::move(children[1]));
+		}
+
 	} else if (function_name == "lte") {
 		D_ASSERT(children.size() == 2);
 		return make_uniq<ComparisonExpression>(ExpressionType::COMPARE_LESSTHANOREQUALTO, std::move(children[0]),
@@ -456,14 +473,18 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformAggregateOp(const substrait::Re
 
 	for (auto &smeas : sop.aggregate().measures()) {
 		vector<unique_ptr<ParsedExpression>> children;
-		for (auto &sarg : smeas.measure().arguments()) {
+		auto &s_aggr_function = smeas.measure();
+		bool is_distinct = s_aggr_function.invocation() ==
+		                   substrait::AggregateFunction_AggregationInvocation_AGGREGATION_INVOCATION_DISTINCT;
+		for (auto &sarg : s_aggr_function.arguments()) {
 			children.push_back(TransformExpr(sarg.value()));
 		}
-		auto function_name = FindFunction(smeas.measure().function_reference());
+		auto function_name = FindFunction(s_aggr_function.function_reference());
 		if (function_name == "count" && children.empty()) {
 			function_name = "count_star";
 		}
-		expressions.push_back(make_uniq<FunctionExpression>(RemapFunctionName(function_name), std::move(children)));
+		expressions.push_back(make_uniq<FunctionExpression>(RemapFunctionName(function_name), std::move(children),
+		                                                    nullptr, nullptr, is_distinct));
 	}
 
 	return make_shared_ptr<AggregateRelation>(TransformOp(sop.aggregate().input()), std::move(expressions),
