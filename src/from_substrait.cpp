@@ -473,14 +473,18 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformAggregateOp(const substrait::Re
 
 	for (auto &smeas : sop.aggregate().measures()) {
 		vector<unique_ptr<ParsedExpression>> children;
-		for (auto &sarg : smeas.measure().arguments()) {
+		auto &s_aggr_function = smeas.measure();
+		bool is_distinct = s_aggr_function.invocation() ==
+		                   substrait::AggregateFunction_AggregationInvocation_AGGREGATION_INVOCATION_DISTINCT;
+		for (auto &sarg : s_aggr_function.arguments()) {
 			children.push_back(TransformExpr(sarg.value()));
 		}
-		auto function_name = FindFunction(smeas.measure().function_reference());
+		auto function_name = FindFunction(s_aggr_function.function_reference());
 		if (function_name == "count" && children.empty()) {
 			function_name = "count_star";
 		}
-		expressions.push_back(make_uniq<FunctionExpression>(RemapFunctionName(function_name), std::move(children)));
+		expressions.push_back(make_uniq<FunctionExpression>(RemapFunctionName(function_name), std::move(children),
+		                                                    nullptr, nullptr, is_distinct));
 	}
 
 	return make_shared_ptr<AggregateRelation>(TransformOp(sop.aggregate().input()), std::move(expressions),
