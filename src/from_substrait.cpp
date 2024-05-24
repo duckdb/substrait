@@ -419,6 +419,9 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformJoinOp(const substrait::Rel &so
 	case substrait::JoinRel::JoinType::JoinRel_JoinType_JOIN_TYPE_SEMI:
 		djointype = JoinType::SEMI;
 		break;
+        case substrait::JoinRel::JoinType::JoinRel_JoinType_JOIN_TYPE_MARK:
+            djointype = JoinType::MARK;
+          break;
 	default:
 		throw InternalException("Unsupported join type");
 	}
@@ -630,7 +633,15 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformPlan() {
 	if (plan.relations().empty()) {
 		throw InvalidInputException("Substrait Plan does not have a SELECT statement");
 	}
-	auto d_plan = TransformRootOp(plan.relations(0).root());
+        shared_ptr<Relation> d_plan;
+        try {
+          d_plan = TransformRootOp(plan.relations(0).root());
+        } catch (std::exception &ex) {
+          // Ideally we don't have to do that, we should change to capture the error and throw it here at some point
+          ::duckdb::ErrorData parsed_error(ex);
+          throw NotImplementedException("Something in this plan is not yet implemented in the Substrait->DuckDB plan conversion.\n Substrait Plan:\n" + plan.DebugString() + "Not Implemented error message: " + parsed_error.RawMessage());
+        }
+
 	return d_plan;
 }
 
