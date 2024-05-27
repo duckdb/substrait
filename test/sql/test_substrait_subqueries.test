@@ -18,8 +18,8 @@ statement ok
 CALL get_substrait('select i, i + (select MIN(i) from integers) from integers order by i')
 
 # Uncorrelated Any (Missing Mark Join)
-#statement ok
-#CALL get_substrait('select i = ANY(select * from integers where i is not null) from integers')
+statement ok
+CALL get_substrait('select i = ANY(select * from integers where i is not null) from integers')
 
 # Uncorrelated Exist
 statement ok

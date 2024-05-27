@@ -885,9 +885,9 @@ substrait::Rel *DuckDBToSubstrait::TransformComparisonJoin(LogicalOperator &dop)
 	case JoinType::SEMI:
 		sjoin->set_type(substrait::JoinRel::JoinType::JoinRel_JoinType_JOIN_TYPE_SEMI);
 		break;
-        case JoinType::MARK:
-                sjoin->set_type(substrait::JoinRel::JoinType::JoinRel_JoinType_JOIN_TYPE_MARK);
-                break;
+	case JoinType::MARK:
+		sjoin->set_type(substrait::JoinRel::JoinType::JoinRel_JoinType_JOIN_TYPE_MARK);
+		break;
 	default:
 		throw InternalException("Unsupported join type " + JoinTypeToString(djoin.join_type));
 	}
@@ -1372,15 +1372,17 @@ substrait::RelRoot *DuckDBToSubstrait::TransformRootOp(LogicalOperator &dop) {
 }
 
 void DuckDBToSubstrait::TransformPlan(LogicalOperator &dop) {
-        substrait::RelRoot * root;
-        try {
-          root = TransformRootOp(dop);
-        } catch (std::exception &ex) {
-          // Ideally we don't have to do that, we should change to capture the error and throw it here at some point
-          ::duckdb::ErrorData parsed_error(ex);
-          throw NotImplementedException("Something in this plan is not yet implemented in the DuckDB -> Substrait plan conversion.\n DuckDB Plan:\n" + dop.ToString() + "Not Implemented error message: " + parsed_error.RawMessage());
-        }
-        plan.add_relations()->set_allocated_root(root);
+	substrait::RelRoot *root;
+	try {
+		root = TransformRootOp(dop);
+	} catch (std::exception &ex) {
+		// Ideally we don't have to do that, we should change to capture the error and throw it here at some point
+		::duckdb::ErrorData parsed_error(ex);
+		throw NotImplementedException("Something in this plan is not yet implemented in the DuckDB -> Substrait plan "
+		                              "conversion.\n DuckDB Plan:\n" +
+		                              dop.ToString() + "Not Implemented error message: " + parsed_error.RawMessage());
+	}
+	plan.add_relations()->set_allocated_root(root);
 	if (strict && !errors.empty()) {
 		throw InvalidInputException("Strict Mode is set to true, and the following warnings/errors happened. \n" +
 		                            errors);
