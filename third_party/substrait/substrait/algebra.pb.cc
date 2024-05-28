@@ -777,11 +777,11 @@ struct MarkJoinRelDefaultTypeInternal {
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT MarkJoinRelDefaultTypeInternal _MarkJoinRel_default_instance_;
 constexpr DelimiterJoinRel::DelimiterJoinRel(
   ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized)
-  : left_keys_()
-  , right_keys_()
-  , common_(nullptr)
+  : common_(nullptr)
   , left_(nullptr)
   , right_(nullptr)
+  , expression_(nullptr)
+  , post_join_filter_(nullptr)
   , delimiter_field_(nullptr)
   , advanced_extension_(nullptr)
   , type_(0)
@@ -2180,8 +2180,8 @@ const uint32_t TableStruct_substrait_2falgebra_2eproto::offsets[] PROTOBUF_SECTI
   PROTOBUF_FIELD_OFFSET(::substrait::DelimiterJoinRel, common_),
   PROTOBUF_FIELD_OFFSET(::substrait::DelimiterJoinRel, left_),
   PROTOBUF_FIELD_OFFSET(::substrait::DelimiterJoinRel, right_),
-  PROTOBUF_FIELD_OFFSET(::substrait::DelimiterJoinRel, left_keys_),
-  PROTOBUF_FIELD_OFFSET(::substrait::DelimiterJoinRel, right_keys_),
+  PROTOBUF_FIELD_OFFSET(::substrait::DelimiterJoinRel, expression_),
+  PROTOBUF_FIELD_OFFSET(::substrait::DelimiterJoinRel, post_join_filter_),
   PROTOBUF_FIELD_OFFSET(::substrait::DelimiterJoinRel, type_),
   PROTOBUF_FIELD_OFFSET(::substrait::DelimiterJoinRel, delimiter_field_),
   PROTOBUF_FIELD_OFFSET(::substrait::DelimiterJoinRel, advanced_extension_),
@@ -3320,289 +3320,289 @@ const char descriptor_table_protodef_substrait_2falgebra_2eproto[] PROTOBUF_SECT
   " \001(\0132\016.substrait.Rel\022)\n\nexpression\030\004 \001(\013"
   "2\025.substrait.Expression\022C\n\022advanced_exte"
   "nsion\030\n \001(\0132\'.substrait.extensions.Advan"
-  "cedExtension\"\201\005\n\020DelimiterJoinRel\022$\n\006com"
+  "cedExtension\"\352\004\n\020DelimiterJoinRel\022$\n\006com"
   "mon\030\001 \001(\0132\024.substrait.RelCommon\022\034\n\004left\030"
   "\002 \001(\0132\016.substrait.Rel\022\035\n\005right\030\003 \001(\0132\016.s"
-  "ubstrait.Rel\0227\n\tleft_keys\030\004 \003(\0132$.substr"
-  "ait.Expression.FieldReference\0228\n\nright_k"
-  "eys\030\005 \003(\0132$.substrait.Expression.FieldRe"
-  "ference\0222\n\004type\030\006 \001(\0162$.substrait.Delimi"
-  "terJoinRel.JoinType\022=\n\017delimiter_field\030\007"
-  " \001(\0132$.substrait.Expression.FieldReferen"
-  "ce\022C\n\022advanced_extension\030\n \001(\0132\'.substra"
-  "it.extensions.AdvancedExtension\"\336\001\n\010Join"
-  "Type\022\031\n\025JOIN_TYPE_UNSPECIFIED\020\000\022\023\n\017JOIN_"
-  "TYPE_INNER\020\001\022\023\n\017JOIN_TYPE_OUTER\020\002\022\022\n\016JOI"
-  "N_TYPE_LEFT\020\003\022\023\n\017JOIN_TYPE_RIGHT\020\004\022\027\n\023JO"
-  "IN_TYPE_LEFT_SEMI\020\005\022\030\n\024JOIN_TYPE_RIGHT_S"
-  "EMI\020\006\022\027\n\023JOIN_TYPE_LEFT_ANTI\020\007\022\030\n\024JOIN_T"
-  "YPE_RIGHT_ANTI\020\010\"w\n\020FunctionArgument\022\016\n\004"
-  "enum\030\001 \001(\tH\000\022\037\n\004type\030\002 \001(\0132\017.substrait.T"
-  "ypeH\000\022&\n\005value\030\003 \001(\0132\025.substrait.Express"
-  "ionH\000B\n\n\010arg_type\"2\n\016FunctionOption\022\014\n\004n"
-  "ame\030\001 \001(\t\022\022\n\npreference\030\002 \003(\t\"\371G\n\nExpres"
-  "sion\0220\n\007literal\030\001 \001(\0132\035.substrait.Expres"
-  "sion.LiteralH\000\0229\n\tselection\030\002 \001(\0132$.subs"
-  "trait.Expression.FieldReferenceH\000\022\?\n\017sca"
-  "lar_function\030\003 \001(\0132$.substrait.Expressio"
-  "n.ScalarFunctionH\000\022\?\n\017window_function\030\005 "
-  "\001(\0132$.substrait.Expression.WindowFunctio"
-  "nH\000\022/\n\007if_then\030\006 \001(\0132\034.substrait.Express"
-  "ion.IfThenH\000\022C\n\021switch_expression\030\007 \001(\0132"
-  "&.substrait.Expression.SwitchExpressionH"
-  "\000\022@\n\020singular_or_list\030\010 \001(\0132$.substrait."
-  "Expression.SingularOrListH\000\022:\n\rmulti_or_"
-  "list\030\t \001(\0132!.substrait.Expression.MultiO"
-  "rListH\000\022*\n\004cast\030\013 \001(\0132\032.substrait.Expres"
-  "sion.CastH\000\0222\n\010subquery\030\014 \001(\0132\036.substrai"
-  "t.Expression.SubqueryH\000\022.\n\006nested\030\r \001(\0132"
-  "\034.substrait.Expression.NestedH\000\022.\n\004enum\030"
-  "\n \001(\0132\032.substrait.Expression.EnumB\002\030\001H\000\032"
-  "r\n\004Enum\022\023\n\tspecified\030\001 \001(\tH\000\0227\n\013unspecif"
-  "ied\030\002 \001(\0132 .substrait.Expression.Enum.Em"
-  "ptyH\000\032\013\n\005Empty:\002\030\001:\002\030\001B\013\n\tenum_kind\032\362\r\n\007"
-  "Literal\022\021\n\007boolean\030\001 \001(\010H\000\022\014\n\002i8\030\002 \001(\005H\000"
-  "\022\r\n\003i16\030\003 \001(\005H\000\022\r\n\003i32\030\005 \001(\005H\000\022\r\n\003i64\030\007 "
-  "\001(\003H\000\022\016\n\004fp32\030\n \001(\002H\000\022\016\n\004fp64\030\013 \001(\001H\000\022\020\n"
-  "\006string\030\014 \001(\tH\000\022\020\n\006binary\030\r \001(\014H\000\022\027\n\ttim"
-  "estamp\030\016 \001(\003B\002\030\001H\000\022\016\n\004date\030\020 \001(\005H\000\022\016\n\004ti"
-  "me\030\021 \001(\003H\000\022S\n\026interval_year_to_month\030\023 \001"
-  "(\01321.substrait.Expression.Literal.Interv"
-  "alYearToMonthH\000\022S\n\026interval_day_to_secon"
-  "d\030\024 \001(\01321.substrait.Expression.Literal.I"
-  "ntervalDayToSecondH\000\022\024\n\nfixed_char\030\025 \001(\t"
-  "H\000\0229\n\010var_char\030\026 \001(\0132%.substrait.Express"
-  "ion.Literal.VarCharH\000\022\026\n\014fixed_binary\030\027 "
-  "\001(\014H\000\0228\n\007decimal\030\030 \001(\0132%.substrait.Expre"
-  "ssion.Literal.DecimalH\000\022\035\n\023precision_tim"
-  "estamp\030\" \001(\004H\000\022 \n\026precision_timestamp_tz"
-  "\030# \001(\004H\000\0226\n\006struct\030\031 \001(\0132$.substrait.Exp"
-  "ression.Literal.StructH\000\0220\n\003map\030\032 \001(\0132!."
-  "substrait.Expression.Literal.MapH\000\022\032\n\014ti"
-  "mestamp_tz\030\033 \001(\003B\002\030\001H\000\022\016\n\004uuid\030\034 \001(\014H\000\022\037"
-  "\n\004null\030\035 \001(\0132\017.substrait.TypeH\000\0222\n\004list\030"
-  "\036 \001(\0132\".substrait.Expression.Literal.Lis"
-  "tH\000\022*\n\nempty_list\030\037 \001(\0132\024.substrait.Type"
-  ".ListH\000\022(\n\tempty_map\030  \001(\0132\023.substrait.T"
-  "ype.MapH\000\022A\n\014user_defined\030! \001(\0132).substr"
-  "ait.Expression.Literal.UserDefinedH\000\022\020\n\010"
-  "nullable\0302 \001(\010\022 \n\030type_variation_referen"
-  "ce\0303 \001(\r\032(\n\007VarChar\022\r\n\005value\030\001 \001(\t\022\016\n\006le"
-  "ngth\030\002 \001(\r\032:\n\007Decimal\022\r\n\005value\030\001 \001(\014\022\021\n\t"
-  "precision\030\002 \001(\005\022\r\n\005scale\030\003 \001(\005\032\253\001\n\003Map\022>"
-  "\n\nkey_values\030\001 \003(\0132*.substrait.Expressio"
-  "n.Literal.Map.KeyValue\032d\n\010KeyValue\022*\n\003ke"
-  "y\030\001 \001(\0132\035.substrait.Expression.Literal\022,"
-  "\n\005value\030\002 \001(\0132\035.substrait.Expression.Lit"
-  "eral\0324\n\023IntervalYearToMonth\022\r\n\005years\030\001 \001"
-  "(\005\022\016\n\006months\030\002 \001(\005\032J\n\023IntervalDayToSecon"
-  "d\022\014\n\004days\030\001 \001(\005\022\017\n\007seconds\030\002 \001(\005\022\024\n\014micr"
-  "oseconds\030\003 \001(\005\0327\n\006Struct\022-\n\006fields\030\001 \003(\013"
-  "2\035.substrait.Expression.Literal\0325\n\004List\022"
-  "-\n\006values\030\001 \003(\0132\035.substrait.Expression.L"
-  "iteral\032\277\001\n\013UserDefined\022\026\n\016type_reference"
-  "\030\001 \001(\r\0222\n\017type_parameters\030\003 \003(\0132\031.substr"
-  "ait.Type.Parameter\022%\n\005value\030\002 \001(\0132\024.goog"
-  "le.protobuf.AnyH\000\0226\n\006struct\030\004 \001(\0132$.subs"
-  "trait.Expression.Literal.StructH\000B\005\n\003val"
-  "B\016\n\014literal_type\032\343\003\n\006Nested\022\020\n\010nullable\030"
-  "\001 \001(\010\022 \n\030type_variation_reference\030\002 \001(\r\022"
-  "5\n\006struct\030\003 \001(\0132#.substrait.Expression.N"
-  "ested.StructH\000\0221\n\004list\030\004 \001(\0132!.substrait"
-  ".Expression.Nested.ListH\000\022/\n\003map\030\005 \001(\0132 "
-  ".substrait.Expression.Nested.MapH\000\032\232\001\n\003M"
-  "ap\022=\n\nkey_values\030\001 \003(\0132).substrait.Expre"
-  "ssion.Nested.Map.KeyValue\032T\n\010KeyValue\022\"\n"
-  "\003key\030\001 \001(\0132\025.substrait.Expression\022$\n\005val"
-  "ue\030\002 \001(\0132\025.substrait.Expression\032/\n\006Struc"
-  "t\022%\n\006fields\030\001 \003(\0132\025.substrait.Expression"
-  "\032-\n\004List\022%\n\006values\030\001 \003(\0132\025.substrait.Exp"
-  "ressionB\r\n\013nested_type\032\327\001\n\016ScalarFunctio"
-  "n\022\032\n\022function_reference\030\001 \001(\r\022.\n\targumen"
-  "ts\030\004 \003(\0132\033.substrait.FunctionArgument\022*\n"
-  "\007options\030\005 \003(\0132\031.substrait.FunctionOptio"
-  "n\022$\n\013output_type\030\003 \001(\0132\017.substrait.Type\022"
-  "\'\n\004args\030\002 \003(\0132\025.substrait.ExpressionB\002\030\001"
-  "\032\321\010\n\016WindowFunction\022\032\n\022function_referenc"
-  "e\030\001 \001(\r\022.\n\targuments\030\t \003(\0132\033.substrait.F"
-  "unctionArgument\022*\n\007options\030\013 \003(\0132\031.subst"
-  "rait.FunctionOption\022$\n\013output_type\030\007 \001(\013"
-  "2\017.substrait.Type\022*\n\005phase\030\006 \001(\0162\033.subst"
-  "rait.AggregationPhase\022#\n\005sorts\030\003 \003(\0132\024.s"
-  "ubstrait.SortField\022F\n\ninvocation\030\n \001(\01622"
-  ".substrait.AggregateFunction.Aggregation"
-  "Invocation\022)\n\npartitions\030\002 \003(\0132\025.substra"
-  "it.Expression\022D\n\013bounds_type\030\014 \001(\0162/.sub"
-  "strait.Expression.WindowFunction.BoundsT"
-  "ype\022\?\n\013lower_bound\030\005 \001(\0132*.substrait.Exp"
-  "ression.WindowFunction.Bound\022\?\n\013upper_bo"
-  "und\030\004 \001(\0132*.substrait.Expression.WindowF"
-  "unction.Bound\022\'\n\004args\030\010 \003(\0132\025.substrait."
-  "ExpressionB\002\030\001\032\223\003\n\005Bound\022I\n\tpreceding\030\001 "
-  "\001(\01324.substrait.Expression.WindowFunctio"
-  "n.Bound.PrecedingH\000\022I\n\tfollowing\030\002 \001(\01324"
-  ".substrait.Expression.WindowFunction.Bou"
-  "nd.FollowingH\000\022L\n\013current_row\030\003 \001(\01325.su"
-  "bstrait.Expression.WindowFunction.Bound."
-  "CurrentRowH\000\022I\n\tunbounded\030\004 \001(\01324.substr"
-  "ait.Expression.WindowFunction.Bound.Unbo"
-  "undedH\000\032\033\n\tPreceding\022\016\n\006offset\030\001 \001(\003\032\033\n\t"
-  "Following\022\016\n\006offset\030\001 \001(\003\032\014\n\nCurrentRow\032"
-  "\013\n\tUnboundedB\006\n\004kind\"V\n\nBoundsType\022\033\n\027BO"
-  "UNDS_TYPE_UNSPECIFIED\020\000\022\024\n\020BOUNDS_TYPE_R"
-  "OWS\020\001\022\025\n\021BOUNDS_TYPE_RANGE\020\002\032\265\001\n\006IfThen\022"
-  "2\n\003ifs\030\001 \003(\0132%.substrait.Expression.IfTh"
-  "en.IfClause\022#\n\004else\030\002 \001(\0132\025.substrait.Ex"
-  "pression\032R\n\010IfClause\022!\n\002if\030\001 \001(\0132\025.subst"
-  "rait.Expression\022#\n\004then\030\002 \001(\0132\025.substrai"
-  "t.Expression\032\216\002\n\004Cast\022\035\n\004type\030\001 \001(\0132\017.su"
-  "bstrait.Type\022$\n\005input\030\002 \001(\0132\025.substrait."
-  "Expression\022D\n\020failure_behavior\030\003 \001(\0162*.s"
-  "ubstrait.Expression.Cast.FailureBehavior"
-  "\"{\n\017FailureBehavior\022 \n\034FAILURE_BEHAVIOR_"
-  "UNSPECIFIED\020\000\022 \n\034FAILURE_BEHAVIOR_RETURN"
-  "_NULL\020\001\022$\n FAILURE_BEHAVIOR_THROW_EXCEPT"
-  "ION\020\002\032\365\001\n\020SwitchExpression\022$\n\005match\030\003 \001("
-  "\0132\025.substrait.Expression\022;\n\003ifs\030\001 \003(\0132.."
-  "substrait.Expression.SwitchExpression.If"
-  "Value\022#\n\004else\030\002 \001(\0132\025.substrait.Expressi"
-  "on\032Y\n\007IfValue\022)\n\002if\030\001 \001(\0132\035.substrait.Ex"
-  "pression.Literal\022#\n\004then\030\002 \001(\0132\025.substra"
-  "it.Expression\032^\n\016SingularOrList\022$\n\005value"
-  "\030\001 \001(\0132\025.substrait.Expression\022&\n\007options"
-  "\030\002 \003(\0132\025.substrait.Expression\032\237\001\n\013MultiO"
-  "rList\022$\n\005value\030\001 \003(\0132\025.substrait.Express"
-  "ion\0229\n\007options\030\002 \003(\0132(.substrait.Express"
-  "ion.MultiOrList.Record\032/\n\006Record\022%\n\006fiel"
-  "ds\030\001 \003(\0132\025.substrait.Expression\032\243\003\n\020Embe"
-  "ddedFunction\022(\n\targuments\030\001 \003(\0132\025.substr"
-  "ait.Expression\022$\n\013output_type\030\002 \001(\0132\017.su"
-  "bstrait.Type\022]\n\026python_pickle_function\030\003"
-  " \001(\0132;.substrait.Expression.EmbeddedFunc"
-  "tion.PythonPickleFunctionH\000\022[\n\025web_assem"
-  "bly_function\030\004 \001(\0132:.substrait.Expressio"
-  "n.EmbeddedFunction.WebAssemblyFunctionH\000"
-  "\032>\n\024PythonPickleFunction\022\020\n\010function\030\001 \001"
-  "(\014\022\024\n\014prerequisite\030\002 \003(\t\032;\n\023WebAssemblyF"
-  "unction\022\016\n\006script\030\001 \001(\014\022\024\n\014prerequisite\030"
-  "\002 \003(\tB\006\n\004kind\032\232\004\n\020ReferenceSegment\022@\n\007ma"
-  "p_key\030\001 \001(\0132-.substrait.Expression.Refer"
-  "enceSegment.MapKeyH\000\022J\n\014struct_field\030\002 \001"
-  "(\01322.substrait.Expression.ReferenceSegme"
-  "nt.StructFieldH\000\022J\n\014list_element\030\003 \001(\01322"
-  ".substrait.Expression.ReferenceSegment.L"
-  "istElementH\000\032o\n\006MapKey\022.\n\007map_key\030\001 \001(\0132"
-  "\035.substrait.Expression.Literal\0225\n\005child\030"
-  "\002 \001(\0132&.substrait.Expression.ReferenceSe"
-  "gment\032S\n\013StructField\022\r\n\005field\030\001 \001(\005\0225\n\005c"
-  "hild\030\002 \001(\0132&.substrait.Expression.Refere"
-  "nceSegment\032T\n\013ListElement\022\016\n\006offset\030\001 \001("
-  "\005\0225\n\005child\030\002 \001(\0132&.substrait.Expression."
-  "ReferenceSegmentB\020\n\016reference_type\032\360\t\n\016M"
-  "askExpression\022A\n\006select\030\001 \001(\01321.substrai"
-  "t.Expression.MaskExpression.StructSelect"
-  "\022 \n\030maintain_singular_struct\030\002 \001(\010\032\325\001\n\006S"
-  "elect\022C\n\006struct\030\001 \001(\01321.substrait.Expres"
-  "sion.MaskExpression.StructSelectH\000\022\?\n\004li"
-  "st\030\002 \001(\0132/.substrait.Expression.MaskExpr"
-  "ession.ListSelectH\000\022=\n\003map\030\003 \001(\0132..subst"
-  "rait.Expression.MaskExpression.MapSelect"
-  "H\000B\006\n\004type\032U\n\014StructSelect\022E\n\014struct_ite"
-  "ms\030\001 \003(\0132/.substrait.Expression.MaskExpr"
-  "ession.StructItem\032W\n\nStructItem\022\r\n\005field"
-  "\030\001 \001(\005\022:\n\005child\030\002 \001(\0132+.substrait.Expres"
-  "sion.MaskExpression.Select\032\264\003\n\nListSelec"
-  "t\022Q\n\tselection\030\001 \003(\0132>.substrait.Express"
-  "ion.MaskExpression.ListSelect.ListSelect"
-  "Item\022:\n\005child\030\002 \001(\0132+.substrait.Expressi"
-  "on.MaskExpression.Select\032\226\002\n\016ListSelectI"
-  "tem\022Z\n\004item\030\001 \001(\0132J.substrait.Expression"
-  ".MaskExpression.ListSelect.ListSelectIte"
-  "m.ListElementH\000\022Y\n\005slice\030\002 \001(\0132H.substra"
-  "it.Expression.MaskExpression.ListSelect."
-  "ListSelectItem.ListSliceH\000\032\034\n\013ListElemen"
-  "t\022\r\n\005field\030\001 \001(\005\032\'\n\tListSlice\022\r\n\005start\030\001"
-  " \001(\005\022\013\n\003end\030\002 \001(\005B\006\n\004type\032\271\002\n\tMapSelect\022"
-  "D\n\003key\030\001 \001(\01325.substrait.Expression.Mask"
-  "Expression.MapSelect.MapKeyH\000\022U\n\nexpress"
-  "ion\030\002 \001(\0132\?.substrait.Expression.MaskExp"
-  "ression.MapSelect.MapKeyExpressionH\000\022:\n\005"
-  "child\030\003 \001(\0132+.substrait.Expression.MaskE"
-  "xpression.Select\032\031\n\006MapKey\022\017\n\007map_key\030\001 "
-  "\001(\t\032.\n\020MapKeyExpression\022\032\n\022map_key_expre"
-  "ssion\030\001 \001(\tB\010\n\006select\032\266\003\n\016FieldReference"
-  "\022B\n\020direct_reference\030\001 \001(\0132&.substrait.E"
-  "xpression.ReferenceSegmentH\000\022@\n\020masked_r"
-  "eference\030\002 \001(\0132$.substrait.Expression.Ma"
-  "skExpressionH\000\022+\n\nexpression\030\003 \001(\0132\025.sub"
-  "strait.ExpressionH\001\022L\n\016root_reference\030\004 "
-  "\001(\01322.substrait.Expression.FieldReferenc"
-  "e.RootReferenceH\001\022N\n\017outer_reference\030\005 \001"
-  "(\01323.substrait.Expression.FieldReference"
-  ".OuterReferenceH\001\032\017\n\rRootReference\032#\n\016Ou"
-  "terReference\022\021\n\tsteps_out\030\001 \001(\rB\020\n\016refer"
-  "ence_typeB\013\n\troot_type\032\214\t\n\010Subquery\0227\n\006s"
-  "calar\030\001 \001(\0132%.substrait.Expression.Subqu"
-  "ery.ScalarH\000\022B\n\014in_predicate\030\002 \001(\0132*.sub"
-  "strait.Expression.Subquery.InPredicateH\000"
-  "\022D\n\rset_predicate\030\003 \001(\0132+.substrait.Expr"
-  "ession.Subquery.SetPredicateH\000\022F\n\016set_co"
-  "mparison\030\004 \001(\0132,.substrait.Expression.Su"
-  "bquery.SetComparisonH\000\032\'\n\006Scalar\022\035\n\005inpu"
-  "t\030\001 \001(\0132\016.substrait.Rel\032W\n\013InPredicate\022&"
-  "\n\007needles\030\001 \003(\0132\025.substrait.Expression\022 "
-  "\n\010haystack\030\002 \001(\0132\016.substrait.Rel\032\334\001\n\014Set"
-  "Predicate\022M\n\014predicate_op\030\001 \001(\01627.substr"
-  "ait.Expression.Subquery.SetPredicate.Pre"
-  "dicateOp\022\036\n\006tuples\030\002 \001(\0132\016.substrait.Rel"
-  "\"]\n\013PredicateOp\022\034\n\030PREDICATE_OP_UNSPECIF"
-  "IED\020\000\022\027\n\023PREDICATE_OP_EXISTS\020\001\022\027\n\023PREDIC"
-  "ATE_OP_UNIQUE\020\002\032\202\004\n\rSetComparison\022N\n\014red"
-  "uction_op\030\001 \001(\01628.substrait.Expression.S"
-  "ubquery.SetComparison.ReductionOp\022P\n\rcom"
-  "parison_op\030\002 \001(\01629.substrait.Expression."
-  "Subquery.SetComparison.ComparisonOp\022#\n\004l"
-  "eft\030\003 \001(\0132\025.substrait.Expression\022\035\n\005righ"
-  "t\030\004 \001(\0132\016.substrait.Rel\"\261\001\n\014ComparisonOp"
-  "\022\035\n\031COMPARISON_OP_UNSPECIFIED\020\000\022\024\n\020COMPA"
-  "RISON_OP_EQ\020\001\022\024\n\020COMPARISON_OP_NE\020\002\022\024\n\020C"
-  "OMPARISON_OP_LT\020\003\022\024\n\020COMPARISON_OP_GT\020\004\022"
-  "\024\n\020COMPARISON_OP_LE\020\005\022\024\n\020COMPARISON_OP_G"
-  "E\020\006\"W\n\013ReductionOp\022\034\n\030REDUCTION_OP_UNSPE"
-  "CIFIED\020\000\022\024\n\020REDUCTION_OP_ANY\020\001\022\024\n\020REDUCT"
-  "ION_OP_ALL\020\002B\017\n\rsubquery_typeB\n\n\010rex_typ"
-  "e\"\377\002\n\tSortField\022#\n\004expr\030\001 \001(\0132\025.substrai"
-  "t.Expression\0227\n\tdirection\030\002 \001(\0162\".substr"
-  "ait.SortField.SortDirectionH\000\022\'\n\035compari"
-  "son_function_reference\030\003 \001(\rH\000\"\335\001\n\rSortD"
-  "irection\022\036\n\032SORT_DIRECTION_UNSPECIFIED\020\000"
-  "\022\"\n\036SORT_DIRECTION_ASC_NULLS_FIRST\020\001\022!\n\035"
-  "SORT_DIRECTION_ASC_NULLS_LAST\020\002\022#\n\037SORT_"
-  "DIRECTION_DESC_NULLS_FIRST\020\003\022\"\n\036SORT_DIR"
-  "ECTION_DESC_NULLS_LAST\020\004\022\034\n\030SORT_DIRECTI"
-  "ON_CLUSTERED\020\005B\013\n\tsort_kind\"\372\003\n\021Aggregat"
-  "eFunction\022\032\n\022function_reference\030\001 \001(\r\022.\n"
-  "\targuments\030\007 \003(\0132\033.substrait.FunctionArg"
-  "ument\022*\n\007options\030\010 \003(\0132\031.substrait.Funct"
-  "ionOption\022$\n\013output_type\030\005 \001(\0132\017.substra"
-  "it.Type\022*\n\005phase\030\004 \001(\0162\033.substrait.Aggre"
-  "gationPhase\022#\n\005sorts\030\003 \003(\0132\024.substrait.S"
-  "ortField\022F\n\ninvocation\030\006 \001(\01622.substrait"
-  ".AggregateFunction.AggregationInvocation"
-  "\022\'\n\004args\030\002 \003(\0132\025.substrait.ExpressionB\002\030"
-  "\001\"\204\001\n\025AggregationInvocation\022&\n\"AGGREGATI"
-  "ON_INVOCATION_UNSPECIFIED\020\000\022\036\n\032AGGREGATI"
-  "ON_INVOCATION_ALL\020\001\022#\n\037AGGREGATION_INVOC"
-  "ATION_DISTINCT\020\002\"\'\n\014ReferenceRel\022\027\n\017subt"
-  "ree_ordinal\030\001 \001(\005*\357\001\n\020AggregationPhase\022!"
-  "\n\035AGGREGATION_PHASE_UNSPECIFIED\020\000\022-\n)AGG"
-  "REGATION_PHASE_INITIAL_TO_INTERMEDIATE\020\001"
-  "\0222\n.AGGREGATION_PHASE_INTERMEDIATE_TO_IN"
-  "TERMEDIATE\020\002\022\'\n#AGGREGATION_PHASE_INITIA"
-  "L_TO_RESULT\020\003\022,\n(AGGREGATION_PHASE_INTER"
-  "MEDIATE_TO_RESULT\020\004BW\n\022io.substrait.prot"
-  "oP\001Z*github.com/substrait-io/substrait-g"
-  "o/proto\252\002\022Substrait.Protobufb\006proto3"
+  "ubstrait.Rel\022)\n\nexpression\030\004 \001(\0132\025.subst"
+  "rait.Expression\022/\n\020post_join_filter\030\005 \001("
+  "\0132\025.substrait.Expression\0222\n\004type\030\006 \001(\0162$"
+  ".substrait.DelimiterJoinRel.JoinType\022=\n\017"
+  "delimiter_field\030\007 \001(\0132$.substrait.Expres"
+  "sion.FieldReference\022C\n\022advanced_extensio"
+  "n\030\n \001(\0132\'.substrait.extensions.AdvancedE"
+  "xtension\"\336\001\n\010JoinType\022\031\n\025JOIN_TYPE_UNSPE"
+  "CIFIED\020\000\022\023\n\017JOIN_TYPE_INNER\020\001\022\023\n\017JOIN_TY"
+  "PE_OUTER\020\002\022\022\n\016JOIN_TYPE_LEFT\020\003\022\023\n\017JOIN_T"
+  "YPE_RIGHT\020\004\022\027\n\023JOIN_TYPE_LEFT_SEMI\020\005\022\030\n\024"
+  "JOIN_TYPE_RIGHT_SEMI\020\006\022\027\n\023JOIN_TYPE_LEFT"
+  "_ANTI\020\007\022\030\n\024JOIN_TYPE_RIGHT_ANTI\020\010\"w\n\020Fun"
+  "ctionArgument\022\016\n\004enum\030\001 \001(\tH\000\022\037\n\004type\030\002 "
+  "\001(\0132\017.substrait.TypeH\000\022&\n\005value\030\003 \001(\0132\025."
+  "substrait.ExpressionH\000B\n\n\010arg_type\"2\n\016Fu"
+  "nctionOption\022\014\n\004name\030\001 \001(\t\022\022\n\npreference"
+  "\030\002 \003(\t\"\371G\n\nExpression\0220\n\007literal\030\001 \001(\0132\035"
+  ".substrait.Expression.LiteralH\000\0229\n\tselec"
+  "tion\030\002 \001(\0132$.substrait.Expression.FieldR"
+  "eferenceH\000\022\?\n\017scalar_function\030\003 \001(\0132$.su"
+  "bstrait.Expression.ScalarFunctionH\000\022\?\n\017w"
+  "indow_function\030\005 \001(\0132$.substrait.Express"
+  "ion.WindowFunctionH\000\022/\n\007if_then\030\006 \001(\0132\034."
+  "substrait.Expression.IfThenH\000\022C\n\021switch_"
+  "expression\030\007 \001(\0132&.substrait.Expression."
+  "SwitchExpressionH\000\022@\n\020singular_or_list\030\010"
+  " \001(\0132$.substrait.Expression.SingularOrLi"
+  "stH\000\022:\n\rmulti_or_list\030\t \001(\0132!.substrait."
+  "Expression.MultiOrListH\000\022*\n\004cast\030\013 \001(\0132\032"
+  ".substrait.Expression.CastH\000\0222\n\010subquery"
+  "\030\014 \001(\0132\036.substrait.Expression.SubqueryH\000"
+  "\022.\n\006nested\030\r \001(\0132\034.substrait.Expression."
+  "NestedH\000\022.\n\004enum\030\n \001(\0132\032.substrait.Expre"
+  "ssion.EnumB\002\030\001H\000\032r\n\004Enum\022\023\n\tspecified\030\001 "
+  "\001(\tH\000\0227\n\013unspecified\030\002 \001(\0132 .substrait.E"
+  "xpression.Enum.EmptyH\000\032\013\n\005Empty:\002\030\001:\002\030\001B"
+  "\013\n\tenum_kind\032\362\r\n\007Literal\022\021\n\007boolean\030\001 \001("
+  "\010H\000\022\014\n\002i8\030\002 \001(\005H\000\022\r\n\003i16\030\003 \001(\005H\000\022\r\n\003i32\030"
+  "\005 \001(\005H\000\022\r\n\003i64\030\007 \001(\003H\000\022\016\n\004fp32\030\n \001(\002H\000\022\016"
+  "\n\004fp64\030\013 \001(\001H\000\022\020\n\006string\030\014 \001(\tH\000\022\020\n\006bina"
+  "ry\030\r \001(\014H\000\022\027\n\ttimestamp\030\016 \001(\003B\002\030\001H\000\022\016\n\004d"
+  "ate\030\020 \001(\005H\000\022\016\n\004time\030\021 \001(\003H\000\022S\n\026interval_"
+  "year_to_month\030\023 \001(\01321.substrait.Expressi"
+  "on.Literal.IntervalYearToMonthH\000\022S\n\026inte"
+  "rval_day_to_second\030\024 \001(\01321.substrait.Exp"
+  "ression.Literal.IntervalDayToSecondH\000\022\024\n"
+  "\nfixed_char\030\025 \001(\tH\000\0229\n\010var_char\030\026 \001(\0132%."
+  "substrait.Expression.Literal.VarCharH\000\022\026"
+  "\n\014fixed_binary\030\027 \001(\014H\000\0228\n\007decimal\030\030 \001(\0132"
+  "%.substrait.Expression.Literal.DecimalH\000"
+  "\022\035\n\023precision_timestamp\030\" \001(\004H\000\022 \n\026preci"
+  "sion_timestamp_tz\030# \001(\004H\000\0226\n\006struct\030\031 \001("
+  "\0132$.substrait.Expression.Literal.StructH"
+  "\000\0220\n\003map\030\032 \001(\0132!.substrait.Expression.Li"
+  "teral.MapH\000\022\032\n\014timestamp_tz\030\033 \001(\003B\002\030\001H\000\022"
+  "\016\n\004uuid\030\034 \001(\014H\000\022\037\n\004null\030\035 \001(\0132\017.substrai"
+  "t.TypeH\000\0222\n\004list\030\036 \001(\0132\".substrait.Expre"
+  "ssion.Literal.ListH\000\022*\n\nempty_list\030\037 \001(\013"
+  "2\024.substrait.Type.ListH\000\022(\n\tempty_map\030  "
+  "\001(\0132\023.substrait.Type.MapH\000\022A\n\014user_defin"
+  "ed\030! \001(\0132).substrait.Expression.Literal."
+  "UserDefinedH\000\022\020\n\010nullable\0302 \001(\010\022 \n\030type_"
+  "variation_reference\0303 \001(\r\032(\n\007VarChar\022\r\n\005"
+  "value\030\001 \001(\t\022\016\n\006length\030\002 \001(\r\032:\n\007Decimal\022\r"
+  "\n\005value\030\001 \001(\014\022\021\n\tprecision\030\002 \001(\005\022\r\n\005scal"
+  "e\030\003 \001(\005\032\253\001\n\003Map\022>\n\nkey_values\030\001 \003(\0132*.su"
+  "bstrait.Expression.Literal.Map.KeyValue\032"
+  "d\n\010KeyValue\022*\n\003key\030\001 \001(\0132\035.substrait.Exp"
+  "ression.Literal\022,\n\005value\030\002 \001(\0132\035.substra"
+  "it.Expression.Literal\0324\n\023IntervalYearToM"
+  "onth\022\r\n\005years\030\001 \001(\005\022\016\n\006months\030\002 \001(\005\032J\n\023I"
+  "ntervalDayToSecond\022\014\n\004days\030\001 \001(\005\022\017\n\007seco"
+  "nds\030\002 \001(\005\022\024\n\014microseconds\030\003 \001(\005\0327\n\006Struc"
+  "t\022-\n\006fields\030\001 \003(\0132\035.substrait.Expression"
+  ".Literal\0325\n\004List\022-\n\006values\030\001 \003(\0132\035.subst"
+  "rait.Expression.Literal\032\277\001\n\013UserDefined\022"
+  "\026\n\016type_reference\030\001 \001(\r\0222\n\017type_paramete"
+  "rs\030\003 \003(\0132\031.substrait.Type.Parameter\022%\n\005v"
+  "alue\030\002 \001(\0132\024.google.protobuf.AnyH\000\0226\n\006st"
+  "ruct\030\004 \001(\0132$.substrait.Expression.Litera"
+  "l.StructH\000B\005\n\003valB\016\n\014literal_type\032\343\003\n\006Ne"
+  "sted\022\020\n\010nullable\030\001 \001(\010\022 \n\030type_variation"
+  "_reference\030\002 \001(\r\0225\n\006struct\030\003 \001(\0132#.subst"
+  "rait.Expression.Nested.StructH\000\0221\n\004list\030"
+  "\004 \001(\0132!.substrait.Expression.Nested.List"
+  "H\000\022/\n\003map\030\005 \001(\0132 .substrait.Expression.N"
+  "ested.MapH\000\032\232\001\n\003Map\022=\n\nkey_values\030\001 \003(\0132"
+  ").substrait.Expression.Nested.Map.KeyVal"
+  "ue\032T\n\010KeyValue\022\"\n\003key\030\001 \001(\0132\025.substrait."
+  "Expression\022$\n\005value\030\002 \001(\0132\025.substrait.Ex"
+  "pression\032/\n\006Struct\022%\n\006fields\030\001 \003(\0132\025.sub"
+  "strait.Expression\032-\n\004List\022%\n\006values\030\001 \003("
+  "\0132\025.substrait.ExpressionB\r\n\013nested_type\032"
+  "\327\001\n\016ScalarFunction\022\032\n\022function_reference"
+  "\030\001 \001(\r\022.\n\targuments\030\004 \003(\0132\033.substrait.Fu"
+  "nctionArgument\022*\n\007options\030\005 \003(\0132\031.substr"
+  "ait.FunctionOption\022$\n\013output_type\030\003 \001(\0132"
+  "\017.substrait.Type\022\'\n\004args\030\002 \003(\0132\025.substra"
+  "it.ExpressionB\002\030\001\032\321\010\n\016WindowFunction\022\032\n\022"
+  "function_reference\030\001 \001(\r\022.\n\targuments\030\t "
+  "\003(\0132\033.substrait.FunctionArgument\022*\n\007opti"
+  "ons\030\013 \003(\0132\031.substrait.FunctionOption\022$\n\013"
+  "output_type\030\007 \001(\0132\017.substrait.Type\022*\n\005ph"
+  "ase\030\006 \001(\0162\033.substrait.AggregationPhase\022#"
+  "\n\005sorts\030\003 \003(\0132\024.substrait.SortField\022F\n\ni"
+  "nvocation\030\n \001(\01622.substrait.AggregateFun"
+  "ction.AggregationInvocation\022)\n\npartition"
+  "s\030\002 \003(\0132\025.substrait.Expression\022D\n\013bounds"
+  "_type\030\014 \001(\0162/.substrait.Expression.Windo"
+  "wFunction.BoundsType\022\?\n\013lower_bound\030\005 \001("
+  "\0132*.substrait.Expression.WindowFunction."
+  "Bound\022\?\n\013upper_bound\030\004 \001(\0132*.substrait.E"
+  "xpression.WindowFunction.Bound\022\'\n\004args\030\010"
+  " \003(\0132\025.substrait.ExpressionB\002\030\001\032\223\003\n\005Boun"
+  "d\022I\n\tpreceding\030\001 \001(\01324.substrait.Express"
+  "ion.WindowFunction.Bound.PrecedingH\000\022I\n\t"
+  "following\030\002 \001(\01324.substrait.Expression.W"
+  "indowFunction.Bound.FollowingH\000\022L\n\013curre"
+  "nt_row\030\003 \001(\01325.substrait.Expression.Wind"
+  "owFunction.Bound.CurrentRowH\000\022I\n\tunbound"
+  "ed\030\004 \001(\01324.substrait.Expression.WindowFu"
+  "nction.Bound.UnboundedH\000\032\033\n\tPreceding\022\016\n"
+  "\006offset\030\001 \001(\003\032\033\n\tFollowing\022\016\n\006offset\030\001 \001"
+  "(\003\032\014\n\nCurrentRow\032\013\n\tUnboundedB\006\n\004kind\"V\n"
+  "\nBoundsType\022\033\n\027BOUNDS_TYPE_UNSPECIFIED\020\000"
+  "\022\024\n\020BOUNDS_TYPE_ROWS\020\001\022\025\n\021BOUNDS_TYPE_RA"
+  "NGE\020\002\032\265\001\n\006IfThen\0222\n\003ifs\030\001 \003(\0132%.substrai"
+  "t.Expression.IfThen.IfClause\022#\n\004else\030\002 \001"
+  "(\0132\025.substrait.Expression\032R\n\010IfClause\022!\n"
+  "\002if\030\001 \001(\0132\025.substrait.Expression\022#\n\004then"
+  "\030\002 \001(\0132\025.substrait.Expression\032\216\002\n\004Cast\022\035"
+  "\n\004type\030\001 \001(\0132\017.substrait.Type\022$\n\005input\030\002"
+  " \001(\0132\025.substrait.Expression\022D\n\020failure_b"
+  "ehavior\030\003 \001(\0162*.substrait.Expression.Cas"
+  "t.FailureBehavior\"{\n\017FailureBehavior\022 \n\034"
+  "FAILURE_BEHAVIOR_UNSPECIFIED\020\000\022 \n\034FAILUR"
+  "E_BEHAVIOR_RETURN_NULL\020\001\022$\n FAILURE_BEHA"
+  "VIOR_THROW_EXCEPTION\020\002\032\365\001\n\020SwitchExpress"
+  "ion\022$\n\005match\030\003 \001(\0132\025.substrait.Expressio"
+  "n\022;\n\003ifs\030\001 \003(\0132..substrait.Expression.Sw"
+  "itchExpression.IfValue\022#\n\004else\030\002 \001(\0132\025.s"
+  "ubstrait.Expression\032Y\n\007IfValue\022)\n\002if\030\001 \001"
+  "(\0132\035.substrait.Expression.Literal\022#\n\004the"
+  "n\030\002 \001(\0132\025.substrait.Expression\032^\n\016Singul"
+  "arOrList\022$\n\005value\030\001 \001(\0132\025.substrait.Expr"
+  "ession\022&\n\007options\030\002 \003(\0132\025.substrait.Expr"
+  "ession\032\237\001\n\013MultiOrList\022$\n\005value\030\001 \003(\0132\025."
+  "substrait.Expression\0229\n\007options\030\002 \003(\0132(."
+  "substrait.Expression.MultiOrList.Record\032"
+  "/\n\006Record\022%\n\006fields\030\001 \003(\0132\025.substrait.Ex"
+  "pression\032\243\003\n\020EmbeddedFunction\022(\n\targumen"
+  "ts\030\001 \003(\0132\025.substrait.Expression\022$\n\013outpu"
+  "t_type\030\002 \001(\0132\017.substrait.Type\022]\n\026python_"
+  "pickle_function\030\003 \001(\0132;.substrait.Expres"
+  "sion.EmbeddedFunction.PythonPickleFuncti"
+  "onH\000\022[\n\025web_assembly_function\030\004 \001(\0132:.su"
+  "bstrait.Expression.EmbeddedFunction.WebA"
+  "ssemblyFunctionH\000\032>\n\024PythonPickleFunctio"
+  "n\022\020\n\010function\030\001 \001(\014\022\024\n\014prerequisite\030\002 \003("
+  "\t\032;\n\023WebAssemblyFunction\022\016\n\006script\030\001 \001(\014"
+  "\022\024\n\014prerequisite\030\002 \003(\tB\006\n\004kind\032\232\004\n\020Refer"
+  "enceSegment\022@\n\007map_key\030\001 \001(\0132-.substrait"
+  ".Expression.ReferenceSegment.MapKeyH\000\022J\n"
+  "\014struct_field\030\002 \001(\01322.substrait.Expressi"
+  "on.ReferenceSegment.StructFieldH\000\022J\n\014lis"
+  "t_element\030\003 \001(\01322.substrait.Expression.R"
+  "eferenceSegment.ListElementH\000\032o\n\006MapKey\022"
+  ".\n\007map_key\030\001 \001(\0132\035.substrait.Expression."
+  "Literal\0225\n\005child\030\002 \001(\0132&.substrait.Expre"
+  "ssion.ReferenceSegment\032S\n\013StructField\022\r\n"
+  "\005field\030\001 \001(\005\0225\n\005child\030\002 \001(\0132&.substrait."
+  "Expression.ReferenceSegment\032T\n\013ListEleme"
+  "nt\022\016\n\006offset\030\001 \001(\005\0225\n\005child\030\002 \001(\0132&.subs"
+  "trait.Expression.ReferenceSegmentB\020\n\016ref"
+  "erence_type\032\360\t\n\016MaskExpression\022A\n\006select"
+  "\030\001 \001(\01321.substrait.Expression.MaskExpres"
+  "sion.StructSelect\022 \n\030maintain_singular_s"
+  "truct\030\002 \001(\010\032\325\001\n\006Select\022C\n\006struct\030\001 \001(\01321"
+  ".substrait.Expression.MaskExpression.Str"
+  "uctSelectH\000\022\?\n\004list\030\002 \001(\0132/.substrait.Ex"
+  "pression.MaskExpression.ListSelectH\000\022=\n\003"
+  "map\030\003 \001(\0132..substrait.Expression.MaskExp"
+  "ression.MapSelectH\000B\006\n\004type\032U\n\014StructSel"
+  "ect\022E\n\014struct_items\030\001 \003(\0132/.substrait.Ex"
+  "pression.MaskExpression.StructItem\032W\n\nSt"
+  "ructItem\022\r\n\005field\030\001 \001(\005\022:\n\005child\030\002 \001(\0132+"
+  ".substrait.Expression.MaskExpression.Sel"
+  "ect\032\264\003\n\nListSelect\022Q\n\tselection\030\001 \003(\0132>."
+  "substrait.Expression.MaskExpression.List"
+  "Select.ListSelectItem\022:\n\005child\030\002 \001(\0132+.s"
+  "ubstrait.Expression.MaskExpression.Selec"
+  "t\032\226\002\n\016ListSelectItem\022Z\n\004item\030\001 \001(\0132J.sub"
+  "strait.Expression.MaskExpression.ListSel"
+  "ect.ListSelectItem.ListElementH\000\022Y\n\005slic"
+  "e\030\002 \001(\0132H.substrait.Expression.MaskExpre"
+  "ssion.ListSelect.ListSelectItem.ListSlic"
+  "eH\000\032\034\n\013ListElement\022\r\n\005field\030\001 \001(\005\032\'\n\tLis"
+  "tSlice\022\r\n\005start\030\001 \001(\005\022\013\n\003end\030\002 \001(\005B\006\n\004ty"
+  "pe\032\271\002\n\tMapSelect\022D\n\003key\030\001 \001(\01325.substrai"
+  "t.Expression.MaskExpression.MapSelect.Ma"
+  "pKeyH\000\022U\n\nexpression\030\002 \001(\0132\?.substrait.E"
+  "xpression.MaskExpression.MapSelect.MapKe"
+  "yExpressionH\000\022:\n\005child\030\003 \001(\0132+.substrait"
+  ".Expression.MaskExpression.Select\032\031\n\006Map"
+  "Key\022\017\n\007map_key\030\001 \001(\t\032.\n\020MapKeyExpression"
+  "\022\032\n\022map_key_expression\030\001 \001(\tB\010\n\006select\032\266"
+  "\003\n\016FieldReference\022B\n\020direct_reference\030\001 "
+  "\001(\0132&.substrait.Expression.ReferenceSegm"
+  "entH\000\022@\n\020masked_reference\030\002 \001(\0132$.substr"
+  "ait.Expression.MaskExpressionH\000\022+\n\nexpre"
+  "ssion\030\003 \001(\0132\025.substrait.ExpressionH\001\022L\n\016"
+  "root_reference\030\004 \001(\01322.substrait.Express"
+  "ion.FieldReference.RootReferenceH\001\022N\n\017ou"
+  "ter_reference\030\005 \001(\01323.substrait.Expressi"
+  "on.FieldReference.OuterReferenceH\001\032\017\n\rRo"
+  "otReference\032#\n\016OuterReference\022\021\n\tsteps_o"
+  "ut\030\001 \001(\rB\020\n\016reference_typeB\013\n\troot_type\032"
+  "\214\t\n\010Subquery\0227\n\006scalar\030\001 \001(\0132%.substrait"
+  ".Expression.Subquery.ScalarH\000\022B\n\014in_pred"
+  "icate\030\002 \001(\0132*.substrait.Expression.Subqu"
+  "ery.InPredicateH\000\022D\n\rset_predicate\030\003 \001(\013"
+  "2+.substrait.Expression.Subquery.SetPred"
+  "icateH\000\022F\n\016set_comparison\030\004 \001(\0132,.substr"
+  "ait.Expression.Subquery.SetComparisonH\000\032"
+  "\'\n\006Scalar\022\035\n\005input\030\001 \001(\0132\016.substrait.Rel"
+  "\032W\n\013InPredicate\022&\n\007needles\030\001 \003(\0132\025.subst"
+  "rait.Expression\022 \n\010haystack\030\002 \001(\0132\016.subs"
+  "trait.Rel\032\334\001\n\014SetPredicate\022M\n\014predicate_"
+  "op\030\001 \001(\01627.substrait.Expression.Subquery"
+  ".SetPredicate.PredicateOp\022\036\n\006tuples\030\002 \001("
+  "\0132\016.substrait.Rel\"]\n\013PredicateOp\022\034\n\030PRED"
+  "ICATE_OP_UNSPECIFIED\020\000\022\027\n\023PREDICATE_OP_E"
+  "XISTS\020\001\022\027\n\023PREDICATE_OP_UNIQUE\020\002\032\202\004\n\rSet"
+  "Comparison\022N\n\014reduction_op\030\001 \001(\01628.subst"
+  "rait.Expression.Subquery.SetComparison.R"
+  "eductionOp\022P\n\rcomparison_op\030\002 \001(\01629.subs"
+  "trait.Expression.Subquery.SetComparison."
+  "ComparisonOp\022#\n\004left\030\003 \001(\0132\025.substrait.E"
+  "xpression\022\035\n\005right\030\004 \001(\0132\016.substrait.Rel"
+  "\"\261\001\n\014ComparisonOp\022\035\n\031COMPARISON_OP_UNSPE"
+  "CIFIED\020\000\022\024\n\020COMPARISON_OP_EQ\020\001\022\024\n\020COMPAR"
+  "ISON_OP_NE\020\002\022\024\n\020COMPARISON_OP_LT\020\003\022\024\n\020CO"
+  "MPARISON_OP_GT\020\004\022\024\n\020COMPARISON_OP_LE\020\005\022\024"
+  "\n\020COMPARISON_OP_GE\020\006\"W\n\013ReductionOp\022\034\n\030R"
+  "EDUCTION_OP_UNSPECIFIED\020\000\022\024\n\020REDUCTION_O"
+  "P_ANY\020\001\022\024\n\020REDUCTION_OP_ALL\020\002B\017\n\rsubquer"
+  "y_typeB\n\n\010rex_type\"\377\002\n\tSortField\022#\n\004expr"
+  "\030\001 \001(\0132\025.substrait.Expression\0227\n\tdirecti"
+  "on\030\002 \001(\0162\".substrait.SortField.SortDirec"
+  "tionH\000\022\'\n\035comparison_function_reference\030"
+  "\003 \001(\rH\000\"\335\001\n\rSortDirection\022\036\n\032SORT_DIRECT"
+  "ION_UNSPECIFIED\020\000\022\"\n\036SORT_DIRECTION_ASC_"
+  "NULLS_FIRST\020\001\022!\n\035SORT_DIRECTION_ASC_NULL"
+  "S_LAST\020\002\022#\n\037SORT_DIRECTION_DESC_NULLS_FI"
+  "RST\020\003\022\"\n\036SORT_DIRECTION_DESC_NULLS_LAST\020"
+  "\004\022\034\n\030SORT_DIRECTION_CLUSTERED\020\005B\013\n\tsort_"
+  "kind\"\372\003\n\021AggregateFunction\022\032\n\022function_r"
+  "eference\030\001 \001(\r\022.\n\targuments\030\007 \003(\0132\033.subs"
+  "trait.FunctionArgument\022*\n\007options\030\010 \003(\0132"
+  "\031.substrait.FunctionOption\022$\n\013output_typ"
+  "e\030\005 \001(\0132\017.substrait.Type\022*\n\005phase\030\004 \001(\0162"
+  "\033.substrait.AggregationPhase\022#\n\005sorts\030\003 "
+  "\003(\0132\024.substrait.SortField\022F\n\ninvocation\030"
+  "\006 \001(\01622.substrait.AggregateFunction.Aggr"
+  "egationInvocation\022\'\n\004args\030\002 \003(\0132\025.substr"
+  "ait.ExpressionB\002\030\001\"\204\001\n\025AggregationInvoca"
+  "tion\022&\n\"AGGREGATION_INVOCATION_UNSPECIFI"
+  "ED\020\000\022\036\n\032AGGREGATION_INVOCATION_ALL\020\001\022#\n\037"
+  "AGGREGATION_INVOCATION_DISTINCT\020\002\"\'\n\014Ref"
+  "erenceRel\022\027\n\017subtree_ordinal\030\001 \001(\005*\357\001\n\020A"
+  "ggregationPhase\022!\n\035AGGREGATION_PHASE_UNS"
+  "PECIFIED\020\000\022-\n)AGGREGATION_PHASE_INITIAL_"
+  "TO_INTERMEDIATE\020\001\0222\n.AGGREGATION_PHASE_I"
+  "NTERMEDIATE_TO_INTERMEDIATE\020\002\022\'\n#AGGREGA"
+  "TION_PHASE_INITIAL_TO_RESULT\020\003\022,\n(AGGREG"
+  "ATION_PHASE_INTERMEDIATE_TO_RESULT\020\004BW\n\022"
+  "io.substrait.protoP\001Z*github.com/substra"
+  "it-io/substrait-go/proto\252\002\022Substrait.Pro"
+  "tobufb\006proto3"
   ;
 static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor_table_substrait_2falgebra_2eproto_deps[3] = {
   &::descriptor_table_google_2fprotobuf_2fany_2eproto,
@@ -3611,7 +3611,7 @@ static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor
 };
 static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_substrait_2falgebra_2eproto_once;
 const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_substrait_2falgebra_2eproto = {
-  false, false, 23476, descriptor_table_protodef_substrait_2falgebra_2eproto, "substrait/algebra.proto", 
+  false, false, 23453, descriptor_table_protodef_substrait_2falgebra_2eproto, "substrait/algebra.proto", 
   &descriptor_table_substrait_2falgebra_2eproto_once, descriptor_table_substrait_2falgebra_2eproto_deps, 3, 118,
   schemas, file_default_instances, TableStruct_substrait_2falgebra_2eproto::offsets,
   file_level_metadata_substrait_2falgebra_2eproto, file_level_enum_descriptors_substrait_2falgebra_2eproto, file_level_service_descriptors_substrait_2falgebra_2eproto,
@@ -20966,6 +20966,8 @@ class DelimiterJoinRel::_Internal {
   static const ::substrait::RelCommon& common(const DelimiterJoinRel* msg);
   static const ::substrait::Rel& left(const DelimiterJoinRel* msg);
   static const ::substrait::Rel& right(const DelimiterJoinRel* msg);
+  static const ::substrait::Expression& expression(const DelimiterJoinRel* msg);
+  static const ::substrait::Expression& post_join_filter(const DelimiterJoinRel* msg);
   static const ::substrait::Expression_FieldReference& delimiter_field(const DelimiterJoinRel* msg);
   static const ::substrait::extensions::AdvancedExtension& advanced_extension(const DelimiterJoinRel* msg);
 };
@@ -20981,6 +20983,14 @@ DelimiterJoinRel::_Internal::left(const DelimiterJoinRel* msg) {
 const ::substrait::Rel&
 DelimiterJoinRel::_Internal::right(const DelimiterJoinRel* msg) {
   return *msg->right_;
+}
+const ::substrait::Expression&
+DelimiterJoinRel::_Internal::expression(const DelimiterJoinRel* msg) {
+  return *msg->expression_;
+}
+const ::substrait::Expression&
+DelimiterJoinRel::_Internal::post_join_filter(const DelimiterJoinRel* msg) {
+  return *msg->post_join_filter_;
 }
 const ::substrait::Expression_FieldReference&
 DelimiterJoinRel::_Internal::delimiter_field(const DelimiterJoinRel* msg) {
@@ -20998,9 +21008,7 @@ void DelimiterJoinRel::clear_advanced_extension() {
 }
 DelimiterJoinRel::DelimiterJoinRel(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
-  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned),
-  left_keys_(arena),
-  right_keys_(arena) {
+  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
   SharedCtor();
   if (!is_message_owned) {
     RegisterArenaDtor(arena);
@@ -21008,9 +21016,7 @@ DelimiterJoinRel::DelimiterJoinRel(::PROTOBUF_NAMESPACE_ID::Arena* arena,
   // @@protoc_insertion_point(arena_constructor:substrait.DelimiterJoinRel)
 }
 DelimiterJoinRel::DelimiterJoinRel(const DelimiterJoinRel& from)
-  : ::PROTOBUF_NAMESPACE_ID::Message(),
-      left_keys_(from.left_keys_),
-      right_keys_(from.right_keys_) {
+  : ::PROTOBUF_NAMESPACE_ID::Message() {
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
   if (from._internal_has_common()) {
     common_ = new ::substrait::RelCommon(*from.common_);
@@ -21026,6 +21032,16 @@ DelimiterJoinRel::DelimiterJoinRel(const DelimiterJoinRel& from)
     right_ = new ::substrait::Rel(*from.right_);
   } else {
     right_ = nullptr;
+  }
+  if (from._internal_has_expression()) {
+    expression_ = new ::substrait::Expression(*from.expression_);
+  } else {
+    expression_ = nullptr;
+  }
+  if (from._internal_has_post_join_filter()) {
+    post_join_filter_ = new ::substrait::Expression(*from.post_join_filter_);
+  } else {
+    post_join_filter_ = nullptr;
   }
   if (from._internal_has_delimiter_field()) {
     delimiter_field_ = new ::substrait::Expression_FieldReference(*from.delimiter_field_);
@@ -21060,6 +21076,8 @@ inline void DelimiterJoinRel::SharedDtor() {
   if (this != internal_default_instance()) delete common_;
   if (this != internal_default_instance()) delete left_;
   if (this != internal_default_instance()) delete right_;
+  if (this != internal_default_instance()) delete expression_;
+  if (this != internal_default_instance()) delete post_join_filter_;
   if (this != internal_default_instance()) delete delimiter_field_;
   if (this != internal_default_instance()) delete advanced_extension_;
 }
@@ -21080,8 +21098,6 @@ void DelimiterJoinRel::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  left_keys_.Clear();
-  right_keys_.Clear();
   if (GetArenaForAllocation() == nullptr && common_ != nullptr) {
     delete common_;
   }
@@ -21094,6 +21110,14 @@ void DelimiterJoinRel::Clear() {
     delete right_;
   }
   right_ = nullptr;
+  if (GetArenaForAllocation() == nullptr && expression_ != nullptr) {
+    delete expression_;
+  }
+  expression_ = nullptr;
+  if (GetArenaForAllocation() == nullptr && post_join_filter_ != nullptr) {
+    delete post_join_filter_;
+  }
+  post_join_filter_ = nullptr;
   if (GetArenaForAllocation() == nullptr && delimiter_field_ != nullptr) {
     delete delimiter_field_;
   }
@@ -21136,29 +21160,19 @@ const char* DelimiterJoinRel::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPA
         } else
           goto handle_unusual;
         continue;
-      // repeated .substrait.Expression.FieldReference left_keys = 4;
+      // .substrait.Expression expression = 4;
       case 4:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 34)) {
-          ptr -= 1;
-          do {
-            ptr += 1;
-            ptr = ctx->ParseMessage(_internal_add_left_keys(), ptr);
-            CHK_(ptr);
-            if (!ctx->DataAvailable(ptr)) break;
-          } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<34>(ptr));
+          ptr = ctx->ParseMessage(_internal_mutable_expression(), ptr);
+          CHK_(ptr);
         } else
           goto handle_unusual;
         continue;
-      // repeated .substrait.Expression.FieldReference right_keys = 5;
+      // .substrait.Expression post_join_filter = 5;
       case 5:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 42)) {
-          ptr -= 1;
-          do {
-            ptr += 1;
-            ptr = ctx->ParseMessage(_internal_add_right_keys(), ptr);
-            CHK_(ptr);
-            if (!ctx->DataAvailable(ptr)) break;
-          } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<42>(ptr));
+          ptr = ctx->ParseMessage(_internal_mutable_post_join_filter(), ptr);
+          CHK_(ptr);
         } else
           goto handle_unusual;
         continue;
@@ -21240,20 +21254,20 @@ uint8_t* DelimiterJoinRel::_InternalSerialize(
         3, _Internal::right(this), target, stream);
   }
 
-  // repeated .substrait.Expression.FieldReference left_keys = 4;
-  for (unsigned int i = 0,
-      n = static_cast<unsigned int>(this->_internal_left_keys_size()); i < n; i++) {
+  // .substrait.Expression expression = 4;
+  if (this->_internal_has_expression()) {
     target = stream->EnsureSpace(target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
-      InternalWriteMessage(4, this->_internal_left_keys(i), target, stream);
+      InternalWriteMessage(
+        4, _Internal::expression(this), target, stream);
   }
 
-  // repeated .substrait.Expression.FieldReference right_keys = 5;
-  for (unsigned int i = 0,
-      n = static_cast<unsigned int>(this->_internal_right_keys_size()); i < n; i++) {
+  // .substrait.Expression post_join_filter = 5;
+  if (this->_internal_has_post_join_filter()) {
     target = stream->EnsureSpace(target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
-      InternalWriteMessage(5, this->_internal_right_keys(i), target, stream);
+      InternalWriteMessage(
+        5, _Internal::post_join_filter(this), target, stream);
   }
 
   // .substrait.DelimiterJoinRel.JoinType type = 6;
@@ -21295,20 +21309,6 @@ size_t DelimiterJoinRel::ByteSizeLong() const {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  // repeated .substrait.Expression.FieldReference left_keys = 4;
-  total_size += 1UL * this->_internal_left_keys_size();
-  for (const auto& msg : this->left_keys_) {
-    total_size +=
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(msg);
-  }
-
-  // repeated .substrait.Expression.FieldReference right_keys = 5;
-  total_size += 1UL * this->_internal_right_keys_size();
-  for (const auto& msg : this->right_keys_) {
-    total_size +=
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(msg);
-  }
-
   // .substrait.RelCommon common = 1;
   if (this->_internal_has_common()) {
     total_size += 1 +
@@ -21328,6 +21328,20 @@ size_t DelimiterJoinRel::ByteSizeLong() const {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
         *right_);
+  }
+
+  // .substrait.Expression expression = 4;
+  if (this->_internal_has_expression()) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
+        *expression_);
+  }
+
+  // .substrait.Expression post_join_filter = 5;
+  if (this->_internal_has_post_join_filter()) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
+        *post_join_filter_);
   }
 
   // .substrait.Expression.FieldReference delimiter_field = 7;
@@ -21372,8 +21386,6 @@ void DelimiterJoinRel::MergeFrom(const DelimiterJoinRel& from) {
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
-  left_keys_.MergeFrom(from.left_keys_);
-  right_keys_.MergeFrom(from.right_keys_);
   if (from._internal_has_common()) {
     _internal_mutable_common()->::substrait::RelCommon::MergeFrom(from._internal_common());
   }
@@ -21382,6 +21394,12 @@ void DelimiterJoinRel::MergeFrom(const DelimiterJoinRel& from) {
   }
   if (from._internal_has_right()) {
     _internal_mutable_right()->::substrait::Rel::MergeFrom(from._internal_right());
+  }
+  if (from._internal_has_expression()) {
+    _internal_mutable_expression()->::substrait::Expression::MergeFrom(from._internal_expression());
+  }
+  if (from._internal_has_post_join_filter()) {
+    _internal_mutable_post_join_filter()->::substrait::Expression::MergeFrom(from._internal_post_join_filter());
   }
   if (from._internal_has_delimiter_field()) {
     _internal_mutable_delimiter_field()->::substrait::Expression_FieldReference::MergeFrom(from._internal_delimiter_field());
@@ -21409,8 +21427,6 @@ bool DelimiterJoinRel::IsInitialized() const {
 void DelimiterJoinRel::InternalSwap(DelimiterJoinRel* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-  left_keys_.InternalSwap(&other->left_keys_);
-  right_keys_.InternalSwap(&other->right_keys_);
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
       PROTOBUF_FIELD_OFFSET(DelimiterJoinRel, type_)
       + sizeof(DelimiterJoinRel::type_)

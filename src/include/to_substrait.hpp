@@ -47,6 +47,7 @@ private:
 	substrait::Rel *TransformLimit(duckdb::LogicalOperator &dop);
 	substrait::Rel *TransformOrderBy(duckdb::LogicalOperator &dop);
 	substrait::Rel *TransformComparisonJoin(duckdb::LogicalOperator &dop);
+        substrait::Rel *TransformDelimiterJoin(duckdb::LogicalOperator &dop);
 	substrait::Rel *TransformAggregateGroup(duckdb::LogicalOperator &dop);
 	substrait::Rel *TransformGet(duckdb::LogicalOperator &dop);
 	substrait::Rel *TransformCrossProduct(duckdb::LogicalOperator &dop);

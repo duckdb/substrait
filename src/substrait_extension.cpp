@@ -96,12 +96,10 @@ static void VerifySubstraitRoundtrip(unique_ptr<LogicalOperator> &query_plan, Co
 	unique_ptr<QueryResult> substrait_result;
 	try {
 		substrait_result = sub_relation->Execute();
-
 	} catch (std::exception &ex) {
 		// Ideally we don't have to do that, we should change to capture the error and throw it here at some point
 		query_plan->Print();
 		sub_relation->Print();
-
 		throw InternalException("Substrait Plan Execution Failed");
 	}
 	substrait_result->names = actual_result->names;

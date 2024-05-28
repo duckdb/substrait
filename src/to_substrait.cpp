@@ -917,6 +917,63 @@ substrait::Rel *DuckDBToSubstrait::TransformComparisonJoin(LogicalOperator &dop)
 	return proj_rel;
 }
 
+substrait::Rel *DuckDBToSubstrait::TransformDelimiterJoin(LogicalOperator &dop) {
+	auto res = new substrait::Rel();
+	auto sjoin = res->mutable_delimiter_join();
+	auto &djoin = (LogicalComparisonJoin &)dop;
+	sjoin->set_allocated_left(TransformOp(*dop.children[0]));
+	sjoin->set_allocated_right(TransformOp(*dop.children[1]));
+
+	auto left_col_count = dop.children[0]->types.size();
+	if (dop.children[0]->type == LogicalOperatorType::LOGICAL_COMPARISON_JOIN) {
+		auto child_join = (LogicalComparisonJoin *)dop.children[0].get();
+		left_col_count = child_join->left_projection_map.size() + child_join->right_projection_map.size();
+	}
+	sjoin->set_allocated_expression(
+	    CreateConjunction(djoin.conditions, [&](JoinCondition &in) { return TransformJoinCond(in, left_col_count); }));
+
+	switch (djoin.join_type) {
+	case JoinType::INNER:
+		sjoin->set_type(substrait::DelimiterJoinRel_JoinType::DelimiterJoinRel_JoinType_JOIN_TYPE_INNER);
+		break;
+	case JoinType::LEFT:
+		sjoin->set_type(substrait::DelimiterJoinRel_JoinType::DelimiterJoinRel_JoinType_JOIN_TYPE_LEFT);
+		break;
+	case JoinType::RIGHT:
+		sjoin->set_type(substrait::DelimiterJoinRel_JoinType::DelimiterJoinRel_JoinType_JOIN_TYPE_RIGHT);
+		break;
+	default:
+		throw InternalException("Unsupported join type " + JoinTypeToString(djoin.join_type));
+	}
+
+	// somewhat odd semantics on our side
+	if (djoin.left_projection_map.empty()) {
+		for (uint64_t i = 0; i < dop.children[0]->types.size(); i++) {
+			djoin.left_projection_map.push_back(i);
+		}
+	}
+	if (djoin.right_projection_map.empty()) {
+		for (uint64_t i = 0; i < dop.children[1]->types.size(); i++) {
+			djoin.right_projection_map.push_back(i);
+		}
+	}
+	auto proj_rel = new substrait::Rel();
+	auto projection = proj_rel->mutable_project();
+	for (auto left_idx : djoin.left_projection_map) {
+		CreateFieldRef(projection->add_expressions(), left_idx);
+	}
+	if (djoin.join_type != JoinType::SEMI) {
+		for (auto right_idx : djoin.right_projection_map) {
+			CreateFieldRef(projection->add_expressions(), right_idx + left_col_count);
+		}
+	}
+//        CreateFieldRef( sjoin->mutable_delimiter_field(),  left_col_count);
+//        sjoin->mutable_delimiter_field() =
+
+	projection->set_allocated_input(res);
+	return proj_rel;
+}
+
 substrait::Rel *DuckDBToSubstrait::TransformAggregateGroup(LogicalOperator &dop) {
 	auto res = new substrait::Rel();
 	auto &daggr = (LogicalAggregate &)dop;
@@ -1302,6 +1359,8 @@ substrait::Rel *DuckDBToSubstrait::TransformOp(LogicalOperator &dop) {
 		return TransformOrderBy(dop);
 	case LogicalOperatorType::LOGICAL_PROJECTION:
 		return TransformProjection(dop);
+        case LogicalOperatorType::LOGICAL_DELIM_JOIN:
+          return TransformDelimiterJoin(dop);
 	case LogicalOperatorType::LOGICAL_COMPARISON_JOIN:
 		return TransformComparisonJoin(dop);
 	case LogicalOperatorType::LOGICAL_AGGREGATE_AND_GROUP_BY:
