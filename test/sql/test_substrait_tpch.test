@@ -78,15 +78,15 @@ CALL get_substrait('SELECT 100.00 * sum( CASE WHEN p_type LIKE ''PROMO%'' THEN l
 statement ok
 CALL get_substrait('SELECT s_suppkey, s_name, s_address, s_phone, total_revenue FROM supplier, ( SELECT l_suppkey AS supplier_no, sum(l_extendedprice * (1 - l_discount)) AS total_revenue FROM lineitem WHERE l_shipdate >= CAST(''1996-01-01'' AS date) AND l_shipdate < CAST(''1996-04-01'' AS date) GROUP BY supplier_no) revenue0 WHERE s_suppkey = supplier_no AND total_revenue = ( SELECT max(total_revenue) FROM ( SELECT l_suppkey AS supplier_no, sum(l_extendedprice * (1 - l_discount)) AS total_revenue FROM lineitem WHERE l_shipdate >= CAST(''1996-01-01'' AS date) AND l_shipdate < CAST(''1996-04-01'' AS date) GROUP BY supplier_no) revenue1) ORDER BY s_suppkey;')
 
-#Q 16 (Missing Chunk Get)
-#statement ok
-#CALL get_substrait('SELECT p_brand, p_type, p_size, count(DISTINCT ps_suppkey) AS supplier_cnt FROM partsupp, part WHERE p_partkey = ps_partkey AND p_brand <> ''Brand#45'' AND p_type NOT LIKE ''MEDIUM POLISHED%'' AND p_size IN (49, 14, 23, 45, 19, 3, 36, 9) AND ps_suppkey NOT IN ( SELECT s_suppkey FROM supplier WHERE s_comment LIKE ''%Customer%Complaints%'') GROUP BY p_brand, p_type, p_size ORDER BY supplier_cnt DESC, p_brand, p_type, p_size;')
+#Q 16
+statement ok
+CALL get_substrait('SELECT p_brand, p_type, p_size, count(DISTINCT ps_suppkey) AS supplier_cnt FROM partsupp, part WHERE p_partkey = ps_partkey AND p_brand <> ''Brand#45'' AND p_type NOT LIKE ''MEDIUM POLISHED%'' AND p_size IN (49, 14, 23, 45, 19, 3, 36, 9) AND ps_suppkey NOT IN ( SELECT s_suppkey FROM supplier WHERE s_comment LIKE ''%Customer%Complaints%'') GROUP BY p_brand, p_type, p_size ORDER BY supplier_cnt DESC, p_brand, p_type, p_size;')
 
 #Q 17 (DELIM_JOIN)
 #statement ok
 #CALL get_substrait('SELECT sum(l_extendedprice) / 7.0 AS avg_yearly FROM lineitem, part WHERE p_partkey = l_partkey AND p_brand = ''Brand#23'' AND p_container = ''MED BOX'' AND l_quantity < ( SELECT 0.2 * avg(l_quantity) FROM lineitem WHERE l_partkey = p_partkey);')
 
-#Q 18 Skipping this test for now beucase it is part of the big posref refactoring
+#Q 18
 statement ok
 CALL get_substrait('SELECT c_name, c_custkey, o_orderkey, o_orderdate, o_totalprice, sum(l_quantity) FROM customer, orders, lineitem WHERE o_orderkey IN ( SELECT l_orderkey FROM lineitem GROUP BY l_orderkey HAVING sum(l_quantity) > 300) AND c_custkey = o_custkey AND o_orderkey = l_orderkey GROUP BY c_name, c_custkey, o_orderkey, o_orderdate, o_totalprice ORDER BY o_totalprice DESC, o_orderdate LIMIT 100;')
 
@@ -102,7 +102,7 @@ CALL get_substrait('SELECT sum(l_extendedprice * (1 - l_discount)) AS revenue FR
 #statement ok
 #CALL get_substrait('SELECT s_name, count(*) AS numwait FROM supplier, lineitem l1, orders, nation WHERE s_suppkey = l1.l_suppkey AND o_orderkey = l1.l_orderkey AND o_orderstatus = ''F'' AND l1.l_receiptdate > l1.l_commitdate AND EXISTS ( SELECT * FROM lineitem l2 WHERE l2.l_orderkey = l1.l_orderkey AND l2.l_suppkey <> l1.l_suppkey) AND NOT EXISTS ( SELECT * FROM lineitem l3 WHERE l3.l_orderkey = l1.l_orderkey AND l3.l_suppkey <> l1.l_suppkey AND l3.l_receiptdate > l3.l_commitdate) AND s_nationkey = n_nationkey AND n_name = ''SAUDI ARABIA'' GROUP BY s_name ORDER BY numwait DESC, s_name LIMIT 100;')
 
-#Q 22 Mark Join + Chunk Get
+#Q 22 - Delim Join
 #statement ok
 #CALL get_substrait('SELECT cntrycode, count(*) AS numcust, sum(c_acctbal) AS totacctbal FROM ( SELECT substring(c_phone FROM 1 FOR 2) AS cntrycode, c_acctbal FROM customer WHERE substring(c_phone FROM 1 FOR 2) IN (''13'', ''31'', ''23'', ''29'', ''30'', ''18'', ''17'') AND c_acctbal > ( SELECT avg(c_acctbal) FROM customer WHERE c_acctbal > 0.00 AND substring(c_phone FROM 1 FOR 2) IN (''13'', ''31'', ''23'', ''29'', ''30'', ''18'', ''17'')) AND NOT EXISTS ( SELECT * FROM orders WHERE o_custkey = c_custkey)) AS custsale GROUP BY cntrycode ORDER BY cntrycode;')
 

@@ -419,13 +419,16 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformJoinOp(const substrait::Rel &so
 	case substrait::JoinRel::JoinType::JoinRel_JoinType_JOIN_TYPE_SEMI:
 		djointype = JoinType::SEMI;
 		break;
+	case substrait::JoinRel::JoinType::JoinRel_JoinType_JOIN_TYPE_MARK:
+		djointype = JoinType::MARK;
+		break;
 	default:
 		throw InternalException("Unsupported join type");
 	}
 	unique_ptr<ParsedExpression> join_condition = TransformExpr(sjoin.expression());
-	return make_shared_ptr<JoinRelation>(TransformOp(sjoin.left())->Alias("left"),
-	                                     TransformOp(sjoin.right())->Alias("right"), std::move(join_condition),
-	                                     djointype);
+	auto left_op = TransformOp(sjoin.left())->Alias("left");
+	auto right_op = TransformOp(sjoin.right())->Alias("right");
+	return make_shared_ptr<JoinRelation>(std::move(left_op), std::move(right_op), std::move(join_condition), djointype);
 }
 
 shared_ptr<Relation> SubstraitToDuckDB::TransformCrossProductOp(const substrait::Rel &sop) {
@@ -455,8 +458,10 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformProjectOp(const substrait::Rel 
 	for (size_t i = 0; i < expressions.size(); i++) {
 		mock_aliases.push_back("expr_" + to_string(i));
 	}
-	return make_shared_ptr<ProjectionRelation>(TransformOp(sop.project().input()), std::move(expressions),
-	                                           std::move(mock_aliases));
+	auto child = TransformOp(sop.project().input());
+	auto proj_relation =
+	    make_shared_ptr<ProjectionRelation>(std::move(child), std::move(expressions), std::move(mock_aliases));
+	return proj_relation;
 }
 
 shared_ptr<Relation> SubstraitToDuckDB::TransformAggregateOp(const substrait::Rel &sop) {
@@ -630,7 +635,18 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformPlan() {
 	if (plan.relations().empty()) {
 		throw InvalidInputException("Substrait Plan does not have a SELECT statement");
 	}
-	auto d_plan = TransformRootOp(plan.relations(0).root());
+	shared_ptr<Relation> d_plan;
+	try {
+		d_plan = TransformRootOp(plan.relations(0).root());
+	} catch (std::exception &ex) {
+		// Ideally we don't have to do that, we should change to capture the error and throw it here at some point
+		::duckdb::ErrorData parsed_error(ex);
+		throw NotImplementedException("Something in this plan is not yet implemented in the Substrait->DuckDB plan "
+		                              "conversion.\n Substrait Plan:\n" +
+		                              plan.DebugString() +
+		                              "Not Implemented error message: " + parsed_error.RawMessage());
+	}
+
 	return d_plan;
 }
 

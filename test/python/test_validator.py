@@ -35,13 +35,10 @@ def run_tpch_validator(require, query_number):
 def test_substrait_tpch_validator(require,query_number):
     run_tpch_validator(require,query_number)
 
-@pytest.mark.skip(reason="DuckDB Compilation: INTERNAL Error: Unsupported join type MARK")
+
+@pytest.mark.skip(reason="We can't run the validator on Q16 since it uses a Mark Join and that does not exist in the validator")
 def test_substrait_tpch_validator_16(require):
     run_tpch_validator(require,16)
-
-@pytest.mark.skip(reason="Skipping this test for now because it is part of the big posref refactoring")
-def test_substrait_tpch_validator_18(require):
-    run_tpch_validator(require,18)
 
 @pytest.mark.skip(reason="Skipping this test for now because it is part of the big posref refactoring")
 def test_substrait_tpch_validator_2(require):
