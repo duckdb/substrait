@@ -1087,6 +1087,18 @@ substrait::Rel *DuckDBToSubstrait::TransformAggregateGroup(LogicalOperator &dop)
 		s_type.set_allocated_user_defined(enum_type);
 		return s_type;
 	}
+	case LogicalTypeId::STRUCT: {
+		auto struct_type = new substrait::Type_Struct;
+		struct_type->set_nullability(type_nullability);
+		// ok lets get the children of our struct
+		auto children = StructType::GetChildTypes(type);
+		for (auto &child : children) {
+			auto new_type = struct_type->add_types();
+			*new_type = DuckToSubstraitType(child.second, column_statistics, not_null);
+		}
+		s_type.set_allocated_struct_(struct_type);
+		return s_type;
+	}
 	default:
 		throw NotImplementedException("Logical Type " + type.ToString() +
 		                              " not implemented as Substrait Schema Result.");
@@ -1143,10 +1155,14 @@ void DuckDBToSubstrait::TransformParquetScanToSubstrait(LogicalGet &dget, substr
 	type_info->set_nullability(substrait::Type_Nullability_NULLABILITY_REQUIRED);
 	for (idx_t i = 0; i < dget.names.size(); i++) {
 		auto cur_type = dget.returned_types[i];
-		if (cur_type.id() == LogicalTypeId::STRUCT) {
-			throw NotImplementedException("Structs are not yet accepted in table scans");
-		}
 		base_schema->add_names(dget.names[i]);
+		if (cur_type.id() == LogicalTypeId::STRUCT) {
+			// Get the names
+			for (idx_t struct_idx = 0; struct_idx < StructType::GetChildCount(cur_type); struct_idx++) {
+				auto child_name = StructType::GetChildName(cur_type, struct_idx);
+				base_schema->add_names(child_name);
+			}
+		}
 		auto column_statistics = dget.function.statistics(context, &bind_data, i);
 		auto new_type = type_info->add_types();
 		*new_type = DuckToSubstraitType(cur_type, column_statistics.get(), false);
