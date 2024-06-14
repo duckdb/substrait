@@ -286,7 +286,7 @@ void DuckDBToSubstrait::TransformConstant(Value &dval, substrait::Expression &se
 		TransformEnum(dval, sexpr);
 		break;
 	default:
-		throw InternalException("Transform constant of type %s", duckdb_type.ToString());
+		throw NotImplementedException("Consuming a value of type %s is not supported yet", duckdb_type.ToString());
 	}
 }
 
