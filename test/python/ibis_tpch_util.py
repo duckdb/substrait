@@ -36,7 +36,7 @@ def tpc_h01(con, DELTA=90, DATE="1998-12-01"):
         avg_disc=t.l_discount.mean(),
         count_order=t.count(),
     )
-    q = q.sort_by(["l_returnflag", "l_linestatus"])
+    q = q.order_by(["l_returnflag", "l_linestatus"])
     return q
 
 def tpc_h02(con, REGION="EUROPE", SIZE=25, TYPE="BRASS"):
@@ -86,7 +86,7 @@ def tpc_h02(con, REGION="EUROPE", SIZE=25, TYPE="BRASS"):
         ]
     )
 
-    return q.sort_by(
+    return q.order_by(
         [
             ibis.desc(q.s_acctbal),
             q.n_name,
@@ -107,7 +107,7 @@ def tpc_h03(con, MKTSEGMENT="BUILDING", DATE="1995-03-15"):
     )
     qg = q.group_by([q.l_orderkey, q.o_orderdate, q.o_shippriority])
     q = qg.aggregate(revenue=(q.l_extendedprice * (1 - q.l_discount)).sum())
-    q = q.sort_by([ibis.desc(q.revenue), q.o_orderdate])
+    q = q.order_by([ibis.desc(q.revenue), q.o_orderdate])
     q = q.limit(10)
 
     return q
@@ -127,7 +127,7 @@ def tpc_h04(con, DATE="1993-07-01"):
     )
     q = q.group_by([orders.o_orderpriority])
     q = q.aggregate(order_count=orders.count())
-    q = q.sort_by([orders.o_orderpriority])
+    q = q.order_by([orders.o_orderpriority])
     return q
 
 def tpc_h05(con, NAME="ASIA", DATE="1994-01-01"):
@@ -155,7 +155,7 @@ def tpc_h05(con, NAME="ASIA", DATE="1994-01-01"):
     revexpr = q.l_extendedprice * (1 - q.l_discount)
     gq = q.group_by([q.n_name])
     q = gq.aggregate(revenue=revexpr.sum())
-    q = q.sort_by([ibis.desc(q.revenue)])
+    q = q.order_by([ibis.desc(q.revenue)])
     return q
 
 def tpc_h06(con, DATE="1994-01-01", DISCOUNT=0.06, QUANTITY=24):
@@ -209,7 +209,7 @@ def tpc_h07(con, NATION1="FRANCE", NATION2="GERMANY", DATE="1995-01-01"):
 
     gq = q.group_by(["supp_nation", "cust_nation", "l_year"])
     q = gq.aggregate(revenue=q.volume.sum())
-    q = q.sort_by(["supp_nation", "cust_nation", "l_year"])
+    q = q.order_by(["supp_nation", "cust_nation", "l_year"])
 
     return q
 
@@ -260,7 +260,7 @@ def tpc_h08(
     )
     gq = q.group_by([q.o_year])
     q = gq.aggregate(mkt_share=q.nation_volume.sum() / q.volume.sum())
-    q = q.sort_by([q.o_year])
+    q = q.order_by([q.o_year])
     return q
 
 def tpc_h09(con, COLOR="green"):
@@ -295,7 +295,7 @@ def tpc_h09(con, COLOR="green"):
 
     gq = q.group_by([q.nation, q.o_year])
     q = gq.aggregate(sum_profit=q.amount.sum())
-    q = q.sort_by([q.nation, ibis.desc(q.o_year)])
+    q = q.order_by([q.nation, ibis.desc(q.o_year)])
     return q
 
 def tpc_h10(con, DATE="1993-10-01"):
@@ -329,7 +329,7 @@ def tpc_h10(con, DATE="1993-10-01"):
     )
     q = gq.aggregate(revenue=(q.l_extendedprice * (1 - q.l_discount)).sum())
 
-    q = q.sort_by(ibis.desc(q.revenue))
+    q = q.order_by(ibis.desc(q.revenue))
     return q.limit(20)
 
 def tpc_h11(con, NATION="GERMANY", FRACTION=0.0001):
@@ -352,7 +352,7 @@ def tpc_h11(con, NATION="GERMANY", FRACTION=0.0001):
     gq = q.group_by([q.ps_partkey])
     q = gq.aggregate(value=(q.ps_supplycost * q.ps_availqty).sum())
     q = q.filter([q.value > innerq.total * FRACTION])
-    q = q.sort_by(ibis.desc(q.value))
+    q = q.order_by(ibis.desc(q.value))
     return q
 
 def tpc_h12(con, SHIPMODE1="MAIL", SHIPMODE2="SHIP", DATE="1994-01-01"):
@@ -393,7 +393,7 @@ def tpc_h12(con, SHIPMODE1="MAIL", SHIPMODE2="SHIP", DATE="1994-01-01"):
             .end()
         ).sum(),
     )
-    q = q.sort_by(q.l_shipmode)
+    q = q.order_by(q.l_shipmode)
 
     return q
 
@@ -416,7 +416,7 @@ def tpc_h13(con, WORD1="special", WORD2="requests"):
     gq = innerq.group_by([innerq.c_count])
     q = gq.aggregate(custdist=innerq.count())
 
-    q = q.sort_by([ibis.desc(q.custdist), ibis.desc(q.c_count)])
+    q = q.order_by([ibis.desc(q.custdist), ibis.desc(q.c_count)])
     return q
 
 def tpc_h14(con, DATE="1995-09-01"):
@@ -454,7 +454,7 @@ def tpc_h15(con, DATE="1996-01-01"):
 
     q = supplier.join(qrev, supplier.s_suppkey == qrev.l_suppkey)
     q = q.filter([q.total_revenue == qrev.total_revenue.max()])
-    q = q.sort_by([q.s_suppkey])
+    q = q.order_by([q.s_suppkey])
     q = q[q.s_suppkey, q.s_name, q.s_address, q.s_phone, q.total_revenue]
     return q
 
@@ -487,9 +487,9 @@ def tpc_h16(
             ),
         ]
     )
-    gq = q.groupby([q.p_brand, q.p_type, q.p_size])
+    gq = q.group_by([q.p_brand, q.p_type, q.p_size])
     q = gq.aggregate(supplier_cnt=q.ps_suppkey.nunique())
-    q = q.sort_by([ibis.desc(q.supplier_cnt), q.p_brand, q.p_type, q.p_size])
+    q = q.order_by([ibis.desc(q.supplier_cnt), q.p_brand, q.p_type, q.p_size])
     return q
 
 def tpc_h17(con, BRAND="Brand#23", CONTAINER="MED BOX"):
@@ -526,7 +526,7 @@ def tpc_h18(con, QUANTITY=300):
     orders = con.table("orders")
     lineitem = con.table("lineitem")
 
-    subgq = lineitem.groupby([lineitem.l_orderkey])
+    subgq = lineitem.group_by([lineitem.l_orderkey])
     subq = subgq.aggregate(qty_sum=lineitem.l_quantity.sum())
     subq = subq.filter([subq.qty_sum > QUANTITY])
 
@@ -535,9 +535,9 @@ def tpc_h18(con, QUANTITY=300):
     q = q.join(lineitem, orders.o_orderkey == lineitem.l_orderkey)
     q = q.filter([q.o_orderkey.isin(subq.l_orderkey)])
 
-    gq = q.groupby([q.c_name, q.c_custkey, q.o_orderkey, q.o_orderdate, q.o_totalprice])
+    gq = q.group_by([q.c_name, q.c_custkey, q.o_orderkey, q.o_orderdate, q.o_totalprice])
     q = gq.aggregate(sum_qty=q.l_quantity.sum())
-    q = q.sort_by([ibis.desc(q.o_totalprice), q.o_orderdate])
+    q = q.order_by([ibis.desc(q.o_totalprice), q.o_orderdate])
     return q.limit(100)
 
 def tpc_h19(
@@ -630,7 +630,7 @@ def tpc_h20(con, COLOR="forest", DATE="1994-01-01", NATION="CANADA"):
 
     q1 = q1[q1.s_name, q1.s_address]
 
-    return q1.sort_by(q1.s_name)
+    return q1.order_by(q1.s_name)
 
 def tpc_h21(con, NATION="SAUDI ARABIA"):
     """Suppliers Who Kept Orders Waiting Query (Q21)
@@ -676,7 +676,7 @@ def tpc_h21(con, NATION="SAUDI ARABIA"):
 
     gq = q.group_by([q.s_name])
     q = gq.aggregate(numwait=q.count())
-    q = q.sort_by([ibis.desc(q.numwait), q.s_name])
+    q = q.order_by([ibis.desc(q.numwait), q.s_name])
     return q.limit(100)
 
 def tpc_h22(con, COUNTRY_CODES=("13", "31", "23", "29", "30", "18", "17")):
@@ -709,7 +709,7 @@ def tpc_h22(con, COUNTRY_CODES=("13", "31", "23", "29", "30", "18", "17")):
     gq = custsale.group_by(custsale.cntrycode)
     outerq = gq.aggregate(numcust=custsale.count(), totacctbal=custsale.c_acctbal.sum())
 
-    return outerq.sort_by(outerq.cntrycode)
+    return outerq.order_by(outerq.cntrycode)
 
 def invalid_query(con):
 	assert 0

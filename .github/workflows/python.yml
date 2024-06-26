@@ -39,7 +39,7 @@ jobs:
     - name: Install Python Dependencies
       shell: bash
       run: |
-        pip install pytest pandas substrait adbc_driver_manager "ibis-framework[duckdb]==3.2.0" "ibis-substrait==2.21.1" "substrait-validator==0.0.11" 
+        pip install -r test/python/requirements-dev.txt
         pip uninstall protobuf -y
         pip install --no-binary protobuf protobuf
 
