@@ -21,10 +21,12 @@
 
 #include "duckdb/parser/expression/comparison_expression.hpp"
 
-#include "substrait/plan.pb.h"
-#include "google/protobuf/util/json_util.h"
-#include "duckdb/main/client_data.hpp"
 #include "duckdb/common/http_state.hpp"
+#include "duckdb/main/client_data.hpp"
+#include "google/protobuf/util/json_util.h"
+#include "substrait/plan.pb.h"
+
+#include "duckdb/main/relation/delimiter_get_relation.hpp"
 
 namespace duckdb {
 const std::unordered_map<std::string, std::string> SubstraitToDuckDB::function_names_remap = {
@@ -432,7 +434,7 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformJoinOp(const substrait::Rel &so
 }
 
 shared_ptr<Relation> SubstraitToDuckDB::TransformDelimJoinOp(const substrait::Rel &sop) {
-	auto &sjoin = sop.join();
+	auto &sjoin = sop.delimiter_join();
 
 	JoinType djointype;
 	switch (sjoin.type()) {
@@ -465,9 +467,12 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformDelimJoinOp(const substrait::Re
 
 shared_ptr<Relation> SubstraitToDuckDB::TransformDelimGetOp(const substrait::Rel &sop) {
 	auto &delimiter_get = sop.delimiter_get();
-
-	return make_shared_ptr<CrossProductRelation>(TransformOp(sub_cross.left())->Alias("left"),
-	                                             TransformOp(sub_cross.right())->Alias("right"));
+	auto &client_context = con.context;
+	vector<LogicalType> chunk_types;
+	for (auto &s_type : delimiter_get.chunk_types()) {
+		chunk_types.emplace_back(SubstraitToDuckType(s_type));
+	}
+	return make_shared_ptr<DelimiterGetRelation>(client_context, chunk_types);
 }
 
 shared_ptr<Relation> SubstraitToDuckDB::TransformCrossProductOp(const substrait::Rel &sop) {
