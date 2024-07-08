@@ -47,7 +47,7 @@ private:
 	substrait::Rel *TransformLimit(duckdb::LogicalOperator &dop);
 	substrait::Rel *TransformOrderBy(duckdb::LogicalOperator &dop);
 	substrait::Rel *TransformComparisonJoin(duckdb::LogicalOperator &dop);
-        substrait::Rel *TransformDelimiterJoin(duckdb::LogicalOperator &dop);
+	substrait::Rel *TransformDelimiterJoin(duckdb::LogicalOperator &dop);
 	substrait::Rel *TransformAggregateGroup(duckdb::LogicalOperator &dop);
 	substrait::Rel *TransformGet(duckdb::LogicalOperator &dop);
 	substrait::Rel *TransformCrossProduct(duckdb::LogicalOperator &dop);
@@ -55,6 +55,7 @@ private:
 	substrait::Rel *TransformDistinct(duckdb::LogicalOperator &dop);
 	substrait::Rel *TransformExcept(LogicalOperator &dop);
 	substrait::Rel *TransformIntersect(LogicalOperator &dop);
+	substrait::Rel *TransformDelimGet(LogicalOperator &dop);
 
 	//! Methods to transform different LogicalGet Types (e.g., Table, Parquet)
 	//! To Substrait;

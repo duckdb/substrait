@@ -431,6 +431,45 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformJoinOp(const substrait::Rel &so
 	return make_shared_ptr<JoinRelation>(std::move(left_op), std::move(right_op), std::move(join_condition), djointype);
 }
 
+shared_ptr<Relation> SubstraitToDuckDB::TransformDelimJoinOp(const substrait::Rel &sop) {
+	auto &sjoin = sop.join();
+
+	JoinType djointype;
+	switch (sjoin.type()) {
+	case substrait::JoinRel::JoinType::JoinRel_JoinType_JOIN_TYPE_INNER:
+		djointype = JoinType::INNER;
+		break;
+	case substrait::JoinRel::JoinType::JoinRel_JoinType_JOIN_TYPE_LEFT:
+		djointype = JoinType::LEFT;
+		break;
+	case substrait::JoinRel::JoinType::JoinRel_JoinType_JOIN_TYPE_RIGHT:
+		djointype = JoinType::RIGHT;
+		break;
+	case substrait::JoinRel::JoinType::JoinRel_JoinType_JOIN_TYPE_SINGLE:
+		djointype = JoinType::SINGLE;
+		break;
+	case substrait::JoinRel::JoinType::JoinRel_JoinType_JOIN_TYPE_SEMI:
+		djointype = JoinType::SEMI;
+		break;
+	case substrait::JoinRel::JoinType::JoinRel_JoinType_JOIN_TYPE_MARK:
+		djointype = JoinType::MARK;
+		break;
+	default:
+		throw InternalException("Unsupported join type");
+	}
+	unique_ptr<ParsedExpression> join_condition = TransformExpr(sjoin.expression());
+	auto left_op = TransformOp(sjoin.left())->Alias("left");
+	auto right_op = TransformOp(sjoin.right())->Alias("right");
+	return make_shared_ptr<JoinRelation>(std::move(left_op), std::move(right_op), std::move(join_condition), djointype);
+}
+
+shared_ptr<Relation> SubstraitToDuckDB::TransformDelimGetOp(const substrait::Rel &sop) {
+	auto &delimiter_get = sop.delimiter_get();
+
+	return make_shared_ptr<CrossProductRelation>(TransformOp(sub_cross.left())->Alias("left"),
+	                                             TransformOp(sub_cross.right())->Alias("right"));
+}
+
 shared_ptr<Relation> SubstraitToDuckDB::TransformCrossProductOp(const substrait::Rel &sop) {
 	auto &sub_cross = sop.cross();
 
@@ -614,6 +653,10 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformOp(const substrait::Rel &sop) {
 		return TransformSortOp(sop);
 	case substrait::Rel::RelTypeCase::kSet:
 		return TransformSetOp(sop);
+	case substrait::Rel::RelTypeCase::kDelimiterJoin:
+		return TransformDelimJoinOp(sop);
+	case substrait::Rel::RelTypeCase::kDelimiterGet:
+		return TransformDelimGetOp(sop);
 	default:
 		throw InternalException("Unsupported relation type " + to_string(sop.rel_type_case()));
 	}

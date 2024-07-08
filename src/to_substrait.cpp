@@ -946,9 +946,19 @@ substrait::Rel *DuckDBToSubstrait::TransformDelimiterJoin(LogicalOperator &dop) 
 	case JoinType::RIGHT:
 		sjoin->set_type(substrait::DelimiterJoinRel_JoinType::DelimiterJoinRel_JoinType_JOIN_TYPE_RIGHT);
 		break;
+	case JoinType::SINGLE:
+		sjoin->set_type(substrait::DelimiterJoinRel_JoinType::DelimiterJoinRel_JoinType_JOIN_TYPE_SINGLE);
+		break;
 	default:
 		throw InternalException("Unsupported join type " + JoinTypeToString(djoin.join_type));
 	}
+
+	// Have to add duplicate_eliminated_columns if any
+	for (auto &dup_col : djoin.duplicate_eliminated_columns) {
+		auto s_dup_col = sjoin->add_duplicate_eliminated_columns();
+		TransformExpr(*dup_col, *s_dup_col);
+	}
+	sjoin->set_delim_flipped(djoin.delim_flipped);
 
 	// somewhat odd semantics on our side
 	if (djoin.left_projection_map.empty()) {
@@ -971,9 +981,6 @@ substrait::Rel *DuckDBToSubstrait::TransformDelimiterJoin(LogicalOperator &dop) 
 			CreateFieldRef(projection->add_expressions(), right_idx + left_col_count);
 		}
 	}
-//        CreateFieldRef( sjoin->mutable_delimiter_field(),  left_col_count);
-//        sjoin->mutable_delimiter_field() =
-
 	projection->set_allocated_input(res);
 	return proj_rel;
 }
@@ -1351,6 +1358,18 @@ substrait::Rel *DuckDBToSubstrait::TransformIntersect(LogicalOperator &dop) {
 	return rel;
 }
 
+substrait::Rel *DuckDBToSubstrait::TransformDelimGet(LogicalOperator &dop) {
+	auto rel = new substrait::Rel();
+	auto delim_get = rel->mutable_delimiter_get();
+
+	auto &get_delimiter = dop.Cast<LogicalDelimGet>();
+	for (auto &type : get_delimiter.chunk_types) {
+		auto s_type = delim_get->add_chunk_types();
+		*s_type = DuckToSubstraitType(type);
+	}
+	return rel;
+}
+
 substrait::Rel *DuckDBToSubstrait::TransformOp(LogicalOperator &dop) {
 	switch (dop.type) {
 	case LogicalOperatorType::LOGICAL_FILTER:
@@ -1363,8 +1382,8 @@ substrait::Rel *DuckDBToSubstrait::TransformOp(LogicalOperator &dop) {
 		return TransformOrderBy(dop);
 	case LogicalOperatorType::LOGICAL_PROJECTION:
 		return TransformProjection(dop);
-        case LogicalOperatorType::LOGICAL_DELIM_JOIN:
-          return TransformDelimiterJoin(dop);
+	case LogicalOperatorType::LOGICAL_DELIM_JOIN:
+		return TransformDelimiterJoin(dop);
 	case LogicalOperatorType::LOGICAL_COMPARISON_JOIN:
 		return TransformComparisonJoin(dop);
 	case LogicalOperatorType::LOGICAL_AGGREGATE_AND_GROUP_BY:
@@ -1381,6 +1400,8 @@ substrait::Rel *DuckDBToSubstrait::TransformOp(LogicalOperator &dop) {
 		return TransformExcept(dop);
 	case LogicalOperatorType::LOGICAL_INTERSECT:
 		return TransformIntersect(dop);
+	case LogicalOperatorType::LOGICAL_DELIM_GET:
+		return TransformDelimGet(dop);
 	default:
 		throw InternalException(LogicalOperatorToString(dop.type));
 	}
