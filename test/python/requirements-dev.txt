@@ -1,0 +1,7 @@
+pytest
+pandas
+pyarrow
+ibis-framework==8.0.0
+ibis-substrait==3.2.1
+substrait-validator==0.0.11
+duckdb-engine==0.9.2
