@@ -462,7 +462,12 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformDelimJoinOp(const substrait::Re
 	unique_ptr<ParsedExpression> join_condition = TransformExpr(sjoin.expression());
 	auto left_op = TransformOp(sjoin.left())->Alias("left");
 	auto right_op = TransformOp(sjoin.right())->Alias("right");
-	return make_shared_ptr<JoinRelation>(std::move(left_op), std::move(right_op), std::move(join_condition), djointype);
+	auto join = make_shared_ptr<JoinRelation>(std::move(left_op), std::move(right_op), std::move(join_condition), djointype);
+	join->delim_flipped = sjoin.delim_flipped();
+	for (auto& col: sjoin.duplicate_eliminated_columns()) {
+		join->duplicate_eliminated_columns.emplace_back(TransformExpr(col));
+	}
+	return join;
 }
 
 shared_ptr<Relation> SubstraitToDuckDB::TransformDelimGetOp(const substrait::Rel &sop) {

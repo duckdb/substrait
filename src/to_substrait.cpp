@@ -949,6 +949,9 @@ substrait::Rel *DuckDBToSubstrait::TransformDelimiterJoin(LogicalOperator &dop) 
 	case JoinType::SINGLE:
 		sjoin->set_type(substrait::DelimiterJoinRel_JoinType::DelimiterJoinRel_JoinType_JOIN_TYPE_SINGLE);
 		break;
+	// case JoinType::SINGLE:
+	// 	sjoin->set_type(substrait::DelimiterJoinRel_JoinType::DelimiterJoinRel_JoinType_JOIN_TYPE_SINGLE);
+	// 	break;
 	default:
 		throw InternalException("Unsupported join type " + JoinTypeToString(djoin.join_type));
 	}
