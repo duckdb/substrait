@@ -89,11 +89,11 @@ shared_ptr<Relation> SubstraitPlanToDuckDBRel(Connection &conn, const string &se
 
 static void VerifySubstraitRoundtrip(unique_ptr<LogicalOperator> &query_plan, Connection &con,
                                      ToSubstraitFunctionData &data, const string &serialized, bool is_json) {
-	// We round-trip the generated json and verify if the result is the same
-	auto actual_result = con.Query(data.query);
-
+	bool is_optimizer_enabled = con.context->config.enable_optimizer;
+	con.context->config.enable_optimizer = false;
 	auto sub_relation = SubstraitPlanToDuckDBRel(con, serialized, is_json);
 	unique_ptr<QueryResult> substrait_result;
+
 	try {
 		substrait_result = sub_relation->Execute();
 	} catch (std::exception &ex) {
@@ -102,6 +102,10 @@ static void VerifySubstraitRoundtrip(unique_ptr<LogicalOperator> &query_plan, Co
 		sub_relation->Print();
 		throw InternalException("Substrait Plan Execution Failed");
 	}
+	con.context->config.enable_optimizer = is_optimizer_enabled;
+	// We round-trip the generated json and verify if the result is the same
+	auto actual_result = con.Query(data.query);
+
 	substrait_result->names = actual_result->names;
 	unique_ptr<MaterializedQueryResult> substrait_materialized;
 

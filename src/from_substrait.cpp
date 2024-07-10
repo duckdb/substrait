@@ -438,22 +438,22 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformDelimJoinOp(const substrait::Re
 
 	JoinType djointype;
 	switch (sjoin.type()) {
-	case substrait::JoinRel::JoinType::JoinRel_JoinType_JOIN_TYPE_INNER:
+	case substrait::DelimiterJoinRel_JoinType::DelimiterJoinRel_JoinType_JOIN_TYPE_INNER:
 		djointype = JoinType::INNER;
 		break;
-	case substrait::JoinRel::JoinType::JoinRel_JoinType_JOIN_TYPE_LEFT:
+	case substrait::DelimiterJoinRel_JoinType::DelimiterJoinRel_JoinType_JOIN_TYPE_LEFT:
 		djointype = JoinType::LEFT;
 		break;
-	case substrait::JoinRel::JoinType::JoinRel_JoinType_JOIN_TYPE_RIGHT:
+	case substrait::DelimiterJoinRel_JoinType::DelimiterJoinRel_JoinType_JOIN_TYPE_RIGHT:
 		djointype = JoinType::RIGHT;
 		break;
-	case substrait::JoinRel::JoinType::JoinRel_JoinType_JOIN_TYPE_SINGLE:
+	case substrait::DelimiterJoinRel_JoinType::DelimiterJoinRel_JoinType_JOIN_TYPE_SINGLE:
 		djointype = JoinType::SINGLE;
 		break;
-	case substrait::JoinRel::JoinType::JoinRel_JoinType_JOIN_TYPE_SEMI:
-		djointype = JoinType::SEMI;
+	case substrait::DelimiterJoinRel_JoinType::DelimiterJoinRel_JoinType_JOIN_TYPE_RIGHT_SEMI:
+		djointype = JoinType::RIGHT_SEMI;
 		break;
-	case substrait::JoinRel::JoinType::JoinRel_JoinType_JOIN_TYPE_MARK:
+	case substrait::DelimiterJoinRel_JoinType::DelimiterJoinRel_JoinType_JOIN_TYPE_MARK:
 		djointype = JoinType::MARK;
 		break;
 	default:
@@ -462,9 +462,10 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformDelimJoinOp(const substrait::Re
 	unique_ptr<ParsedExpression> join_condition = TransformExpr(sjoin.expression());
 	auto left_op = TransformOp(sjoin.left())->Alias("left");
 	auto right_op = TransformOp(sjoin.right())->Alias("right");
-	auto join = make_shared_ptr<JoinRelation>(std::move(left_op), std::move(right_op), std::move(join_condition), djointype);
+	auto join =
+	    make_shared_ptr<JoinRelation>(std::move(left_op), std::move(right_op), std::move(join_condition), djointype);
 	join->delim_flipped = sjoin.delim_flipped();
-	for (auto& col: sjoin.duplicate_eliminated_columns()) {
+	for (auto &col : sjoin.duplicate_eliminated_columns()) {
 		join->duplicate_eliminated_columns.emplace_back(TransformExpr(col));
 	}
 	return join;
@@ -699,7 +700,6 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformPlan() {
 		                              plan.DebugString() +
 		                              "Not Implemented error message: " + parsed_error.RawMessage());
 	}
-
 	return d_plan;
 }
 

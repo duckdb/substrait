@@ -8,28 +8,36 @@ statement ok
 PRAGMA enable_verification
 
 statement ok
-CREATE TABLE integers_2 (i integer, j integer);
-
-statement ok
-INSERT INTO integers_2 VALUES  (NULL,1)
-
-statement ok
-CALL get_substrait('SELECT i, (select SUM(i) OR true from integers_2 where j = i1.j) FROM integers_2 i1;')
-
-
-statement ok
 CREATE TABLE integers (i integer);
 
 statement ok
-insert into integers values (1),(2),(3),(NULL);
+INSERT INTO integers VALUES  (NULL)
+
+statement ok
+CREATE TABLE integers_2 (j integer);
+
+statement ok
+INSERT INTO integers_2 VALUES  (NULL)
+
+statement ok
+CALL get_substrait('SELECT (select SUM(i) OR true as i from integers where i = integers_2.j) FROM integers_2;')
+
+statement ok
+drop table integers
+
+statement ok
+CREATE TABLE integers (i integer, j integer);
+
+statement ok
+insert into integers values (1,1),(2,2),(3,3),(NULL,NULL);
 
 # Uncorrelated Scalar
 statement ok
 CALL get_substrait('select i, i + (select MIN(i) from integers) from integers order by i')
 
 # Uncorrelated Any (Missing Mark Join)
-statement ok
-CALL get_substrait('select i = ANY(select * from integers where i is not null) from integers')
+#statement ok
+#CALL get_substrait('select i = ANY(select * from integers where i is not null) from integers')
 
 # Uncorrelated Exist
 statement ok

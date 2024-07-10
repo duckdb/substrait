@@ -839,12 +839,14 @@ enum DelimiterJoinRel_JoinType : int {
   DelimiterJoinRel_JoinType_JOIN_TYPE_SEMI = 5,
   DelimiterJoinRel_JoinType_JOIN_TYPE_ANTI = 6,
   DelimiterJoinRel_JoinType_JOIN_TYPE_SINGLE = 7,
+  DelimiterJoinRel_JoinType_JOIN_TYPE_RIGHT_SEMI = 8,
+  DelimiterJoinRel_JoinType_JOIN_TYPE_MARK = 9,
   DelimiterJoinRel_JoinType_DelimiterJoinRel_JoinType_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
   DelimiterJoinRel_JoinType_DelimiterJoinRel_JoinType_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
 };
 bool DelimiterJoinRel_JoinType_IsValid(int value);
 constexpr DelimiterJoinRel_JoinType DelimiterJoinRel_JoinType_JoinType_MIN = DelimiterJoinRel_JoinType_JOIN_TYPE_UNSPECIFIED;
-constexpr DelimiterJoinRel_JoinType DelimiterJoinRel_JoinType_JoinType_MAX = DelimiterJoinRel_JoinType_JOIN_TYPE_SINGLE;
+constexpr DelimiterJoinRel_JoinType DelimiterJoinRel_JoinType_JoinType_MAX = DelimiterJoinRel_JoinType_JOIN_TYPE_MARK;
 constexpr int DelimiterJoinRel_JoinType_JoinType_ARRAYSIZE = DelimiterJoinRel_JoinType_JoinType_MAX + 1;
 
 const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* DelimiterJoinRel_JoinType_descriptor();
@@ -12793,6 +12795,10 @@ class DelimiterJoinRel final :
     DelimiterJoinRel_JoinType_JOIN_TYPE_ANTI;
   static constexpr JoinType JOIN_TYPE_SINGLE =
     DelimiterJoinRel_JoinType_JOIN_TYPE_SINGLE;
+  static constexpr JoinType JOIN_TYPE_RIGHT_SEMI =
+    DelimiterJoinRel_JoinType_JOIN_TYPE_RIGHT_SEMI;
+  static constexpr JoinType JOIN_TYPE_MARK =
+    DelimiterJoinRel_JoinType_JOIN_TYPE_MARK;
   static inline bool JoinType_IsValid(int value) {
     return DelimiterJoinRel_JoinType_IsValid(value);
   }
