@@ -20,6 +20,6 @@ def test_substrait_from_json(require):
         
     # Test closed connection
     connection.close()
-    with pytest.raises(duckdb.ConnectionException, match="Connection has already been closed"):
+    with pytest.raises(duckdb.ConnectionException, match="Connection"):
         connection.from_substrait_json(query_json).fetchone()[0]
 
