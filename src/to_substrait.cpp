@@ -916,8 +916,8 @@ substrait::Rel *DuckDBToSubstrait::TransformComparisonJoin(LogicalOperator &dop)
 	auto projection = proj_rel->mutable_project();
 	if (djoin.join_type == JoinType::RIGHT_SEMI) {
 		// We project everything from the right table
-		for (uint64_t i = 0; i < dop.children[1]->types.size(); i++) {
-			CreateFieldRef(projection->add_expressions(), i);
+		for (auto right_idx : djoin.right_projection_map) {
+			CreateFieldRef(projection->add_expressions(), right_idx);
 		}
 	} else {
 		for (auto left_idx : djoin.left_projection_map) {
@@ -997,8 +997,8 @@ substrait::Rel *DuckDBToSubstrait::TransformDelimiterJoin(LogicalOperator &dop) 
 	auto projection = proj_rel->mutable_project();
 	if (djoin.join_type == JoinType::RIGHT_SEMI || djoin.join_type == JoinType::RIGHT_ANTI) {
 		// We project everything from the right table
-		for (uint64_t i = 0; i < dop.children[1]->types.size(); i++) {
-			CreateFieldRef(projection->add_expressions(), i);
+		for (auto right_idx : djoin.right_projection_map) {
+			CreateFieldRef(projection->add_expressions(), right_idx);
 		}
 	} else {
 		for (auto left_idx : djoin.left_projection_map) {
