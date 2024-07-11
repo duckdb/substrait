@@ -857,6 +857,42 @@ substrait::Rel *DuckDBToSubstrait::TransformOrderBy(LogicalOperator &dop) {
 	return res;
 }
 
+substrait::Rel *DuckDBToSubstrait::ProjectJoinRelation(LogicalComparisonJoin &djoin, substrait::Rel *join_relation,
+                                                       idx_t left_col_count) {
+
+	// somewhat odd semantics on our side
+	if (djoin.left_projection_map.empty()) {
+		for (uint64_t i = 0; i < djoin.children[0]->types.size(); i++) {
+			djoin.left_projection_map.push_back(i);
+		}
+	}
+	if (djoin.right_projection_map.empty()) {
+		for (uint64_t i = 0; i < djoin.children[1]->types.size(); i++) {
+			djoin.right_projection_map.push_back(i);
+		}
+	}
+	auto proj_rel = new substrait::Rel();
+	auto projection = proj_rel->mutable_project();
+	if (djoin.join_type == JoinType::RIGHT_SEMI || djoin.join_type == JoinType::RIGHT_ANTI) {
+		// We project everything from the right table
+		for (auto right_idx : djoin.right_projection_map) {
+			CreateFieldRef(projection->add_expressions(), right_idx);
+		}
+	} else {
+		for (auto left_idx : djoin.left_projection_map) {
+			CreateFieldRef(projection->add_expressions(), left_idx);
+		}
+		if (djoin.join_type != JoinType::SEMI) {
+			for (auto right_idx : djoin.right_projection_map) {
+				CreateFieldRef(projection->add_expressions(), right_idx + left_col_count);
+			}
+		}
+	}
+
+	projection->set_allocated_input(join_relation);
+	return proj_rel;
+}
+
 substrait::Rel *DuckDBToSubstrait::TransformComparisonJoin(LogicalOperator &dop) {
 	auto res = new substrait::Rel();
 	auto sjoin = res->mutable_join();
@@ -901,37 +937,7 @@ substrait::Rel *DuckDBToSubstrait::TransformComparisonJoin(LogicalOperator &dop)
 	default:
 		throw InternalException("Unsupported join type " + JoinTypeToString(djoin.join_type));
 	}
-	// somewhat odd semantics on our side
-	if (djoin.left_projection_map.empty()) {
-		for (uint64_t i = 0; i < dop.children[0]->types.size(); i++) {
-			djoin.left_projection_map.push_back(i);
-		}
-	}
-	if (djoin.right_projection_map.empty()) {
-		for (uint64_t i = 0; i < dop.children[1]->types.size(); i++) {
-			djoin.right_projection_map.push_back(i);
-		}
-	}
-	auto proj_rel = new substrait::Rel();
-	auto projection = proj_rel->mutable_project();
-	if (djoin.join_type == JoinType::RIGHT_SEMI) {
-		// We project everything from the right table
-		for (auto right_idx : djoin.right_projection_map) {
-			CreateFieldRef(projection->add_expressions(), right_idx);
-		}
-	} else {
-		for (auto left_idx : djoin.left_projection_map) {
-			CreateFieldRef(projection->add_expressions(), left_idx);
-		}
-		if (djoin.join_type != JoinType::SEMI) {
-			for (auto right_idx : djoin.right_projection_map) {
-				CreateFieldRef(projection->add_expressions(), right_idx + left_col_count);
-			}
-		}
-	}
-
-	projection->set_allocated_input(res);
-	return proj_rel;
+	return ProjectJoinRelation(djoin, res, left_col_count);
 }
 
 substrait::Rel *DuckDBToSubstrait::TransformDelimiterJoin(LogicalOperator &dop) {
@@ -981,38 +987,7 @@ substrait::Rel *DuckDBToSubstrait::TransformDelimiterJoin(LogicalOperator &dop) 
 		TransformExpr(*dup_col, *s_dup_col);
 	}
 	sjoin->set_delim_flipped(djoin.delim_flipped);
-
-	// somewhat odd semantics on our side
-	if (djoin.left_projection_map.empty()) {
-		for (uint64_t i = 0; i < dop.children[0]->types.size(); i++) {
-			djoin.left_projection_map.push_back(i);
-		}
-	}
-	if (djoin.right_projection_map.empty()) {
-		for (uint64_t i = 0; i < dop.children[1]->types.size(); i++) {
-			djoin.right_projection_map.push_back(i);
-		}
-	}
-	auto proj_rel = new substrait::Rel();
-	auto projection = proj_rel->mutable_project();
-	if (djoin.join_type == JoinType::RIGHT_SEMI || djoin.join_type == JoinType::RIGHT_ANTI) {
-		// We project everything from the right table
-		for (auto right_idx : djoin.right_projection_map) {
-			CreateFieldRef(projection->add_expressions(), right_idx);
-		}
-	} else {
-		for (auto left_idx : djoin.left_projection_map) {
-			CreateFieldRef(projection->add_expressions(), left_idx);
-		}
-		if (djoin.join_type != JoinType::SEMI) {
-			for (auto right_idx : djoin.right_projection_map) {
-				CreateFieldRef(projection->add_expressions(), right_idx + left_col_count);
-			}
-		}
-	}
-
-	projection->set_allocated_input(res);
-	return proj_rel;
+	return ProjectJoinRelation(djoin, res, left_col_count);
 }
 
 substrait::Rel *DuckDBToSubstrait::TransformAggregateGroup(LogicalOperator &dop) {

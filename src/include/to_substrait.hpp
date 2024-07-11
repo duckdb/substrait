@@ -57,6 +57,10 @@ private:
 	substrait::Rel *TransformIntersect(LogicalOperator &dop);
 	substrait::Rel *TransformDelimGet(LogicalOperator &dop);
 
+	//! Auxiliary function to create Projection on top of a Join
+	substrait::Rel *ProjectJoinRelation(LogicalComparisonJoin &djoin, substrait::Rel *join_relation,
+	                                    idx_t left_col_count);
+
 	//! Methods to transform different LogicalGet Types (e.g., Table, Parquet)
 	//! To Substrait;
 	void TransformTableScanToSubstrait(LogicalGet &dget, substrait::ReadRel *sget);
