@@ -286,7 +286,7 @@ void DuckDBToSubstrait::TransformConstant(Value &dval, substrait::Expression &se
 		TransformEnum(dval, sexpr);
 		break;
 	default:
-		throw InternalException("Transform constant of type %s", duckdb_type.ToString());
+		throw NotImplementedException("Consuming a value of type %s is not supported yet", duckdb_type.ToString());
 	}
 }
 
@@ -864,7 +864,11 @@ substrait::Rel *DuckDBToSubstrait::TransformComparisonJoin(LogicalOperator &dop)
 	auto left_col_count = dop.children[0]->types.size();
 	if (dop.children[0]->type == LogicalOperatorType::LOGICAL_COMPARISON_JOIN) {
 		auto child_join = (LogicalComparisonJoin *)dop.children[0].get();
-		left_col_count = child_join->left_projection_map.size() + child_join->right_projection_map.size();
+		if (child_join->join_type != JoinType::SEMI && child_join->join_type != JoinType::ANTI) {
+			left_col_count = child_join->left_projection_map.size() + child_join->right_projection_map.size();
+		} else {
+			left_col_count = child_join->left_projection_map.size();
+		}
 	}
 	sjoin->set_allocated_expression(
 	    CreateConjunction(djoin.conditions, [&](JoinCondition &in) { return TransformJoinCond(in, left_col_count); }));
