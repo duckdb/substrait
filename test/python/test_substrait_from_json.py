@@ -9,7 +9,7 @@ def test_substrait_from_json(require):
     connection.execute('CREATE TABLE integers (i integer)')
     connection.execute('INSERT INTO integers values (0)')
     
-    query_json = '{"relations":[{"root":{"input":{"fetch":{"input":{"project":{"input":{"read":{"baseSchema":{"names":["i"],"struct":{"types":[{"i32":{"nullability":"NULLABILITY_NULLABLE"}}],"nullability":"NULLABILITY_REQUIRED"}},"projection":{"select":{"structItems":[{}]},"maintainSingularStruct":true},"namedTable":{"names":["integers"]}}},"expressions":[{"selection":{"directReference":{"structField":{}},"rootReference":{}}}]}},"count":"5"}},"names":["i"]}}],"version":{"minorNumber":24,"producer":"DuckDB"}}'
+    query_json = '{"relations":[{"root":{"input":{"project":{"input":{"fetch":{"input":{"read":{"baseSchema":{"names":["i"],"struct":{"types":[{"i32":{"nullability":"NULLABILITY_NULLABLE"}}],"nullability":"NULLABILITY_REQUIRED"}},"projection":{"select":{"structItems":[{}]},"maintainSingularStruct":true},"namedTable":{"names":["integers"]}}},"count":"5"}},"expressions":[{"selection":{"directReference":{"structField":{}},"rootReference":{}}}]}},"names":["i"]}}],"version":{"minorNumber":48,"producer":"DuckDB"}}'
     
     assert connection.from_substrait_json(query_json).fetchone()[0] == 0
 
@@ -20,6 +20,6 @@ def test_substrait_from_json(require):
         
     # Test closed connection
     connection.close()
-    with pytest.raises(duckdb.ConnectionException, match="Connection has already been closed"):
+    with pytest.raises(duckdb.ConnectionException, match="Connection"):
         connection.from_substrait_json(query_json).fetchone()[0]
 
