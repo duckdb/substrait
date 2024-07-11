@@ -436,29 +436,29 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformJoinOp(const substrait::Rel &so
 }
 
 shared_ptr<Relation> SubstraitToDuckDB::TransformDelimJoinOp(const substrait::Rel &sop) {
-	auto &sjoin = sop.delimiter_join();
+	auto &sjoin = sop.delim_join();
 
 	JoinType djointype;
 	switch (sjoin.type()) {
-	case substrait::DelimiterJoinRel_JoinType::DelimiterJoinRel_JoinType_JOIN_TYPE_INNER:
+	case substrait::DelimJoinRel_JoinType::DelimJoinRel_JoinType_JOIN_TYPE_INNER:
 		djointype = JoinType::INNER;
 		break;
-	case substrait::DelimiterJoinRel_JoinType::DelimiterJoinRel_JoinType_JOIN_TYPE_LEFT:
+	case substrait::DelimJoinRel_JoinType::DelimJoinRel_JoinType_JOIN_TYPE_LEFT:
 		djointype = JoinType::LEFT;
 		break;
-	case substrait::DelimiterJoinRel_JoinType::DelimiterJoinRel_JoinType_JOIN_TYPE_RIGHT:
+	case substrait::DelimJoinRel_JoinType::DelimJoinRel_JoinType_JOIN_TYPE_RIGHT:
 		djointype = JoinType::RIGHT;
 		break;
-	case substrait::DelimiterJoinRel_JoinType::DelimiterJoinRel_JoinType_JOIN_TYPE_SINGLE:
+	case substrait::DelimJoinRel_JoinType::DelimJoinRel_JoinType_JOIN_TYPE_SINGLE:
 		djointype = JoinType::SINGLE;
 		break;
-	case substrait::DelimiterJoinRel_JoinType::DelimiterJoinRel_JoinType_JOIN_TYPE_RIGHT_SEMI:
+	case substrait::DelimJoinRel_JoinType::DelimJoinRel_JoinType_JOIN_TYPE_RIGHT_SEMI:
 		djointype = JoinType::RIGHT_SEMI;
 		break;
-	case substrait::DelimiterJoinRel_JoinType::DelimiterJoinRel_JoinType_JOIN_TYPE_MARK:
+	case substrait::DelimJoinRel_JoinType::DelimJoinRel_JoinType_JOIN_TYPE_MARK:
 		djointype = JoinType::MARK;
 		break;
-	case substrait::DelimiterJoinRel_JoinType::DelimiterJoinRel_JoinType_JOIN_TYPE_RIGHT_ANTI:
+	case substrait::DelimJoinRel_JoinType::DelimJoinRel_JoinType_JOIN_TYPE_RIGHT_ANTI:
 		djointype = JoinType::RIGHT_ANTI;
 		break;
 	default:
@@ -477,10 +477,10 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformDelimJoinOp(const substrait::Re
 }
 
 shared_ptr<Relation> SubstraitToDuckDB::TransformDelimGetOp(const substrait::Rel &sop) {
-	auto &delimiter_get = sop.delimiter_get();
+	auto &delimiter_get = sop.delim_get();
 	auto &client_context = con.context;
 	vector<LogicalType> chunk_types;
-	for (auto &s_type : delimiter_get.chunk_types()) {
+	for (auto &s_type : delimiter_get.delim_types()) {
 		chunk_types.emplace_back(SubstraitToDuckType(s_type));
 	}
 	return make_shared_ptr<DelimGetRelation>(client_context, chunk_types);
@@ -669,9 +669,9 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformOp(const substrait::Rel &sop) {
 		return TransformSortOp(sop);
 	case substrait::Rel::RelTypeCase::kSet:
 		return TransformSetOp(sop);
-	case substrait::Rel::RelTypeCase::kDelimiterJoin:
+	case substrait::Rel::RelTypeCase::kDelimJoin:
 		return TransformDelimJoinOp(sop);
-	case substrait::Rel::RelTypeCase::kDelimiterGet:
+	case substrait::Rel::RelTypeCase::kDelimGet:
 		return TransformDelimGetOp(sop);
 	default:
 		throw InternalException("Unsupported relation type " + to_string(sop.rel_type_case()));

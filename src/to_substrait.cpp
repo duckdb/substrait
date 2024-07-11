@@ -942,7 +942,7 @@ substrait::Rel *DuckDBToSubstrait::TransformComparisonJoin(LogicalOperator &dop)
 
 substrait::Rel *DuckDBToSubstrait::TransformDelimiterJoin(LogicalOperator &dop) {
 	auto res = new substrait::Rel();
-	auto sjoin = res->mutable_delimiter_join();
+	auto sjoin = res->mutable_delim_join();
 	auto &djoin = (LogicalComparisonJoin &)dop;
 	sjoin->set_allocated_left(TransformOp(*dop.children[0]));
 	sjoin->set_allocated_right(TransformOp(*dop.children[1]));
@@ -957,25 +957,25 @@ substrait::Rel *DuckDBToSubstrait::TransformDelimiterJoin(LogicalOperator &dop) 
 
 	switch (djoin.join_type) {
 	case JoinType::INNER:
-		sjoin->set_type(substrait::DelimiterJoinRel_JoinType::DelimiterJoinRel_JoinType_JOIN_TYPE_INNER);
+		sjoin->set_type(substrait::DelimJoinRel_JoinType::DelimJoinRel_JoinType_JOIN_TYPE_INNER);
 		break;
 	case JoinType::LEFT:
-		sjoin->set_type(substrait::DelimiterJoinRel_JoinType::DelimiterJoinRel_JoinType_JOIN_TYPE_LEFT);
+		sjoin->set_type(substrait::DelimJoinRel_JoinType::DelimJoinRel_JoinType_JOIN_TYPE_LEFT);
 		break;
 	case JoinType::RIGHT:
-		sjoin->set_type(substrait::DelimiterJoinRel_JoinType::DelimiterJoinRel_JoinType_JOIN_TYPE_RIGHT);
+		sjoin->set_type(substrait::DelimJoinRel_JoinType::DelimJoinRel_JoinType_JOIN_TYPE_RIGHT);
 		break;
 	case JoinType::SINGLE:
-		sjoin->set_type(substrait::DelimiterJoinRel_JoinType::DelimiterJoinRel_JoinType_JOIN_TYPE_SINGLE);
+		sjoin->set_type(substrait::DelimJoinRel_JoinType::DelimJoinRel_JoinType_JOIN_TYPE_SINGLE);
 		break;
 	case JoinType::RIGHT_SEMI:
-		sjoin->set_type(substrait::DelimiterJoinRel_JoinType::DelimiterJoinRel_JoinType_JOIN_TYPE_RIGHT_SEMI);
+		sjoin->set_type(substrait::DelimJoinRel_JoinType::DelimJoinRel_JoinType_JOIN_TYPE_RIGHT_SEMI);
 		break;
 	case JoinType::MARK:
-		sjoin->set_type(substrait::DelimiterJoinRel_JoinType::DelimiterJoinRel_JoinType_JOIN_TYPE_MARK);
+		sjoin->set_type(substrait::DelimJoinRel_JoinType::DelimJoinRel_JoinType_JOIN_TYPE_MARK);
 		break;
 	case JoinType::RIGHT_ANTI:
-		sjoin->set_type(substrait::DelimiterJoinRel_JoinType::DelimiterJoinRel_JoinType_JOIN_TYPE_RIGHT_ANTI);
+		sjoin->set_type(substrait::DelimJoinRel_JoinType::DelimJoinRel_JoinType_JOIN_TYPE_RIGHT_ANTI);
 		break;
 	default:
 		throw InternalException("Unsupported join type " + JoinTypeToString(djoin.join_type));
@@ -1365,11 +1365,11 @@ substrait::Rel *DuckDBToSubstrait::TransformIntersect(LogicalOperator &dop) {
 
 substrait::Rel *DuckDBToSubstrait::TransformDelimGet(LogicalOperator &dop) {
 	auto rel = new substrait::Rel();
-	auto delim_get = rel->mutable_delimiter_get();
+	auto delim_get = rel->mutable_delim_get();
 
 	auto &get_delimiter = dop.Cast<LogicalDelimGet>();
 	for (auto &type : get_delimiter.chunk_types) {
-		auto s_type = delim_get->add_chunk_types();
+		auto s_type = delim_get->add_delim_types();
 		*s_type = DuckToSubstraitType(type);
 	}
 	return rel;
