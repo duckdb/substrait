@@ -689,6 +689,9 @@ substrait::Expression *DuckDBToSubstrait::TransformJoinCond(JoinCondition &dcond
 	case ExpressionType::COMPARE_LESSTHAN:
 		join_comparision = "lt";
 		break;
+	case ExpressionType::COMPARE_NOTEQUAL:
+		join_comparision = "not_equal";
+		break;
 	default:
 		throw InternalException("Unsupported join comparison: " + ExpressionTypeToOperator(dcond.comparison));
 	}
@@ -992,7 +995,7 @@ substrait::Rel *DuckDBToSubstrait::TransformDelimiterJoin(LogicalOperator &dop) 
 	}
 	auto proj_rel = new substrait::Rel();
 	auto projection = proj_rel->mutable_project();
-	if (djoin.join_type == JoinType::RIGHT_SEMI) {
+	if (djoin.join_type == JoinType::RIGHT_SEMI || djoin.join_type == JoinType::RIGHT_ANTI) {
 		// We project everything from the right table
 		for (uint64_t i = 0; i < dop.children[1]->types.size(); i++) {
 			CreateFieldRef(projection->add_expressions(), i);
