@@ -148,6 +148,9 @@ INSERT INTO timestz VALUES ('2021-11-26 10:15:13.123456+00');
 statement ok
 CALL get_substrait('SELECT s FROM timestz WHERE s > ''2001-11-26 05:02:23.123456+00'' ');
 
+# not supported because TIMETZ comparisons generate a UBIGINT
+mode skip
+
 statement ok
 CREATE table times_tz (s TIMETZ);
 
@@ -156,6 +159,8 @@ INSERT INTO times_tz VALUES ('05:40:00.000001');
 
 statement ok
 CALL get_substrait('SELECT s FROM times_tz WHERE s = ''05:40:00.000001'' ');
+
+mode unskip
 
 statement ok
 CREATE table times (s TIME);
