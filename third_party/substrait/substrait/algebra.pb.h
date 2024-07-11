@@ -546,12 +546,13 @@ enum JoinRel_JoinType : int {
   JoinRel_JoinType_JOIN_TYPE_ANTI = 6,
   JoinRel_JoinType_JOIN_TYPE_SINGLE = 7,
   JoinRel_JoinType_JOIN_TYPE_MARK = 8,
+  JoinRel_JoinType_JOIN_TYPE_RIGHT_SEMI = 9,
   JoinRel_JoinType_JoinRel_JoinType_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
   JoinRel_JoinType_JoinRel_JoinType_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
 };
 bool JoinRel_JoinType_IsValid(int value);
 constexpr JoinRel_JoinType JoinRel_JoinType_JoinType_MIN = JoinRel_JoinType_JOIN_TYPE_UNSPECIFIED;
-constexpr JoinRel_JoinType JoinRel_JoinType_JoinType_MAX = JoinRel_JoinType_JOIN_TYPE_MARK;
+constexpr JoinRel_JoinType JoinRel_JoinType_JoinType_MAX = JoinRel_JoinType_JOIN_TYPE_RIGHT_SEMI;
 constexpr int JoinRel_JoinType_JoinType_ARRAYSIZE = JoinRel_JoinType_JoinType_MAX + 1;
 
 const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* JoinRel_JoinType_descriptor();
@@ -841,12 +842,13 @@ enum DelimiterJoinRel_JoinType : int {
   DelimiterJoinRel_JoinType_JOIN_TYPE_SINGLE = 7,
   DelimiterJoinRel_JoinType_JOIN_TYPE_RIGHT_SEMI = 8,
   DelimiterJoinRel_JoinType_JOIN_TYPE_MARK = 9,
+  DelimiterJoinRel_JoinType_JOIN_TYPE_RIGHT_ANTI = 10,
   DelimiterJoinRel_JoinType_DelimiterJoinRel_JoinType_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
   DelimiterJoinRel_JoinType_DelimiterJoinRel_JoinType_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
 };
 bool DelimiterJoinRel_JoinType_IsValid(int value);
 constexpr DelimiterJoinRel_JoinType DelimiterJoinRel_JoinType_JoinType_MIN = DelimiterJoinRel_JoinType_JOIN_TYPE_UNSPECIFIED;
-constexpr DelimiterJoinRel_JoinType DelimiterJoinRel_JoinType_JoinType_MAX = DelimiterJoinRel_JoinType_JOIN_TYPE_MARK;
+constexpr DelimiterJoinRel_JoinType DelimiterJoinRel_JoinType_JoinType_MAX = DelimiterJoinRel_JoinType_JOIN_TYPE_RIGHT_ANTI;
 constexpr int DelimiterJoinRel_JoinType_JoinType_ARRAYSIZE = DelimiterJoinRel_JoinType_JoinType_MAX + 1;
 
 const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* DelimiterJoinRel_JoinType_descriptor();
@@ -4383,6 +4385,8 @@ class JoinRel final :
     JoinRel_JoinType_JOIN_TYPE_SINGLE;
   static constexpr JoinType JOIN_TYPE_MARK =
     JoinRel_JoinType_JOIN_TYPE_MARK;
+  static constexpr JoinType JOIN_TYPE_RIGHT_SEMI =
+    JoinRel_JoinType_JOIN_TYPE_RIGHT_SEMI;
   static inline bool JoinType_IsValid(int value) {
     return JoinRel_JoinType_IsValid(value);
   }
@@ -12799,6 +12803,8 @@ class DelimiterJoinRel final :
     DelimiterJoinRel_JoinType_JOIN_TYPE_RIGHT_SEMI;
   static constexpr JoinType JOIN_TYPE_MARK =
     DelimiterJoinRel_JoinType_JOIN_TYPE_MARK;
+  static constexpr JoinType JOIN_TYPE_RIGHT_ANTI =
+    DelimiterJoinRel_JoinType_JOIN_TYPE_RIGHT_ANTI;
   static inline bool JoinType_IsValid(int value) {
     return DelimiterJoinRel_JoinType_IsValid(value);
   }

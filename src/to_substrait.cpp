@@ -892,6 +892,9 @@ substrait::Rel *DuckDBToSubstrait::TransformComparisonJoin(LogicalOperator &dop)
 	case JoinType::MARK:
 		sjoin->set_type(substrait::JoinRel::JoinType::JoinRel_JoinType_JOIN_TYPE_MARK);
 		break;
+	case JoinType::RIGHT_SEMI:
+		sjoin->set_type(substrait::JoinRel::JoinType::JoinRel_JoinType_JOIN_TYPE_RIGHT_SEMI);
+		break;
 	default:
 		throw InternalException("Unsupported join type " + JoinTypeToString(djoin.join_type));
 	}
@@ -908,12 +911,19 @@ substrait::Rel *DuckDBToSubstrait::TransformComparisonJoin(LogicalOperator &dop)
 	}
 	auto proj_rel = new substrait::Rel();
 	auto projection = proj_rel->mutable_project();
-	for (auto left_idx : djoin.left_projection_map) {
-		CreateFieldRef(projection->add_expressions(), left_idx);
-	}
-	if (djoin.join_type != JoinType::SEMI) {
-		for (auto right_idx : djoin.right_projection_map) {
-			CreateFieldRef(projection->add_expressions(), right_idx + left_col_count);
+	if (djoin.join_type == JoinType::RIGHT_SEMI) {
+		// We project everything from the right table
+		for (uint64_t i = 0; i < dop.children[1]->types.size(); i++) {
+			CreateFieldRef(projection->add_expressions(), i);
+		}
+	} else {
+		for (auto left_idx : djoin.left_projection_map) {
+			CreateFieldRef(projection->add_expressions(), left_idx);
+		}
+		if (djoin.join_type != JoinType::SEMI) {
+			for (auto right_idx : djoin.right_projection_map) {
+				CreateFieldRef(projection->add_expressions(), right_idx + left_col_count);
+			}
 		}
 	}
 
@@ -954,6 +964,9 @@ substrait::Rel *DuckDBToSubstrait::TransformDelimiterJoin(LogicalOperator &dop) 
 		break;
 	case JoinType::MARK:
 		sjoin->set_type(substrait::DelimiterJoinRel_JoinType::DelimiterJoinRel_JoinType_JOIN_TYPE_MARK);
+		break;
+	case JoinType::RIGHT_ANTI:
+		sjoin->set_type(substrait::DelimiterJoinRel_JoinType::DelimiterJoinRel_JoinType_JOIN_TYPE_RIGHT_ANTI);
 		break;
 	default:
 		throw InternalException("Unsupported join type " + JoinTypeToString(djoin.join_type));
