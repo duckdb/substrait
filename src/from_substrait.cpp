@@ -25,8 +25,7 @@
 #include "duckdb/main/client_data.hpp"
 #include "google/protobuf/util/json_util.h"
 #include "substrait/plan.pb.h"
-
-#include "duckdb/main/relation/delimiter_get_relation.hpp"
+#include "duckdb/main/relation/delim_get_relation.hpp"
 
 namespace duckdb {
 const std::unordered_map<std::string, std::string> SubstraitToDuckDB::function_names_remap = {
@@ -484,7 +483,7 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformDelimGetOp(const substrait::Rel
 	for (auto &s_type : delimiter_get.chunk_types()) {
 		chunk_types.emplace_back(SubstraitToDuckType(s_type));
 	}
-	return make_shared_ptr<DelimiterGetRelation>(client_context, chunk_types);
+	return make_shared_ptr<DelimGetRelation>(client_context, chunk_types);
 }
 
 shared_ptr<Relation> SubstraitToDuckDB::TransformCrossProductOp(const substrait::Rel &sop) {
