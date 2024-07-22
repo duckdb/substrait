@@ -1191,7 +1191,7 @@ substrait::Rel *DuckDBToSubstrait::TransformGet(LogicalOperator &dop) {
 		auto select = new substrait::Expression_MaskExpression_StructSelect();
 		for (auto col_idx : dget.projection_ids) {
 			auto struct_item = select->add_struct_items();
-			struct_item->set_field((int32_t)dget.column_ids[col_idx]);
+			struct_item->set_field((int32_t)dget.GetColumnIds()[col_idx]);
 			// FIXME do we need to set the child? if yes, to what?
 		}
 		projection->set_allocated_select(select);
