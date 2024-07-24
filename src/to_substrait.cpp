@@ -983,8 +983,9 @@ substrait::Rel *DuckDBToSubstrait::TransformDelimiterJoin(LogicalOperator &dop) 
 
 	// Have to add duplicate_eliminated_columns if any
 	for (auto &dup_col : djoin.duplicate_eliminated_columns) {
+		auto &dref = dup_col->Cast<BoundReferenceExpression>();
 		auto s_dup_col = sjoin->add_duplicate_eliminated_columns();
-		TransformExpr(*dup_col, *s_dup_col);
+		s_dup_col->mutable_direct_reference()->mutable_struct_field()->set_field(static_cast<int32_t>(dref.index));
 	}
 	sjoin->set_delim_flipped(djoin.delim_flipped);
 	return ProjectJoinRelation(djoin, res, left_col_count);
@@ -1261,9 +1262,10 @@ substrait::Rel *DuckDBToSubstrait::TransformGet(LogicalOperator &dop) {
 		// fixme: whatever this means
 		projection->set_maintain_singular_struct(true);
 		auto select = new substrait::Expression_MaskExpression_StructSelect();
+		auto &column_ids = dget.GetColumnIds();
 		for (auto col_idx : dget.projection_ids) {
 			auto struct_item = select->add_struct_items();
-			struct_item->set_field((int32_t)dget.column_ids[col_idx]);
+			struct_item->set_field(static_cast<int32_t>(column_ids[col_idx]));
 			// FIXME do we need to set the child? if yes, to what?
 		}
 		projection->set_allocated_select(select);

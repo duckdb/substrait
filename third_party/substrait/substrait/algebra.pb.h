@@ -831,6 +831,31 @@ inline bool NestedLoopJoinRel_JoinType_Parse(
   return ::PROTOBUF_NAMESPACE_ID::internal::ParseNamedEnum<NestedLoopJoinRel_JoinType>(
     NestedLoopJoinRel_JoinType_descriptor(), name, value);
 }
+enum DelimJoinRel_DelimiterSide : int {
+  DelimJoinRel_DelimiterSide_LEFT = 0,
+  DelimJoinRel_DelimiterSide_RIGHT = 1,
+  DelimJoinRel_DelimiterSide_DelimJoinRel_DelimiterSide_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
+  DelimJoinRel_DelimiterSide_DelimJoinRel_DelimiterSide_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
+};
+bool DelimJoinRel_DelimiterSide_IsValid(int value);
+constexpr DelimJoinRel_DelimiterSide DelimJoinRel_DelimiterSide_DelimiterSide_MIN = DelimJoinRel_DelimiterSide_LEFT;
+constexpr DelimJoinRel_DelimiterSide DelimJoinRel_DelimiterSide_DelimiterSide_MAX = DelimJoinRel_DelimiterSide_RIGHT;
+constexpr int DelimJoinRel_DelimiterSide_DelimiterSide_ARRAYSIZE = DelimJoinRel_DelimiterSide_DelimiterSide_MAX + 1;
+
+const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* DelimJoinRel_DelimiterSide_descriptor();
+template<typename T>
+inline const std::string& DelimJoinRel_DelimiterSide_Name(T enum_t_value) {
+  static_assert(::std::is_same<T, DelimJoinRel_DelimiterSide>::value ||
+    ::std::is_integral<T>::value,
+    "Incorrect type passed to function DelimJoinRel_DelimiterSide_Name.");
+  return ::PROTOBUF_NAMESPACE_ID::internal::NameOfEnum(
+    DelimJoinRel_DelimiterSide_descriptor(), enum_t_value);
+}
+inline bool DelimJoinRel_DelimiterSide_Parse(
+    ::PROTOBUF_NAMESPACE_ID::ConstStringParam name, DelimJoinRel_DelimiterSide* value) {
+  return ::PROTOBUF_NAMESPACE_ID::internal::ParseNamedEnum<DelimJoinRel_DelimiterSide>(
+    DelimJoinRel_DelimiterSide_descriptor(), name, value);
+}
 enum DelimJoinRel_JoinType : int {
   DelimJoinRel_JoinType_JOIN_TYPE_UNSPECIFIED = 0,
   DelimJoinRel_JoinType_JOIN_TYPE_INNER = 1,
@@ -12782,6 +12807,36 @@ class DelimJoinRel final :
 
   // nested types ----------------------------------------------------
 
+  typedef DelimJoinRel_DelimiterSide DelimiterSide;
+  static constexpr DelimiterSide LEFT =
+    DelimJoinRel_DelimiterSide_LEFT;
+  static constexpr DelimiterSide RIGHT =
+    DelimJoinRel_DelimiterSide_RIGHT;
+  static inline bool DelimiterSide_IsValid(int value) {
+    return DelimJoinRel_DelimiterSide_IsValid(value);
+  }
+  static constexpr DelimiterSide DelimiterSide_MIN =
+    DelimJoinRel_DelimiterSide_DelimiterSide_MIN;
+  static constexpr DelimiterSide DelimiterSide_MAX =
+    DelimJoinRel_DelimiterSide_DelimiterSide_MAX;
+  static constexpr int DelimiterSide_ARRAYSIZE =
+    DelimJoinRel_DelimiterSide_DelimiterSide_ARRAYSIZE;
+  static inline const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor*
+  DelimiterSide_descriptor() {
+    return DelimJoinRel_DelimiterSide_descriptor();
+  }
+  template<typename T>
+  static inline const std::string& DelimiterSide_Name(T enum_t_value) {
+    static_assert(::std::is_same<T, DelimiterSide>::value ||
+      ::std::is_integral<T>::value,
+      "Incorrect type passed to function DelimiterSide_Name.");
+    return DelimJoinRel_DelimiterSide_Name(enum_t_value);
+  }
+  static inline bool DelimiterSide_Parse(::PROTOBUF_NAMESPACE_ID::ConstStringParam name,
+      DelimiterSide* value) {
+    return DelimJoinRel_DelimiterSide_Parse(name, value);
+  }
+
   typedef DelimJoinRel_JoinType JoinType;
   static constexpr JoinType JOIN_TYPE_UNSPECIFIED =
     DelimJoinRel_JoinType_JOIN_TYPE_UNSPECIFIED;
@@ -12843,22 +12898,22 @@ class DelimJoinRel final :
     kTypeFieldNumber = 6,
     kDelimFlippedFieldNumber = 8,
   };
-  // repeated .substrait.Expression duplicate_eliminated_columns = 7;
+  // repeated .substrait.Expression.FieldReference duplicate_eliminated_columns = 7;
   int duplicate_eliminated_columns_size() const;
   private:
   int _internal_duplicate_eliminated_columns_size() const;
   public:
   void clear_duplicate_eliminated_columns();
-  ::substrait::Expression* mutable_duplicate_eliminated_columns(int index);
-  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Expression >*
+  ::substrait::Expression_FieldReference* mutable_duplicate_eliminated_columns(int index);
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Expression_FieldReference >*
       mutable_duplicate_eliminated_columns();
   private:
-  const ::substrait::Expression& _internal_duplicate_eliminated_columns(int index) const;
-  ::substrait::Expression* _internal_add_duplicate_eliminated_columns();
+  const ::substrait::Expression_FieldReference& _internal_duplicate_eliminated_columns(int index) const;
+  ::substrait::Expression_FieldReference* _internal_add_duplicate_eliminated_columns();
   public:
-  const ::substrait::Expression& duplicate_eliminated_columns(int index) const;
-  ::substrait::Expression* add_duplicate_eliminated_columns();
-  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Expression >&
+  const ::substrait::Expression_FieldReference& duplicate_eliminated_columns(int index) const;
+  ::substrait::Expression_FieldReference* add_duplicate_eliminated_columns();
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Expression_FieldReference >&
       duplicate_eliminated_columns() const;
 
   // .substrait.RelCommon common = 1;
@@ -12994,7 +13049,7 @@ class DelimJoinRel final :
   template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
-  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Expression > duplicate_eliminated_columns_;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Expression_FieldReference > duplicate_eliminated_columns_;
   ::substrait::RelCommon* common_;
   ::substrait::Rel* left_;
   ::substrait::Rel* right_;
@@ -40490,7 +40545,7 @@ inline void DelimJoinRel::set_type(::substrait::DelimJoinRel_JoinType value) {
   // @@protoc_insertion_point(field_set:substrait.DelimJoinRel.type)
 }
 
-// repeated .substrait.Expression duplicate_eliminated_columns = 7;
+// repeated .substrait.Expression.FieldReference duplicate_eliminated_columns = 7;
 inline int DelimJoinRel::_internal_duplicate_eliminated_columns_size() const {
   return duplicate_eliminated_columns_.size();
 }
@@ -40500,31 +40555,31 @@ inline int DelimJoinRel::duplicate_eliminated_columns_size() const {
 inline void DelimJoinRel::clear_duplicate_eliminated_columns() {
   duplicate_eliminated_columns_.Clear();
 }
-inline ::substrait::Expression* DelimJoinRel::mutable_duplicate_eliminated_columns(int index) {
+inline ::substrait::Expression_FieldReference* DelimJoinRel::mutable_duplicate_eliminated_columns(int index) {
   // @@protoc_insertion_point(field_mutable:substrait.DelimJoinRel.duplicate_eliminated_columns)
   return duplicate_eliminated_columns_.Mutable(index);
 }
-inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Expression >*
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Expression_FieldReference >*
 DelimJoinRel::mutable_duplicate_eliminated_columns() {
   // @@protoc_insertion_point(field_mutable_list:substrait.DelimJoinRel.duplicate_eliminated_columns)
   return &duplicate_eliminated_columns_;
 }
-inline const ::substrait::Expression& DelimJoinRel::_internal_duplicate_eliminated_columns(int index) const {
+inline const ::substrait::Expression_FieldReference& DelimJoinRel::_internal_duplicate_eliminated_columns(int index) const {
   return duplicate_eliminated_columns_.Get(index);
 }
-inline const ::substrait::Expression& DelimJoinRel::duplicate_eliminated_columns(int index) const {
+inline const ::substrait::Expression_FieldReference& DelimJoinRel::duplicate_eliminated_columns(int index) const {
   // @@protoc_insertion_point(field_get:substrait.DelimJoinRel.duplicate_eliminated_columns)
   return _internal_duplicate_eliminated_columns(index);
 }
-inline ::substrait::Expression* DelimJoinRel::_internal_add_duplicate_eliminated_columns() {
+inline ::substrait::Expression_FieldReference* DelimJoinRel::_internal_add_duplicate_eliminated_columns() {
   return duplicate_eliminated_columns_.Add();
 }
-inline ::substrait::Expression* DelimJoinRel::add_duplicate_eliminated_columns() {
-  ::substrait::Expression* _add = _internal_add_duplicate_eliminated_columns();
+inline ::substrait::Expression_FieldReference* DelimJoinRel::add_duplicate_eliminated_columns() {
+  ::substrait::Expression_FieldReference* _add = _internal_add_duplicate_eliminated_columns();
   // @@protoc_insertion_point(field_add:substrait.DelimJoinRel.duplicate_eliminated_columns)
   return _add;
 }
-inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Expression >&
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Expression_FieldReference >&
 DelimJoinRel::duplicate_eliminated_columns() const {
   // @@protoc_insertion_point(field_list:substrait.DelimJoinRel.duplicate_eliminated_columns)
   return duplicate_eliminated_columns_;
@@ -52076,6 +52131,11 @@ template <> struct is_proto_enum< ::substrait::NestedLoopJoinRel_JoinType> : ::s
 template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::substrait::NestedLoopJoinRel_JoinType>() {
   return ::substrait::NestedLoopJoinRel_JoinType_descriptor();
+}
+template <> struct is_proto_enum< ::substrait::DelimJoinRel_DelimiterSide> : ::std::true_type {};
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::substrait::DelimJoinRel_DelimiterSide>() {
+  return ::substrait::DelimJoinRel_DelimiterSide_descriptor();
 }
 template <> struct is_proto_enum< ::substrait::DelimJoinRel_JoinType> : ::std::true_type {};
 template <>

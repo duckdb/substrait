@@ -20,12 +20,11 @@
 #include "duckdb/common/enums/set_operation_type.hpp"
 
 #include "duckdb/parser/expression/comparison_expression.hpp"
-
-#include "duckdb/common/http_state.hpp"
 #include "duckdb/main/client_data.hpp"
 #include "google/protobuf/util/json_util.h"
 #include "substrait/plan.pb.h"
 #include "duckdb/main/relation/delim_get_relation.hpp"
+#include "duckdb/main/client_data.hpp"
 
 namespace duckdb {
 const std::unordered_map<std::string, std::string> SubstraitToDuckDB::function_names_remap = {
@@ -67,9 +66,6 @@ std::string SubstraitToDuckDB::RemoveExtension(std::string &function_name) {
 }
 
 SubstraitToDuckDB::SubstraitToDuckDB(Connection &con_p, const string &serialized, bool json) : con(con_p) {
-	auto http_state = HTTPState::TryGetState(*con_p.context);
-	http_state->Reset();
-
 	if (!json) {
 		if (!plan.ParseFromString(serialized)) {
 			throw std::runtime_error("Was not possible to convert binary into Substrait plan");
@@ -471,7 +467,8 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformDelimJoinOp(const substrait::Re
 	    make_shared_ptr<JoinRelation>(std::move(left_op), std::move(right_op), std::move(join_condition), djointype);
 	join->delim_flipped = sjoin.delim_flipped();
 	for (auto &col : sjoin.duplicate_eliminated_columns()) {
-		join->duplicate_eliminated_columns.emplace_back(TransformExpr(col));
+		join->duplicate_eliminated_columns.emplace_back(
+		    make_uniq<PositionalReferenceExpression>(col.direct_reference().struct_field().field() + 1));
 	}
 	return join;
 }
