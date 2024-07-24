@@ -987,7 +987,12 @@ substrait::Rel *DuckDBToSubstrait::TransformDelimiterJoin(LogicalOperator &dop) 
 		auto s_dup_col = sjoin->add_duplicate_eliminated_columns();
 		s_dup_col->mutable_direct_reference()->mutable_struct_field()->set_field(static_cast<int32_t>(dref.index));
 	}
-	sjoin->set_delim_flipped(djoin.delim_flipped);
+	if (djoin.delim_flipped) {
+		sjoin->set_delimiter_side(substrait::DelimJoinRel_DelimiterSide::DelimJoinRel_DelimiterSide_RIGHT);
+	} else {
+		sjoin->set_delimiter_side(substrait::DelimJoinRel_DelimiterSide::DelimJoinRel_DelimiterSide_LEFT);
+	}
+
 	return ProjectJoinRelation(djoin, res, left_col_count);
 }
 

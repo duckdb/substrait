@@ -12896,7 +12896,7 @@ class DelimJoinRel final :
     kPostJoinFilterFieldNumber = 5,
     kAdvancedExtensionFieldNumber = 10,
     kTypeFieldNumber = 6,
-    kDelimFlippedFieldNumber = 8,
+    kDelimiterSideFieldNumber = 8,
   };
   // repeated .substrait.Expression.FieldReference duplicate_eliminated_columns = 7;
   int duplicate_eliminated_columns_size() const;
@@ -13033,13 +13033,13 @@ class DelimJoinRel final :
   void _internal_set_type(::substrait::DelimJoinRel_JoinType value);
   public:
 
-  // bool delim_flipped = 8;
-  void clear_delim_flipped();
-  bool delim_flipped() const;
-  void set_delim_flipped(bool value);
+  // .substrait.DelimJoinRel.DelimiterSide delimiter_side = 8;
+  void clear_delimiter_side();
+  ::substrait::DelimJoinRel_DelimiterSide delimiter_side() const;
+  void set_delimiter_side(::substrait::DelimJoinRel_DelimiterSide value);
   private:
-  bool _internal_delim_flipped() const;
-  void _internal_set_delim_flipped(bool value);
+  ::substrait::DelimJoinRel_DelimiterSide _internal_delimiter_side() const;
+  void _internal_set_delimiter_side(::substrait::DelimJoinRel_DelimiterSide value);
   public:
 
   // @@protoc_insertion_point(class_scope:substrait.DelimJoinRel)
@@ -13057,7 +13057,7 @@ class DelimJoinRel final :
   ::substrait::Expression* post_join_filter_;
   ::substrait::extensions::AdvancedExtension* advanced_extension_;
   int type_;
-  bool delim_flipped_;
+  int delimiter_side_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_substrait_2falgebra_2eproto;
 };
@@ -40585,24 +40585,24 @@ DelimJoinRel::duplicate_eliminated_columns() const {
   return duplicate_eliminated_columns_;
 }
 
-// bool delim_flipped = 8;
-inline void DelimJoinRel::clear_delim_flipped() {
-  delim_flipped_ = false;
+// .substrait.DelimJoinRel.DelimiterSide delimiter_side = 8;
+inline void DelimJoinRel::clear_delimiter_side() {
+  delimiter_side_ = 0;
 }
-inline bool DelimJoinRel::_internal_delim_flipped() const {
-  return delim_flipped_;
+inline ::substrait::DelimJoinRel_DelimiterSide DelimJoinRel::_internal_delimiter_side() const {
+  return static_cast< ::substrait::DelimJoinRel_DelimiterSide >(delimiter_side_);
 }
-inline bool DelimJoinRel::delim_flipped() const {
-  // @@protoc_insertion_point(field_get:substrait.DelimJoinRel.delim_flipped)
-  return _internal_delim_flipped();
+inline ::substrait::DelimJoinRel_DelimiterSide DelimJoinRel::delimiter_side() const {
+  // @@protoc_insertion_point(field_get:substrait.DelimJoinRel.delimiter_side)
+  return _internal_delimiter_side();
 }
-inline void DelimJoinRel::_internal_set_delim_flipped(bool value) {
+inline void DelimJoinRel::_internal_set_delimiter_side(::substrait::DelimJoinRel_DelimiterSide value) {
   
-  delim_flipped_ = value;
+  delimiter_side_ = value;
 }
-inline void DelimJoinRel::set_delim_flipped(bool value) {
-  _internal_set_delim_flipped(value);
-  // @@protoc_insertion_point(field_set:substrait.DelimJoinRel.delim_flipped)
+inline void DelimJoinRel::set_delimiter_side(::substrait::DelimJoinRel_DelimiterSide value) {
+  _internal_set_delimiter_side(value);
+  // @@protoc_insertion_point(field_set:substrait.DelimJoinRel.delimiter_side)
 }
 
 // .substrait.extensions.AdvancedExtension advanced_extension = 10;

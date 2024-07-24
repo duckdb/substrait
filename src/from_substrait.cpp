@@ -465,7 +465,13 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformDelimJoinOp(const substrait::Re
 	auto right_op = TransformOp(sjoin.right())->Alias("right");
 	auto join =
 	    make_shared_ptr<JoinRelation>(std::move(left_op), std::move(right_op), std::move(join_condition), djointype);
-	join->delim_flipped = sjoin.delim_flipped();
+	if (sjoin.delimiter_side() == substrait::DelimJoinRel_DelimiterSide::DelimJoinRel_DelimiterSide_RIGHT) {
+		join->delim_flipped = true;
+	} else if (sjoin.delimiter_side() == substrait::DelimJoinRel_DelimiterSide::DelimJoinRel_DelimiterSide_LEFT) {
+		join->delim_flipped = false;
+	} else {
+		throw InvalidInputException("The plan has a delimiter join with an invalid type for it's delimiter side.");
+	}
 	for (auto &col : sjoin.duplicate_eliminated_columns()) {
 		join->duplicate_eliminated_columns.emplace_back(
 		    make_uniq<PositionalReferenceExpression>(col.direct_reference().struct_field().field() + 1));

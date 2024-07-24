@@ -783,7 +783,8 @@ constexpr DelimJoinRel::DelimJoinRel(
   , advanced_extension_(nullptr)
   , type_(0)
 
-  , delim_flipped_(false){}
+  , delimiter_side_(0)
+{}
 struct DelimJoinRelDefaultTypeInternal {
   constexpr DelimJoinRelDefaultTypeInternal()
     : _instance(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized{}) {}
@@ -2179,7 +2180,7 @@ const uint32_t TableStruct_substrait_2falgebra_2eproto::offsets[] PROTOBUF_SECTI
   PROTOBUF_FIELD_OFFSET(::substrait::DelimJoinRel, post_join_filter_),
   PROTOBUF_FIELD_OFFSET(::substrait::DelimJoinRel, type_),
   PROTOBUF_FIELD_OFFSET(::substrait::DelimJoinRel, duplicate_eliminated_columns_),
-  PROTOBUF_FIELD_OFFSET(::substrait::DelimJoinRel, delim_flipped_),
+  PROTOBUF_FIELD_OFFSET(::substrait::DelimJoinRel, delimiter_side_),
   PROTOBUF_FIELD_OFFSET(::substrait::DelimJoinRel, advanced_extension_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::substrait::FunctionArgument, _internal_metadata_),
@@ -3313,7 +3314,7 @@ const char descriptor_table_protodef_substrait_2falgebra_2eproto[] PROTOBUF_SECT
   "_TYPE_LEFT_ANTI\020\007\022\030\n\024JOIN_TYPE_RIGHT_ANT"
   "I\020\010\"Y\n\013DelimGetRel\022$\n\006common\030\001 \001(\0132\024.sub"
   "strait.RelCommon\022$\n\013delim_types\030\002 \003(\0132\017."
-  "substrait.Type\"\314\005\n\014DelimJoinRel\022$\n\006commo"
+  "substrait.Type\"\364\005\n\014DelimJoinRel\022$\n\006commo"
   "n\030\001 \001(\0132\024.substrait.RelCommon\022\034\n\004left\030\002 "
   "\001(\0132\016.substrait.Rel\022\035\n\005right\030\003 \001(\0132\016.sub"
   "strait.Rel\022)\n\nexpression\030\004 \001(\0132\025.substra"
@@ -3321,8 +3322,9 @@ const char descriptor_table_protodef_substrait_2falgebra_2eproto[] PROTOBUF_SECT
   "\025.substrait.Expression\022.\n\004type\030\006 \001(\0162 .s"
   "ubstrait.DelimJoinRel.JoinType\022J\n\034duplic"
   "ate_eliminated_columns\030\007 \003(\0132$.substrait"
-  ".Expression.FieldReference\022\025\n\rdelim_flip"
-  "ped\030\010 \001(\010\022C\n\022advanced_extension\030\n \001(\0132\'."
+  ".Expression.FieldReference\022=\n\016delimiter_"
+  "side\030\010 \001(\0162%.substrait.DelimJoinRel.Deli"
+  "miterSide\022C\n\022advanced_extension\030\n \001(\0132\'."
   "substrait.extensions.AdvancedExtension\"$"
   "\n\rDelimiterSide\022\010\n\004LEFT\020\000\022\t\n\005RIGHT\020\001\"\376\001\n"
   "\010JoinType\022\031\n\025JOIN_TYPE_UNSPECIFIED\020\000\022\023\n\017"
@@ -3606,7 +3608,7 @@ static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor
 };
 static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_substrait_2falgebra_2eproto_once;
 const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_substrait_2falgebra_2eproto = {
-  false, false, 23433, descriptor_table_protodef_substrait_2falgebra_2eproto, "substrait/algebra.proto", 
+  false, false, 23473, descriptor_table_protodef_substrait_2falgebra_2eproto, "substrait/algebra.proto", 
   &descriptor_table_substrait_2falgebra_2eproto_once, descriptor_table_substrait_2falgebra_2eproto_deps, 3, 118,
   schemas, file_default_instances, TableStruct_substrait_2falgebra_2eproto::offsets,
   file_level_metadata_substrait_2falgebra_2eproto, file_level_enum_descriptors_substrait_2falgebra_2eproto, file_level_service_descriptors_substrait_2falgebra_2eproto,
@@ -20926,16 +20928,16 @@ DelimJoinRel::DelimJoinRel(const DelimJoinRel& from)
     advanced_extension_ = nullptr;
   }
   ::memcpy(&type_, &from.type_,
-    static_cast<size_t>(reinterpret_cast<char*>(&delim_flipped_) -
-    reinterpret_cast<char*>(&type_)) + sizeof(delim_flipped_));
+    static_cast<size_t>(reinterpret_cast<char*>(&delimiter_side_) -
+    reinterpret_cast<char*>(&type_)) + sizeof(delimiter_side_));
   // @@protoc_insertion_point(copy_constructor:substrait.DelimJoinRel)
 }
 
 inline void DelimJoinRel::SharedCtor() {
 ::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
     reinterpret_cast<char*>(&common_) - reinterpret_cast<char*>(this)),
-    0, static_cast<size_t>(reinterpret_cast<char*>(&delim_flipped_) -
-    reinterpret_cast<char*>(&common_)) + sizeof(delim_flipped_));
+    0, static_cast<size_t>(reinterpret_cast<char*>(&delimiter_side_) -
+    reinterpret_cast<char*>(&common_)) + sizeof(delimiter_side_));
 }
 
 DelimJoinRel::~DelimJoinRel() {
@@ -20997,8 +20999,8 @@ void DelimJoinRel::Clear() {
   }
   advanced_extension_ = nullptr;
   ::memset(&type_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&delim_flipped_) -
-      reinterpret_cast<char*>(&type_)) + sizeof(delim_flipped_));
+      reinterpret_cast<char*>(&delimiter_side_) -
+      reinterpret_cast<char*>(&type_)) + sizeof(delimiter_side_));
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -21070,11 +21072,12 @@ const char* DelimJoinRel::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_I
         } else
           goto handle_unusual;
         continue;
-      // bool delim_flipped = 8;
+      // .substrait.DelimJoinRel.DelimiterSide delimiter_side = 8;
       case 8:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 64)) {
-          delim_flipped_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          uint64_t val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
+          _internal_set_delimiter_side(static_cast<::substrait::DelimJoinRel_DelimiterSide>(val));
         } else
           goto handle_unusual;
         continue;
@@ -21170,10 +21173,11 @@ uint8_t* DelimJoinRel::_InternalSerialize(
       InternalWriteMessage(7, this->_internal_duplicate_eliminated_columns(i), target, stream);
   }
 
-  // bool delim_flipped = 8;
-  if (this->_internal_delim_flipped() != 0) {
+  // .substrait.DelimJoinRel.DelimiterSide delimiter_side = 8;
+  if (this->_internal_delimiter_side() != 0) {
     target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteBoolToArray(8, this->_internal_delim_flipped(), target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteEnumToArray(
+      8, this->_internal_delimiter_side(), target);
   }
 
   // .substrait.extensions.AdvancedExtension advanced_extension = 10;
@@ -21255,9 +21259,10 @@ size_t DelimJoinRel::ByteSizeLong() const {
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::EnumSize(this->_internal_type());
   }
 
-  // bool delim_flipped = 8;
-  if (this->_internal_delim_flipped() != 0) {
-    total_size += 1 + 1;
+  // .substrait.DelimJoinRel.DelimiterSide delimiter_side = 8;
+  if (this->_internal_delimiter_side() != 0) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::EnumSize(this->_internal_delimiter_side());
   }
 
   return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
@@ -21304,8 +21309,8 @@ void DelimJoinRel::MergeFrom(const DelimJoinRel& from) {
   if (from._internal_type() != 0) {
     _internal_set_type(from._internal_type());
   }
-  if (from._internal_delim_flipped() != 0) {
-    _internal_set_delim_flipped(from._internal_delim_flipped());
+  if (from._internal_delimiter_side() != 0) {
+    _internal_set_delimiter_side(from._internal_delimiter_side());
   }
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
@@ -21326,8 +21331,8 @@ void DelimJoinRel::InternalSwap(DelimJoinRel* other) {
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   duplicate_eliminated_columns_.InternalSwap(&other->duplicate_eliminated_columns_);
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(DelimJoinRel, delim_flipped_)
-      + sizeof(DelimJoinRel::delim_flipped_)
+      PROTOBUF_FIELD_OFFSET(DelimJoinRel, delimiter_side_)
+      + sizeof(DelimJoinRel::delimiter_side_)
       - PROTOBUF_FIELD_OFFSET(DelimJoinRel, common_)>(
           reinterpret_cast<char*>(&common_),
           reinterpret_cast<char*>(&other->common_));
