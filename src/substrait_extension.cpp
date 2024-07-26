@@ -98,7 +98,7 @@ static void VerifySubstraitRoundtrip(unique_ptr<LogicalOperator> &query_plan, Co
 	unique_ptr<MaterializedQueryResult> substrait_materialized;
 
 	if (substrait_result->type == QueryResultType::STREAM_RESULT) {
-		auto &stream_query = substrait_result->Cast<duckdb::StreamQueryResult>();
+		auto &stream_query = substrait_result->Cast<StreamQueryResult>();
 
 		substrait_materialized = stream_query.Materialize();
 	} else if (substrait_result->type == QueryResultType::MATERIALIZED_RESULT) {
@@ -142,6 +142,7 @@ static DuckDBToSubstrait InitPlanExtractor(ClientContext &context, ToSubstraitFu
 	set<OptimizerType> disabled_optimizers = DBConfig::GetConfig(context).options.disabled_optimizers;
 	disabled_optimizers.insert(OptimizerType::IN_CLAUSE);
 	disabled_optimizers.insert(OptimizerType::COMPRESSED_MATERIALIZATION);
+	disabled_optimizers.insert(OptimizerType::MATERIALIZED_CTE);
 	DBConfig::GetConfig(*new_conn.context).options.disabled_optimizers = disabled_optimizers;
 
 	query_plan = new_conn.context->ExtractPlan(data.query);
