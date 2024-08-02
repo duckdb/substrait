@@ -1165,7 +1165,7 @@ substrait::Rel *DuckDBToSubstrait::TransformGet(LogicalOperator &dop) {
 	auto &dget = (LogicalGet &)dop;
 
 	if (!dget.function.get_bind_info) {
-		throw NotImplementedException("This Scanner Type can't be used in substrait because a get batch info "
+		throw NotImplementedException("This Scanner Type can't be used in substrait because a get bind info "
 		                              "is not yet implemented");
 	}
 	auto bind_info = dget.function.get_bind_info(dget.bind_data.get());
