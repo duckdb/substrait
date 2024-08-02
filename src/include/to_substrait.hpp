@@ -37,7 +37,7 @@ private:
 	void CreateFieldRef(substrait::Expression *expr, uint64_t col_idx);
 
 	//! Transforms Relation Root
-	substrait::RelRoot *TransformRootOp(LogicalOperator &dop);
+	void TransformRootOp(substrait::RelRoot &root_rel, LogicalOperator &dop);
 
 	//! Methods to Transform Logical Operators to Substrait Relations
 	substrait::Rel *TransformOp(duckdb::LogicalOperator &dop);
@@ -55,7 +55,7 @@ private:
 	substrait::Rel *TransformDistinct(duckdb::LogicalOperator &dop);
 	substrait::Rel *TransformExcept(LogicalOperator &dop);
 	substrait::Rel *TransformIntersect(LogicalOperator &dop);
-	substrait::Rel *TransformDelimGet(LogicalOperator &dop);
+	substrait::Rel *TransformDelimGet();
 
 	//! Auxiliary function to create Projection on top of a Join
 	substrait::Rel *ProjectJoinRelation(LogicalComparisonJoin &djoin, substrait::Rel *join_relation,
@@ -166,5 +166,9 @@ private:
 	//! things don't go perfectly shiny
 	bool strict;
 	string errors;
+	//! Index of the current subtree relation we are looking at
+	//! This really only matters for delim joins/gets, since these are
+	//! the only splits we currently support.
+	int32_t cur_subtree_relation = 1;
 };
 } // namespace duckdb

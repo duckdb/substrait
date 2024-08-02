@@ -942,10 +942,30 @@ substrait::Rel *DuckDBToSubstrait::TransformComparisonJoin(LogicalOperator &dop)
 
 substrait::Rel *DuckDBToSubstrait::TransformDelimiterJoin(LogicalOperator &dop) {
 	auto res = new substrait::Rel();
+
 	auto sjoin = res->mutable_delim_join();
 	auto &djoin = (LogicalComparisonJoin &)dop;
-	sjoin->set_allocated_left(TransformOp(*dop.children[0]));
-	sjoin->set_allocated_right(TransformOp(*dop.children[1]));
+	auto lhs_child = TransformOp(*dop.children[0]);
+	auto rhs_child = TransformOp(*dop.children[1]);
+	if (djoin.delim_flipped) {
+		// right side is where our delim is
+		sjoin->set_delimiter_side(substrait::DelimJoinRel_DelimiterSide::DelimJoinRel_DelimiterSide_RIGHT);
+		plan.add_relations()->set_allocated_rel(rhs_child);
+		sjoin->set_allocated_left(lhs_child);
+		auto rhs_res = new substrait::Rel();
+		auto rhs_ref_rel = rhs_res->mutable_reference();
+		rhs_ref_rel->set_subtree_ordinal(cur_subtree_relation++);
+		sjoin->set_allocated_right(rhs_res);
+	} else {
+		// left side is where our delim is
+		sjoin->set_delimiter_side(substrait::DelimJoinRel_DelimiterSide::DelimJoinRel_DelimiterSide_LEFT);
+		plan.add_relations()->set_allocated_rel(lhs_child);
+		sjoin->set_allocated_right(rhs_child);
+		auto lhs_res = new substrait::Rel();
+		auto lhs_ref_rel = lhs_res->mutable_reference();
+		lhs_ref_rel->set_subtree_ordinal(cur_subtree_relation++);
+		sjoin->set_allocated_left(lhs_res);
+	}
 
 	auto left_col_count = dop.children[0]->types.size();
 	if (dop.children[0]->type == LogicalOperatorType::LOGICAL_COMPARISON_JOIN) {
@@ -986,11 +1006,6 @@ substrait::Rel *DuckDBToSubstrait::TransformDelimiterJoin(LogicalOperator &dop) 
 		auto &dref = dup_col->Cast<BoundReferenceExpression>();
 		auto s_dup_col = sjoin->add_duplicate_eliminated_columns();
 		s_dup_col->mutable_direct_reference()->mutable_struct_field()->set_field(static_cast<int32_t>(dref.index));
-	}
-	if (djoin.delim_flipped) {
-		sjoin->set_delimiter_side(substrait::DelimJoinRel_DelimiterSide::DelimJoinRel_DelimiterSide_RIGHT);
-	} else {
-		sjoin->set_delimiter_side(substrait::DelimJoinRel_DelimiterSide::DelimJoinRel_DelimiterSide_LEFT);
 	}
 
 	return ProjectJoinRelation(djoin, res, left_col_count);
@@ -1370,15 +1385,11 @@ substrait::Rel *DuckDBToSubstrait::TransformIntersect(LogicalOperator &dop) {
 	return rel;
 }
 
-substrait::Rel *DuckDBToSubstrait::TransformDelimGet(LogicalOperator &dop) {
+substrait::Rel *DuckDBToSubstrait::TransformDelimGet() {
 	auto rel = new substrait::Rel();
 	auto delim_get = rel->mutable_delim_get();
-
-	auto &get_delimiter = dop.Cast<LogicalDelimGet>();
-	for (auto &type : get_delimiter.chunk_types) {
-		auto s_type = delim_get->add_delim_types();
-		*s_type = DuckToSubstraitType(type);
-	}
+	auto ref_input = delim_get->mutable_input();
+	ref_input->set_subtree_ordinal(cur_subtree_relation);
 	return rel;
 }
 
@@ -1413,7 +1424,7 @@ substrait::Rel *DuckDBToSubstrait::TransformOp(LogicalOperator &dop) {
 	case LogicalOperatorType::LOGICAL_INTERSECT:
 		return TransformIntersect(dop);
 	case LogicalOperatorType::LOGICAL_DELIM_GET:
-		return TransformDelimGet(dop);
+		return TransformDelimGet();
 	default:
 		throw InternalException(LogicalOperatorToString(dop.type));
 	}
@@ -1424,8 +1435,7 @@ static bool IsSetOperation(LogicalOperator &op) {
 	       op.type == LogicalOperatorType::LOGICAL_INTERSECT;
 }
 
-substrait::RelRoot *DuckDBToSubstrait::TransformRootOp(LogicalOperator &dop) {
-	auto root_rel = new substrait::RelRoot();
+void DuckDBToSubstrait::TransformRootOp(substrait::RelRoot &root_rel, LogicalOperator &dop) {
 	LogicalOperator *current_op = &dop;
 	bool weird_scenario = current_op->type == LogicalOperatorType::LOGICAL_PROJECTION &&
 	                      current_op->children[0]->type == LogicalOperatorType::LOGICAL_TOP_N;
@@ -1450,35 +1460,33 @@ substrait::RelRoot *DuckDBToSubstrait::TransformRootOp(LogicalOperator &dop) {
 		}
 		current_op = current_op->children[0].get();
 	}
-	root_rel->set_allocated_input(TransformOp(dop));
+	root_rel.set_allocated_input(TransformOp(dop));
 	auto &dproj = (LogicalProjection &)*current_op;
 	if (!weird_scenario) {
 		for (auto &expression : dproj.expressions) {
-			root_rel->add_names(expression->GetName());
+			root_rel.add_names(expression->GetName());
 		}
 	} else {
 		for (auto &expression : dop.expressions) {
 			D_ASSERT(expression->type == ExpressionType::BOUND_REF);
 			auto b_expr = (BoundReferenceExpression *)expression.get();
-			root_rel->add_names(dproj.expressions[b_expr->index]->GetName());
+			root_rel.add_names(dproj.expressions[b_expr->index]->GetName());
 		}
 	}
-
-	return root_rel;
 }
 
 void DuckDBToSubstrait::TransformPlan(LogicalOperator &dop) {
-	substrait::RelRoot *root;
+	auto root = new substrait::RelRoot();
+	plan.add_relations()->set_allocated_root(root);
 	try {
-		root = TransformRootOp(dop);
+		TransformRootOp(*root, dop);
 	} catch (std::exception &ex) {
 		// Ideally we don't have to do that, we should change to capture the error and throw it here at some point
-		::duckdb::ErrorData parsed_error(ex);
+		ErrorData parsed_error(ex);
 		throw NotImplementedException("Something in this plan is not yet implemented in the DuckDB -> Substrait plan "
 		                              "conversion.\n DuckDB Plan:\n" +
 		                              dop.ToString() + "Not Implemented error message: " + parsed_error.RawMessage());
 	}
-	plan.add_relations()->set_allocated_root(root);
 	if (strict && !errors.empty()) {
 		throw InvalidInputException("Strict Mode is set to true, and the following warnings/errors happened. \n" +
 		                            errors);

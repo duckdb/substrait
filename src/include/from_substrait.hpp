@@ -30,6 +30,7 @@ private:
 	shared_ptr<Relation> TransformReadOp(const substrait::Rel &sop);
 	shared_ptr<Relation> TransformSortOp(const substrait::Rel &sop);
 	shared_ptr<Relation> TransformSetOp(const substrait::Rel &sop);
+	shared_ptr<Relation> TransformReferenceOp(const substrait::ReferenceRel &reference);
 
 	//! Transform Substrait Expressions to DuckDB Expressions
 	unique_ptr<ParsedExpression> TransformExpr(const substrait::Expression &sexpr);
@@ -59,5 +60,8 @@ private:
 	//! names
 	static const unordered_map<std::string, std::string> function_names_remap;
 	static const case_insensitive_set_t valid_extract_subfields;
+
+	//! FIXME: this is pretty brittle
+	vector<unique_ptr<ParsedExpression>> *duplicate_eliminated_columns_ptr = nullptr;
 };
 } // namespace duckdb

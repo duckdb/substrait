@@ -12635,26 +12635,27 @@ class DelimGetRel final :
   // accessors -------------------------------------------------------
 
   enum : int {
-    kDelimTypesFieldNumber = 2,
+    kColumnIdsFieldNumber = 3,
     kCommonFieldNumber = 1,
+    kInputFieldNumber = 2,
   };
-  // repeated .substrait.Type delim_types = 2;
-  int delim_types_size() const;
+  // repeated .substrait.Expression.FieldReference column_ids = 3;
+  int column_ids_size() const;
   private:
-  int _internal_delim_types_size() const;
+  int _internal_column_ids_size() const;
   public:
-  void clear_delim_types();
-  ::substrait::Type* mutable_delim_types(int index);
-  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Type >*
-      mutable_delim_types();
+  void clear_column_ids();
+  ::substrait::Expression_FieldReference* mutable_column_ids(int index);
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Expression_FieldReference >*
+      mutable_column_ids();
   private:
-  const ::substrait::Type& _internal_delim_types(int index) const;
-  ::substrait::Type* _internal_add_delim_types();
+  const ::substrait::Expression_FieldReference& _internal_column_ids(int index) const;
+  ::substrait::Expression_FieldReference* _internal_add_column_ids();
   public:
-  const ::substrait::Type& delim_types(int index) const;
-  ::substrait::Type* add_delim_types();
-  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Type >&
-      delim_types() const;
+  const ::substrait::Expression_FieldReference& column_ids(int index) const;
+  ::substrait::Expression_FieldReference* add_column_ids();
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Expression_FieldReference >&
+      column_ids() const;
 
   // .substrait.RelCommon common = 1;
   bool has_common() const;
@@ -12674,6 +12675,24 @@ class DelimGetRel final :
       ::substrait::RelCommon* common);
   ::substrait::RelCommon* unsafe_arena_release_common();
 
+  // .substrait.ReferenceRel input = 2;
+  bool has_input() const;
+  private:
+  bool _internal_has_input() const;
+  public:
+  void clear_input();
+  const ::substrait::ReferenceRel& input() const;
+  PROTOBUF_NODISCARD ::substrait::ReferenceRel* release_input();
+  ::substrait::ReferenceRel* mutable_input();
+  void set_allocated_input(::substrait::ReferenceRel* input);
+  private:
+  const ::substrait::ReferenceRel& _internal_input() const;
+  ::substrait::ReferenceRel* _internal_mutable_input();
+  public:
+  void unsafe_arena_set_allocated_input(
+      ::substrait::ReferenceRel* input);
+  ::substrait::ReferenceRel* unsafe_arena_release_input();
+
   // @@protoc_insertion_point(class_scope:substrait.DelimGetRel)
  private:
   class _Internal;
@@ -12681,8 +12700,9 @@ class DelimGetRel final :
   template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
-  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Type > delim_types_;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Expression_FieldReference > column_ids_;
   ::substrait::RelCommon* common_;
+  ::substrait::ReferenceRel* input_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_substrait_2falgebra_2eproto;
 };
@@ -40034,41 +40054,134 @@ inline void DelimGetRel::set_allocated_common(::substrait::RelCommon* common) {
   // @@protoc_insertion_point(field_set_allocated:substrait.DelimGetRel.common)
 }
 
-// repeated .substrait.Type delim_types = 2;
-inline int DelimGetRel::_internal_delim_types_size() const {
-  return delim_types_.size();
+// .substrait.ReferenceRel input = 2;
+inline bool DelimGetRel::_internal_has_input() const {
+  return this != internal_default_instance() && input_ != nullptr;
 }
-inline int DelimGetRel::delim_types_size() const {
-  return _internal_delim_types_size();
+inline bool DelimGetRel::has_input() const {
+  return _internal_has_input();
 }
-inline ::substrait::Type* DelimGetRel::mutable_delim_types(int index) {
-  // @@protoc_insertion_point(field_mutable:substrait.DelimGetRel.delim_types)
-  return delim_types_.Mutable(index);
+inline void DelimGetRel::clear_input() {
+  if (GetArenaForAllocation() == nullptr && input_ != nullptr) {
+    delete input_;
+  }
+  input_ = nullptr;
 }
-inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Type >*
-DelimGetRel::mutable_delim_types() {
-  // @@protoc_insertion_point(field_mutable_list:substrait.DelimGetRel.delim_types)
-  return &delim_types_;
+inline const ::substrait::ReferenceRel& DelimGetRel::_internal_input() const {
+  const ::substrait::ReferenceRel* p = input_;
+  return p != nullptr ? *p : reinterpret_cast<const ::substrait::ReferenceRel&>(
+      ::substrait::_ReferenceRel_default_instance_);
 }
-inline const ::substrait::Type& DelimGetRel::_internal_delim_types(int index) const {
-  return delim_types_.Get(index);
+inline const ::substrait::ReferenceRel& DelimGetRel::input() const {
+  // @@protoc_insertion_point(field_get:substrait.DelimGetRel.input)
+  return _internal_input();
 }
-inline const ::substrait::Type& DelimGetRel::delim_types(int index) const {
-  // @@protoc_insertion_point(field_get:substrait.DelimGetRel.delim_types)
-  return _internal_delim_types(index);
+inline void DelimGetRel::unsafe_arena_set_allocated_input(
+    ::substrait::ReferenceRel* input) {
+  if (GetArenaForAllocation() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(input_);
+  }
+  input_ = input;
+  if (input) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:substrait.DelimGetRel.input)
 }
-inline ::substrait::Type* DelimGetRel::_internal_add_delim_types() {
-  return delim_types_.Add();
+inline ::substrait::ReferenceRel* DelimGetRel::release_input() {
+  
+  ::substrait::ReferenceRel* temp = input_;
+  input_ = nullptr;
+#ifdef PROTOBUF_FORCE_COPY_IN_RELEASE
+  auto* old =  reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(temp);
+  temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  if (GetArenaForAllocation() == nullptr) { delete old; }
+#else  // PROTOBUF_FORCE_COPY_IN_RELEASE
+  if (GetArenaForAllocation() != nullptr) {
+    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  }
+#endif  // !PROTOBUF_FORCE_COPY_IN_RELEASE
+  return temp;
 }
-inline ::substrait::Type* DelimGetRel::add_delim_types() {
-  ::substrait::Type* _add = _internal_add_delim_types();
-  // @@protoc_insertion_point(field_add:substrait.DelimGetRel.delim_types)
+inline ::substrait::ReferenceRel* DelimGetRel::unsafe_arena_release_input() {
+  // @@protoc_insertion_point(field_release:substrait.DelimGetRel.input)
+  
+  ::substrait::ReferenceRel* temp = input_;
+  input_ = nullptr;
+  return temp;
+}
+inline ::substrait::ReferenceRel* DelimGetRel::_internal_mutable_input() {
+  
+  if (input_ == nullptr) {
+    auto* p = CreateMaybeMessage<::substrait::ReferenceRel>(GetArenaForAllocation());
+    input_ = p;
+  }
+  return input_;
+}
+inline ::substrait::ReferenceRel* DelimGetRel::mutable_input() {
+  ::substrait::ReferenceRel* _msg = _internal_mutable_input();
+  // @@protoc_insertion_point(field_mutable:substrait.DelimGetRel.input)
+  return _msg;
+}
+inline void DelimGetRel::set_allocated_input(::substrait::ReferenceRel* input) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
+  if (message_arena == nullptr) {
+    delete input_;
+  }
+  if (input) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+        ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper<::substrait::ReferenceRel>::GetOwningArena(input);
+    if (message_arena != submessage_arena) {
+      input = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, input, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  input_ = input;
+  // @@protoc_insertion_point(field_set_allocated:substrait.DelimGetRel.input)
+}
+
+// repeated .substrait.Expression.FieldReference column_ids = 3;
+inline int DelimGetRel::_internal_column_ids_size() const {
+  return column_ids_.size();
+}
+inline int DelimGetRel::column_ids_size() const {
+  return _internal_column_ids_size();
+}
+inline void DelimGetRel::clear_column_ids() {
+  column_ids_.Clear();
+}
+inline ::substrait::Expression_FieldReference* DelimGetRel::mutable_column_ids(int index) {
+  // @@protoc_insertion_point(field_mutable:substrait.DelimGetRel.column_ids)
+  return column_ids_.Mutable(index);
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Expression_FieldReference >*
+DelimGetRel::mutable_column_ids() {
+  // @@protoc_insertion_point(field_mutable_list:substrait.DelimGetRel.column_ids)
+  return &column_ids_;
+}
+inline const ::substrait::Expression_FieldReference& DelimGetRel::_internal_column_ids(int index) const {
+  return column_ids_.Get(index);
+}
+inline const ::substrait::Expression_FieldReference& DelimGetRel::column_ids(int index) const {
+  // @@protoc_insertion_point(field_get:substrait.DelimGetRel.column_ids)
+  return _internal_column_ids(index);
+}
+inline ::substrait::Expression_FieldReference* DelimGetRel::_internal_add_column_ids() {
+  return column_ids_.Add();
+}
+inline ::substrait::Expression_FieldReference* DelimGetRel::add_column_ids() {
+  ::substrait::Expression_FieldReference* _add = _internal_add_column_ids();
+  // @@protoc_insertion_point(field_add:substrait.DelimGetRel.column_ids)
   return _add;
 }
-inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Type >&
-DelimGetRel::delim_types() const {
-  // @@protoc_insertion_point(field_list:substrait.DelimGetRel.delim_types)
-  return delim_types_;
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Expression_FieldReference >&
+DelimGetRel::column_ids() const {
+  // @@protoc_insertion_point(field_list:substrait.DelimGetRel.column_ids)
+  return column_ids_;
 }
 
 // -------------------------------------------------------------------
