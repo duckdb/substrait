@@ -89,9 +89,12 @@ extern CrossRelDefaultTypeInternal _CrossRel_default_instance_;
 class DdlRel;
 struct DdlRelDefaultTypeInternal;
 extern DdlRelDefaultTypeInternal _DdlRel_default_instance_;
-class DelimiterJoinRel;
-struct DelimiterJoinRelDefaultTypeInternal;
-extern DelimiterJoinRelDefaultTypeInternal _DelimiterJoinRel_default_instance_;
+class DelimGetRel;
+struct DelimGetRelDefaultTypeInternal;
+extern DelimGetRelDefaultTypeInternal _DelimGetRel_default_instance_;
+class DelimJoinRel;
+struct DelimJoinRelDefaultTypeInternal;
+extern DelimJoinRelDefaultTypeInternal _DelimJoinRel_default_instance_;
 class ExchangeRel;
 struct ExchangeRelDefaultTypeInternal;
 extern ExchangeRelDefaultTypeInternal _ExchangeRel_default_instance_;
@@ -329,9 +332,6 @@ extern HashJoinRelDefaultTypeInternal _HashJoinRel_default_instance_;
 class JoinRel;
 struct JoinRelDefaultTypeInternal;
 extern JoinRelDefaultTypeInternal _JoinRel_default_instance_;
-class MarkJoinRel;
-struct MarkJoinRelDefaultTypeInternal;
-extern MarkJoinRelDefaultTypeInternal _MarkJoinRel_default_instance_;
 class MergeJoinRel;
 struct MergeJoinRelDefaultTypeInternal;
 extern MergeJoinRelDefaultTypeInternal _MergeJoinRel_default_instance_;
@@ -425,7 +425,8 @@ template<> ::substrait::ConsistentPartitionWindowRel* Arena::CreateMaybeMessage<
 template<> ::substrait::ConsistentPartitionWindowRel_WindowRelFunction* Arena::CreateMaybeMessage<::substrait::ConsistentPartitionWindowRel_WindowRelFunction>(Arena*);
 template<> ::substrait::CrossRel* Arena::CreateMaybeMessage<::substrait::CrossRel>(Arena*);
 template<> ::substrait::DdlRel* Arena::CreateMaybeMessage<::substrait::DdlRel>(Arena*);
-template<> ::substrait::DelimiterJoinRel* Arena::CreateMaybeMessage<::substrait::DelimiterJoinRel>(Arena*);
+template<> ::substrait::DelimGetRel* Arena::CreateMaybeMessage<::substrait::DelimGetRel>(Arena*);
+template<> ::substrait::DelimJoinRel* Arena::CreateMaybeMessage<::substrait::DelimJoinRel>(Arena*);
 template<> ::substrait::ExchangeRel* Arena::CreateMaybeMessage<::substrait::ExchangeRel>(Arena*);
 template<> ::substrait::ExchangeRel_Broadcast* Arena::CreateMaybeMessage<::substrait::ExchangeRel_Broadcast>(Arena*);
 template<> ::substrait::ExchangeRel_ExchangeTarget* Arena::CreateMaybeMessage<::substrait::ExchangeRel_ExchangeTarget>(Arena*);
@@ -505,7 +506,6 @@ template<> ::substrait::FunctionArgument* Arena::CreateMaybeMessage<::substrait:
 template<> ::substrait::FunctionOption* Arena::CreateMaybeMessage<::substrait::FunctionOption>(Arena*);
 template<> ::substrait::HashJoinRel* Arena::CreateMaybeMessage<::substrait::HashJoinRel>(Arena*);
 template<> ::substrait::JoinRel* Arena::CreateMaybeMessage<::substrait::JoinRel>(Arena*);
-template<> ::substrait::MarkJoinRel* Arena::CreateMaybeMessage<::substrait::MarkJoinRel>(Arena*);
 template<> ::substrait::MergeJoinRel* Arena::CreateMaybeMessage<::substrait::MergeJoinRel>(Arena*);
 template<> ::substrait::NamedObjectWrite* Arena::CreateMaybeMessage<::substrait::NamedObjectWrite>(Arena*);
 template<> ::substrait::NestedLoopJoinRel* Arena::CreateMaybeMessage<::substrait::NestedLoopJoinRel>(Arena*);
@@ -546,12 +546,13 @@ enum JoinRel_JoinType : int {
   JoinRel_JoinType_JOIN_TYPE_ANTI = 6,
   JoinRel_JoinType_JOIN_TYPE_SINGLE = 7,
   JoinRel_JoinType_JOIN_TYPE_MARK = 8,
+  JoinRel_JoinType_JOIN_TYPE_RIGHT_SEMI = 9,
   JoinRel_JoinType_JoinRel_JoinType_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
   JoinRel_JoinType_JoinRel_JoinType_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
 };
 bool JoinRel_JoinType_IsValid(int value);
 constexpr JoinRel_JoinType JoinRel_JoinType_JoinType_MIN = JoinRel_JoinType_JOIN_TYPE_UNSPECIFIED;
-constexpr JoinRel_JoinType JoinRel_JoinType_JoinType_MAX = JoinRel_JoinType_JOIN_TYPE_MARK;
+constexpr JoinRel_JoinType JoinRel_JoinType_JoinType_MAX = JoinRel_JoinType_JOIN_TYPE_RIGHT_SEMI;
 constexpr int JoinRel_JoinType_JoinType_ARRAYSIZE = JoinRel_JoinType_JoinType_MAX + 1;
 
 const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* JoinRel_JoinType_descriptor();
@@ -830,37 +831,64 @@ inline bool NestedLoopJoinRel_JoinType_Parse(
   return ::PROTOBUF_NAMESPACE_ID::internal::ParseNamedEnum<NestedLoopJoinRel_JoinType>(
     NestedLoopJoinRel_JoinType_descriptor(), name, value);
 }
-enum DelimiterJoinRel_JoinType : int {
-  DelimiterJoinRel_JoinType_JOIN_TYPE_UNSPECIFIED = 0,
-  DelimiterJoinRel_JoinType_JOIN_TYPE_INNER = 1,
-  DelimiterJoinRel_JoinType_JOIN_TYPE_OUTER = 2,
-  DelimiterJoinRel_JoinType_JOIN_TYPE_LEFT = 3,
-  DelimiterJoinRel_JoinType_JOIN_TYPE_RIGHT = 4,
-  DelimiterJoinRel_JoinType_JOIN_TYPE_LEFT_SEMI = 5,
-  DelimiterJoinRel_JoinType_JOIN_TYPE_RIGHT_SEMI = 6,
-  DelimiterJoinRel_JoinType_JOIN_TYPE_LEFT_ANTI = 7,
-  DelimiterJoinRel_JoinType_JOIN_TYPE_RIGHT_ANTI = 8,
-  DelimiterJoinRel_JoinType_DelimiterJoinRel_JoinType_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
-  DelimiterJoinRel_JoinType_DelimiterJoinRel_JoinType_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
+enum DelimJoinRel_DelimiterSide : int {
+  DelimJoinRel_DelimiterSide_LEFT = 0,
+  DelimJoinRel_DelimiterSide_RIGHT = 1,
+  DelimJoinRel_DelimiterSide_DelimJoinRel_DelimiterSide_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
+  DelimJoinRel_DelimiterSide_DelimJoinRel_DelimiterSide_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
 };
-bool DelimiterJoinRel_JoinType_IsValid(int value);
-constexpr DelimiterJoinRel_JoinType DelimiterJoinRel_JoinType_JoinType_MIN = DelimiterJoinRel_JoinType_JOIN_TYPE_UNSPECIFIED;
-constexpr DelimiterJoinRel_JoinType DelimiterJoinRel_JoinType_JoinType_MAX = DelimiterJoinRel_JoinType_JOIN_TYPE_RIGHT_ANTI;
-constexpr int DelimiterJoinRel_JoinType_JoinType_ARRAYSIZE = DelimiterJoinRel_JoinType_JoinType_MAX + 1;
+bool DelimJoinRel_DelimiterSide_IsValid(int value);
+constexpr DelimJoinRel_DelimiterSide DelimJoinRel_DelimiterSide_DelimiterSide_MIN = DelimJoinRel_DelimiterSide_LEFT;
+constexpr DelimJoinRel_DelimiterSide DelimJoinRel_DelimiterSide_DelimiterSide_MAX = DelimJoinRel_DelimiterSide_RIGHT;
+constexpr int DelimJoinRel_DelimiterSide_DelimiterSide_ARRAYSIZE = DelimJoinRel_DelimiterSide_DelimiterSide_MAX + 1;
 
-const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* DelimiterJoinRel_JoinType_descriptor();
+const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* DelimJoinRel_DelimiterSide_descriptor();
 template<typename T>
-inline const std::string& DelimiterJoinRel_JoinType_Name(T enum_t_value) {
-  static_assert(::std::is_same<T, DelimiterJoinRel_JoinType>::value ||
+inline const std::string& DelimJoinRel_DelimiterSide_Name(T enum_t_value) {
+  static_assert(::std::is_same<T, DelimJoinRel_DelimiterSide>::value ||
     ::std::is_integral<T>::value,
-    "Incorrect type passed to function DelimiterJoinRel_JoinType_Name.");
+    "Incorrect type passed to function DelimJoinRel_DelimiterSide_Name.");
   return ::PROTOBUF_NAMESPACE_ID::internal::NameOfEnum(
-    DelimiterJoinRel_JoinType_descriptor(), enum_t_value);
+    DelimJoinRel_DelimiterSide_descriptor(), enum_t_value);
 }
-inline bool DelimiterJoinRel_JoinType_Parse(
-    ::PROTOBUF_NAMESPACE_ID::ConstStringParam name, DelimiterJoinRel_JoinType* value) {
-  return ::PROTOBUF_NAMESPACE_ID::internal::ParseNamedEnum<DelimiterJoinRel_JoinType>(
-    DelimiterJoinRel_JoinType_descriptor(), name, value);
+inline bool DelimJoinRel_DelimiterSide_Parse(
+    ::PROTOBUF_NAMESPACE_ID::ConstStringParam name, DelimJoinRel_DelimiterSide* value) {
+  return ::PROTOBUF_NAMESPACE_ID::internal::ParseNamedEnum<DelimJoinRel_DelimiterSide>(
+    DelimJoinRel_DelimiterSide_descriptor(), name, value);
+}
+enum DelimJoinRel_JoinType : int {
+  DelimJoinRel_JoinType_JOIN_TYPE_UNSPECIFIED = 0,
+  DelimJoinRel_JoinType_JOIN_TYPE_INNER = 1,
+  DelimJoinRel_JoinType_JOIN_TYPE_OUTER = 2,
+  DelimJoinRel_JoinType_JOIN_TYPE_LEFT = 3,
+  DelimJoinRel_JoinType_JOIN_TYPE_RIGHT = 4,
+  DelimJoinRel_JoinType_JOIN_TYPE_SEMI = 5,
+  DelimJoinRel_JoinType_JOIN_TYPE_ANTI = 6,
+  DelimJoinRel_JoinType_JOIN_TYPE_SINGLE = 7,
+  DelimJoinRel_JoinType_JOIN_TYPE_RIGHT_SEMI = 8,
+  DelimJoinRel_JoinType_JOIN_TYPE_MARK = 9,
+  DelimJoinRel_JoinType_JOIN_TYPE_RIGHT_ANTI = 10,
+  DelimJoinRel_JoinType_DelimJoinRel_JoinType_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
+  DelimJoinRel_JoinType_DelimJoinRel_JoinType_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
+};
+bool DelimJoinRel_JoinType_IsValid(int value);
+constexpr DelimJoinRel_JoinType DelimJoinRel_JoinType_JoinType_MIN = DelimJoinRel_JoinType_JOIN_TYPE_UNSPECIFIED;
+constexpr DelimJoinRel_JoinType DelimJoinRel_JoinType_JoinType_MAX = DelimJoinRel_JoinType_JOIN_TYPE_RIGHT_ANTI;
+constexpr int DelimJoinRel_JoinType_JoinType_ARRAYSIZE = DelimJoinRel_JoinType_JoinType_MAX + 1;
+
+const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* DelimJoinRel_JoinType_descriptor();
+template<typename T>
+inline const std::string& DelimJoinRel_JoinType_Name(T enum_t_value) {
+  static_assert(::std::is_same<T, DelimJoinRel_JoinType>::value ||
+    ::std::is_integral<T>::value,
+    "Incorrect type passed to function DelimJoinRel_JoinType_Name.");
+  return ::PROTOBUF_NAMESPACE_ID::internal::NameOfEnum(
+    DelimJoinRel_JoinType_descriptor(), enum_t_value);
+}
+inline bool DelimJoinRel_JoinType_Parse(
+    ::PROTOBUF_NAMESPACE_ID::ConstStringParam name, DelimJoinRel_JoinType* value) {
+  return ::PROTOBUF_NAMESPACE_ID::internal::ParseNamedEnum<DelimJoinRel_JoinType>(
+    DelimJoinRel_JoinType_descriptor(), name, value);
 }
 enum Expression_WindowFunction_BoundsType : int {
   Expression_WindowFunction_BoundsType_BOUNDS_TYPE_UNSPECIFIED = 0,
@@ -4382,6 +4410,8 @@ class JoinRel final :
     JoinRel_JoinType_JOIN_TYPE_SINGLE;
   static constexpr JoinType JOIN_TYPE_MARK =
     JoinRel_JoinType_JOIN_TYPE_MARK;
+  static constexpr JoinType JOIN_TYPE_RIGHT_SEMI =
+    JoinRel_JoinType_JOIN_TYPE_RIGHT_SEMI;
   static inline bool JoinType_IsValid(int value) {
     return JoinRel_JoinType_IsValid(value);
   }
@@ -9438,8 +9468,8 @@ class Rel final :
     kHashJoin = 13,
     kMergeJoin = 14,
     kNestedLoopJoin = 18,
-    kMarkJoin = 23,
-    kDelimiterJoin = 24,
+    kDelimGet = 23,
+    kDelimJoin = 24,
     kWindow = 17,
     kExchange = 15,
     kExpand = 16,
@@ -9543,8 +9573,8 @@ class Rel final :
     kHashJoinFieldNumber = 13,
     kMergeJoinFieldNumber = 14,
     kNestedLoopJoinFieldNumber = 18,
-    kMarkJoinFieldNumber = 23,
-    kDelimiterJoinFieldNumber = 24,
+    kDelimGetFieldNumber = 23,
+    kDelimJoinFieldNumber = 24,
     kWindowFieldNumber = 17,
     kExchangeFieldNumber = 15,
     kExpandFieldNumber = 16,
@@ -9873,41 +9903,41 @@ class Rel final :
       ::substrait::NestedLoopJoinRel* nested_loop_join);
   ::substrait::NestedLoopJoinRel* unsafe_arena_release_nested_loop_join();
 
-  // .substrait.MarkJoinRel mark_join = 23;
-  bool has_mark_join() const;
+  // .substrait.DelimGetRel delim_get = 23;
+  bool has_delim_get() const;
   private:
-  bool _internal_has_mark_join() const;
+  bool _internal_has_delim_get() const;
   public:
-  void clear_mark_join();
-  const ::substrait::MarkJoinRel& mark_join() const;
-  PROTOBUF_NODISCARD ::substrait::MarkJoinRel* release_mark_join();
-  ::substrait::MarkJoinRel* mutable_mark_join();
-  void set_allocated_mark_join(::substrait::MarkJoinRel* mark_join);
+  void clear_delim_get();
+  const ::substrait::DelimGetRel& delim_get() const;
+  PROTOBUF_NODISCARD ::substrait::DelimGetRel* release_delim_get();
+  ::substrait::DelimGetRel* mutable_delim_get();
+  void set_allocated_delim_get(::substrait::DelimGetRel* delim_get);
   private:
-  const ::substrait::MarkJoinRel& _internal_mark_join() const;
-  ::substrait::MarkJoinRel* _internal_mutable_mark_join();
+  const ::substrait::DelimGetRel& _internal_delim_get() const;
+  ::substrait::DelimGetRel* _internal_mutable_delim_get();
   public:
-  void unsafe_arena_set_allocated_mark_join(
-      ::substrait::MarkJoinRel* mark_join);
-  ::substrait::MarkJoinRel* unsafe_arena_release_mark_join();
+  void unsafe_arena_set_allocated_delim_get(
+      ::substrait::DelimGetRel* delim_get);
+  ::substrait::DelimGetRel* unsafe_arena_release_delim_get();
 
-  // .substrait.DelimiterJoinRel delimiter_join = 24;
-  bool has_delimiter_join() const;
+  // .substrait.DelimJoinRel delim_join = 24;
+  bool has_delim_join() const;
   private:
-  bool _internal_has_delimiter_join() const;
+  bool _internal_has_delim_join() const;
   public:
-  void clear_delimiter_join();
-  const ::substrait::DelimiterJoinRel& delimiter_join() const;
-  PROTOBUF_NODISCARD ::substrait::DelimiterJoinRel* release_delimiter_join();
-  ::substrait::DelimiterJoinRel* mutable_delimiter_join();
-  void set_allocated_delimiter_join(::substrait::DelimiterJoinRel* delimiter_join);
+  void clear_delim_join();
+  const ::substrait::DelimJoinRel& delim_join() const;
+  PROTOBUF_NODISCARD ::substrait::DelimJoinRel* release_delim_join();
+  ::substrait::DelimJoinRel* mutable_delim_join();
+  void set_allocated_delim_join(::substrait::DelimJoinRel* delim_join);
   private:
-  const ::substrait::DelimiterJoinRel& _internal_delimiter_join() const;
-  ::substrait::DelimiterJoinRel* _internal_mutable_delimiter_join();
+  const ::substrait::DelimJoinRel& _internal_delim_join() const;
+  ::substrait::DelimJoinRel* _internal_mutable_delim_join();
   public:
-  void unsafe_arena_set_allocated_delimiter_join(
-      ::substrait::DelimiterJoinRel* delimiter_join);
-  ::substrait::DelimiterJoinRel* unsafe_arena_release_delimiter_join();
+  void unsafe_arena_set_allocated_delim_join(
+      ::substrait::DelimJoinRel* delim_join);
+  ::substrait::DelimJoinRel* unsafe_arena_release_delim_join();
 
   // .substrait.ConsistentPartitionWindowRel window = 17;
   bool has_window() const;
@@ -9986,8 +10016,8 @@ class Rel final :
   void set_has_hash_join();
   void set_has_merge_join();
   void set_has_nested_loop_join();
-  void set_has_mark_join();
-  void set_has_delimiter_join();
+  void set_has_delim_get();
+  void set_has_delim_join();
   void set_has_window();
   void set_has_exchange();
   void set_has_expand();
@@ -10019,8 +10049,8 @@ class Rel final :
     ::substrait::HashJoinRel* hash_join_;
     ::substrait::MergeJoinRel* merge_join_;
     ::substrait::NestedLoopJoinRel* nested_loop_join_;
-    ::substrait::MarkJoinRel* mark_join_;
-    ::substrait::DelimiterJoinRel* delimiter_join_;
+    ::substrait::DelimGetRel* delim_get_;
+    ::substrait::DelimJoinRel* delim_join_;
     ::substrait::ConsistentPartitionWindowRel* window_;
     ::substrait::ExchangeRel* exchange_;
     ::substrait::ExpandRel* expand_;
@@ -12483,24 +12513,24 @@ class NestedLoopJoinRel final :
 };
 // -------------------------------------------------------------------
 
-class MarkJoinRel final :
-    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:substrait.MarkJoinRel) */ {
+class DelimGetRel final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:substrait.DelimGetRel) */ {
  public:
-  inline MarkJoinRel() : MarkJoinRel(nullptr) {}
-  ~MarkJoinRel() override;
-  explicit constexpr MarkJoinRel(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+  inline DelimGetRel() : DelimGetRel(nullptr) {}
+  ~DelimGetRel() override;
+  explicit constexpr DelimGetRel(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
 
-  MarkJoinRel(const MarkJoinRel& from);
-  MarkJoinRel(MarkJoinRel&& from) noexcept
-    : MarkJoinRel() {
+  DelimGetRel(const DelimGetRel& from);
+  DelimGetRel(DelimGetRel&& from) noexcept
+    : DelimGetRel() {
     *this = ::std::move(from);
   }
 
-  inline MarkJoinRel& operator=(const MarkJoinRel& from) {
+  inline DelimGetRel& operator=(const DelimGetRel& from) {
     CopyFrom(from);
     return *this;
   }
-  inline MarkJoinRel& operator=(MarkJoinRel&& from) noexcept {
+  inline DelimGetRel& operator=(DelimGetRel&& from) noexcept {
     if (this == &from) return *this;
     if (GetOwningArena() == from.GetOwningArena()
   #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
@@ -12523,20 +12553,20 @@ class MarkJoinRel final :
   static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
     return default_instance().GetMetadata().reflection;
   }
-  static const MarkJoinRel& default_instance() {
+  static const DelimGetRel& default_instance() {
     return *internal_default_instance();
   }
-  static inline const MarkJoinRel* internal_default_instance() {
-    return reinterpret_cast<const MarkJoinRel*>(
-               &_MarkJoinRel_default_instance_);
+  static inline const DelimGetRel* internal_default_instance() {
+    return reinterpret_cast<const DelimGetRel*>(
+               &_DelimGetRel_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
     52;
 
-  friend void swap(MarkJoinRel& a, MarkJoinRel& b) {
+  friend void swap(DelimGetRel& a, DelimGetRel& b) {
     a.Swap(&b);
   }
-  inline void Swap(MarkJoinRel* other) {
+  inline void Swap(DelimGetRel* other) {
     if (other == this) return;
   #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
     if (GetOwningArena() != nullptr &&
@@ -12549,7 +12579,7 @@ class MarkJoinRel final :
       ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
     }
   }
-  void UnsafeArenaSwap(MarkJoinRel* other) {
+  void UnsafeArenaSwap(DelimGetRel* other) {
     if (other == this) return;
     GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
     InternalSwap(other);
@@ -12557,13 +12587,13 @@ class MarkJoinRel final :
 
   // implements Message ----------------------------------------------
 
-  MarkJoinRel* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final {
-    return CreateMaybeMessage<MarkJoinRel>(arena);
+  DelimGetRel* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<DelimGetRel>(arena);
   }
   using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
-  void CopyFrom(const MarkJoinRel& from);
+  void CopyFrom(const DelimGetRel& from);
   using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
-  void MergeFrom(const MarkJoinRel& from);
+  void MergeFrom(const DelimGetRel& from);
   private:
   static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to, const ::PROTOBUF_NAMESPACE_ID::Message& from);
   public:
@@ -12580,15 +12610,15 @@ class MarkJoinRel final :
   void SharedCtor();
   void SharedDtor();
   void SetCachedSize(int size) const final;
-  void InternalSwap(MarkJoinRel* other);
+  void InternalSwap(DelimGetRel* other);
 
   private:
   friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
   static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
-    return "substrait.MarkJoinRel";
+    return "substrait.DelimGetRel";
   }
   protected:
-  explicit MarkJoinRel(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+  explicit DelimGetRel(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                        bool is_message_owned = false);
   private:
   static void ArenaDtor(void* object);
@@ -12605,12 +12635,307 @@ class MarkJoinRel final :
   // accessors -------------------------------------------------------
 
   enum : int {
+    kColumnIdsFieldNumber = 3,
+    kCommonFieldNumber = 1,
+    kInputFieldNumber = 2,
+  };
+  // repeated .substrait.Expression.FieldReference column_ids = 3;
+  int column_ids_size() const;
+  private:
+  int _internal_column_ids_size() const;
+  public:
+  void clear_column_ids();
+  ::substrait::Expression_FieldReference* mutable_column_ids(int index);
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Expression_FieldReference >*
+      mutable_column_ids();
+  private:
+  const ::substrait::Expression_FieldReference& _internal_column_ids(int index) const;
+  ::substrait::Expression_FieldReference* _internal_add_column_ids();
+  public:
+  const ::substrait::Expression_FieldReference& column_ids(int index) const;
+  ::substrait::Expression_FieldReference* add_column_ids();
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Expression_FieldReference >&
+      column_ids() const;
+
+  // .substrait.RelCommon common = 1;
+  bool has_common() const;
+  private:
+  bool _internal_has_common() const;
+  public:
+  void clear_common();
+  const ::substrait::RelCommon& common() const;
+  PROTOBUF_NODISCARD ::substrait::RelCommon* release_common();
+  ::substrait::RelCommon* mutable_common();
+  void set_allocated_common(::substrait::RelCommon* common);
+  private:
+  const ::substrait::RelCommon& _internal_common() const;
+  ::substrait::RelCommon* _internal_mutable_common();
+  public:
+  void unsafe_arena_set_allocated_common(
+      ::substrait::RelCommon* common);
+  ::substrait::RelCommon* unsafe_arena_release_common();
+
+  // .substrait.ReferenceRel input = 2;
+  bool has_input() const;
+  private:
+  bool _internal_has_input() const;
+  public:
+  void clear_input();
+  const ::substrait::ReferenceRel& input() const;
+  PROTOBUF_NODISCARD ::substrait::ReferenceRel* release_input();
+  ::substrait::ReferenceRel* mutable_input();
+  void set_allocated_input(::substrait::ReferenceRel* input);
+  private:
+  const ::substrait::ReferenceRel& _internal_input() const;
+  ::substrait::ReferenceRel* _internal_mutable_input();
+  public:
+  void unsafe_arena_set_allocated_input(
+      ::substrait::ReferenceRel* input);
+  ::substrait::ReferenceRel* unsafe_arena_release_input();
+
+  // @@protoc_insertion_point(class_scope:substrait.DelimGetRel)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Expression_FieldReference > column_ids_;
+  ::substrait::RelCommon* common_;
+  ::substrait::ReferenceRel* input_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_substrait_2falgebra_2eproto;
+};
+// -------------------------------------------------------------------
+
+class DelimJoinRel final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:substrait.DelimJoinRel) */ {
+ public:
+  inline DelimJoinRel() : DelimJoinRel(nullptr) {}
+  ~DelimJoinRel() override;
+  explicit constexpr DelimJoinRel(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  DelimJoinRel(const DelimJoinRel& from);
+  DelimJoinRel(DelimJoinRel&& from) noexcept
+    : DelimJoinRel() {
+    *this = ::std::move(from);
+  }
+
+  inline DelimJoinRel& operator=(const DelimJoinRel& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline DelimJoinRel& operator=(DelimJoinRel&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()
+  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
+        && GetOwningArena() != nullptr
+  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
+    ) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const DelimJoinRel& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const DelimJoinRel* internal_default_instance() {
+    return reinterpret_cast<const DelimJoinRel*>(
+               &_DelimJoinRel_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    53;
+
+  friend void swap(DelimJoinRel& a, DelimJoinRel& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(DelimJoinRel* other) {
+    if (other == this) return;
+  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() != nullptr &&
+        GetOwningArena() == other->GetOwningArena()) {
+   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() == other->GetOwningArena()) {
+  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(DelimJoinRel* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  DelimJoinRel* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<DelimJoinRel>(arena);
+  }
+  using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
+  void CopyFrom(const DelimJoinRel& from);
+  using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
+  void MergeFrom(const DelimJoinRel& from);
+  private:
+  static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to, const ::PROTOBUF_NAMESPACE_ID::Message& from);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  uint8_t* _InternalSerialize(
+      uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(DelimJoinRel* other);
+
+  private:
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "substrait.DelimJoinRel";
+  }
+  protected:
+  explicit DelimJoinRel(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                       bool is_message_owned = false);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  static const ClassData _class_data_;
+  const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetClassData() const final;
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  typedef DelimJoinRel_DelimiterSide DelimiterSide;
+  static constexpr DelimiterSide LEFT =
+    DelimJoinRel_DelimiterSide_LEFT;
+  static constexpr DelimiterSide RIGHT =
+    DelimJoinRel_DelimiterSide_RIGHT;
+  static inline bool DelimiterSide_IsValid(int value) {
+    return DelimJoinRel_DelimiterSide_IsValid(value);
+  }
+  static constexpr DelimiterSide DelimiterSide_MIN =
+    DelimJoinRel_DelimiterSide_DelimiterSide_MIN;
+  static constexpr DelimiterSide DelimiterSide_MAX =
+    DelimJoinRel_DelimiterSide_DelimiterSide_MAX;
+  static constexpr int DelimiterSide_ARRAYSIZE =
+    DelimJoinRel_DelimiterSide_DelimiterSide_ARRAYSIZE;
+  static inline const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor*
+  DelimiterSide_descriptor() {
+    return DelimJoinRel_DelimiterSide_descriptor();
+  }
+  template<typename T>
+  static inline const std::string& DelimiterSide_Name(T enum_t_value) {
+    static_assert(::std::is_same<T, DelimiterSide>::value ||
+      ::std::is_integral<T>::value,
+      "Incorrect type passed to function DelimiterSide_Name.");
+    return DelimJoinRel_DelimiterSide_Name(enum_t_value);
+  }
+  static inline bool DelimiterSide_Parse(::PROTOBUF_NAMESPACE_ID::ConstStringParam name,
+      DelimiterSide* value) {
+    return DelimJoinRel_DelimiterSide_Parse(name, value);
+  }
+
+  typedef DelimJoinRel_JoinType JoinType;
+  static constexpr JoinType JOIN_TYPE_UNSPECIFIED =
+    DelimJoinRel_JoinType_JOIN_TYPE_UNSPECIFIED;
+  static constexpr JoinType JOIN_TYPE_INNER =
+    DelimJoinRel_JoinType_JOIN_TYPE_INNER;
+  static constexpr JoinType JOIN_TYPE_OUTER =
+    DelimJoinRel_JoinType_JOIN_TYPE_OUTER;
+  static constexpr JoinType JOIN_TYPE_LEFT =
+    DelimJoinRel_JoinType_JOIN_TYPE_LEFT;
+  static constexpr JoinType JOIN_TYPE_RIGHT =
+    DelimJoinRel_JoinType_JOIN_TYPE_RIGHT;
+  static constexpr JoinType JOIN_TYPE_SEMI =
+    DelimJoinRel_JoinType_JOIN_TYPE_SEMI;
+  static constexpr JoinType JOIN_TYPE_ANTI =
+    DelimJoinRel_JoinType_JOIN_TYPE_ANTI;
+  static constexpr JoinType JOIN_TYPE_SINGLE =
+    DelimJoinRel_JoinType_JOIN_TYPE_SINGLE;
+  static constexpr JoinType JOIN_TYPE_RIGHT_SEMI =
+    DelimJoinRel_JoinType_JOIN_TYPE_RIGHT_SEMI;
+  static constexpr JoinType JOIN_TYPE_MARK =
+    DelimJoinRel_JoinType_JOIN_TYPE_MARK;
+  static constexpr JoinType JOIN_TYPE_RIGHT_ANTI =
+    DelimJoinRel_JoinType_JOIN_TYPE_RIGHT_ANTI;
+  static inline bool JoinType_IsValid(int value) {
+    return DelimJoinRel_JoinType_IsValid(value);
+  }
+  static constexpr JoinType JoinType_MIN =
+    DelimJoinRel_JoinType_JoinType_MIN;
+  static constexpr JoinType JoinType_MAX =
+    DelimJoinRel_JoinType_JoinType_MAX;
+  static constexpr int JoinType_ARRAYSIZE =
+    DelimJoinRel_JoinType_JoinType_ARRAYSIZE;
+  static inline const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor*
+  JoinType_descriptor() {
+    return DelimJoinRel_JoinType_descriptor();
+  }
+  template<typename T>
+  static inline const std::string& JoinType_Name(T enum_t_value) {
+    static_assert(::std::is_same<T, JoinType>::value ||
+      ::std::is_integral<T>::value,
+      "Incorrect type passed to function JoinType_Name.");
+    return DelimJoinRel_JoinType_Name(enum_t_value);
+  }
+  static inline bool JoinType_Parse(::PROTOBUF_NAMESPACE_ID::ConstStringParam name,
+      JoinType* value) {
+    return DelimJoinRel_JoinType_Parse(name, value);
+  }
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kDuplicateEliminatedColumnsFieldNumber = 7,
     kCommonFieldNumber = 1,
     kLeftFieldNumber = 2,
     kRightFieldNumber = 3,
     kExpressionFieldNumber = 4,
+    kPostJoinFilterFieldNumber = 5,
     kAdvancedExtensionFieldNumber = 10,
+    kTypeFieldNumber = 6,
+    kDelimiterSideFieldNumber = 8,
   };
+  // repeated .substrait.Expression.FieldReference duplicate_eliminated_columns = 7;
+  int duplicate_eliminated_columns_size() const;
+  private:
+  int _internal_duplicate_eliminated_columns_size() const;
+  public:
+  void clear_duplicate_eliminated_columns();
+  ::substrait::Expression_FieldReference* mutable_duplicate_eliminated_columns(int index);
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Expression_FieldReference >*
+      mutable_duplicate_eliminated_columns();
+  private:
+  const ::substrait::Expression_FieldReference& _internal_duplicate_eliminated_columns(int index) const;
+  ::substrait::Expression_FieldReference* _internal_add_duplicate_eliminated_columns();
+  public:
+  const ::substrait::Expression_FieldReference& duplicate_eliminated_columns(int index) const;
+  ::substrait::Expression_FieldReference* add_duplicate_eliminated_columns();
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Expression_FieldReference >&
+      duplicate_eliminated_columns() const;
+
   // .substrait.RelCommon common = 1;
   bool has_common() const;
   private:
@@ -12683,6 +13008,24 @@ class MarkJoinRel final :
       ::substrait::Expression* expression);
   ::substrait::Expression* unsafe_arena_release_expression();
 
+  // .substrait.Expression post_join_filter = 5;
+  bool has_post_join_filter() const;
+  private:
+  bool _internal_has_post_join_filter() const;
+  public:
+  void clear_post_join_filter();
+  const ::substrait::Expression& post_join_filter() const;
+  PROTOBUF_NODISCARD ::substrait::Expression* release_post_join_filter();
+  ::substrait::Expression* mutable_post_join_filter();
+  void set_allocated_post_join_filter(::substrait::Expression* post_join_filter);
+  private:
+  const ::substrait::Expression& _internal_post_join_filter() const;
+  ::substrait::Expression* _internal_mutable_post_join_filter();
+  public:
+  void unsafe_arena_set_allocated_post_join_filter(
+      ::substrait::Expression* post_join_filter);
+  ::substrait::Expression* unsafe_arena_release_post_join_filter();
+
   // .substrait.extensions.AdvancedExtension advanced_extension = 10;
   bool has_advanced_extension() const;
   private:
@@ -12701,348 +13044,40 @@ class MarkJoinRel final :
       ::substrait::extensions::AdvancedExtension* advanced_extension);
   ::substrait::extensions::AdvancedExtension* unsafe_arena_release_advanced_extension();
 
-  // @@protoc_insertion_point(class_scope:substrait.MarkJoinRel)
+  // .substrait.DelimJoinRel.JoinType type = 6;
+  void clear_type();
+  ::substrait::DelimJoinRel_JoinType type() const;
+  void set_type(::substrait::DelimJoinRel_JoinType value);
+  private:
+  ::substrait::DelimJoinRel_JoinType _internal_type() const;
+  void _internal_set_type(::substrait::DelimJoinRel_JoinType value);
+  public:
+
+  // .substrait.DelimJoinRel.DelimiterSide delimiter_side = 8;
+  void clear_delimiter_side();
+  ::substrait::DelimJoinRel_DelimiterSide delimiter_side() const;
+  void set_delimiter_side(::substrait::DelimJoinRel_DelimiterSide value);
+  private:
+  ::substrait::DelimJoinRel_DelimiterSide _internal_delimiter_side() const;
+  void _internal_set_delimiter_side(::substrait::DelimJoinRel_DelimiterSide value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:substrait.DelimJoinRel)
  private:
   class _Internal;
 
   template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Expression_FieldReference > duplicate_eliminated_columns_;
   ::substrait::RelCommon* common_;
   ::substrait::Rel* left_;
   ::substrait::Rel* right_;
   ::substrait::Expression* expression_;
-  ::substrait::extensions::AdvancedExtension* advanced_extension_;
-  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
-  friend struct ::TableStruct_substrait_2falgebra_2eproto;
-};
-// -------------------------------------------------------------------
-
-class DelimiterJoinRel final :
-    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:substrait.DelimiterJoinRel) */ {
- public:
-  inline DelimiterJoinRel() : DelimiterJoinRel(nullptr) {}
-  ~DelimiterJoinRel() override;
-  explicit constexpr DelimiterJoinRel(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
-
-  DelimiterJoinRel(const DelimiterJoinRel& from);
-  DelimiterJoinRel(DelimiterJoinRel&& from) noexcept
-    : DelimiterJoinRel() {
-    *this = ::std::move(from);
-  }
-
-  inline DelimiterJoinRel& operator=(const DelimiterJoinRel& from) {
-    CopyFrom(from);
-    return *this;
-  }
-  inline DelimiterJoinRel& operator=(DelimiterJoinRel&& from) noexcept {
-    if (this == &from) return *this;
-    if (GetOwningArena() == from.GetOwningArena()
-  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
-        && GetOwningArena() != nullptr
-  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
-    ) {
-      InternalSwap(&from);
-    } else {
-      CopyFrom(from);
-    }
-    return *this;
-  }
-
-  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
-    return GetDescriptor();
-  }
-  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
-    return default_instance().GetMetadata().descriptor;
-  }
-  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
-    return default_instance().GetMetadata().reflection;
-  }
-  static const DelimiterJoinRel& default_instance() {
-    return *internal_default_instance();
-  }
-  static inline const DelimiterJoinRel* internal_default_instance() {
-    return reinterpret_cast<const DelimiterJoinRel*>(
-               &_DelimiterJoinRel_default_instance_);
-  }
-  static constexpr int kIndexInFileMessages =
-    53;
-
-  friend void swap(DelimiterJoinRel& a, DelimiterJoinRel& b) {
-    a.Swap(&b);
-  }
-  inline void Swap(DelimiterJoinRel* other) {
-    if (other == this) return;
-  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
-    if (GetOwningArena() != nullptr &&
-        GetOwningArena() == other->GetOwningArena()) {
-   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
-    if (GetOwningArena() == other->GetOwningArena()) {
-  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
-      InternalSwap(other);
-    } else {
-      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
-    }
-  }
-  void UnsafeArenaSwap(DelimiterJoinRel* other) {
-    if (other == this) return;
-    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
-    InternalSwap(other);
-  }
-
-  // implements Message ----------------------------------------------
-
-  DelimiterJoinRel* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final {
-    return CreateMaybeMessage<DelimiterJoinRel>(arena);
-  }
-  using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
-  void CopyFrom(const DelimiterJoinRel& from);
-  using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
-  void MergeFrom(const DelimiterJoinRel& from);
-  private:
-  static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to, const ::PROTOBUF_NAMESPACE_ID::Message& from);
-  public:
-  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
-  bool IsInitialized() const final;
-
-  size_t ByteSizeLong() const final;
-  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
-  uint8_t* _InternalSerialize(
-      uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
-  int GetCachedSize() const final { return _cached_size_.Get(); }
-
-  private:
-  void SharedCtor();
-  void SharedDtor();
-  void SetCachedSize(int size) const final;
-  void InternalSwap(DelimiterJoinRel* other);
-
-  private:
-  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
-  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
-    return "substrait.DelimiterJoinRel";
-  }
-  protected:
-  explicit DelimiterJoinRel(::PROTOBUF_NAMESPACE_ID::Arena* arena,
-                       bool is_message_owned = false);
-  private:
-  static void ArenaDtor(void* object);
-  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
-  public:
-
-  static const ClassData _class_data_;
-  const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetClassData() const final;
-
-  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
-
-  // nested types ----------------------------------------------------
-
-  typedef DelimiterJoinRel_JoinType JoinType;
-  static constexpr JoinType JOIN_TYPE_UNSPECIFIED =
-    DelimiterJoinRel_JoinType_JOIN_TYPE_UNSPECIFIED;
-  static constexpr JoinType JOIN_TYPE_INNER =
-    DelimiterJoinRel_JoinType_JOIN_TYPE_INNER;
-  static constexpr JoinType JOIN_TYPE_OUTER =
-    DelimiterJoinRel_JoinType_JOIN_TYPE_OUTER;
-  static constexpr JoinType JOIN_TYPE_LEFT =
-    DelimiterJoinRel_JoinType_JOIN_TYPE_LEFT;
-  static constexpr JoinType JOIN_TYPE_RIGHT =
-    DelimiterJoinRel_JoinType_JOIN_TYPE_RIGHT;
-  static constexpr JoinType JOIN_TYPE_LEFT_SEMI =
-    DelimiterJoinRel_JoinType_JOIN_TYPE_LEFT_SEMI;
-  static constexpr JoinType JOIN_TYPE_RIGHT_SEMI =
-    DelimiterJoinRel_JoinType_JOIN_TYPE_RIGHT_SEMI;
-  static constexpr JoinType JOIN_TYPE_LEFT_ANTI =
-    DelimiterJoinRel_JoinType_JOIN_TYPE_LEFT_ANTI;
-  static constexpr JoinType JOIN_TYPE_RIGHT_ANTI =
-    DelimiterJoinRel_JoinType_JOIN_TYPE_RIGHT_ANTI;
-  static inline bool JoinType_IsValid(int value) {
-    return DelimiterJoinRel_JoinType_IsValid(value);
-  }
-  static constexpr JoinType JoinType_MIN =
-    DelimiterJoinRel_JoinType_JoinType_MIN;
-  static constexpr JoinType JoinType_MAX =
-    DelimiterJoinRel_JoinType_JoinType_MAX;
-  static constexpr int JoinType_ARRAYSIZE =
-    DelimiterJoinRel_JoinType_JoinType_ARRAYSIZE;
-  static inline const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor*
-  JoinType_descriptor() {
-    return DelimiterJoinRel_JoinType_descriptor();
-  }
-  template<typename T>
-  static inline const std::string& JoinType_Name(T enum_t_value) {
-    static_assert(::std::is_same<T, JoinType>::value ||
-      ::std::is_integral<T>::value,
-      "Incorrect type passed to function JoinType_Name.");
-    return DelimiterJoinRel_JoinType_Name(enum_t_value);
-  }
-  static inline bool JoinType_Parse(::PROTOBUF_NAMESPACE_ID::ConstStringParam name,
-      JoinType* value) {
-    return DelimiterJoinRel_JoinType_Parse(name, value);
-  }
-
-  // accessors -------------------------------------------------------
-
-  enum : int {
-    kLeftKeysFieldNumber = 4,
-    kRightKeysFieldNumber = 5,
-    kCommonFieldNumber = 1,
-    kLeftFieldNumber = 2,
-    kRightFieldNumber = 3,
-    kDelimiterFieldFieldNumber = 7,
-    kAdvancedExtensionFieldNumber = 10,
-    kTypeFieldNumber = 6,
-  };
-  // repeated .substrait.Expression.FieldReference left_keys = 4;
-  int left_keys_size() const;
-  private:
-  int _internal_left_keys_size() const;
-  public:
-  void clear_left_keys();
-  ::substrait::Expression_FieldReference* mutable_left_keys(int index);
-  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Expression_FieldReference >*
-      mutable_left_keys();
-  private:
-  const ::substrait::Expression_FieldReference& _internal_left_keys(int index) const;
-  ::substrait::Expression_FieldReference* _internal_add_left_keys();
-  public:
-  const ::substrait::Expression_FieldReference& left_keys(int index) const;
-  ::substrait::Expression_FieldReference* add_left_keys();
-  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Expression_FieldReference >&
-      left_keys() const;
-
-  // repeated .substrait.Expression.FieldReference right_keys = 5;
-  int right_keys_size() const;
-  private:
-  int _internal_right_keys_size() const;
-  public:
-  void clear_right_keys();
-  ::substrait::Expression_FieldReference* mutable_right_keys(int index);
-  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Expression_FieldReference >*
-      mutable_right_keys();
-  private:
-  const ::substrait::Expression_FieldReference& _internal_right_keys(int index) const;
-  ::substrait::Expression_FieldReference* _internal_add_right_keys();
-  public:
-  const ::substrait::Expression_FieldReference& right_keys(int index) const;
-  ::substrait::Expression_FieldReference* add_right_keys();
-  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Expression_FieldReference >&
-      right_keys() const;
-
-  // .substrait.RelCommon common = 1;
-  bool has_common() const;
-  private:
-  bool _internal_has_common() const;
-  public:
-  void clear_common();
-  const ::substrait::RelCommon& common() const;
-  PROTOBUF_NODISCARD ::substrait::RelCommon* release_common();
-  ::substrait::RelCommon* mutable_common();
-  void set_allocated_common(::substrait::RelCommon* common);
-  private:
-  const ::substrait::RelCommon& _internal_common() const;
-  ::substrait::RelCommon* _internal_mutable_common();
-  public:
-  void unsafe_arena_set_allocated_common(
-      ::substrait::RelCommon* common);
-  ::substrait::RelCommon* unsafe_arena_release_common();
-
-  // .substrait.Rel left = 2;
-  bool has_left() const;
-  private:
-  bool _internal_has_left() const;
-  public:
-  void clear_left();
-  const ::substrait::Rel& left() const;
-  PROTOBUF_NODISCARD ::substrait::Rel* release_left();
-  ::substrait::Rel* mutable_left();
-  void set_allocated_left(::substrait::Rel* left);
-  private:
-  const ::substrait::Rel& _internal_left() const;
-  ::substrait::Rel* _internal_mutable_left();
-  public:
-  void unsafe_arena_set_allocated_left(
-      ::substrait::Rel* left);
-  ::substrait::Rel* unsafe_arena_release_left();
-
-  // .substrait.Rel right = 3;
-  bool has_right() const;
-  private:
-  bool _internal_has_right() const;
-  public:
-  void clear_right();
-  const ::substrait::Rel& right() const;
-  PROTOBUF_NODISCARD ::substrait::Rel* release_right();
-  ::substrait::Rel* mutable_right();
-  void set_allocated_right(::substrait::Rel* right);
-  private:
-  const ::substrait::Rel& _internal_right() const;
-  ::substrait::Rel* _internal_mutable_right();
-  public:
-  void unsafe_arena_set_allocated_right(
-      ::substrait::Rel* right);
-  ::substrait::Rel* unsafe_arena_release_right();
-
-  // .substrait.Expression.FieldReference delimiter_field = 7;
-  bool has_delimiter_field() const;
-  private:
-  bool _internal_has_delimiter_field() const;
-  public:
-  void clear_delimiter_field();
-  const ::substrait::Expression_FieldReference& delimiter_field() const;
-  PROTOBUF_NODISCARD ::substrait::Expression_FieldReference* release_delimiter_field();
-  ::substrait::Expression_FieldReference* mutable_delimiter_field();
-  void set_allocated_delimiter_field(::substrait::Expression_FieldReference* delimiter_field);
-  private:
-  const ::substrait::Expression_FieldReference& _internal_delimiter_field() const;
-  ::substrait::Expression_FieldReference* _internal_mutable_delimiter_field();
-  public:
-  void unsafe_arena_set_allocated_delimiter_field(
-      ::substrait::Expression_FieldReference* delimiter_field);
-  ::substrait::Expression_FieldReference* unsafe_arena_release_delimiter_field();
-
-  // .substrait.extensions.AdvancedExtension advanced_extension = 10;
-  bool has_advanced_extension() const;
-  private:
-  bool _internal_has_advanced_extension() const;
-  public:
-  void clear_advanced_extension();
-  const ::substrait::extensions::AdvancedExtension& advanced_extension() const;
-  PROTOBUF_NODISCARD ::substrait::extensions::AdvancedExtension* release_advanced_extension();
-  ::substrait::extensions::AdvancedExtension* mutable_advanced_extension();
-  void set_allocated_advanced_extension(::substrait::extensions::AdvancedExtension* advanced_extension);
-  private:
-  const ::substrait::extensions::AdvancedExtension& _internal_advanced_extension() const;
-  ::substrait::extensions::AdvancedExtension* _internal_mutable_advanced_extension();
-  public:
-  void unsafe_arena_set_allocated_advanced_extension(
-      ::substrait::extensions::AdvancedExtension* advanced_extension);
-  ::substrait::extensions::AdvancedExtension* unsafe_arena_release_advanced_extension();
-
-  // .substrait.DelimiterJoinRel.JoinType type = 6;
-  void clear_type();
-  ::substrait::DelimiterJoinRel_JoinType type() const;
-  void set_type(::substrait::DelimiterJoinRel_JoinType value);
-  private:
-  ::substrait::DelimiterJoinRel_JoinType _internal_type() const;
-  void _internal_set_type(::substrait::DelimiterJoinRel_JoinType value);
-  public:
-
-  // @@protoc_insertion_point(class_scope:substrait.DelimiterJoinRel)
- private:
-  class _Internal;
-
-  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
-  typedef void InternalArenaConstructable_;
-  typedef void DestructorSkippable_;
-  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Expression_FieldReference > left_keys_;
-  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Expression_FieldReference > right_keys_;
-  ::substrait::RelCommon* common_;
-  ::substrait::Rel* left_;
-  ::substrait::Rel* right_;
-  ::substrait::Expression_FieldReference* delimiter_field_;
+  ::substrait::Expression* post_join_filter_;
   ::substrait::extensions::AdvancedExtension* advanced_extension_;
   int type_;
+  int delimiter_side_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_substrait_2falgebra_2eproto;
 };
@@ -36254,151 +36289,151 @@ inline ::substrait::NestedLoopJoinRel* Rel::mutable_nested_loop_join() {
   return _msg;
 }
 
-// .substrait.MarkJoinRel mark_join = 23;
-inline bool Rel::_internal_has_mark_join() const {
-  return rel_type_case() == kMarkJoin;
+// .substrait.DelimGetRel delim_get = 23;
+inline bool Rel::_internal_has_delim_get() const {
+  return rel_type_case() == kDelimGet;
 }
-inline bool Rel::has_mark_join() const {
-  return _internal_has_mark_join();
+inline bool Rel::has_delim_get() const {
+  return _internal_has_delim_get();
 }
-inline void Rel::set_has_mark_join() {
-  _oneof_case_[0] = kMarkJoin;
+inline void Rel::set_has_delim_get() {
+  _oneof_case_[0] = kDelimGet;
 }
-inline void Rel::clear_mark_join() {
-  if (_internal_has_mark_join()) {
+inline void Rel::clear_delim_get() {
+  if (_internal_has_delim_get()) {
     if (GetArenaForAllocation() == nullptr) {
-      delete rel_type_.mark_join_;
+      delete rel_type_.delim_get_;
     }
     clear_has_rel_type();
   }
 }
-inline ::substrait::MarkJoinRel* Rel::release_mark_join() {
-  // @@protoc_insertion_point(field_release:substrait.Rel.mark_join)
-  if (_internal_has_mark_join()) {
+inline ::substrait::DelimGetRel* Rel::release_delim_get() {
+  // @@protoc_insertion_point(field_release:substrait.Rel.delim_get)
+  if (_internal_has_delim_get()) {
     clear_has_rel_type();
-      ::substrait::MarkJoinRel* temp = rel_type_.mark_join_;
+      ::substrait::DelimGetRel* temp = rel_type_.delim_get_;
     if (GetArenaForAllocation() != nullptr) {
       temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
     }
-    rel_type_.mark_join_ = nullptr;
+    rel_type_.delim_get_ = nullptr;
     return temp;
   } else {
     return nullptr;
   }
 }
-inline const ::substrait::MarkJoinRel& Rel::_internal_mark_join() const {
-  return _internal_has_mark_join()
-      ? *rel_type_.mark_join_
-      : reinterpret_cast< ::substrait::MarkJoinRel&>(::substrait::_MarkJoinRel_default_instance_);
+inline const ::substrait::DelimGetRel& Rel::_internal_delim_get() const {
+  return _internal_has_delim_get()
+      ? *rel_type_.delim_get_
+      : reinterpret_cast< ::substrait::DelimGetRel&>(::substrait::_DelimGetRel_default_instance_);
 }
-inline const ::substrait::MarkJoinRel& Rel::mark_join() const {
-  // @@protoc_insertion_point(field_get:substrait.Rel.mark_join)
-  return _internal_mark_join();
+inline const ::substrait::DelimGetRel& Rel::delim_get() const {
+  // @@protoc_insertion_point(field_get:substrait.Rel.delim_get)
+  return _internal_delim_get();
 }
-inline ::substrait::MarkJoinRel* Rel::unsafe_arena_release_mark_join() {
-  // @@protoc_insertion_point(field_unsafe_arena_release:substrait.Rel.mark_join)
-  if (_internal_has_mark_join()) {
+inline ::substrait::DelimGetRel* Rel::unsafe_arena_release_delim_get() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:substrait.Rel.delim_get)
+  if (_internal_has_delim_get()) {
     clear_has_rel_type();
-    ::substrait::MarkJoinRel* temp = rel_type_.mark_join_;
-    rel_type_.mark_join_ = nullptr;
+    ::substrait::DelimGetRel* temp = rel_type_.delim_get_;
+    rel_type_.delim_get_ = nullptr;
     return temp;
   } else {
     return nullptr;
   }
 }
-inline void Rel::unsafe_arena_set_allocated_mark_join(::substrait::MarkJoinRel* mark_join) {
+inline void Rel::unsafe_arena_set_allocated_delim_get(::substrait::DelimGetRel* delim_get) {
   clear_rel_type();
-  if (mark_join) {
-    set_has_mark_join();
-    rel_type_.mark_join_ = mark_join;
+  if (delim_get) {
+    set_has_delim_get();
+    rel_type_.delim_get_ = delim_get;
   }
-  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:substrait.Rel.mark_join)
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:substrait.Rel.delim_get)
 }
-inline ::substrait::MarkJoinRel* Rel::_internal_mutable_mark_join() {
-  if (!_internal_has_mark_join()) {
+inline ::substrait::DelimGetRel* Rel::_internal_mutable_delim_get() {
+  if (!_internal_has_delim_get()) {
     clear_rel_type();
-    set_has_mark_join();
-    rel_type_.mark_join_ = CreateMaybeMessage< ::substrait::MarkJoinRel >(GetArenaForAllocation());
+    set_has_delim_get();
+    rel_type_.delim_get_ = CreateMaybeMessage< ::substrait::DelimGetRel >(GetArenaForAllocation());
   }
-  return rel_type_.mark_join_;
+  return rel_type_.delim_get_;
 }
-inline ::substrait::MarkJoinRel* Rel::mutable_mark_join() {
-  ::substrait::MarkJoinRel* _msg = _internal_mutable_mark_join();
-  // @@protoc_insertion_point(field_mutable:substrait.Rel.mark_join)
+inline ::substrait::DelimGetRel* Rel::mutable_delim_get() {
+  ::substrait::DelimGetRel* _msg = _internal_mutable_delim_get();
+  // @@protoc_insertion_point(field_mutable:substrait.Rel.delim_get)
   return _msg;
 }
 
-// .substrait.DelimiterJoinRel delimiter_join = 24;
-inline bool Rel::_internal_has_delimiter_join() const {
-  return rel_type_case() == kDelimiterJoin;
+// .substrait.DelimJoinRel delim_join = 24;
+inline bool Rel::_internal_has_delim_join() const {
+  return rel_type_case() == kDelimJoin;
 }
-inline bool Rel::has_delimiter_join() const {
-  return _internal_has_delimiter_join();
+inline bool Rel::has_delim_join() const {
+  return _internal_has_delim_join();
 }
-inline void Rel::set_has_delimiter_join() {
-  _oneof_case_[0] = kDelimiterJoin;
+inline void Rel::set_has_delim_join() {
+  _oneof_case_[0] = kDelimJoin;
 }
-inline void Rel::clear_delimiter_join() {
-  if (_internal_has_delimiter_join()) {
+inline void Rel::clear_delim_join() {
+  if (_internal_has_delim_join()) {
     if (GetArenaForAllocation() == nullptr) {
-      delete rel_type_.delimiter_join_;
+      delete rel_type_.delim_join_;
     }
     clear_has_rel_type();
   }
 }
-inline ::substrait::DelimiterJoinRel* Rel::release_delimiter_join() {
-  // @@protoc_insertion_point(field_release:substrait.Rel.delimiter_join)
-  if (_internal_has_delimiter_join()) {
+inline ::substrait::DelimJoinRel* Rel::release_delim_join() {
+  // @@protoc_insertion_point(field_release:substrait.Rel.delim_join)
+  if (_internal_has_delim_join()) {
     clear_has_rel_type();
-      ::substrait::DelimiterJoinRel* temp = rel_type_.delimiter_join_;
+      ::substrait::DelimJoinRel* temp = rel_type_.delim_join_;
     if (GetArenaForAllocation() != nullptr) {
       temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
     }
-    rel_type_.delimiter_join_ = nullptr;
+    rel_type_.delim_join_ = nullptr;
     return temp;
   } else {
     return nullptr;
   }
 }
-inline const ::substrait::DelimiterJoinRel& Rel::_internal_delimiter_join() const {
-  return _internal_has_delimiter_join()
-      ? *rel_type_.delimiter_join_
-      : reinterpret_cast< ::substrait::DelimiterJoinRel&>(::substrait::_DelimiterJoinRel_default_instance_);
+inline const ::substrait::DelimJoinRel& Rel::_internal_delim_join() const {
+  return _internal_has_delim_join()
+      ? *rel_type_.delim_join_
+      : reinterpret_cast< ::substrait::DelimJoinRel&>(::substrait::_DelimJoinRel_default_instance_);
 }
-inline const ::substrait::DelimiterJoinRel& Rel::delimiter_join() const {
-  // @@protoc_insertion_point(field_get:substrait.Rel.delimiter_join)
-  return _internal_delimiter_join();
+inline const ::substrait::DelimJoinRel& Rel::delim_join() const {
+  // @@protoc_insertion_point(field_get:substrait.Rel.delim_join)
+  return _internal_delim_join();
 }
-inline ::substrait::DelimiterJoinRel* Rel::unsafe_arena_release_delimiter_join() {
-  // @@protoc_insertion_point(field_unsafe_arena_release:substrait.Rel.delimiter_join)
-  if (_internal_has_delimiter_join()) {
+inline ::substrait::DelimJoinRel* Rel::unsafe_arena_release_delim_join() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:substrait.Rel.delim_join)
+  if (_internal_has_delim_join()) {
     clear_has_rel_type();
-    ::substrait::DelimiterJoinRel* temp = rel_type_.delimiter_join_;
-    rel_type_.delimiter_join_ = nullptr;
+    ::substrait::DelimJoinRel* temp = rel_type_.delim_join_;
+    rel_type_.delim_join_ = nullptr;
     return temp;
   } else {
     return nullptr;
   }
 }
-inline void Rel::unsafe_arena_set_allocated_delimiter_join(::substrait::DelimiterJoinRel* delimiter_join) {
+inline void Rel::unsafe_arena_set_allocated_delim_join(::substrait::DelimJoinRel* delim_join) {
   clear_rel_type();
-  if (delimiter_join) {
-    set_has_delimiter_join();
-    rel_type_.delimiter_join_ = delimiter_join;
+  if (delim_join) {
+    set_has_delim_join();
+    rel_type_.delim_join_ = delim_join;
   }
-  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:substrait.Rel.delimiter_join)
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:substrait.Rel.delim_join)
 }
-inline ::substrait::DelimiterJoinRel* Rel::_internal_mutable_delimiter_join() {
-  if (!_internal_has_delimiter_join()) {
+inline ::substrait::DelimJoinRel* Rel::_internal_mutable_delim_join() {
+  if (!_internal_has_delim_join()) {
     clear_rel_type();
-    set_has_delimiter_join();
-    rel_type_.delimiter_join_ = CreateMaybeMessage< ::substrait::DelimiterJoinRel >(GetArenaForAllocation());
+    set_has_delim_join();
+    rel_type_.delim_join_ = CreateMaybeMessage< ::substrait::DelimJoinRel >(GetArenaForAllocation());
   }
-  return rel_type_.delimiter_join_;
+  return rel_type_.delim_join_;
 }
-inline ::substrait::DelimiterJoinRel* Rel::mutable_delimiter_join() {
-  ::substrait::DelimiterJoinRel* _msg = _internal_mutable_delimiter_join();
-  // @@protoc_insertion_point(field_mutable:substrait.Rel.delimiter_join)
+inline ::substrait::DelimJoinRel* Rel::mutable_delim_join() {
+  ::substrait::DelimJoinRel* _msg = _internal_mutable_delim_join();
+  // @@protoc_insertion_point(field_mutable:substrait.Rel.delim_join)
   return _msg;
 }
 
@@ -39927,31 +39962,31 @@ inline void NestedLoopJoinRel::set_allocated_advanced_extension(::substrait::ext
 
 // -------------------------------------------------------------------
 
-// MarkJoinRel
+// DelimGetRel
 
 // .substrait.RelCommon common = 1;
-inline bool MarkJoinRel::_internal_has_common() const {
+inline bool DelimGetRel::_internal_has_common() const {
   return this != internal_default_instance() && common_ != nullptr;
 }
-inline bool MarkJoinRel::has_common() const {
+inline bool DelimGetRel::has_common() const {
   return _internal_has_common();
 }
-inline void MarkJoinRel::clear_common() {
+inline void DelimGetRel::clear_common() {
   if (GetArenaForAllocation() == nullptr && common_ != nullptr) {
     delete common_;
   }
   common_ = nullptr;
 }
-inline const ::substrait::RelCommon& MarkJoinRel::_internal_common() const {
+inline const ::substrait::RelCommon& DelimGetRel::_internal_common() const {
   const ::substrait::RelCommon* p = common_;
   return p != nullptr ? *p : reinterpret_cast<const ::substrait::RelCommon&>(
       ::substrait::_RelCommon_default_instance_);
 }
-inline const ::substrait::RelCommon& MarkJoinRel::common() const {
-  // @@protoc_insertion_point(field_get:substrait.MarkJoinRel.common)
+inline const ::substrait::RelCommon& DelimGetRel::common() const {
+  // @@protoc_insertion_point(field_get:substrait.DelimGetRel.common)
   return _internal_common();
 }
-inline void MarkJoinRel::unsafe_arena_set_allocated_common(
+inline void DelimGetRel::unsafe_arena_set_allocated_common(
     ::substrait::RelCommon* common) {
   if (GetArenaForAllocation() == nullptr) {
     delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(common_);
@@ -39962,9 +39997,9 @@ inline void MarkJoinRel::unsafe_arena_set_allocated_common(
   } else {
     
   }
-  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:substrait.MarkJoinRel.common)
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:substrait.DelimGetRel.common)
 }
-inline ::substrait::RelCommon* MarkJoinRel::release_common() {
+inline ::substrait::RelCommon* DelimGetRel::release_common() {
   
   ::substrait::RelCommon* temp = common_;
   common_ = nullptr;
@@ -39979,14 +40014,14 @@ inline ::substrait::RelCommon* MarkJoinRel::release_common() {
 #endif  // !PROTOBUF_FORCE_COPY_IN_RELEASE
   return temp;
 }
-inline ::substrait::RelCommon* MarkJoinRel::unsafe_arena_release_common() {
-  // @@protoc_insertion_point(field_release:substrait.MarkJoinRel.common)
+inline ::substrait::RelCommon* DelimGetRel::unsafe_arena_release_common() {
+  // @@protoc_insertion_point(field_release:substrait.DelimGetRel.common)
   
   ::substrait::RelCommon* temp = common_;
   common_ = nullptr;
   return temp;
 }
-inline ::substrait::RelCommon* MarkJoinRel::_internal_mutable_common() {
+inline ::substrait::RelCommon* DelimGetRel::_internal_mutable_common() {
   
   if (common_ == nullptr) {
     auto* p = CreateMaybeMessage<::substrait::RelCommon>(GetArenaForAllocation());
@@ -39994,12 +40029,12 @@ inline ::substrait::RelCommon* MarkJoinRel::_internal_mutable_common() {
   }
   return common_;
 }
-inline ::substrait::RelCommon* MarkJoinRel::mutable_common() {
+inline ::substrait::RelCommon* DelimGetRel::mutable_common() {
   ::substrait::RelCommon* _msg = _internal_mutable_common();
-  // @@protoc_insertion_point(field_mutable:substrait.MarkJoinRel.common)
+  // @@protoc_insertion_point(field_mutable:substrait.DelimGetRel.common)
   return _msg;
 }
-inline void MarkJoinRel::set_allocated_common(::substrait::RelCommon* common) {
+inline void DelimGetRel::set_allocated_common(::substrait::RelCommon* common) {
   ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
   if (message_arena == nullptr) {
     delete common_;
@@ -40016,32 +40051,256 @@ inline void MarkJoinRel::set_allocated_common(::substrait::RelCommon* common) {
     
   }
   common_ = common;
-  // @@protoc_insertion_point(field_set_allocated:substrait.MarkJoinRel.common)
+  // @@protoc_insertion_point(field_set_allocated:substrait.DelimGetRel.common)
+}
+
+// .substrait.ReferenceRel input = 2;
+inline bool DelimGetRel::_internal_has_input() const {
+  return this != internal_default_instance() && input_ != nullptr;
+}
+inline bool DelimGetRel::has_input() const {
+  return _internal_has_input();
+}
+inline void DelimGetRel::clear_input() {
+  if (GetArenaForAllocation() == nullptr && input_ != nullptr) {
+    delete input_;
+  }
+  input_ = nullptr;
+}
+inline const ::substrait::ReferenceRel& DelimGetRel::_internal_input() const {
+  const ::substrait::ReferenceRel* p = input_;
+  return p != nullptr ? *p : reinterpret_cast<const ::substrait::ReferenceRel&>(
+      ::substrait::_ReferenceRel_default_instance_);
+}
+inline const ::substrait::ReferenceRel& DelimGetRel::input() const {
+  // @@protoc_insertion_point(field_get:substrait.DelimGetRel.input)
+  return _internal_input();
+}
+inline void DelimGetRel::unsafe_arena_set_allocated_input(
+    ::substrait::ReferenceRel* input) {
+  if (GetArenaForAllocation() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(input_);
+  }
+  input_ = input;
+  if (input) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:substrait.DelimGetRel.input)
+}
+inline ::substrait::ReferenceRel* DelimGetRel::release_input() {
+  
+  ::substrait::ReferenceRel* temp = input_;
+  input_ = nullptr;
+#ifdef PROTOBUF_FORCE_COPY_IN_RELEASE
+  auto* old =  reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(temp);
+  temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  if (GetArenaForAllocation() == nullptr) { delete old; }
+#else  // PROTOBUF_FORCE_COPY_IN_RELEASE
+  if (GetArenaForAllocation() != nullptr) {
+    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  }
+#endif  // !PROTOBUF_FORCE_COPY_IN_RELEASE
+  return temp;
+}
+inline ::substrait::ReferenceRel* DelimGetRel::unsafe_arena_release_input() {
+  // @@protoc_insertion_point(field_release:substrait.DelimGetRel.input)
+  
+  ::substrait::ReferenceRel* temp = input_;
+  input_ = nullptr;
+  return temp;
+}
+inline ::substrait::ReferenceRel* DelimGetRel::_internal_mutable_input() {
+  
+  if (input_ == nullptr) {
+    auto* p = CreateMaybeMessage<::substrait::ReferenceRel>(GetArenaForAllocation());
+    input_ = p;
+  }
+  return input_;
+}
+inline ::substrait::ReferenceRel* DelimGetRel::mutable_input() {
+  ::substrait::ReferenceRel* _msg = _internal_mutable_input();
+  // @@protoc_insertion_point(field_mutable:substrait.DelimGetRel.input)
+  return _msg;
+}
+inline void DelimGetRel::set_allocated_input(::substrait::ReferenceRel* input) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
+  if (message_arena == nullptr) {
+    delete input_;
+  }
+  if (input) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+        ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper<::substrait::ReferenceRel>::GetOwningArena(input);
+    if (message_arena != submessage_arena) {
+      input = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, input, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  input_ = input;
+  // @@protoc_insertion_point(field_set_allocated:substrait.DelimGetRel.input)
+}
+
+// repeated .substrait.Expression.FieldReference column_ids = 3;
+inline int DelimGetRel::_internal_column_ids_size() const {
+  return column_ids_.size();
+}
+inline int DelimGetRel::column_ids_size() const {
+  return _internal_column_ids_size();
+}
+inline void DelimGetRel::clear_column_ids() {
+  column_ids_.Clear();
+}
+inline ::substrait::Expression_FieldReference* DelimGetRel::mutable_column_ids(int index) {
+  // @@protoc_insertion_point(field_mutable:substrait.DelimGetRel.column_ids)
+  return column_ids_.Mutable(index);
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Expression_FieldReference >*
+DelimGetRel::mutable_column_ids() {
+  // @@protoc_insertion_point(field_mutable_list:substrait.DelimGetRel.column_ids)
+  return &column_ids_;
+}
+inline const ::substrait::Expression_FieldReference& DelimGetRel::_internal_column_ids(int index) const {
+  return column_ids_.Get(index);
+}
+inline const ::substrait::Expression_FieldReference& DelimGetRel::column_ids(int index) const {
+  // @@protoc_insertion_point(field_get:substrait.DelimGetRel.column_ids)
+  return _internal_column_ids(index);
+}
+inline ::substrait::Expression_FieldReference* DelimGetRel::_internal_add_column_ids() {
+  return column_ids_.Add();
+}
+inline ::substrait::Expression_FieldReference* DelimGetRel::add_column_ids() {
+  ::substrait::Expression_FieldReference* _add = _internal_add_column_ids();
+  // @@protoc_insertion_point(field_add:substrait.DelimGetRel.column_ids)
+  return _add;
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Expression_FieldReference >&
+DelimGetRel::column_ids() const {
+  // @@protoc_insertion_point(field_list:substrait.DelimGetRel.column_ids)
+  return column_ids_;
+}
+
+// -------------------------------------------------------------------
+
+// DelimJoinRel
+
+// .substrait.RelCommon common = 1;
+inline bool DelimJoinRel::_internal_has_common() const {
+  return this != internal_default_instance() && common_ != nullptr;
+}
+inline bool DelimJoinRel::has_common() const {
+  return _internal_has_common();
+}
+inline void DelimJoinRel::clear_common() {
+  if (GetArenaForAllocation() == nullptr && common_ != nullptr) {
+    delete common_;
+  }
+  common_ = nullptr;
+}
+inline const ::substrait::RelCommon& DelimJoinRel::_internal_common() const {
+  const ::substrait::RelCommon* p = common_;
+  return p != nullptr ? *p : reinterpret_cast<const ::substrait::RelCommon&>(
+      ::substrait::_RelCommon_default_instance_);
+}
+inline const ::substrait::RelCommon& DelimJoinRel::common() const {
+  // @@protoc_insertion_point(field_get:substrait.DelimJoinRel.common)
+  return _internal_common();
+}
+inline void DelimJoinRel::unsafe_arena_set_allocated_common(
+    ::substrait::RelCommon* common) {
+  if (GetArenaForAllocation() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(common_);
+  }
+  common_ = common;
+  if (common) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:substrait.DelimJoinRel.common)
+}
+inline ::substrait::RelCommon* DelimJoinRel::release_common() {
+  
+  ::substrait::RelCommon* temp = common_;
+  common_ = nullptr;
+#ifdef PROTOBUF_FORCE_COPY_IN_RELEASE
+  auto* old =  reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(temp);
+  temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  if (GetArenaForAllocation() == nullptr) { delete old; }
+#else  // PROTOBUF_FORCE_COPY_IN_RELEASE
+  if (GetArenaForAllocation() != nullptr) {
+    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  }
+#endif  // !PROTOBUF_FORCE_COPY_IN_RELEASE
+  return temp;
+}
+inline ::substrait::RelCommon* DelimJoinRel::unsafe_arena_release_common() {
+  // @@protoc_insertion_point(field_release:substrait.DelimJoinRel.common)
+  
+  ::substrait::RelCommon* temp = common_;
+  common_ = nullptr;
+  return temp;
+}
+inline ::substrait::RelCommon* DelimJoinRel::_internal_mutable_common() {
+  
+  if (common_ == nullptr) {
+    auto* p = CreateMaybeMessage<::substrait::RelCommon>(GetArenaForAllocation());
+    common_ = p;
+  }
+  return common_;
+}
+inline ::substrait::RelCommon* DelimJoinRel::mutable_common() {
+  ::substrait::RelCommon* _msg = _internal_mutable_common();
+  // @@protoc_insertion_point(field_mutable:substrait.DelimJoinRel.common)
+  return _msg;
+}
+inline void DelimJoinRel::set_allocated_common(::substrait::RelCommon* common) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
+  if (message_arena == nullptr) {
+    delete common_;
+  }
+  if (common) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+        ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper<::substrait::RelCommon>::GetOwningArena(common);
+    if (message_arena != submessage_arena) {
+      common = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, common, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  common_ = common;
+  // @@protoc_insertion_point(field_set_allocated:substrait.DelimJoinRel.common)
 }
 
 // .substrait.Rel left = 2;
-inline bool MarkJoinRel::_internal_has_left() const {
+inline bool DelimJoinRel::_internal_has_left() const {
   return this != internal_default_instance() && left_ != nullptr;
 }
-inline bool MarkJoinRel::has_left() const {
+inline bool DelimJoinRel::has_left() const {
   return _internal_has_left();
 }
-inline void MarkJoinRel::clear_left() {
+inline void DelimJoinRel::clear_left() {
   if (GetArenaForAllocation() == nullptr && left_ != nullptr) {
     delete left_;
   }
   left_ = nullptr;
 }
-inline const ::substrait::Rel& MarkJoinRel::_internal_left() const {
+inline const ::substrait::Rel& DelimJoinRel::_internal_left() const {
   const ::substrait::Rel* p = left_;
   return p != nullptr ? *p : reinterpret_cast<const ::substrait::Rel&>(
       ::substrait::_Rel_default_instance_);
 }
-inline const ::substrait::Rel& MarkJoinRel::left() const {
-  // @@protoc_insertion_point(field_get:substrait.MarkJoinRel.left)
+inline const ::substrait::Rel& DelimJoinRel::left() const {
+  // @@protoc_insertion_point(field_get:substrait.DelimJoinRel.left)
   return _internal_left();
 }
-inline void MarkJoinRel::unsafe_arena_set_allocated_left(
+inline void DelimJoinRel::unsafe_arena_set_allocated_left(
     ::substrait::Rel* left) {
   if (GetArenaForAllocation() == nullptr) {
     delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(left_);
@@ -40052,9 +40311,9 @@ inline void MarkJoinRel::unsafe_arena_set_allocated_left(
   } else {
     
   }
-  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:substrait.MarkJoinRel.left)
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:substrait.DelimJoinRel.left)
 }
-inline ::substrait::Rel* MarkJoinRel::release_left() {
+inline ::substrait::Rel* DelimJoinRel::release_left() {
   
   ::substrait::Rel* temp = left_;
   left_ = nullptr;
@@ -40069,14 +40328,14 @@ inline ::substrait::Rel* MarkJoinRel::release_left() {
 #endif  // !PROTOBUF_FORCE_COPY_IN_RELEASE
   return temp;
 }
-inline ::substrait::Rel* MarkJoinRel::unsafe_arena_release_left() {
-  // @@protoc_insertion_point(field_release:substrait.MarkJoinRel.left)
+inline ::substrait::Rel* DelimJoinRel::unsafe_arena_release_left() {
+  // @@protoc_insertion_point(field_release:substrait.DelimJoinRel.left)
   
   ::substrait::Rel* temp = left_;
   left_ = nullptr;
   return temp;
 }
-inline ::substrait::Rel* MarkJoinRel::_internal_mutable_left() {
+inline ::substrait::Rel* DelimJoinRel::_internal_mutable_left() {
   
   if (left_ == nullptr) {
     auto* p = CreateMaybeMessage<::substrait::Rel>(GetArenaForAllocation());
@@ -40084,12 +40343,12 @@ inline ::substrait::Rel* MarkJoinRel::_internal_mutable_left() {
   }
   return left_;
 }
-inline ::substrait::Rel* MarkJoinRel::mutable_left() {
+inline ::substrait::Rel* DelimJoinRel::mutable_left() {
   ::substrait::Rel* _msg = _internal_mutable_left();
-  // @@protoc_insertion_point(field_mutable:substrait.MarkJoinRel.left)
+  // @@protoc_insertion_point(field_mutable:substrait.DelimJoinRel.left)
   return _msg;
 }
-inline void MarkJoinRel::set_allocated_left(::substrait::Rel* left) {
+inline void DelimJoinRel::set_allocated_left(::substrait::Rel* left) {
   ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
   if (message_arena == nullptr) {
     delete left_;
@@ -40106,32 +40365,32 @@ inline void MarkJoinRel::set_allocated_left(::substrait::Rel* left) {
     
   }
   left_ = left;
-  // @@protoc_insertion_point(field_set_allocated:substrait.MarkJoinRel.left)
+  // @@protoc_insertion_point(field_set_allocated:substrait.DelimJoinRel.left)
 }
 
 // .substrait.Rel right = 3;
-inline bool MarkJoinRel::_internal_has_right() const {
+inline bool DelimJoinRel::_internal_has_right() const {
   return this != internal_default_instance() && right_ != nullptr;
 }
-inline bool MarkJoinRel::has_right() const {
+inline bool DelimJoinRel::has_right() const {
   return _internal_has_right();
 }
-inline void MarkJoinRel::clear_right() {
+inline void DelimJoinRel::clear_right() {
   if (GetArenaForAllocation() == nullptr && right_ != nullptr) {
     delete right_;
   }
   right_ = nullptr;
 }
-inline const ::substrait::Rel& MarkJoinRel::_internal_right() const {
+inline const ::substrait::Rel& DelimJoinRel::_internal_right() const {
   const ::substrait::Rel* p = right_;
   return p != nullptr ? *p : reinterpret_cast<const ::substrait::Rel&>(
       ::substrait::_Rel_default_instance_);
 }
-inline const ::substrait::Rel& MarkJoinRel::right() const {
-  // @@protoc_insertion_point(field_get:substrait.MarkJoinRel.right)
+inline const ::substrait::Rel& DelimJoinRel::right() const {
+  // @@protoc_insertion_point(field_get:substrait.DelimJoinRel.right)
   return _internal_right();
 }
-inline void MarkJoinRel::unsafe_arena_set_allocated_right(
+inline void DelimJoinRel::unsafe_arena_set_allocated_right(
     ::substrait::Rel* right) {
   if (GetArenaForAllocation() == nullptr) {
     delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(right_);
@@ -40142,9 +40401,9 @@ inline void MarkJoinRel::unsafe_arena_set_allocated_right(
   } else {
     
   }
-  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:substrait.MarkJoinRel.right)
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:substrait.DelimJoinRel.right)
 }
-inline ::substrait::Rel* MarkJoinRel::release_right() {
+inline ::substrait::Rel* DelimJoinRel::release_right() {
   
   ::substrait::Rel* temp = right_;
   right_ = nullptr;
@@ -40159,14 +40418,14 @@ inline ::substrait::Rel* MarkJoinRel::release_right() {
 #endif  // !PROTOBUF_FORCE_COPY_IN_RELEASE
   return temp;
 }
-inline ::substrait::Rel* MarkJoinRel::unsafe_arena_release_right() {
-  // @@protoc_insertion_point(field_release:substrait.MarkJoinRel.right)
+inline ::substrait::Rel* DelimJoinRel::unsafe_arena_release_right() {
+  // @@protoc_insertion_point(field_release:substrait.DelimJoinRel.right)
   
   ::substrait::Rel* temp = right_;
   right_ = nullptr;
   return temp;
 }
-inline ::substrait::Rel* MarkJoinRel::_internal_mutable_right() {
+inline ::substrait::Rel* DelimJoinRel::_internal_mutable_right() {
   
   if (right_ == nullptr) {
     auto* p = CreateMaybeMessage<::substrait::Rel>(GetArenaForAllocation());
@@ -40174,12 +40433,12 @@ inline ::substrait::Rel* MarkJoinRel::_internal_mutable_right() {
   }
   return right_;
 }
-inline ::substrait::Rel* MarkJoinRel::mutable_right() {
+inline ::substrait::Rel* DelimJoinRel::mutable_right() {
   ::substrait::Rel* _msg = _internal_mutable_right();
-  // @@protoc_insertion_point(field_mutable:substrait.MarkJoinRel.right)
+  // @@protoc_insertion_point(field_mutable:substrait.DelimJoinRel.right)
   return _msg;
 }
-inline void MarkJoinRel::set_allocated_right(::substrait::Rel* right) {
+inline void DelimJoinRel::set_allocated_right(::substrait::Rel* right) {
   ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
   if (message_arena == nullptr) {
     delete right_;
@@ -40196,32 +40455,32 @@ inline void MarkJoinRel::set_allocated_right(::substrait::Rel* right) {
     
   }
   right_ = right;
-  // @@protoc_insertion_point(field_set_allocated:substrait.MarkJoinRel.right)
+  // @@protoc_insertion_point(field_set_allocated:substrait.DelimJoinRel.right)
 }
 
 // .substrait.Expression expression = 4;
-inline bool MarkJoinRel::_internal_has_expression() const {
+inline bool DelimJoinRel::_internal_has_expression() const {
   return this != internal_default_instance() && expression_ != nullptr;
 }
-inline bool MarkJoinRel::has_expression() const {
+inline bool DelimJoinRel::has_expression() const {
   return _internal_has_expression();
 }
-inline void MarkJoinRel::clear_expression() {
+inline void DelimJoinRel::clear_expression() {
   if (GetArenaForAllocation() == nullptr && expression_ != nullptr) {
     delete expression_;
   }
   expression_ = nullptr;
 }
-inline const ::substrait::Expression& MarkJoinRel::_internal_expression() const {
+inline const ::substrait::Expression& DelimJoinRel::_internal_expression() const {
   const ::substrait::Expression* p = expression_;
   return p != nullptr ? *p : reinterpret_cast<const ::substrait::Expression&>(
       ::substrait::_Expression_default_instance_);
 }
-inline const ::substrait::Expression& MarkJoinRel::expression() const {
-  // @@protoc_insertion_point(field_get:substrait.MarkJoinRel.expression)
+inline const ::substrait::Expression& DelimJoinRel::expression() const {
+  // @@protoc_insertion_point(field_get:substrait.DelimJoinRel.expression)
   return _internal_expression();
 }
-inline void MarkJoinRel::unsafe_arena_set_allocated_expression(
+inline void DelimJoinRel::unsafe_arena_set_allocated_expression(
     ::substrait::Expression* expression) {
   if (GetArenaForAllocation() == nullptr) {
     delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(expression_);
@@ -40232,9 +40491,9 @@ inline void MarkJoinRel::unsafe_arena_set_allocated_expression(
   } else {
     
   }
-  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:substrait.MarkJoinRel.expression)
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:substrait.DelimJoinRel.expression)
 }
-inline ::substrait::Expression* MarkJoinRel::release_expression() {
+inline ::substrait::Expression* DelimJoinRel::release_expression() {
   
   ::substrait::Expression* temp = expression_;
   expression_ = nullptr;
@@ -40249,14 +40508,14 @@ inline ::substrait::Expression* MarkJoinRel::release_expression() {
 #endif  // !PROTOBUF_FORCE_COPY_IN_RELEASE
   return temp;
 }
-inline ::substrait::Expression* MarkJoinRel::unsafe_arena_release_expression() {
-  // @@protoc_insertion_point(field_release:substrait.MarkJoinRel.expression)
+inline ::substrait::Expression* DelimJoinRel::unsafe_arena_release_expression() {
+  // @@protoc_insertion_point(field_release:substrait.DelimJoinRel.expression)
   
   ::substrait::Expression* temp = expression_;
   expression_ = nullptr;
   return temp;
 }
-inline ::substrait::Expression* MarkJoinRel::_internal_mutable_expression() {
+inline ::substrait::Expression* DelimJoinRel::_internal_mutable_expression() {
   
   if (expression_ == nullptr) {
     auto* p = CreateMaybeMessage<::substrait::Expression>(GetArenaForAllocation());
@@ -40264,12 +40523,12 @@ inline ::substrait::Expression* MarkJoinRel::_internal_mutable_expression() {
   }
   return expression_;
 }
-inline ::substrait::Expression* MarkJoinRel::mutable_expression() {
+inline ::substrait::Expression* DelimJoinRel::mutable_expression() {
   ::substrait::Expression* _msg = _internal_mutable_expression();
-  // @@protoc_insertion_point(field_mutable:substrait.MarkJoinRel.expression)
+  // @@protoc_insertion_point(field_mutable:substrait.DelimJoinRel.expression)
   return _msg;
 }
-inline void MarkJoinRel::set_allocated_expression(::substrait::Expression* expression) {
+inline void DelimJoinRel::set_allocated_expression(::substrait::Expression* expression) {
   ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
   if (message_arena == nullptr) {
     delete expression_;
@@ -40286,42 +40545,48 @@ inline void MarkJoinRel::set_allocated_expression(::substrait::Expression* expre
     
   }
   expression_ = expression;
-  // @@protoc_insertion_point(field_set_allocated:substrait.MarkJoinRel.expression)
+  // @@protoc_insertion_point(field_set_allocated:substrait.DelimJoinRel.expression)
 }
 
-// .substrait.extensions.AdvancedExtension advanced_extension = 10;
-inline bool MarkJoinRel::_internal_has_advanced_extension() const {
-  return this != internal_default_instance() && advanced_extension_ != nullptr;
+// .substrait.Expression post_join_filter = 5;
+inline bool DelimJoinRel::_internal_has_post_join_filter() const {
+  return this != internal_default_instance() && post_join_filter_ != nullptr;
 }
-inline bool MarkJoinRel::has_advanced_extension() const {
-  return _internal_has_advanced_extension();
+inline bool DelimJoinRel::has_post_join_filter() const {
+  return _internal_has_post_join_filter();
 }
-inline const ::substrait::extensions::AdvancedExtension& MarkJoinRel::_internal_advanced_extension() const {
-  const ::substrait::extensions::AdvancedExtension* p = advanced_extension_;
-  return p != nullptr ? *p : reinterpret_cast<const ::substrait::extensions::AdvancedExtension&>(
-      ::substrait::extensions::_AdvancedExtension_default_instance_);
-}
-inline const ::substrait::extensions::AdvancedExtension& MarkJoinRel::advanced_extension() const {
-  // @@protoc_insertion_point(field_get:substrait.MarkJoinRel.advanced_extension)
-  return _internal_advanced_extension();
-}
-inline void MarkJoinRel::unsafe_arena_set_allocated_advanced_extension(
-    ::substrait::extensions::AdvancedExtension* advanced_extension) {
-  if (GetArenaForAllocation() == nullptr) {
-    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(advanced_extension_);
+inline void DelimJoinRel::clear_post_join_filter() {
+  if (GetArenaForAllocation() == nullptr && post_join_filter_ != nullptr) {
+    delete post_join_filter_;
   }
-  advanced_extension_ = advanced_extension;
-  if (advanced_extension) {
+  post_join_filter_ = nullptr;
+}
+inline const ::substrait::Expression& DelimJoinRel::_internal_post_join_filter() const {
+  const ::substrait::Expression* p = post_join_filter_;
+  return p != nullptr ? *p : reinterpret_cast<const ::substrait::Expression&>(
+      ::substrait::_Expression_default_instance_);
+}
+inline const ::substrait::Expression& DelimJoinRel::post_join_filter() const {
+  // @@protoc_insertion_point(field_get:substrait.DelimJoinRel.post_join_filter)
+  return _internal_post_join_filter();
+}
+inline void DelimJoinRel::unsafe_arena_set_allocated_post_join_filter(
+    ::substrait::Expression* post_join_filter) {
+  if (GetArenaForAllocation() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(post_join_filter_);
+  }
+  post_join_filter_ = post_join_filter;
+  if (post_join_filter) {
     
   } else {
     
   }
-  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:substrait.MarkJoinRel.advanced_extension)
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:substrait.DelimJoinRel.post_join_filter)
 }
-inline ::substrait::extensions::AdvancedExtension* MarkJoinRel::release_advanced_extension() {
+inline ::substrait::Expression* DelimJoinRel::release_post_join_filter() {
   
-  ::substrait::extensions::AdvancedExtension* temp = advanced_extension_;
-  advanced_extension_ = nullptr;
+  ::substrait::Expression* temp = post_join_filter_;
+  post_join_filter_ = nullptr;
 #ifdef PROTOBUF_FORCE_COPY_IN_RELEASE
   auto* old =  reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(temp);
   temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
@@ -40333,529 +40598,143 @@ inline ::substrait::extensions::AdvancedExtension* MarkJoinRel::release_advanced
 #endif  // !PROTOBUF_FORCE_COPY_IN_RELEASE
   return temp;
 }
-inline ::substrait::extensions::AdvancedExtension* MarkJoinRel::unsafe_arena_release_advanced_extension() {
-  // @@protoc_insertion_point(field_release:substrait.MarkJoinRel.advanced_extension)
+inline ::substrait::Expression* DelimJoinRel::unsafe_arena_release_post_join_filter() {
+  // @@protoc_insertion_point(field_release:substrait.DelimJoinRel.post_join_filter)
   
-  ::substrait::extensions::AdvancedExtension* temp = advanced_extension_;
-  advanced_extension_ = nullptr;
+  ::substrait::Expression* temp = post_join_filter_;
+  post_join_filter_ = nullptr;
   return temp;
 }
-inline ::substrait::extensions::AdvancedExtension* MarkJoinRel::_internal_mutable_advanced_extension() {
+inline ::substrait::Expression* DelimJoinRel::_internal_mutable_post_join_filter() {
   
-  if (advanced_extension_ == nullptr) {
-    auto* p = CreateMaybeMessage<::substrait::extensions::AdvancedExtension>(GetArenaForAllocation());
-    advanced_extension_ = p;
+  if (post_join_filter_ == nullptr) {
+    auto* p = CreateMaybeMessage<::substrait::Expression>(GetArenaForAllocation());
+    post_join_filter_ = p;
   }
-  return advanced_extension_;
+  return post_join_filter_;
 }
-inline ::substrait::extensions::AdvancedExtension* MarkJoinRel::mutable_advanced_extension() {
-  ::substrait::extensions::AdvancedExtension* _msg = _internal_mutable_advanced_extension();
-  // @@protoc_insertion_point(field_mutable:substrait.MarkJoinRel.advanced_extension)
+inline ::substrait::Expression* DelimJoinRel::mutable_post_join_filter() {
+  ::substrait::Expression* _msg = _internal_mutable_post_join_filter();
+  // @@protoc_insertion_point(field_mutable:substrait.DelimJoinRel.post_join_filter)
   return _msg;
 }
-inline void MarkJoinRel::set_allocated_advanced_extension(::substrait::extensions::AdvancedExtension* advanced_extension) {
+inline void DelimJoinRel::set_allocated_post_join_filter(::substrait::Expression* post_join_filter) {
   ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
   if (message_arena == nullptr) {
-    delete reinterpret_cast< ::PROTOBUF_NAMESPACE_ID::MessageLite*>(advanced_extension_);
+    delete post_join_filter_;
   }
-  if (advanced_extension) {
+  if (post_join_filter) {
     ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
-        ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper<
-            ::PROTOBUF_NAMESPACE_ID::MessageLite>::GetOwningArena(
-                reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(advanced_extension));
+        ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper<::substrait::Expression>::GetOwningArena(post_join_filter);
     if (message_arena != submessage_arena) {
-      advanced_extension = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
-          message_arena, advanced_extension, submessage_arena);
+      post_join_filter = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, post_join_filter, submessage_arena);
     }
     
   } else {
     
   }
-  advanced_extension_ = advanced_extension;
-  // @@protoc_insertion_point(field_set_allocated:substrait.MarkJoinRel.advanced_extension)
+  post_join_filter_ = post_join_filter;
+  // @@protoc_insertion_point(field_set_allocated:substrait.DelimJoinRel.post_join_filter)
 }
 
-// -------------------------------------------------------------------
-
-// DelimiterJoinRel
-
-// .substrait.RelCommon common = 1;
-inline bool DelimiterJoinRel::_internal_has_common() const {
-  return this != internal_default_instance() && common_ != nullptr;
-}
-inline bool DelimiterJoinRel::has_common() const {
-  return _internal_has_common();
-}
-inline void DelimiterJoinRel::clear_common() {
-  if (GetArenaForAllocation() == nullptr && common_ != nullptr) {
-    delete common_;
-  }
-  common_ = nullptr;
-}
-inline const ::substrait::RelCommon& DelimiterJoinRel::_internal_common() const {
-  const ::substrait::RelCommon* p = common_;
-  return p != nullptr ? *p : reinterpret_cast<const ::substrait::RelCommon&>(
-      ::substrait::_RelCommon_default_instance_);
-}
-inline const ::substrait::RelCommon& DelimiterJoinRel::common() const {
-  // @@protoc_insertion_point(field_get:substrait.DelimiterJoinRel.common)
-  return _internal_common();
-}
-inline void DelimiterJoinRel::unsafe_arena_set_allocated_common(
-    ::substrait::RelCommon* common) {
-  if (GetArenaForAllocation() == nullptr) {
-    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(common_);
-  }
-  common_ = common;
-  if (common) {
-    
-  } else {
-    
-  }
-  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:substrait.DelimiterJoinRel.common)
-}
-inline ::substrait::RelCommon* DelimiterJoinRel::release_common() {
-  
-  ::substrait::RelCommon* temp = common_;
-  common_ = nullptr;
-#ifdef PROTOBUF_FORCE_COPY_IN_RELEASE
-  auto* old =  reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(temp);
-  temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
-  if (GetArenaForAllocation() == nullptr) { delete old; }
-#else  // PROTOBUF_FORCE_COPY_IN_RELEASE
-  if (GetArenaForAllocation() != nullptr) {
-    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
-  }
-#endif  // !PROTOBUF_FORCE_COPY_IN_RELEASE
-  return temp;
-}
-inline ::substrait::RelCommon* DelimiterJoinRel::unsafe_arena_release_common() {
-  // @@protoc_insertion_point(field_release:substrait.DelimiterJoinRel.common)
-  
-  ::substrait::RelCommon* temp = common_;
-  common_ = nullptr;
-  return temp;
-}
-inline ::substrait::RelCommon* DelimiterJoinRel::_internal_mutable_common() {
-  
-  if (common_ == nullptr) {
-    auto* p = CreateMaybeMessage<::substrait::RelCommon>(GetArenaForAllocation());
-    common_ = p;
-  }
-  return common_;
-}
-inline ::substrait::RelCommon* DelimiterJoinRel::mutable_common() {
-  ::substrait::RelCommon* _msg = _internal_mutable_common();
-  // @@protoc_insertion_point(field_mutable:substrait.DelimiterJoinRel.common)
-  return _msg;
-}
-inline void DelimiterJoinRel::set_allocated_common(::substrait::RelCommon* common) {
-  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
-  if (message_arena == nullptr) {
-    delete common_;
-  }
-  if (common) {
-    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
-        ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper<::substrait::RelCommon>::GetOwningArena(common);
-    if (message_arena != submessage_arena) {
-      common = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
-          message_arena, common, submessage_arena);
-    }
-    
-  } else {
-    
-  }
-  common_ = common;
-  // @@protoc_insertion_point(field_set_allocated:substrait.DelimiterJoinRel.common)
-}
-
-// .substrait.Rel left = 2;
-inline bool DelimiterJoinRel::_internal_has_left() const {
-  return this != internal_default_instance() && left_ != nullptr;
-}
-inline bool DelimiterJoinRel::has_left() const {
-  return _internal_has_left();
-}
-inline void DelimiterJoinRel::clear_left() {
-  if (GetArenaForAllocation() == nullptr && left_ != nullptr) {
-    delete left_;
-  }
-  left_ = nullptr;
-}
-inline const ::substrait::Rel& DelimiterJoinRel::_internal_left() const {
-  const ::substrait::Rel* p = left_;
-  return p != nullptr ? *p : reinterpret_cast<const ::substrait::Rel&>(
-      ::substrait::_Rel_default_instance_);
-}
-inline const ::substrait::Rel& DelimiterJoinRel::left() const {
-  // @@protoc_insertion_point(field_get:substrait.DelimiterJoinRel.left)
-  return _internal_left();
-}
-inline void DelimiterJoinRel::unsafe_arena_set_allocated_left(
-    ::substrait::Rel* left) {
-  if (GetArenaForAllocation() == nullptr) {
-    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(left_);
-  }
-  left_ = left;
-  if (left) {
-    
-  } else {
-    
-  }
-  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:substrait.DelimiterJoinRel.left)
-}
-inline ::substrait::Rel* DelimiterJoinRel::release_left() {
-  
-  ::substrait::Rel* temp = left_;
-  left_ = nullptr;
-#ifdef PROTOBUF_FORCE_COPY_IN_RELEASE
-  auto* old =  reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(temp);
-  temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
-  if (GetArenaForAllocation() == nullptr) { delete old; }
-#else  // PROTOBUF_FORCE_COPY_IN_RELEASE
-  if (GetArenaForAllocation() != nullptr) {
-    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
-  }
-#endif  // !PROTOBUF_FORCE_COPY_IN_RELEASE
-  return temp;
-}
-inline ::substrait::Rel* DelimiterJoinRel::unsafe_arena_release_left() {
-  // @@protoc_insertion_point(field_release:substrait.DelimiterJoinRel.left)
-  
-  ::substrait::Rel* temp = left_;
-  left_ = nullptr;
-  return temp;
-}
-inline ::substrait::Rel* DelimiterJoinRel::_internal_mutable_left() {
-  
-  if (left_ == nullptr) {
-    auto* p = CreateMaybeMessage<::substrait::Rel>(GetArenaForAllocation());
-    left_ = p;
-  }
-  return left_;
-}
-inline ::substrait::Rel* DelimiterJoinRel::mutable_left() {
-  ::substrait::Rel* _msg = _internal_mutable_left();
-  // @@protoc_insertion_point(field_mutable:substrait.DelimiterJoinRel.left)
-  return _msg;
-}
-inline void DelimiterJoinRel::set_allocated_left(::substrait::Rel* left) {
-  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
-  if (message_arena == nullptr) {
-    delete left_;
-  }
-  if (left) {
-    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
-        ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper<::substrait::Rel>::GetOwningArena(left);
-    if (message_arena != submessage_arena) {
-      left = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
-          message_arena, left, submessage_arena);
-    }
-    
-  } else {
-    
-  }
-  left_ = left;
-  // @@protoc_insertion_point(field_set_allocated:substrait.DelimiterJoinRel.left)
-}
-
-// .substrait.Rel right = 3;
-inline bool DelimiterJoinRel::_internal_has_right() const {
-  return this != internal_default_instance() && right_ != nullptr;
-}
-inline bool DelimiterJoinRel::has_right() const {
-  return _internal_has_right();
-}
-inline void DelimiterJoinRel::clear_right() {
-  if (GetArenaForAllocation() == nullptr && right_ != nullptr) {
-    delete right_;
-  }
-  right_ = nullptr;
-}
-inline const ::substrait::Rel& DelimiterJoinRel::_internal_right() const {
-  const ::substrait::Rel* p = right_;
-  return p != nullptr ? *p : reinterpret_cast<const ::substrait::Rel&>(
-      ::substrait::_Rel_default_instance_);
-}
-inline const ::substrait::Rel& DelimiterJoinRel::right() const {
-  // @@protoc_insertion_point(field_get:substrait.DelimiterJoinRel.right)
-  return _internal_right();
-}
-inline void DelimiterJoinRel::unsafe_arena_set_allocated_right(
-    ::substrait::Rel* right) {
-  if (GetArenaForAllocation() == nullptr) {
-    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(right_);
-  }
-  right_ = right;
-  if (right) {
-    
-  } else {
-    
-  }
-  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:substrait.DelimiterJoinRel.right)
-}
-inline ::substrait::Rel* DelimiterJoinRel::release_right() {
-  
-  ::substrait::Rel* temp = right_;
-  right_ = nullptr;
-#ifdef PROTOBUF_FORCE_COPY_IN_RELEASE
-  auto* old =  reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(temp);
-  temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
-  if (GetArenaForAllocation() == nullptr) { delete old; }
-#else  // PROTOBUF_FORCE_COPY_IN_RELEASE
-  if (GetArenaForAllocation() != nullptr) {
-    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
-  }
-#endif  // !PROTOBUF_FORCE_COPY_IN_RELEASE
-  return temp;
-}
-inline ::substrait::Rel* DelimiterJoinRel::unsafe_arena_release_right() {
-  // @@protoc_insertion_point(field_release:substrait.DelimiterJoinRel.right)
-  
-  ::substrait::Rel* temp = right_;
-  right_ = nullptr;
-  return temp;
-}
-inline ::substrait::Rel* DelimiterJoinRel::_internal_mutable_right() {
-  
-  if (right_ == nullptr) {
-    auto* p = CreateMaybeMessage<::substrait::Rel>(GetArenaForAllocation());
-    right_ = p;
-  }
-  return right_;
-}
-inline ::substrait::Rel* DelimiterJoinRel::mutable_right() {
-  ::substrait::Rel* _msg = _internal_mutable_right();
-  // @@protoc_insertion_point(field_mutable:substrait.DelimiterJoinRel.right)
-  return _msg;
-}
-inline void DelimiterJoinRel::set_allocated_right(::substrait::Rel* right) {
-  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
-  if (message_arena == nullptr) {
-    delete right_;
-  }
-  if (right) {
-    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
-        ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper<::substrait::Rel>::GetOwningArena(right);
-    if (message_arena != submessage_arena) {
-      right = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
-          message_arena, right, submessage_arena);
-    }
-    
-  } else {
-    
-  }
-  right_ = right;
-  // @@protoc_insertion_point(field_set_allocated:substrait.DelimiterJoinRel.right)
-}
-
-// repeated .substrait.Expression.FieldReference left_keys = 4;
-inline int DelimiterJoinRel::_internal_left_keys_size() const {
-  return left_keys_.size();
-}
-inline int DelimiterJoinRel::left_keys_size() const {
-  return _internal_left_keys_size();
-}
-inline void DelimiterJoinRel::clear_left_keys() {
-  left_keys_.Clear();
-}
-inline ::substrait::Expression_FieldReference* DelimiterJoinRel::mutable_left_keys(int index) {
-  // @@protoc_insertion_point(field_mutable:substrait.DelimiterJoinRel.left_keys)
-  return left_keys_.Mutable(index);
-}
-inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Expression_FieldReference >*
-DelimiterJoinRel::mutable_left_keys() {
-  // @@protoc_insertion_point(field_mutable_list:substrait.DelimiterJoinRel.left_keys)
-  return &left_keys_;
-}
-inline const ::substrait::Expression_FieldReference& DelimiterJoinRel::_internal_left_keys(int index) const {
-  return left_keys_.Get(index);
-}
-inline const ::substrait::Expression_FieldReference& DelimiterJoinRel::left_keys(int index) const {
-  // @@protoc_insertion_point(field_get:substrait.DelimiterJoinRel.left_keys)
-  return _internal_left_keys(index);
-}
-inline ::substrait::Expression_FieldReference* DelimiterJoinRel::_internal_add_left_keys() {
-  return left_keys_.Add();
-}
-inline ::substrait::Expression_FieldReference* DelimiterJoinRel::add_left_keys() {
-  ::substrait::Expression_FieldReference* _add = _internal_add_left_keys();
-  // @@protoc_insertion_point(field_add:substrait.DelimiterJoinRel.left_keys)
-  return _add;
-}
-inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Expression_FieldReference >&
-DelimiterJoinRel::left_keys() const {
-  // @@protoc_insertion_point(field_list:substrait.DelimiterJoinRel.left_keys)
-  return left_keys_;
-}
-
-// repeated .substrait.Expression.FieldReference right_keys = 5;
-inline int DelimiterJoinRel::_internal_right_keys_size() const {
-  return right_keys_.size();
-}
-inline int DelimiterJoinRel::right_keys_size() const {
-  return _internal_right_keys_size();
-}
-inline void DelimiterJoinRel::clear_right_keys() {
-  right_keys_.Clear();
-}
-inline ::substrait::Expression_FieldReference* DelimiterJoinRel::mutable_right_keys(int index) {
-  // @@protoc_insertion_point(field_mutable:substrait.DelimiterJoinRel.right_keys)
-  return right_keys_.Mutable(index);
-}
-inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Expression_FieldReference >*
-DelimiterJoinRel::mutable_right_keys() {
-  // @@protoc_insertion_point(field_mutable_list:substrait.DelimiterJoinRel.right_keys)
-  return &right_keys_;
-}
-inline const ::substrait::Expression_FieldReference& DelimiterJoinRel::_internal_right_keys(int index) const {
-  return right_keys_.Get(index);
-}
-inline const ::substrait::Expression_FieldReference& DelimiterJoinRel::right_keys(int index) const {
-  // @@protoc_insertion_point(field_get:substrait.DelimiterJoinRel.right_keys)
-  return _internal_right_keys(index);
-}
-inline ::substrait::Expression_FieldReference* DelimiterJoinRel::_internal_add_right_keys() {
-  return right_keys_.Add();
-}
-inline ::substrait::Expression_FieldReference* DelimiterJoinRel::add_right_keys() {
-  ::substrait::Expression_FieldReference* _add = _internal_add_right_keys();
-  // @@protoc_insertion_point(field_add:substrait.DelimiterJoinRel.right_keys)
-  return _add;
-}
-inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Expression_FieldReference >&
-DelimiterJoinRel::right_keys() const {
-  // @@protoc_insertion_point(field_list:substrait.DelimiterJoinRel.right_keys)
-  return right_keys_;
-}
-
-// .substrait.DelimiterJoinRel.JoinType type = 6;
-inline void DelimiterJoinRel::clear_type() {
+// .substrait.DelimJoinRel.JoinType type = 6;
+inline void DelimJoinRel::clear_type() {
   type_ = 0;
 }
-inline ::substrait::DelimiterJoinRel_JoinType DelimiterJoinRel::_internal_type() const {
-  return static_cast< ::substrait::DelimiterJoinRel_JoinType >(type_);
+inline ::substrait::DelimJoinRel_JoinType DelimJoinRel::_internal_type() const {
+  return static_cast< ::substrait::DelimJoinRel_JoinType >(type_);
 }
-inline ::substrait::DelimiterJoinRel_JoinType DelimiterJoinRel::type() const {
-  // @@protoc_insertion_point(field_get:substrait.DelimiterJoinRel.type)
+inline ::substrait::DelimJoinRel_JoinType DelimJoinRel::type() const {
+  // @@protoc_insertion_point(field_get:substrait.DelimJoinRel.type)
   return _internal_type();
 }
-inline void DelimiterJoinRel::_internal_set_type(::substrait::DelimiterJoinRel_JoinType value) {
+inline void DelimJoinRel::_internal_set_type(::substrait::DelimJoinRel_JoinType value) {
   
   type_ = value;
 }
-inline void DelimiterJoinRel::set_type(::substrait::DelimiterJoinRel_JoinType value) {
+inline void DelimJoinRel::set_type(::substrait::DelimJoinRel_JoinType value) {
   _internal_set_type(value);
-  // @@protoc_insertion_point(field_set:substrait.DelimiterJoinRel.type)
+  // @@protoc_insertion_point(field_set:substrait.DelimJoinRel.type)
 }
 
-// .substrait.Expression.FieldReference delimiter_field = 7;
-inline bool DelimiterJoinRel::_internal_has_delimiter_field() const {
-  return this != internal_default_instance() && delimiter_field_ != nullptr;
+// repeated .substrait.Expression.FieldReference duplicate_eliminated_columns = 7;
+inline int DelimJoinRel::_internal_duplicate_eliminated_columns_size() const {
+  return duplicate_eliminated_columns_.size();
 }
-inline bool DelimiterJoinRel::has_delimiter_field() const {
-  return _internal_has_delimiter_field();
+inline int DelimJoinRel::duplicate_eliminated_columns_size() const {
+  return _internal_duplicate_eliminated_columns_size();
 }
-inline void DelimiterJoinRel::clear_delimiter_field() {
-  if (GetArenaForAllocation() == nullptr && delimiter_field_ != nullptr) {
-    delete delimiter_field_;
-  }
-  delimiter_field_ = nullptr;
+inline void DelimJoinRel::clear_duplicate_eliminated_columns() {
+  duplicate_eliminated_columns_.Clear();
 }
-inline const ::substrait::Expression_FieldReference& DelimiterJoinRel::_internal_delimiter_field() const {
-  const ::substrait::Expression_FieldReference* p = delimiter_field_;
-  return p != nullptr ? *p : reinterpret_cast<const ::substrait::Expression_FieldReference&>(
-      ::substrait::_Expression_FieldReference_default_instance_);
+inline ::substrait::Expression_FieldReference* DelimJoinRel::mutable_duplicate_eliminated_columns(int index) {
+  // @@protoc_insertion_point(field_mutable:substrait.DelimJoinRel.duplicate_eliminated_columns)
+  return duplicate_eliminated_columns_.Mutable(index);
 }
-inline const ::substrait::Expression_FieldReference& DelimiterJoinRel::delimiter_field() const {
-  // @@protoc_insertion_point(field_get:substrait.DelimiterJoinRel.delimiter_field)
-  return _internal_delimiter_field();
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Expression_FieldReference >*
+DelimJoinRel::mutable_duplicate_eliminated_columns() {
+  // @@protoc_insertion_point(field_mutable_list:substrait.DelimJoinRel.duplicate_eliminated_columns)
+  return &duplicate_eliminated_columns_;
 }
-inline void DelimiterJoinRel::unsafe_arena_set_allocated_delimiter_field(
-    ::substrait::Expression_FieldReference* delimiter_field) {
-  if (GetArenaForAllocation() == nullptr) {
-    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(delimiter_field_);
-  }
-  delimiter_field_ = delimiter_field;
-  if (delimiter_field) {
-    
-  } else {
-    
-  }
-  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:substrait.DelimiterJoinRel.delimiter_field)
+inline const ::substrait::Expression_FieldReference& DelimJoinRel::_internal_duplicate_eliminated_columns(int index) const {
+  return duplicate_eliminated_columns_.Get(index);
 }
-inline ::substrait::Expression_FieldReference* DelimiterJoinRel::release_delimiter_field() {
+inline const ::substrait::Expression_FieldReference& DelimJoinRel::duplicate_eliminated_columns(int index) const {
+  // @@protoc_insertion_point(field_get:substrait.DelimJoinRel.duplicate_eliminated_columns)
+  return _internal_duplicate_eliminated_columns(index);
+}
+inline ::substrait::Expression_FieldReference* DelimJoinRel::_internal_add_duplicate_eliminated_columns() {
+  return duplicate_eliminated_columns_.Add();
+}
+inline ::substrait::Expression_FieldReference* DelimJoinRel::add_duplicate_eliminated_columns() {
+  ::substrait::Expression_FieldReference* _add = _internal_add_duplicate_eliminated_columns();
+  // @@protoc_insertion_point(field_add:substrait.DelimJoinRel.duplicate_eliminated_columns)
+  return _add;
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Expression_FieldReference >&
+DelimJoinRel::duplicate_eliminated_columns() const {
+  // @@protoc_insertion_point(field_list:substrait.DelimJoinRel.duplicate_eliminated_columns)
+  return duplicate_eliminated_columns_;
+}
+
+// .substrait.DelimJoinRel.DelimiterSide delimiter_side = 8;
+inline void DelimJoinRel::clear_delimiter_side() {
+  delimiter_side_ = 0;
+}
+inline ::substrait::DelimJoinRel_DelimiterSide DelimJoinRel::_internal_delimiter_side() const {
+  return static_cast< ::substrait::DelimJoinRel_DelimiterSide >(delimiter_side_);
+}
+inline ::substrait::DelimJoinRel_DelimiterSide DelimJoinRel::delimiter_side() const {
+  // @@protoc_insertion_point(field_get:substrait.DelimJoinRel.delimiter_side)
+  return _internal_delimiter_side();
+}
+inline void DelimJoinRel::_internal_set_delimiter_side(::substrait::DelimJoinRel_DelimiterSide value) {
   
-  ::substrait::Expression_FieldReference* temp = delimiter_field_;
-  delimiter_field_ = nullptr;
-#ifdef PROTOBUF_FORCE_COPY_IN_RELEASE
-  auto* old =  reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(temp);
-  temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
-  if (GetArenaForAllocation() == nullptr) { delete old; }
-#else  // PROTOBUF_FORCE_COPY_IN_RELEASE
-  if (GetArenaForAllocation() != nullptr) {
-    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
-  }
-#endif  // !PROTOBUF_FORCE_COPY_IN_RELEASE
-  return temp;
+  delimiter_side_ = value;
 }
-inline ::substrait::Expression_FieldReference* DelimiterJoinRel::unsafe_arena_release_delimiter_field() {
-  // @@protoc_insertion_point(field_release:substrait.DelimiterJoinRel.delimiter_field)
-  
-  ::substrait::Expression_FieldReference* temp = delimiter_field_;
-  delimiter_field_ = nullptr;
-  return temp;
-}
-inline ::substrait::Expression_FieldReference* DelimiterJoinRel::_internal_mutable_delimiter_field() {
-  
-  if (delimiter_field_ == nullptr) {
-    auto* p = CreateMaybeMessage<::substrait::Expression_FieldReference>(GetArenaForAllocation());
-    delimiter_field_ = p;
-  }
-  return delimiter_field_;
-}
-inline ::substrait::Expression_FieldReference* DelimiterJoinRel::mutable_delimiter_field() {
-  ::substrait::Expression_FieldReference* _msg = _internal_mutable_delimiter_field();
-  // @@protoc_insertion_point(field_mutable:substrait.DelimiterJoinRel.delimiter_field)
-  return _msg;
-}
-inline void DelimiterJoinRel::set_allocated_delimiter_field(::substrait::Expression_FieldReference* delimiter_field) {
-  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
-  if (message_arena == nullptr) {
-    delete delimiter_field_;
-  }
-  if (delimiter_field) {
-    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
-        ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper<::substrait::Expression_FieldReference>::GetOwningArena(delimiter_field);
-    if (message_arena != submessage_arena) {
-      delimiter_field = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
-          message_arena, delimiter_field, submessage_arena);
-    }
-    
-  } else {
-    
-  }
-  delimiter_field_ = delimiter_field;
-  // @@protoc_insertion_point(field_set_allocated:substrait.DelimiterJoinRel.delimiter_field)
+inline void DelimJoinRel::set_delimiter_side(::substrait::DelimJoinRel_DelimiterSide value) {
+  _internal_set_delimiter_side(value);
+  // @@protoc_insertion_point(field_set:substrait.DelimJoinRel.delimiter_side)
 }
 
 // .substrait.extensions.AdvancedExtension advanced_extension = 10;
-inline bool DelimiterJoinRel::_internal_has_advanced_extension() const {
+inline bool DelimJoinRel::_internal_has_advanced_extension() const {
   return this != internal_default_instance() && advanced_extension_ != nullptr;
 }
-inline bool DelimiterJoinRel::has_advanced_extension() const {
+inline bool DelimJoinRel::has_advanced_extension() const {
   return _internal_has_advanced_extension();
 }
-inline const ::substrait::extensions::AdvancedExtension& DelimiterJoinRel::_internal_advanced_extension() const {
+inline const ::substrait::extensions::AdvancedExtension& DelimJoinRel::_internal_advanced_extension() const {
   const ::substrait::extensions::AdvancedExtension* p = advanced_extension_;
   return p != nullptr ? *p : reinterpret_cast<const ::substrait::extensions::AdvancedExtension&>(
       ::substrait::extensions::_AdvancedExtension_default_instance_);
 }
-inline const ::substrait::extensions::AdvancedExtension& DelimiterJoinRel::advanced_extension() const {
-  // @@protoc_insertion_point(field_get:substrait.DelimiterJoinRel.advanced_extension)
+inline const ::substrait::extensions::AdvancedExtension& DelimJoinRel::advanced_extension() const {
+  // @@protoc_insertion_point(field_get:substrait.DelimJoinRel.advanced_extension)
   return _internal_advanced_extension();
 }
-inline void DelimiterJoinRel::unsafe_arena_set_allocated_advanced_extension(
+inline void DelimJoinRel::unsafe_arena_set_allocated_advanced_extension(
     ::substrait::extensions::AdvancedExtension* advanced_extension) {
   if (GetArenaForAllocation() == nullptr) {
     delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(advanced_extension_);
@@ -40866,9 +40745,9 @@ inline void DelimiterJoinRel::unsafe_arena_set_allocated_advanced_extension(
   } else {
     
   }
-  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:substrait.DelimiterJoinRel.advanced_extension)
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:substrait.DelimJoinRel.advanced_extension)
 }
-inline ::substrait::extensions::AdvancedExtension* DelimiterJoinRel::release_advanced_extension() {
+inline ::substrait::extensions::AdvancedExtension* DelimJoinRel::release_advanced_extension() {
   
   ::substrait::extensions::AdvancedExtension* temp = advanced_extension_;
   advanced_extension_ = nullptr;
@@ -40883,14 +40762,14 @@ inline ::substrait::extensions::AdvancedExtension* DelimiterJoinRel::release_adv
 #endif  // !PROTOBUF_FORCE_COPY_IN_RELEASE
   return temp;
 }
-inline ::substrait::extensions::AdvancedExtension* DelimiterJoinRel::unsafe_arena_release_advanced_extension() {
-  // @@protoc_insertion_point(field_release:substrait.DelimiterJoinRel.advanced_extension)
+inline ::substrait::extensions::AdvancedExtension* DelimJoinRel::unsafe_arena_release_advanced_extension() {
+  // @@protoc_insertion_point(field_release:substrait.DelimJoinRel.advanced_extension)
   
   ::substrait::extensions::AdvancedExtension* temp = advanced_extension_;
   advanced_extension_ = nullptr;
   return temp;
 }
-inline ::substrait::extensions::AdvancedExtension* DelimiterJoinRel::_internal_mutable_advanced_extension() {
+inline ::substrait::extensions::AdvancedExtension* DelimJoinRel::_internal_mutable_advanced_extension() {
   
   if (advanced_extension_ == nullptr) {
     auto* p = CreateMaybeMessage<::substrait::extensions::AdvancedExtension>(GetArenaForAllocation());
@@ -40898,12 +40777,12 @@ inline ::substrait::extensions::AdvancedExtension* DelimiterJoinRel::_internal_m
   }
   return advanced_extension_;
 }
-inline ::substrait::extensions::AdvancedExtension* DelimiterJoinRel::mutable_advanced_extension() {
+inline ::substrait::extensions::AdvancedExtension* DelimJoinRel::mutable_advanced_extension() {
   ::substrait::extensions::AdvancedExtension* _msg = _internal_mutable_advanced_extension();
-  // @@protoc_insertion_point(field_mutable:substrait.DelimiterJoinRel.advanced_extension)
+  // @@protoc_insertion_point(field_mutable:substrait.DelimJoinRel.advanced_extension)
   return _msg;
 }
-inline void DelimiterJoinRel::set_allocated_advanced_extension(::substrait::extensions::AdvancedExtension* advanced_extension) {
+inline void DelimJoinRel::set_allocated_advanced_extension(::substrait::extensions::AdvancedExtension* advanced_extension) {
   ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
   if (message_arena == nullptr) {
     delete reinterpret_cast< ::PROTOBUF_NAMESPACE_ID::MessageLite*>(advanced_extension_);
@@ -40922,7 +40801,7 @@ inline void DelimiterJoinRel::set_allocated_advanced_extension(::substrait::exte
     
   }
   advanced_extension_ = advanced_extension;
-  // @@protoc_insertion_point(field_set_allocated:substrait.DelimiterJoinRel.advanced_extension)
+  // @@protoc_insertion_point(field_set_allocated:substrait.DelimJoinRel.advanced_extension)
 }
 
 // -------------------------------------------------------------------
@@ -52366,10 +52245,15 @@ template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::substrait::NestedLoopJoinRel_JoinType>() {
   return ::substrait::NestedLoopJoinRel_JoinType_descriptor();
 }
-template <> struct is_proto_enum< ::substrait::DelimiterJoinRel_JoinType> : ::std::true_type {};
+template <> struct is_proto_enum< ::substrait::DelimJoinRel_DelimiterSide> : ::std::true_type {};
 template <>
-inline const EnumDescriptor* GetEnumDescriptor< ::substrait::DelimiterJoinRel_JoinType>() {
-  return ::substrait::DelimiterJoinRel_JoinType_descriptor();
+inline const EnumDescriptor* GetEnumDescriptor< ::substrait::DelimJoinRel_DelimiterSide>() {
+  return ::substrait::DelimJoinRel_DelimiterSide_descriptor();
+}
+template <> struct is_proto_enum< ::substrait::DelimJoinRel_JoinType> : ::std::true_type {};
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::substrait::DelimJoinRel_JoinType>() {
+  return ::substrait::DelimJoinRel_JoinType_descriptor();
 }
 template <> struct is_proto_enum< ::substrait::Expression_WindowFunction_BoundsType> : ::std::true_type {};
 template <>

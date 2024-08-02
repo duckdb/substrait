@@ -20,11 +20,11 @@
 #include "duckdb/common/enums/set_operation_type.hpp"
 
 #include "duckdb/parser/expression/comparison_expression.hpp"
-
-#include "substrait/plan.pb.h"
-#include "google/protobuf/util/json_util.h"
 #include "duckdb/main/client_data.hpp"
-#include "duckdb/common/http_state.hpp"
+#include "google/protobuf/util/json_util.h"
+#include "substrait/plan.pb.h"
+#include "duckdb/main/relation/delim_get_relation.hpp"
+#include "duckdb/main/client_data.hpp"
 
 namespace duckdb {
 const std::unordered_map<std::string, std::string> SubstraitToDuckDB::function_names_remap = {
@@ -66,9 +66,6 @@ std::string SubstraitToDuckDB::RemoveExtension(std::string &function_name) {
 }
 
 SubstraitToDuckDB::SubstraitToDuckDB(Connection &con_p, const string &serialized, bool json) : con(con_p) {
-	auto http_state = HTTPState::TryGetState(*con_p.context);
-	http_state->Reset();
-
 	if (!json) {
 		if (!plan.ParseFromString(serialized)) {
 			throw std::runtime_error("Was not possible to convert binary into Substrait plan");
@@ -422,6 +419,9 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformJoinOp(const substrait::Rel &so
 	case substrait::JoinRel::JoinType::JoinRel_JoinType_JOIN_TYPE_MARK:
 		djointype = JoinType::MARK;
 		break;
+	case substrait::JoinRel::JoinType::JoinRel_JoinType_JOIN_TYPE_RIGHT_SEMI:
+		djointype = JoinType::RIGHT_SEMI;
+		break;
 	default:
 		throw InternalException("Unsupported join type");
 	}
@@ -429,6 +429,70 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformJoinOp(const substrait::Rel &so
 	auto left_op = TransformOp(sjoin.left())->Alias("left");
 	auto right_op = TransformOp(sjoin.right())->Alias("right");
 	return make_shared_ptr<JoinRelation>(std::move(left_op), std::move(right_op), std::move(join_condition), djointype);
+}
+
+shared_ptr<Relation> SubstraitToDuckDB::TransformDelimJoinOp(const substrait::Rel &sop) {
+	auto &sjoin = sop.delim_join();
+
+	vector<unique_ptr<ParsedExpression>> duplicate_eliminated_columns;
+	for (auto &col : sjoin.duplicate_eliminated_columns()) {
+		duplicate_eliminated_columns.emplace_back(
+		    make_uniq<PositionalReferenceExpression>(col.direct_reference().struct_field().field() + 1));
+	}
+
+	JoinType djointype;
+	switch (sjoin.type()) {
+	case substrait::DelimJoinRel_JoinType::DelimJoinRel_JoinType_JOIN_TYPE_INNER:
+		djointype = JoinType::INNER;
+		break;
+	case substrait::DelimJoinRel_JoinType::DelimJoinRel_JoinType_JOIN_TYPE_LEFT:
+		djointype = JoinType::LEFT;
+		break;
+	case substrait::DelimJoinRel_JoinType::DelimJoinRel_JoinType_JOIN_TYPE_RIGHT:
+		djointype = JoinType::RIGHT;
+		break;
+	case substrait::DelimJoinRel_JoinType::DelimJoinRel_JoinType_JOIN_TYPE_SINGLE:
+		djointype = JoinType::SINGLE;
+		break;
+	case substrait::DelimJoinRel_JoinType::DelimJoinRel_JoinType_JOIN_TYPE_RIGHT_SEMI:
+		djointype = JoinType::RIGHT_SEMI;
+		break;
+	case substrait::DelimJoinRel_JoinType::DelimJoinRel_JoinType_JOIN_TYPE_MARK:
+		djointype = JoinType::MARK;
+		break;
+	case substrait::DelimJoinRel_JoinType::DelimJoinRel_JoinType_JOIN_TYPE_RIGHT_ANTI:
+		djointype = JoinType::RIGHT_ANTI;
+		break;
+	default:
+		throw InternalException("Unsupported join type");
+	}
+	unique_ptr<ParsedExpression> join_condition = TransformExpr(sjoin.expression());
+	auto left_op = TransformOp(sjoin.left())->Alias("left");
+	auto right_op = TransformOp(sjoin.right())->Alias("right");
+	auto join =
+	    make_shared_ptr<JoinRelation>(std::move(left_op), std::move(right_op), std::move(join_condition), djointype);
+	if (sjoin.delimiter_side() == substrait::DelimJoinRel_DelimiterSide::DelimJoinRel_DelimiterSide_RIGHT) {
+		join->delim_flipped = true;
+	} else if (sjoin.delimiter_side() == substrait::DelimJoinRel_DelimiterSide::DelimJoinRel_DelimiterSide_LEFT) {
+		join->delim_flipped = false;
+	} else {
+		throw InvalidInputException("The plan has a delimiter join with an invalid type for it's delimiter side.");
+	}
+	join->duplicate_eliminated_columns = std::move(duplicate_eliminated_columns);
+	return join;
+}
+
+shared_ptr<Relation> SubstraitToDuckDB::TransformDelimGetOp(const substrait::Rel &sop) {
+	auto &delim_get = sop.delim_get();
+	auto subtree = TransformReferenceOp(delim_get.input());
+
+	auto &client_context = con.context;
+	vector<LogicalType> chunk_types;
+	auto &input_columns = subtree->Columns();
+	for (auto &col_ref : delim_get.column_ids()) {
+		chunk_types.emplace_back(input_columns[col_ref.direct_reference().struct_field().field()].Type());
+	}
+	return make_shared_ptr<DelimGetRelation>(client_context, chunk_types);
 }
 
 shared_ptr<Relation> SubstraitToDuckDB::TransformCrossProductOp(const substrait::Rel &sop) {
@@ -594,6 +658,12 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformSetOp(const substrait::Rel &sop
 	return make_shared_ptr<SetOpRelation>(std::move(lhs), std::move(rhs), type);
 }
 
+shared_ptr<Relation> SubstraitToDuckDB::TransformReferenceOp(const substrait::ReferenceRel &reference) {
+	// Lets get the subtree
+	auto subtree = plan.relations(reference.subtree_ordinal());
+	return TransformOp(subtree.rel());
+}
+
 shared_ptr<Relation> SubstraitToDuckDB::TransformOp(const substrait::Rel &sop) {
 	switch (sop.rel_type_case()) {
 	case substrait::Rel::RelTypeCase::kJoin:
@@ -614,6 +684,12 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformOp(const substrait::Rel &sop) {
 		return TransformSortOp(sop);
 	case substrait::Rel::RelTypeCase::kSet:
 		return TransformSetOp(sop);
+	case substrait::Rel::RelTypeCase::kDelimJoin:
+		return TransformDelimJoinOp(sop);
+	case substrait::Rel::RelTypeCase::kDelimGet:
+		return TransformDelimGetOp(sop);
+	case substrait::Rel::RelTypeCase::kReference:
+		return TransformReferenceOp(sop.reference());
 	default:
 		throw InternalException("Unsupported relation type " + to_string(sop.rel_type_case()));
 	}
@@ -640,13 +716,12 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformPlan() {
 		d_plan = TransformRootOp(plan.relations(0).root());
 	} catch (std::exception &ex) {
 		// Ideally we don't have to do that, we should change to capture the error and throw it here at some point
-		::duckdb::ErrorData parsed_error(ex);
+		ErrorData parsed_error(ex);
 		throw NotImplementedException("Something in this plan is not yet implemented in the Substrait->DuckDB plan "
 		                              "conversion.\n Substrait Plan:\n" +
 		                              plan.DebugString() +
 		                              "Not Implemented error message: " + parsed_error.RawMessage());
 	}
-
 	return d_plan;
 }
 

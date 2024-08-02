@@ -20,6 +20,8 @@ private:
 	//! Transform Substrait Operations to DuckDB Relations
 	shared_ptr<Relation> TransformOp(const substrait::Rel &sop);
 	shared_ptr<Relation> TransformJoinOp(const substrait::Rel &sop);
+	shared_ptr<Relation> TransformDelimJoinOp(const substrait::Rel &sop);
+	shared_ptr<Relation> TransformDelimGetOp(const substrait::Rel &sop);
 	shared_ptr<Relation> TransformCrossProductOp(const substrait::Rel &sop);
 	shared_ptr<Relation> TransformFetchOp(const substrait::Rel &sop);
 	shared_ptr<Relation> TransformFilterOp(const substrait::Rel &sop);
@@ -28,6 +30,7 @@ private:
 	shared_ptr<Relation> TransformReadOp(const substrait::Rel &sop);
 	shared_ptr<Relation> TransformSortOp(const substrait::Rel &sop);
 	shared_ptr<Relation> TransformSetOp(const substrait::Rel &sop);
+	shared_ptr<Relation> TransformReferenceOp(const substrait::ReferenceRel &reference);
 
 	//! Transform Substrait Expressions to DuckDB Expressions
 	unique_ptr<ParsedExpression> TransformExpr(const substrait::Expression &sexpr);
