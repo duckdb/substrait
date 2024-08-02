@@ -439,7 +439,6 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformDelimJoinOp(const substrait::Re
 		duplicate_eliminated_columns.emplace_back(
 		    make_uniq<PositionalReferenceExpression>(col.direct_reference().struct_field().field() + 1));
 	}
-	duplicate_eliminated_columns_ptr = &duplicate_eliminated_columns;
 
 	JoinType djointype;
 	switch (sjoin.type()) {
@@ -484,18 +483,14 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformDelimJoinOp(const substrait::Re
 }
 
 shared_ptr<Relation> SubstraitToDuckDB::TransformDelimGetOp(const substrait::Rel &sop) {
-	auto &delimiter_get = sop.delim_get();
-	auto subtree = TransformReferenceOp(delimiter_get.input());
+	auto &delim_get = sop.delim_get();
+	auto subtree = TransformReferenceOp(delim_get.input());
 
-	// vector<unique_ptr<ParsedExpression>> expressions;
-	// for (auto &sexpr : sop.project().expressions()) {
-	// 	expressions.push_back(TransformExpr(sexpr));
-	// }
 	auto &client_context = con.context;
 	vector<LogicalType> chunk_types;
 	auto &input_columns = subtree->Columns();
-	for (auto &col_ref : *duplicate_eliminated_columns_ptr) {
-		chunk_types.emplace_back(input_columns[col_ref->Cast<PositionalReferenceExpression>().index - 1].Type());
+	for (auto &col_ref : delim_get.column_ids()) {
+		chunk_types.emplace_back(input_columns[col_ref.direct_reference().struct_field().field()].Type());
 	}
 	return make_shared_ptr<DelimGetRelation>(client_context, chunk_types);
 }

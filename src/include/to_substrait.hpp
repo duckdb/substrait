@@ -170,5 +170,7 @@ private:
 	//! This really only matters for delim joins/gets, since these are
 	//! the only splits we currently support.
 	int32_t cur_subtree_relation = 1;
+	//! The pointer to a delim join
+	LogicalComparisonJoin *duplicate_eliminated_parent_ptr = nullptr;
 };
 } // namespace duckdb

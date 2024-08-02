@@ -941,10 +941,12 @@ substrait::Rel *DuckDBToSubstrait::TransformComparisonJoin(LogicalOperator &dop)
 }
 
 substrait::Rel *DuckDBToSubstrait::TransformDelimiterJoin(LogicalOperator &dop) {
+	auto &djoin = dop.Cast<LogicalComparisonJoin>();
+	duplicate_eliminated_parent_ptr = &djoin;
 	auto res = new substrait::Rel();
 
 	auto sjoin = res->mutable_delim_join();
-	auto &djoin = (LogicalComparisonJoin &)dop;
+
 	auto lhs_child = TransformOp(*dop.children[0]);
 	auto rhs_child = TransformOp(*dop.children[1]);
 	if (djoin.delim_flipped) {
@@ -1388,8 +1390,15 @@ substrait::Rel *DuckDBToSubstrait::TransformIntersect(LogicalOperator &dop) {
 substrait::Rel *DuckDBToSubstrait::TransformDelimGet() {
 	auto rel = new substrait::Rel();
 	auto delim_get = rel->mutable_delim_get();
+	D_ASSERT(duplicate_eliminated_parent_ptr);
+	for (auto &dup_col : duplicate_eliminated_parent_ptr->duplicate_eliminated_columns) {
+		auto &dref = dup_col->Cast<BoundReferenceExpression>();
+		auto s_dup_col = delim_get->add_column_ids();
+		s_dup_col->mutable_direct_reference()->mutable_struct_field()->set_field(static_cast<int32_t>(dref.index));
+	}
 	auto ref_input = delim_get->mutable_input();
 	ref_input->set_subtree_ordinal(cur_subtree_relation);
+	duplicate_eliminated_parent_ptr = nullptr;
 	return rel;
 }
 
