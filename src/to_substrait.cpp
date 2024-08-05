@@ -955,6 +955,21 @@ substrait::Rel *DuckDBToSubstrait::TransformAggregateGroup(LogicalOperator &dop)
 	return res;
 }
 
+int32_t GetTimestampPrecision(LogicalTypeId type) {
+	switch (type) {
+	case LogicalTypeId::TIMESTAMP_SEC:
+		return 0;
+	case LogicalTypeId::TIMESTAMP_MS:
+		return 3;
+	case LogicalTypeId::TIMESTAMP:
+		return 6;
+	case LogicalTypeId::TIMESTAMP_NS:
+		return 9;
+	default:
+		throw InternalException("Only timestamp values can have a timestamp precision");
+	}
+}
+
 ::substrait::Type DuckDBToSubstrait::DuckToSubstraitType(const LogicalType &type, BaseStatistics *column_statistics,
                                                          bool not_null) {
 	::substrait::Type s_type;
@@ -1029,16 +1044,18 @@ substrait::Rel *DuckDBToSubstrait::TransformAggregateGroup(LogicalOperator &dop)
 	case LogicalTypeId::TIMESTAMP_MS:
 	case LogicalTypeId::TIMESTAMP_NS:
 	case LogicalTypeId::TIMESTAMP_SEC: {
-		// FIXME: Shouldn't this have a precision?
-		auto timestamp_type = new substrait::Type_Timestamp;
+		auto timestamp_type = new substrait::Type_PrecisionTimestamp;
+		timestamp_type->set_precision(GetTimestampPrecision(type.id()));
 		timestamp_type->set_nullability(type_nullability);
-		s_type.set_allocated_timestamp(timestamp_type);
+		s_type.set_allocated_precision_timestamp(timestamp_type);
 		return s_type;
 	}
 	case LogicalTypeId::TIMESTAMP_TZ: {
-		auto timestamp_type = new substrait::Type_TimestampTZ;
+		auto timestamp_type = new substrait::Type_PrecisionTimestampTZ;
+		// Timestamp tz is always 'us'
+		timestamp_type->set_precision(6);
 		timestamp_type->set_nullability(type_nullability);
-		s_type.set_allocated_timestamp_tz(timestamp_type);
+		s_type.set_allocated_precision_timestamp_tz(timestamp_type);
 		return s_type;
 	}
 	case LogicalTypeId::INTERVAL: {

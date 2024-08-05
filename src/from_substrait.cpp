@@ -550,20 +550,19 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformSortOp(const substrait::Rel &so
 	return make_shared_ptr<OrderRelation>(TransformOp(sop.sort().input()), std::move(order_nodes));
 }
 
-static duckdb::SetOperationType TransformSetOperationType(substrait::SetRel_SetOp setop) {
+static SetOperationType TransformSetOperationType(substrait::SetRel_SetOp setop) {
 	switch (setop) {
 	case substrait::SetRel_SetOp::SetRel_SetOp_SET_OP_UNION_ALL: {
-		return duckdb::SetOperationType::UNION;
+		return SetOperationType::UNION;
 	}
 	case substrait::SetRel_SetOp::SetRel_SetOp_SET_OP_MINUS_PRIMARY: {
-		return duckdb::SetOperationType::EXCEPT;
+		return SetOperationType::EXCEPT;
 	}
 	case substrait::SetRel_SetOp::SetRel_SetOp_SET_OP_INTERSECTION_PRIMARY: {
-		return duckdb::SetOperationType::INTERSECT;
+		return SetOperationType::INTERSECT;
 	}
 	default: {
-		throw duckdb::NotImplementedException("SetOperationType transform not implemented for SetRel_SetOp type %d",
-		                                      setop);
+		throw NotImplementedException("SetOperationType transform not implemented for SetRel_SetOp type %d", setop);
 	}
 	}
 }
