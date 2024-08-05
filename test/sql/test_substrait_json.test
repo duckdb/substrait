@@ -1,6 +1,6 @@
 # name: test/sql/test_substrait_json.test
 # description: Test get_substrait_json and from_substrait_json basic functionality
-# group: [substrait]
+# group: [sql]
 
 require substrait
 

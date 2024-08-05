@@ -1,6 +1,6 @@
 # name: test/sql/test_substrait.test
 # description: Test get_substrait and from_substrait basic functionality
-# group: [substrait]
+# group: [sql]
 
 require substrait
 
