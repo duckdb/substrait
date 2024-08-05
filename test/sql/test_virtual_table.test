@@ -1,0 +1,11 @@
+# name: test/sql/test_virtual_table.test
+# description: Test literal conversion with substrait virtual tables
+# group: [sql]
+
+require substrait
+
+statement ok
+PRAGMA enable_verification
+
+statement ok
+CALL get_substrait('select 42')

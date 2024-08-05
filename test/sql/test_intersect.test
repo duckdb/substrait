@@ -1,6 +1,6 @@
 # name: test/sql/test_intersect.test
 # description: Test the INTERSECT set operation
-# group: [substrait]
+# group: [sql]
 
 require substrait
 

@@ -37,7 +37,7 @@ static void VerifyBlobRoundtrip(unique_ptr<LogicalOperator> &query_plan, Connect
                                 const string &serialized);
 
 static void SetOptions(ToSubstraitFunctionData &function, const ClientConfig &config,
-                       const duckdb::named_parameter_map_t &named_params) {
+                       const named_parameter_map_t &named_params) {
 	bool optimizer_option_set = false;
 	for (const auto &param : named_params) {
 		auto loption = StringUtil::Lower(param.first);
