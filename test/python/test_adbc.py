@@ -146,7 +146,7 @@ PLAN_PROTOTEXT = '''{
     }
   ],
   "version":{
-    "minorNumber":48,
+    "minorNumber":53,
     "producer":"DuckDB"
   }
 }'''

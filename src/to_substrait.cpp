@@ -1381,7 +1381,7 @@ void DuckDBToSubstrait::TransformPlan(LogicalOperator &dop) {
 	}
 	auto version = plan.mutable_version();
 	version->set_major_number(0);
-	version->set_minor_number(48);
+	version->set_minor_number(53);
 	version->set_patch_number(0);
 	auto *producer_name = new string();
 	*producer_name = "DuckDB";

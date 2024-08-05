@@ -87,7 +87,7 @@ struct SimpleExtensionDeclarationDefaultTypeInternal {
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT SimpleExtensionDeclarationDefaultTypeInternal _SimpleExtensionDeclaration_default_instance_;
 constexpr AdvancedExtension::AdvancedExtension(
   ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized)
-  : optimization_(nullptr)
+  : optimization_()
   , enhancement_(nullptr){}
 struct AdvancedExtensionDefaultTypeInternal {
   constexpr AdvancedExtensionDefaultTypeInternal()
@@ -198,7 +198,7 @@ const char descriptor_table_protodef_substrait_2fextensions_2fextensions_2eproto
   "ionFunction\022\037\n\027extension_uri_reference\030\001"
   " \001(\r\022\027\n\017function_anchor\030\002 \001(\r\022\014\n\004name\030\003 "
   "\001(\tB\016\n\014mapping_type\"j\n\021AdvancedExtension"
-  "\022*\n\014optimization\030\001 \001(\0132\024.google.protobuf"
+  "\022*\n\014optimization\030\001 \003(\0132\024.google.protobuf"
   ".Any\022)\n\013enhancement\030\002 \001(\0132\024.google.proto"
   "buf.AnyBb\n\022io.substrait.protoP\001Z5github."
   "com/substrait-io/substrait-go/proto/exte"
@@ -1602,23 +1602,15 @@ void SimpleExtensionDeclaration::InternalSwap(SimpleExtensionDeclaration* other)
 
 class AdvancedExtension::_Internal {
  public:
-  static const ::PROTOBUF_NAMESPACE_ID::Any& optimization(const AdvancedExtension* msg);
   static const ::PROTOBUF_NAMESPACE_ID::Any& enhancement(const AdvancedExtension* msg);
 };
 
-const ::PROTOBUF_NAMESPACE_ID::Any&
-AdvancedExtension::_Internal::optimization(const AdvancedExtension* msg) {
-  return *msg->optimization_;
-}
 const ::PROTOBUF_NAMESPACE_ID::Any&
 AdvancedExtension::_Internal::enhancement(const AdvancedExtension* msg) {
   return *msg->enhancement_;
 }
 void AdvancedExtension::clear_optimization() {
-  if (GetArenaForAllocation() == nullptr && optimization_ != nullptr) {
-    delete optimization_;
-  }
-  optimization_ = nullptr;
+  optimization_.Clear();
 }
 void AdvancedExtension::clear_enhancement() {
   if (GetArenaForAllocation() == nullptr && enhancement_ != nullptr) {
@@ -1628,7 +1620,8 @@ void AdvancedExtension::clear_enhancement() {
 }
 AdvancedExtension::AdvancedExtension(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
-  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
+  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned),
+  optimization_(arena) {
   SharedCtor();
   if (!is_message_owned) {
     RegisterArenaDtor(arena);
@@ -1636,13 +1629,9 @@ AdvancedExtension::AdvancedExtension(::PROTOBUF_NAMESPACE_ID::Arena* arena,
   // @@protoc_insertion_point(arena_constructor:substrait.extensions.AdvancedExtension)
 }
 AdvancedExtension::AdvancedExtension(const AdvancedExtension& from)
-  : ::PROTOBUF_NAMESPACE_ID::Message() {
+  : ::PROTOBUF_NAMESPACE_ID::Message(),
+      optimization_(from.optimization_) {
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  if (from._internal_has_optimization()) {
-    optimization_ = new ::PROTOBUF_NAMESPACE_ID::Any(*from.optimization_);
-  } else {
-    optimization_ = nullptr;
-  }
   if (from._internal_has_enhancement()) {
     enhancement_ = new ::PROTOBUF_NAMESPACE_ID::Any(*from.enhancement_);
   } else {
@@ -1652,10 +1641,7 @@ AdvancedExtension::AdvancedExtension(const AdvancedExtension& from)
 }
 
 inline void AdvancedExtension::SharedCtor() {
-::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
-    reinterpret_cast<char*>(&optimization_) - reinterpret_cast<char*>(this)),
-    0, static_cast<size_t>(reinterpret_cast<char*>(&enhancement_) -
-    reinterpret_cast<char*>(&optimization_)) + sizeof(enhancement_));
+enhancement_ = nullptr;
 }
 
 AdvancedExtension::~AdvancedExtension() {
@@ -1667,7 +1653,6 @@ AdvancedExtension::~AdvancedExtension() {
 
 inline void AdvancedExtension::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
-  if (this != internal_default_instance()) delete optimization_;
   if (this != internal_default_instance()) delete enhancement_;
 }
 
@@ -1687,10 +1672,7 @@ void AdvancedExtension::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  if (GetArenaForAllocation() == nullptr && optimization_ != nullptr) {
-    delete optimization_;
-  }
-  optimization_ = nullptr;
+  optimization_.Clear();
   if (GetArenaForAllocation() == nullptr && enhancement_ != nullptr) {
     delete enhancement_;
   }
@@ -1704,11 +1686,16 @@ const char* AdvancedExtension::_InternalParse(const char* ptr, ::PROTOBUF_NAMESP
     uint32_t tag;
     ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
     switch (tag >> 3) {
-      // .google.protobuf.Any optimization = 1;
+      // repeated .google.protobuf.Any optimization = 1;
       case 1:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 10)) {
-          ptr = ctx->ParseMessage(_internal_mutable_optimization(), ptr);
-          CHK_(ptr);
+          ptr -= 1;
+          do {
+            ptr += 1;
+            ptr = ctx->ParseMessage(_internal_add_optimization(), ptr);
+            CHK_(ptr);
+            if (!ctx->DataAvailable(ptr)) break;
+          } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<10>(ptr));
         } else
           goto handle_unusual;
         continue;
@@ -1749,12 +1736,12 @@ uint8_t* AdvancedExtension::_InternalSerialize(
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
-  // .google.protobuf.Any optimization = 1;
-  if (this->_internal_has_optimization()) {
+  // repeated .google.protobuf.Any optimization = 1;
+  for (unsigned int i = 0,
+      n = static_cast<unsigned int>(this->_internal_optimization_size()); i < n; i++) {
     target = stream->EnsureSpace(target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
-      InternalWriteMessage(
-        1, _Internal::optimization(this), target, stream);
+      InternalWriteMessage(1, this->_internal_optimization(i), target, stream);
   }
 
   // .google.protobuf.Any enhancement = 2;
@@ -1781,11 +1768,11 @@ size_t AdvancedExtension::ByteSizeLong() const {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  // .google.protobuf.Any optimization = 1;
-  if (this->_internal_has_optimization()) {
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-        *optimization_);
+  // repeated .google.protobuf.Any optimization = 1;
+  total_size += 1UL * this->_internal_optimization_size();
+  for (const auto& msg : this->optimization_) {
+    total_size +=
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(msg);
   }
 
   // .google.protobuf.Any enhancement = 2;
@@ -1817,9 +1804,7 @@ void AdvancedExtension::MergeFrom(const AdvancedExtension& from) {
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
-  if (from._internal_has_optimization()) {
-    _internal_mutable_optimization()->::PROTOBUF_NAMESPACE_ID::Any::MergeFrom(from._internal_optimization());
-  }
+  optimization_.MergeFrom(from.optimization_);
   if (from._internal_has_enhancement()) {
     _internal_mutable_enhancement()->::PROTOBUF_NAMESPACE_ID::Any::MergeFrom(from._internal_enhancement());
   }
@@ -1840,12 +1825,8 @@ bool AdvancedExtension::IsInitialized() const {
 void AdvancedExtension::InternalSwap(AdvancedExtension* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-  ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(AdvancedExtension, enhancement_)
-      + sizeof(AdvancedExtension::enhancement_)
-      - PROTOBUF_FIELD_OFFSET(AdvancedExtension, optimization_)>(
-          reinterpret_cast<char*>(&optimization_),
-          reinterpret_cast<char*>(&other->optimization_));
+  optimization_.InternalSwap(&other->optimization_);
+  swap(enhancement_, other->enhancement_);
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata AdvancedExtension::GetMetadata() const {
