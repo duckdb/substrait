@@ -955,6 +955,21 @@ substrait::Rel *DuckDBToSubstrait::TransformAggregateGroup(LogicalOperator &dop)
 	return res;
 }
 
+int32_t GetTimestampPrecision(LogicalTypeId type) {
+	switch (type) {
+	case LogicalTypeId::TIMESTAMP_SEC:
+		return 0;
+	case LogicalTypeId::TIMESTAMP_MS:
+		return 3;
+	case LogicalTypeId::TIMESTAMP:
+		return 6;
+	case LogicalTypeId::TIMESTAMP_NS:
+		return 9;
+	default:
+		throw InternalException("Only timestamp values can have a timestamp precision");
+	}
+}
+
 ::substrait::Type DuckDBToSubstrait::DuckToSubstraitType(const LogicalType &type, BaseStatistics *column_statistics,
                                                          bool not_null) {
 	::substrait::Type s_type;
@@ -1029,16 +1044,18 @@ substrait::Rel *DuckDBToSubstrait::TransformAggregateGroup(LogicalOperator &dop)
 	case LogicalTypeId::TIMESTAMP_MS:
 	case LogicalTypeId::TIMESTAMP_NS:
 	case LogicalTypeId::TIMESTAMP_SEC: {
-		// FIXME: Shouldn't this have a precision?
-		auto timestamp_type = new substrait::Type_Timestamp;
+		auto timestamp_type = new substrait::Type_PrecisionTimestamp;
+		timestamp_type->set_precision(GetTimestampPrecision(type.id()));
 		timestamp_type->set_nullability(type_nullability);
-		s_type.set_allocated_timestamp(timestamp_type);
+		s_type.set_allocated_precision_timestamp(timestamp_type);
 		return s_type;
 	}
 	case LogicalTypeId::TIMESTAMP_TZ: {
-		auto timestamp_type = new substrait::Type_TimestampTZ;
+		auto timestamp_type = new substrait::Type_PrecisionTimestampTZ;
+		// Timestamp tz is always 'us'
+		timestamp_type->set_precision(6);
 		timestamp_type->set_nullability(type_nullability);
-		s_type.set_allocated_timestamp_tz(timestamp_type);
+		s_type.set_allocated_precision_timestamp_tz(timestamp_type);
 		return s_type;
 	}
 	case LogicalTypeId::INTERVAL: {
@@ -1111,7 +1128,7 @@ void DuckDBToSubstrait::TransformTableScanToSubstrait(LogicalGet &dget, substrai
 	auto &table_scan_bind_data = dget.bind_data->Cast<TableScanBindData>();
 	auto &table = table_scan_bind_data.table;
 	sget->mutable_named_table()->add_names(table.name);
-	auto base_schema = new ::substrait::NamedStruct();
+	auto base_schema = new substrait::NamedStruct();
 	auto type_info = new substrait::Type_Struct();
 	type_info->set_nullability(substrait::Type_Nullability_NULLABILITY_REQUIRED);
 	auto not_null_constraint = GetNotNullConstraintCol(table);
@@ -1142,7 +1159,7 @@ void DuckDBToSubstrait::TransformParquetScanToSubstrait(LogicalGet &dget, substr
 		parquet_item->mutable_parquet();
 	}
 
-	auto base_schema = new ::substrait::NamedStruct();
+	auto base_schema = new substrait::NamedStruct();
 	auto type_info = new substrait::Type_Struct();
 	type_info->set_nullability(substrait::Type_Nullability_NULLABILITY_REQUIRED);
 	for (idx_t i = 0; i < dget.names.size(); i++) {
@@ -1159,9 +1176,20 @@ void DuckDBToSubstrait::TransformParquetScanToSubstrait(LogicalGet &dget, substr
 	sget->set_allocated_base_schema(base_schema);
 }
 
+substrait::Rel *DuckDBToSubstrait::TransformDummyScan() {
+	// I just have to turn the dummy scan to emit one garbage row, the projection will take care of the rest
+	auto get_rel = new substrait::Rel();
+	auto sget = get_rel->mutable_read();
+	auto virtual_table = sget->mutable_virtual_table();
+
+	// Add a dummy value to emit one row
+	auto dummy_value = virtual_table->add_values();
+	dummy_value->add_fields()->set_i32(42);
+	return get_rel;
+}
+
 substrait::Rel *DuckDBToSubstrait::TransformGet(LogicalOperator &dop) {
 	auto get_rel = new substrait::Rel();
-	substrait::Rel *rel = get_rel;
 	auto &dget = (LogicalGet &)dop;
 
 	if (!dget.function.get_bind_info) {
@@ -1211,7 +1239,7 @@ substrait::Rel *DuckDBToSubstrait::TransformGet(LogicalOperator &dop) {
 		throw NotImplementedException("This Scan Type is not yet implement for the to_substrait function");
 	}
 
-	return rel;
+	return get_rel;
 }
 
 substrait::Rel *DuckDBToSubstrait::TransformCrossProduct(LogicalOperator &dop) {
@@ -1320,6 +1348,8 @@ substrait::Rel *DuckDBToSubstrait::TransformOp(LogicalOperator &dop) {
 		return TransformExcept(dop);
 	case LogicalOperatorType::LOGICAL_INTERSECT:
 		return TransformIntersect(dop);
+	case LogicalOperatorType::LOGICAL_DUMMY_SCAN:
+		return TransformDummyScan();
 	default:
 		throw InternalException(LogicalOperatorToString(dop.type));
 	}

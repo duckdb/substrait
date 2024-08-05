@@ -1,6 +1,6 @@
 # name: test/sql/test_distinct.test
 # description: Test the Count Distinct operation
-# group: [substrait]
+# group: [sql]
 
 require substrait
 

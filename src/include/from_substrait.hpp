@@ -2,12 +2,12 @@
 
 #include <string>
 #include <unordered_map>
-#include <memory>
 #include "substrait/plan.pb.h"
 #include "duckdb/main/connection.hpp"
 #include "duckdb/common/shared_ptr.hpp"
 
 namespace duckdb {
+
 class SubstraitToDuckDB {
 public:
 	SubstraitToDuckDB(Connection &con_p, const string &serialized, bool json = false);
