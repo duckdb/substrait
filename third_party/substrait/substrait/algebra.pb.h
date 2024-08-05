@@ -51,7 +51,7 @@ struct TableStruct_substrait_2falgebra_2eproto {
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::AuxiliaryParseTableField aux[]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
-  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[116]
+  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[117]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::FieldMetadata field_metadata[];
   static const ::PROTOBUF_NAMESPACE_ID::internal::SerializationTable serialization_table[];
@@ -176,6 +176,9 @@ extern Expression_Literal_MapDefaultTypeInternal _Expression_Literal_Map_default
 class Expression_Literal_Map_KeyValue;
 struct Expression_Literal_Map_KeyValueDefaultTypeInternal;
 extern Expression_Literal_Map_KeyValueDefaultTypeInternal _Expression_Literal_Map_KeyValue_default_instance_;
+class Expression_Literal_PrecisionTimestamp;
+struct Expression_Literal_PrecisionTimestampDefaultTypeInternal;
+extern Expression_Literal_PrecisionTimestampDefaultTypeInternal _Expression_Literal_PrecisionTimestamp_default_instance_;
 class Expression_Literal_Struct;
 struct Expression_Literal_StructDefaultTypeInternal;
 extern Expression_Literal_StructDefaultTypeInternal _Expression_Literal_Struct_default_instance_;
@@ -448,6 +451,7 @@ template<> ::substrait::Expression_Literal_IntervalYearToMonth* Arena::CreateMay
 template<> ::substrait::Expression_Literal_List* Arena::CreateMaybeMessage<::substrait::Expression_Literal_List>(Arena*);
 template<> ::substrait::Expression_Literal_Map* Arena::CreateMaybeMessage<::substrait::Expression_Literal_Map>(Arena*);
 template<> ::substrait::Expression_Literal_Map_KeyValue* Arena::CreateMaybeMessage<::substrait::Expression_Literal_Map_KeyValue>(Arena*);
+template<> ::substrait::Expression_Literal_PrecisionTimestamp* Arena::CreateMaybeMessage<::substrait::Expression_Literal_PrecisionTimestamp>(Arena*);
 template<> ::substrait::Expression_Literal_Struct* Arena::CreateMaybeMessage<::substrait::Expression_Literal_Struct>(Arena*);
 template<> ::substrait::Expression_Literal_UserDefined* Arena::CreateMaybeMessage<::substrait::Expression_Literal_UserDefined>(Arena*);
 template<> ::substrait::Expression_Literal_VarChar* Arena::CreateMaybeMessage<::substrait::Expression_Literal_VarChar>(Arena*);
@@ -1775,10 +1779,25 @@ class RelCommon_Hint final :
   // accessors -------------------------------------------------------
 
   enum : int {
+    kAliasFieldNumber = 3,
     kStatsFieldNumber = 1,
     kConstraintFieldNumber = 2,
     kAdvancedExtensionFieldNumber = 10,
   };
+  // string alias = 3;
+  void clear_alias();
+  const std::string& alias() const;
+  template <typename ArgT0 = const std::string&, typename... ArgT>
+  void set_alias(ArgT0&& arg0, ArgT... args);
+  std::string* mutable_alias();
+  PROTOBUF_NODISCARD std::string* release_alias();
+  void set_allocated_alias(std::string* alias);
+  private:
+  const std::string& _internal_alias() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_alias(const std::string& value);
+  std::string* _internal_mutable_alias();
+  public:
+
   // .substrait.RelCommon.Hint.Stats stats = 1;
   bool has_stats() const;
   private:
@@ -1840,6 +1859,7 @@ class RelCommon_Hint final :
   template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr alias_;
   ::substrait::RelCommon_Hint_Stats* stats_;
   ::substrait::RelCommon_Hint_RuntimeConstraint* constraint_;
   ::substrait::extensions::AdvancedExtension* advanced_extension_;
@@ -13438,6 +13458,163 @@ class Expression_Literal_Decimal final :
 };
 // -------------------------------------------------------------------
 
+class Expression_Literal_PrecisionTimestamp final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:substrait.Expression.Literal.PrecisionTimestamp) */ {
+ public:
+  inline Expression_Literal_PrecisionTimestamp() : Expression_Literal_PrecisionTimestamp(nullptr) {}
+  ~Expression_Literal_PrecisionTimestamp() override;
+  explicit constexpr Expression_Literal_PrecisionTimestamp(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  Expression_Literal_PrecisionTimestamp(const Expression_Literal_PrecisionTimestamp& from);
+  Expression_Literal_PrecisionTimestamp(Expression_Literal_PrecisionTimestamp&& from) noexcept
+    : Expression_Literal_PrecisionTimestamp() {
+    *this = ::std::move(from);
+  }
+
+  inline Expression_Literal_PrecisionTimestamp& operator=(const Expression_Literal_PrecisionTimestamp& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline Expression_Literal_PrecisionTimestamp& operator=(Expression_Literal_PrecisionTimestamp&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()
+  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
+        && GetOwningArena() != nullptr
+  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
+    ) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const Expression_Literal_PrecisionTimestamp& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const Expression_Literal_PrecisionTimestamp* internal_default_instance() {
+    return reinterpret_cast<const Expression_Literal_PrecisionTimestamp*>(
+               &_Expression_Literal_PrecisionTimestamp_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    58;
+
+  friend void swap(Expression_Literal_PrecisionTimestamp& a, Expression_Literal_PrecisionTimestamp& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(Expression_Literal_PrecisionTimestamp* other) {
+    if (other == this) return;
+  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() != nullptr &&
+        GetOwningArena() == other->GetOwningArena()) {
+   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() == other->GetOwningArena()) {
+  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(Expression_Literal_PrecisionTimestamp* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  Expression_Literal_PrecisionTimestamp* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<Expression_Literal_PrecisionTimestamp>(arena);
+  }
+  using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
+  void CopyFrom(const Expression_Literal_PrecisionTimestamp& from);
+  using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
+  void MergeFrom(const Expression_Literal_PrecisionTimestamp& from);
+  private:
+  static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to, const ::PROTOBUF_NAMESPACE_ID::Message& from);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  uint8_t* _InternalSerialize(
+      uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(Expression_Literal_PrecisionTimestamp* other);
+
+  private:
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "substrait.Expression.Literal.PrecisionTimestamp";
+  }
+  protected:
+  explicit Expression_Literal_PrecisionTimestamp(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                       bool is_message_owned = false);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  static const ClassData _class_data_;
+  const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetClassData() const final;
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kValueFieldNumber = 2,
+    kPrecisionFieldNumber = 1,
+  };
+  // int64 value = 2;
+  void clear_value();
+  int64_t value() const;
+  void set_value(int64_t value);
+  private:
+  int64_t _internal_value() const;
+  void _internal_set_value(int64_t value);
+  public:
+
+  // int32 precision = 1;
+  void clear_precision();
+  int32_t precision() const;
+  void set_precision(int32_t value);
+  private:
+  int32_t _internal_precision() const;
+  void _internal_set_precision(int32_t value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:substrait.Expression.Literal.PrecisionTimestamp)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  int64_t value_;
+  int32_t precision_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_substrait_2falgebra_2eproto;
+};
+// -------------------------------------------------------------------
+
 class Expression_Literal_Map_KeyValue final :
     public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:substrait.Expression.Literal.Map.KeyValue) */ {
  public:
@@ -13486,7 +13663,7 @@ class Expression_Literal_Map_KeyValue final :
                &_Expression_Literal_Map_KeyValue_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    58;
+    59;
 
   friend void swap(Expression_Literal_Map_KeyValue& a, Expression_Literal_Map_KeyValue& b) {
     a.Swap(&b);
@@ -13661,7 +13838,7 @@ class Expression_Literal_Map final :
                &_Expression_Literal_Map_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    59;
+    60;
 
   friend void swap(Expression_Literal_Map& a, Expression_Literal_Map& b) {
     a.Swap(&b);
@@ -13818,7 +13995,7 @@ class Expression_Literal_IntervalYearToMonth final :
                &_Expression_Literal_IntervalYearToMonth_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    60;
+    61;
 
   friend void swap(Expression_Literal_IntervalYearToMonth& a, Expression_Literal_IntervalYearToMonth& b) {
     a.Swap(&b);
@@ -13975,7 +14152,7 @@ class Expression_Literal_IntervalDayToSecond final :
                &_Expression_Literal_IntervalDayToSecond_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    61;
+    62;
 
   friend void swap(Expression_Literal_IntervalDayToSecond& a, Expression_Literal_IntervalDayToSecond& b) {
     a.Swap(&b);
@@ -14143,7 +14320,7 @@ class Expression_Literal_Struct final :
                &_Expression_Literal_Struct_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    62;
+    63;
 
   friend void swap(Expression_Literal_Struct& a, Expression_Literal_Struct& b) {
     a.Swap(&b);
@@ -14298,7 +14475,7 @@ class Expression_Literal_List final :
                &_Expression_Literal_List_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    63;
+    64;
 
   friend void swap(Expression_Literal_List& a, Expression_Literal_List& b) {
     a.Swap(&b);
@@ -14459,7 +14636,7 @@ class Expression_Literal_UserDefined final :
                &_Expression_Literal_UserDefined_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    64;
+    65;
 
   friend void swap(Expression_Literal_UserDefined& a, Expression_Literal_UserDefined& b) {
     a.Swap(&b);
@@ -14711,7 +14888,7 @@ class Expression_Literal final :
                &_Expression_Literal_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    65;
+    66;
 
   friend void swap(Expression_Literal& a, Expression_Literal& b) {
     a.Swap(&b);
@@ -14784,6 +14961,7 @@ class Expression_Literal final :
 
   typedef Expression_Literal_VarChar VarChar;
   typedef Expression_Literal_Decimal Decimal;
+  typedef Expression_Literal_PrecisionTimestamp PrecisionTimestamp;
   typedef Expression_Literal_Map Map;
   typedef Expression_Literal_IntervalYearToMonth IntervalYearToMonth;
   typedef Expression_Literal_IntervalDayToSecond IntervalDayToSecond;
@@ -15118,31 +15296,41 @@ class Expression_Literal final :
       ::substrait::Expression_Literal_Decimal* decimal);
   ::substrait::Expression_Literal_Decimal* unsafe_arena_release_decimal();
 
-  // uint64 precision_timestamp = 34;
+  // .substrait.Expression.Literal.PrecisionTimestamp precision_timestamp = 34;
   bool has_precision_timestamp() const;
   private:
   bool _internal_has_precision_timestamp() const;
   public:
   void clear_precision_timestamp();
-  uint64_t precision_timestamp() const;
-  void set_precision_timestamp(uint64_t value);
+  const ::substrait::Expression_Literal_PrecisionTimestamp& precision_timestamp() const;
+  PROTOBUF_NODISCARD ::substrait::Expression_Literal_PrecisionTimestamp* release_precision_timestamp();
+  ::substrait::Expression_Literal_PrecisionTimestamp* mutable_precision_timestamp();
+  void set_allocated_precision_timestamp(::substrait::Expression_Literal_PrecisionTimestamp* precision_timestamp);
   private:
-  uint64_t _internal_precision_timestamp() const;
-  void _internal_set_precision_timestamp(uint64_t value);
+  const ::substrait::Expression_Literal_PrecisionTimestamp& _internal_precision_timestamp() const;
+  ::substrait::Expression_Literal_PrecisionTimestamp* _internal_mutable_precision_timestamp();
   public:
+  void unsafe_arena_set_allocated_precision_timestamp(
+      ::substrait::Expression_Literal_PrecisionTimestamp* precision_timestamp);
+  ::substrait::Expression_Literal_PrecisionTimestamp* unsafe_arena_release_precision_timestamp();
 
-  // uint64 precision_timestamp_tz = 35;
+  // .substrait.Expression.Literal.PrecisionTimestamp precision_timestamp_tz = 35;
   bool has_precision_timestamp_tz() const;
   private:
   bool _internal_has_precision_timestamp_tz() const;
   public:
   void clear_precision_timestamp_tz();
-  uint64_t precision_timestamp_tz() const;
-  void set_precision_timestamp_tz(uint64_t value);
+  const ::substrait::Expression_Literal_PrecisionTimestamp& precision_timestamp_tz() const;
+  PROTOBUF_NODISCARD ::substrait::Expression_Literal_PrecisionTimestamp* release_precision_timestamp_tz();
+  ::substrait::Expression_Literal_PrecisionTimestamp* mutable_precision_timestamp_tz();
+  void set_allocated_precision_timestamp_tz(::substrait::Expression_Literal_PrecisionTimestamp* precision_timestamp_tz);
   private:
-  uint64_t _internal_precision_timestamp_tz() const;
-  void _internal_set_precision_timestamp_tz(uint64_t value);
+  const ::substrait::Expression_Literal_PrecisionTimestamp& _internal_precision_timestamp_tz() const;
+  ::substrait::Expression_Literal_PrecisionTimestamp* _internal_mutable_precision_timestamp_tz();
   public:
+  void unsafe_arena_set_allocated_precision_timestamp_tz(
+      ::substrait::Expression_Literal_PrecisionTimestamp* precision_timestamp_tz);
+  ::substrait::Expression_Literal_PrecisionTimestamp* unsafe_arena_release_precision_timestamp_tz();
 
   // .substrait.Expression.Literal.Struct struct = 25;
   bool has_struct_() const;
@@ -15365,8 +15553,8 @@ class Expression_Literal final :
     ::substrait::Expression_Literal_VarChar* var_char_;
     ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr fixed_binary_;
     ::substrait::Expression_Literal_Decimal* decimal_;
-    uint64_t precision_timestamp_;
-    uint64_t precision_timestamp_tz_;
+    ::substrait::Expression_Literal_PrecisionTimestamp* precision_timestamp_;
+    ::substrait::Expression_Literal_PrecisionTimestamp* precision_timestamp_tz_;
     ::substrait::Expression_Literal_Struct* struct__;
     ::substrait::Expression_Literal_Map* map_;
     int64_t timestamp_tz_;
@@ -15432,7 +15620,7 @@ class Expression_Nested_Map_KeyValue final :
                &_Expression_Nested_Map_KeyValue_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    66;
+    67;
 
   friend void swap(Expression_Nested_Map_KeyValue& a, Expression_Nested_Map_KeyValue& b) {
     a.Swap(&b);
@@ -15607,7 +15795,7 @@ class Expression_Nested_Map final :
                &_Expression_Nested_Map_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    67;
+    68;
 
   friend void swap(Expression_Nested_Map& a, Expression_Nested_Map& b) {
     a.Swap(&b);
@@ -15764,7 +15952,7 @@ class Expression_Nested_Struct final :
                &_Expression_Nested_Struct_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    68;
+    69;
 
   friend void swap(Expression_Nested_Struct& a, Expression_Nested_Struct& b) {
     a.Swap(&b);
@@ -15919,7 +16107,7 @@ class Expression_Nested_List final :
                &_Expression_Nested_List_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    69;
+    70;
 
   friend void swap(Expression_Nested_List& a, Expression_Nested_List& b) {
     a.Swap(&b);
@@ -16081,7 +16269,7 @@ class Expression_Nested final :
                &_Expression_Nested_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    70;
+    71;
 
   friend void swap(Expression_Nested& a, Expression_Nested& b) {
     a.Swap(&b);
@@ -16316,7 +16504,7 @@ class Expression_ScalarFunction final :
                &_Expression_ScalarFunction_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    71;
+    72;
 
   friend void swap(Expression_ScalarFunction& a, Expression_ScalarFunction& b) {
     a.Swap(&b);
@@ -16542,7 +16730,7 @@ class Expression_WindowFunction_Bound_Preceding final :
                &_Expression_WindowFunction_Bound_Preceding_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    72;
+    73;
 
   friend void swap(Expression_WindowFunction_Bound_Preceding& a, Expression_WindowFunction_Bound_Preceding& b) {
     a.Swap(&b);
@@ -16688,7 +16876,7 @@ class Expression_WindowFunction_Bound_Following final :
                &_Expression_WindowFunction_Bound_Following_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    73;
+    74;
 
   friend void swap(Expression_WindowFunction_Bound_Following& a, Expression_WindowFunction_Bound_Following& b) {
     a.Swap(&b);
@@ -16833,7 +17021,7 @@ class Expression_WindowFunction_Bound_CurrentRow final :
                &_Expression_WindowFunction_Bound_CurrentRow_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    74;
+    75;
 
   friend void swap(Expression_WindowFunction_Bound_CurrentRow& a, Expression_WindowFunction_Bound_CurrentRow& b) {
     a.Swap(&b);
@@ -16951,7 +17139,7 @@ class Expression_WindowFunction_Bound_Unbounded final :
                &_Expression_WindowFunction_Bound_Unbounded_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    75;
+    76;
 
   friend void swap(Expression_WindowFunction_Bound_Unbounded& a, Expression_WindowFunction_Bound_Unbounded& b) {
     a.Swap(&b);
@@ -17078,7 +17266,7 @@ class Expression_WindowFunction_Bound final :
                &_Expression_WindowFunction_Bound_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    76;
+    77;
 
   friend void swap(Expression_WindowFunction_Bound& a, Expression_WindowFunction_Bound& b) {
     a.Swap(&b);
@@ -17313,7 +17501,7 @@ class Expression_WindowFunction final :
                &_Expression_WindowFunction_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    77;
+    78;
 
   friend void swap(Expression_WindowFunction& a, Expression_WindowFunction& b) {
     a.Swap(&b);
@@ -17686,7 +17874,7 @@ class Expression_IfThen_IfClause final :
                &_Expression_IfThen_IfClause_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    78;
+    79;
 
   friend void swap(Expression_IfThen_IfClause& a, Expression_IfThen_IfClause& b) {
     a.Swap(&b);
@@ -17861,7 +18049,7 @@ class Expression_IfThen final :
                &_Expression_IfThen_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    79;
+    80;
 
   friend void swap(Expression_IfThen& a, Expression_IfThen& b) {
     a.Swap(&b);
@@ -18038,7 +18226,7 @@ class Expression_Cast final :
                &_Expression_Cast_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    80;
+    81;
 
   friend void swap(Expression_Cast& a, Expression_Cast& b) {
     a.Swap(&b);
@@ -18256,7 +18444,7 @@ class Expression_SwitchExpression_IfValue final :
                &_Expression_SwitchExpression_IfValue_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    81;
+    82;
 
   friend void swap(Expression_SwitchExpression_IfValue& a, Expression_SwitchExpression_IfValue& b) {
     a.Swap(&b);
@@ -18431,7 +18619,7 @@ class Expression_SwitchExpression final :
                &_Expression_SwitchExpression_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    82;
+    83;
 
   friend void swap(Expression_SwitchExpression& a, Expression_SwitchExpression& b) {
     a.Swap(&b);
@@ -18628,7 +18816,7 @@ class Expression_SingularOrList final :
                &_Expression_SingularOrList_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    83;
+    84;
 
   friend void swap(Expression_SingularOrList& a, Expression_SingularOrList& b) {
     a.Swap(&b);
@@ -18803,7 +18991,7 @@ class Expression_MultiOrList_Record final :
                &_Expression_MultiOrList_Record_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    84;
+    85;
 
   friend void swap(Expression_MultiOrList_Record& a, Expression_MultiOrList_Record& b) {
     a.Swap(&b);
@@ -18958,7 +19146,7 @@ class Expression_MultiOrList final :
                &_Expression_MultiOrList_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    85;
+    86;
 
   friend void swap(Expression_MultiOrList& a, Expression_MultiOrList& b) {
     a.Swap(&b);
@@ -19135,7 +19323,7 @@ class Expression_EmbeddedFunction_PythonPickleFunction final :
                &_Expression_EmbeddedFunction_PythonPickleFunction_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    86;
+    87;
 
   friend void swap(Expression_EmbeddedFunction_PythonPickleFunction& a, Expression_EmbeddedFunction_PythonPickleFunction& b) {
     a.Swap(&b);
@@ -19312,7 +19500,7 @@ class Expression_EmbeddedFunction_WebAssemblyFunction final :
                &_Expression_EmbeddedFunction_WebAssemblyFunction_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    87;
+    88;
 
   friend void swap(Expression_EmbeddedFunction_WebAssemblyFunction& a, Expression_EmbeddedFunction_WebAssemblyFunction& b) {
     a.Swap(&b);
@@ -19495,7 +19683,7 @@ class Expression_EmbeddedFunction final :
                &_Expression_EmbeddedFunction_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    88;
+    89;
 
   friend void swap(Expression_EmbeddedFunction& a, Expression_EmbeddedFunction& b) {
     a.Swap(&b);
@@ -19726,7 +19914,7 @@ class Expression_ReferenceSegment_MapKey final :
                &_Expression_ReferenceSegment_MapKey_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    89;
+    90;
 
   friend void swap(Expression_ReferenceSegment_MapKey& a, Expression_ReferenceSegment_MapKey& b) {
     a.Swap(&b);
@@ -19901,7 +20089,7 @@ class Expression_ReferenceSegment_StructField final :
                &_Expression_ReferenceSegment_StructField_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    90;
+    91;
 
   friend void swap(Expression_ReferenceSegment_StructField& a, Expression_ReferenceSegment_StructField& b) {
     a.Swap(&b);
@@ -20067,7 +20255,7 @@ class Expression_ReferenceSegment_ListElement final :
                &_Expression_ReferenceSegment_ListElement_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    91;
+    92;
 
   friend void swap(Expression_ReferenceSegment_ListElement& a, Expression_ReferenceSegment_ListElement& b) {
     a.Swap(&b);
@@ -20240,7 +20428,7 @@ class Expression_ReferenceSegment final :
                &_Expression_ReferenceSegment_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    92;
+    93;
 
   friend void swap(Expression_ReferenceSegment& a, Expression_ReferenceSegment& b) {
     a.Swap(&b);
@@ -20460,7 +20648,7 @@ class Expression_MaskExpression_Select final :
                &_Expression_MaskExpression_Select_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    93;
+    94;
 
   friend void swap(Expression_MaskExpression_Select& a, Expression_MaskExpression_Select& b) {
     a.Swap(&b);
@@ -20669,7 +20857,7 @@ class Expression_MaskExpression_StructSelect final :
                &_Expression_MaskExpression_StructSelect_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    94;
+    95;
 
   friend void swap(Expression_MaskExpression_StructSelect& a, Expression_MaskExpression_StructSelect& b) {
     a.Swap(&b);
@@ -20824,7 +21012,7 @@ class Expression_MaskExpression_StructItem final :
                &_Expression_MaskExpression_StructItem_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    95;
+    96;
 
   friend void swap(Expression_MaskExpression_StructItem& a, Expression_MaskExpression_StructItem& b) {
     a.Swap(&b);
@@ -20990,7 +21178,7 @@ class Expression_MaskExpression_ListSelect_ListSelectItem_ListElement final :
                &_Expression_MaskExpression_ListSelect_ListSelectItem_ListElement_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    96;
+    97;
 
   friend void swap(Expression_MaskExpression_ListSelect_ListSelectItem_ListElement& a, Expression_MaskExpression_ListSelect_ListSelectItem_ListElement& b) {
     a.Swap(&b);
@@ -21136,7 +21324,7 @@ class Expression_MaskExpression_ListSelect_ListSelectItem_ListSlice final :
                &_Expression_MaskExpression_ListSelect_ListSelectItem_ListSlice_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    97;
+    98;
 
   friend void swap(Expression_MaskExpression_ListSelect_ListSelectItem_ListSlice& a, Expression_MaskExpression_ListSelect_ListSelectItem_ListSlice& b) {
     a.Swap(&b);
@@ -21299,7 +21487,7 @@ class Expression_MaskExpression_ListSelect_ListSelectItem final :
                &_Expression_MaskExpression_ListSelect_ListSelectItem_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    98;
+    99;
 
   friend void swap(Expression_MaskExpression_ListSelect_ListSelectItem& a, Expression_MaskExpression_ListSelect_ListSelectItem& b) {
     a.Swap(&b);
@@ -21490,7 +21678,7 @@ class Expression_MaskExpression_ListSelect final :
                &_Expression_MaskExpression_ListSelect_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    99;
+    100;
 
   friend void swap(Expression_MaskExpression_ListSelect& a, Expression_MaskExpression_ListSelect& b) {
     a.Swap(&b);
@@ -21667,7 +21855,7 @@ class Expression_MaskExpression_MapSelect_MapKey final :
                &_Expression_MaskExpression_MapSelect_MapKey_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    100;
+    101;
 
   friend void swap(Expression_MaskExpression_MapSelect_MapKey& a, Expression_MaskExpression_MapSelect_MapKey& b) {
     a.Swap(&b);
@@ -21818,7 +22006,7 @@ class Expression_MaskExpression_MapSelect_MapKeyExpression final :
                &_Expression_MaskExpression_MapSelect_MapKeyExpression_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    101;
+    102;
 
   friend void swap(Expression_MaskExpression_MapSelect_MapKeyExpression& a, Expression_MaskExpression_MapSelect_MapKeyExpression& b) {
     a.Swap(&b);
@@ -21975,7 +22163,7 @@ class Expression_MaskExpression_MapSelect final :
                &_Expression_MaskExpression_MapSelect_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    102;
+    103;
 
   friend void swap(Expression_MaskExpression_MapSelect& a, Expression_MaskExpression_MapSelect& b) {
     a.Swap(&b);
@@ -22186,7 +22374,7 @@ class Expression_MaskExpression final :
                &_Expression_MaskExpression_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    103;
+    104;
 
   friend void swap(Expression_MaskExpression& a, Expression_MaskExpression& b) {
     a.Swap(&b);
@@ -22357,7 +22545,7 @@ class Expression_FieldReference_RootReference final :
                &_Expression_FieldReference_RootReference_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    104;
+    105;
 
   friend void swap(Expression_FieldReference_RootReference& a, Expression_FieldReference_RootReference& b) {
     a.Swap(&b);
@@ -22476,7 +22664,7 @@ class Expression_FieldReference_OuterReference final :
                &_Expression_FieldReference_OuterReference_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    105;
+    106;
 
   friend void swap(Expression_FieldReference_OuterReference& a, Expression_FieldReference_OuterReference& b) {
     a.Swap(&b);
@@ -22635,7 +22823,7 @@ class Expression_FieldReference final :
                &_Expression_FieldReference_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    106;
+    107;
 
   friend void swap(Expression_FieldReference& a, Expression_FieldReference& b) {
     a.Swap(&b);
@@ -22898,7 +23086,7 @@ class Expression_Subquery_Scalar final :
                &_Expression_Subquery_Scalar_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    107;
+    108;
 
   friend void swap(Expression_Subquery_Scalar& a, Expression_Subquery_Scalar& b) {
     a.Swap(&b);
@@ -23053,7 +23241,7 @@ class Expression_Subquery_InPredicate final :
                &_Expression_Subquery_InPredicate_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    108;
+    109;
 
   friend void swap(Expression_Subquery_InPredicate& a, Expression_Subquery_InPredicate& b) {
     a.Swap(&b);
@@ -23228,7 +23416,7 @@ class Expression_Subquery_SetPredicate final :
                &_Expression_Subquery_SetPredicate_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    109;
+    110;
 
   friend void swap(Expression_Subquery_SetPredicate& a, Expression_Subquery_SetPredicate& b) {
     a.Swap(&b);
@@ -23426,7 +23614,7 @@ class Expression_Subquery_SetComparison final :
                &_Expression_Subquery_SetComparison_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    110;
+    111;
 
   friend void swap(Expression_Subquery_SetComparison& a, Expression_Subquery_SetComparison& b) {
     a.Swap(&b);
@@ -23703,7 +23891,7 @@ class Expression_Subquery final :
                &_Expression_Subquery_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    111;
+    112;
 
   friend void swap(Expression_Subquery& a, Expression_Subquery& b) {
     a.Swap(&b);
@@ -23954,7 +24142,7 @@ class Expression final :
                &_Expression_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    112;
+    113;
 
   friend void swap(Expression& a, Expression& b) {
     a.Swap(&b);
@@ -24374,7 +24562,7 @@ class SortField final :
                &_SortField_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    113;
+    114;
 
   friend void swap(SortField& a, SortField& b) {
     a.Swap(&b);
@@ -24610,7 +24798,7 @@ class AggregateFunction final :
                &_AggregateFunction_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    114;
+    115;
 
   friend void swap(AggregateFunction& a, AggregateFunction& b) {
     a.Swap(&b);
@@ -24910,7 +25098,7 @@ class ReferenceRel final :
                &_ReferenceRel_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    115;
+    116;
 
   friend void swap(ReferenceRel& a, ReferenceRel& b) {
     a.Swap(&b);
@@ -25470,6 +25658,57 @@ inline void RelCommon_Hint::set_allocated_constraint(::substrait::RelCommon_Hint
   }
   constraint_ = constraint;
   // @@protoc_insertion_point(field_set_allocated:substrait.RelCommon.Hint.constraint)
+}
+
+// string alias = 3;
+inline void RelCommon_Hint::clear_alias() {
+  alias_.ClearToEmpty();
+}
+inline const std::string& RelCommon_Hint::alias() const {
+  // @@protoc_insertion_point(field_get:substrait.RelCommon.Hint.alias)
+  return _internal_alias();
+}
+template <typename ArgT0, typename... ArgT>
+inline PROTOBUF_ALWAYS_INLINE
+void RelCommon_Hint::set_alias(ArgT0&& arg0, ArgT... args) {
+ 
+ alias_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set:substrait.RelCommon.Hint.alias)
+}
+inline std::string* RelCommon_Hint::mutable_alias() {
+  std::string* _s = _internal_mutable_alias();
+  // @@protoc_insertion_point(field_mutable:substrait.RelCommon.Hint.alias)
+  return _s;
+}
+inline const std::string& RelCommon_Hint::_internal_alias() const {
+  return alias_.Get();
+}
+inline void RelCommon_Hint::_internal_set_alias(const std::string& value) {
+  
+  alias_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, value, GetArenaForAllocation());
+}
+inline std::string* RelCommon_Hint::_internal_mutable_alias() {
+  
+  return alias_.Mutable(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, GetArenaForAllocation());
+}
+inline std::string* RelCommon_Hint::release_alias() {
+  // @@protoc_insertion_point(field_release:substrait.RelCommon.Hint.alias)
+  return alias_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArenaForAllocation());
+}
+inline void RelCommon_Hint::set_allocated_alias(std::string* alias) {
+  if (alias != nullptr) {
+    
+  } else {
+    
+  }
+  alias_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), alias,
+      GetArenaForAllocation());
+#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  if (alias_.IsDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited())) {
+    alias_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), "", GetArenaForAllocation());
+  }
+#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  // @@protoc_insertion_point(field_set_allocated:substrait.RelCommon.Hint.alias)
 }
 
 // .substrait.extensions.AdvancedExtension advanced_extension = 10;
@@ -39835,6 +40074,50 @@ inline void Expression_Literal_Decimal::set_scale(int32_t value) {
 
 // -------------------------------------------------------------------
 
+// Expression_Literal_PrecisionTimestamp
+
+// int32 precision = 1;
+inline void Expression_Literal_PrecisionTimestamp::clear_precision() {
+  precision_ = 0;
+}
+inline int32_t Expression_Literal_PrecisionTimestamp::_internal_precision() const {
+  return precision_;
+}
+inline int32_t Expression_Literal_PrecisionTimestamp::precision() const {
+  // @@protoc_insertion_point(field_get:substrait.Expression.Literal.PrecisionTimestamp.precision)
+  return _internal_precision();
+}
+inline void Expression_Literal_PrecisionTimestamp::_internal_set_precision(int32_t value) {
+  
+  precision_ = value;
+}
+inline void Expression_Literal_PrecisionTimestamp::set_precision(int32_t value) {
+  _internal_set_precision(value);
+  // @@protoc_insertion_point(field_set:substrait.Expression.Literal.PrecisionTimestamp.precision)
+}
+
+// int64 value = 2;
+inline void Expression_Literal_PrecisionTimestamp::clear_value() {
+  value_ = int64_t{0};
+}
+inline int64_t Expression_Literal_PrecisionTimestamp::_internal_value() const {
+  return value_;
+}
+inline int64_t Expression_Literal_PrecisionTimestamp::value() const {
+  // @@protoc_insertion_point(field_get:substrait.Expression.Literal.PrecisionTimestamp.value)
+  return _internal_value();
+}
+inline void Expression_Literal_PrecisionTimestamp::_internal_set_value(int64_t value) {
+  
+  value_ = value;
+}
+inline void Expression_Literal_PrecisionTimestamp::set_value(int64_t value) {
+  _internal_set_value(value);
+  // @@protoc_insertion_point(field_set:substrait.Expression.Literal.PrecisionTimestamp.value)
+}
+
+// -------------------------------------------------------------------
+
 // Expression_Literal_Map_KeyValue
 
 // .substrait.Expression.Literal key = 1;
@@ -41475,7 +41758,7 @@ inline ::substrait::Expression_Literal_Decimal* Expression_Literal::mutable_deci
   return _msg;
 }
 
-// uint64 precision_timestamp = 34;
+// .substrait.Expression.Literal.PrecisionTimestamp precision_timestamp = 34;
 inline bool Expression_Literal::_internal_has_precision_timestamp() const {
   return literal_type_case() == kPrecisionTimestamp;
 }
@@ -41487,33 +41770,69 @@ inline void Expression_Literal::set_has_precision_timestamp() {
 }
 inline void Expression_Literal::clear_precision_timestamp() {
   if (_internal_has_precision_timestamp()) {
-    literal_type_.precision_timestamp_ = uint64_t{0u};
+    if (GetArenaForAllocation() == nullptr) {
+      delete literal_type_.precision_timestamp_;
+    }
     clear_has_literal_type();
   }
 }
-inline uint64_t Expression_Literal::_internal_precision_timestamp() const {
+inline ::substrait::Expression_Literal_PrecisionTimestamp* Expression_Literal::release_precision_timestamp() {
+  // @@protoc_insertion_point(field_release:substrait.Expression.Literal.precision_timestamp)
   if (_internal_has_precision_timestamp()) {
-    return literal_type_.precision_timestamp_;
+    clear_has_literal_type();
+      ::substrait::Expression_Literal_PrecisionTimestamp* temp = literal_type_.precision_timestamp_;
+    if (GetArenaForAllocation() != nullptr) {
+      temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+    }
+    literal_type_.precision_timestamp_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
   }
-  return uint64_t{0u};
 }
-inline void Expression_Literal::_internal_set_precision_timestamp(uint64_t value) {
-  if (!_internal_has_precision_timestamp()) {
-    clear_literal_type();
-    set_has_precision_timestamp();
-  }
-  literal_type_.precision_timestamp_ = value;
+inline const ::substrait::Expression_Literal_PrecisionTimestamp& Expression_Literal::_internal_precision_timestamp() const {
+  return _internal_has_precision_timestamp()
+      ? *literal_type_.precision_timestamp_
+      : reinterpret_cast< ::substrait::Expression_Literal_PrecisionTimestamp&>(::substrait::_Expression_Literal_PrecisionTimestamp_default_instance_);
 }
-inline uint64_t Expression_Literal::precision_timestamp() const {
+inline const ::substrait::Expression_Literal_PrecisionTimestamp& Expression_Literal::precision_timestamp() const {
   // @@protoc_insertion_point(field_get:substrait.Expression.Literal.precision_timestamp)
   return _internal_precision_timestamp();
 }
-inline void Expression_Literal::set_precision_timestamp(uint64_t value) {
-  _internal_set_precision_timestamp(value);
-  // @@protoc_insertion_point(field_set:substrait.Expression.Literal.precision_timestamp)
+inline ::substrait::Expression_Literal_PrecisionTimestamp* Expression_Literal::unsafe_arena_release_precision_timestamp() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:substrait.Expression.Literal.precision_timestamp)
+  if (_internal_has_precision_timestamp()) {
+    clear_has_literal_type();
+    ::substrait::Expression_Literal_PrecisionTimestamp* temp = literal_type_.precision_timestamp_;
+    literal_type_.precision_timestamp_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void Expression_Literal::unsafe_arena_set_allocated_precision_timestamp(::substrait::Expression_Literal_PrecisionTimestamp* precision_timestamp) {
+  clear_literal_type();
+  if (precision_timestamp) {
+    set_has_precision_timestamp();
+    literal_type_.precision_timestamp_ = precision_timestamp;
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:substrait.Expression.Literal.precision_timestamp)
+}
+inline ::substrait::Expression_Literal_PrecisionTimestamp* Expression_Literal::_internal_mutable_precision_timestamp() {
+  if (!_internal_has_precision_timestamp()) {
+    clear_literal_type();
+    set_has_precision_timestamp();
+    literal_type_.precision_timestamp_ = CreateMaybeMessage< ::substrait::Expression_Literal_PrecisionTimestamp >(GetArenaForAllocation());
+  }
+  return literal_type_.precision_timestamp_;
+}
+inline ::substrait::Expression_Literal_PrecisionTimestamp* Expression_Literal::mutable_precision_timestamp() {
+  ::substrait::Expression_Literal_PrecisionTimestamp* _msg = _internal_mutable_precision_timestamp();
+  // @@protoc_insertion_point(field_mutable:substrait.Expression.Literal.precision_timestamp)
+  return _msg;
 }
 
-// uint64 precision_timestamp_tz = 35;
+// .substrait.Expression.Literal.PrecisionTimestamp precision_timestamp_tz = 35;
 inline bool Expression_Literal::_internal_has_precision_timestamp_tz() const {
   return literal_type_case() == kPrecisionTimestampTz;
 }
@@ -41525,30 +41844,66 @@ inline void Expression_Literal::set_has_precision_timestamp_tz() {
 }
 inline void Expression_Literal::clear_precision_timestamp_tz() {
   if (_internal_has_precision_timestamp_tz()) {
-    literal_type_.precision_timestamp_tz_ = uint64_t{0u};
+    if (GetArenaForAllocation() == nullptr) {
+      delete literal_type_.precision_timestamp_tz_;
+    }
     clear_has_literal_type();
   }
 }
-inline uint64_t Expression_Literal::_internal_precision_timestamp_tz() const {
+inline ::substrait::Expression_Literal_PrecisionTimestamp* Expression_Literal::release_precision_timestamp_tz() {
+  // @@protoc_insertion_point(field_release:substrait.Expression.Literal.precision_timestamp_tz)
   if (_internal_has_precision_timestamp_tz()) {
-    return literal_type_.precision_timestamp_tz_;
+    clear_has_literal_type();
+      ::substrait::Expression_Literal_PrecisionTimestamp* temp = literal_type_.precision_timestamp_tz_;
+    if (GetArenaForAllocation() != nullptr) {
+      temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+    }
+    literal_type_.precision_timestamp_tz_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
   }
-  return uint64_t{0u};
 }
-inline void Expression_Literal::_internal_set_precision_timestamp_tz(uint64_t value) {
-  if (!_internal_has_precision_timestamp_tz()) {
-    clear_literal_type();
-    set_has_precision_timestamp_tz();
-  }
-  literal_type_.precision_timestamp_tz_ = value;
+inline const ::substrait::Expression_Literal_PrecisionTimestamp& Expression_Literal::_internal_precision_timestamp_tz() const {
+  return _internal_has_precision_timestamp_tz()
+      ? *literal_type_.precision_timestamp_tz_
+      : reinterpret_cast< ::substrait::Expression_Literal_PrecisionTimestamp&>(::substrait::_Expression_Literal_PrecisionTimestamp_default_instance_);
 }
-inline uint64_t Expression_Literal::precision_timestamp_tz() const {
+inline const ::substrait::Expression_Literal_PrecisionTimestamp& Expression_Literal::precision_timestamp_tz() const {
   // @@protoc_insertion_point(field_get:substrait.Expression.Literal.precision_timestamp_tz)
   return _internal_precision_timestamp_tz();
 }
-inline void Expression_Literal::set_precision_timestamp_tz(uint64_t value) {
-  _internal_set_precision_timestamp_tz(value);
-  // @@protoc_insertion_point(field_set:substrait.Expression.Literal.precision_timestamp_tz)
+inline ::substrait::Expression_Literal_PrecisionTimestamp* Expression_Literal::unsafe_arena_release_precision_timestamp_tz() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:substrait.Expression.Literal.precision_timestamp_tz)
+  if (_internal_has_precision_timestamp_tz()) {
+    clear_has_literal_type();
+    ::substrait::Expression_Literal_PrecisionTimestamp* temp = literal_type_.precision_timestamp_tz_;
+    literal_type_.precision_timestamp_tz_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void Expression_Literal::unsafe_arena_set_allocated_precision_timestamp_tz(::substrait::Expression_Literal_PrecisionTimestamp* precision_timestamp_tz) {
+  clear_literal_type();
+  if (precision_timestamp_tz) {
+    set_has_precision_timestamp_tz();
+    literal_type_.precision_timestamp_tz_ = precision_timestamp_tz;
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:substrait.Expression.Literal.precision_timestamp_tz)
+}
+inline ::substrait::Expression_Literal_PrecisionTimestamp* Expression_Literal::_internal_mutable_precision_timestamp_tz() {
+  if (!_internal_has_precision_timestamp_tz()) {
+    clear_literal_type();
+    set_has_precision_timestamp_tz();
+    literal_type_.precision_timestamp_tz_ = CreateMaybeMessage< ::substrait::Expression_Literal_PrecisionTimestamp >(GetArenaForAllocation());
+  }
+  return literal_type_.precision_timestamp_tz_;
+}
+inline ::substrait::Expression_Literal_PrecisionTimestamp* Expression_Literal::mutable_precision_timestamp_tz() {
+  ::substrait::Expression_Literal_PrecisionTimestamp* _msg = _internal_mutable_precision_timestamp_tz();
+  // @@protoc_insertion_point(field_mutable:substrait.Expression.Literal.precision_timestamp_tz)
+  return _msg;
 }
 
 // .substrait.Expression.Literal.Struct struct = 25;
@@ -50275,6 +50630,8 @@ inline void ReferenceRel::set_subtree_ordinal(int32_t value) {
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------
