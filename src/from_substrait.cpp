@@ -512,7 +512,7 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformReadOp(const substrait::Rel &so
 			}
 			expression_rows.emplace_back(expression_row);
 		}
-		int x = 0;
+		scan = con.Values(expression_rows);
 	} else {
 		throw NotImplementedException("Unsupported type of read operator for substrait");
 	}
@@ -531,7 +531,6 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformReadOp(const substrait::Rel &so
 			// TODO make sure nothing else is in there
 			expressions.push_back(make_uniq<PositionalReferenceExpression>(sproj.field() + 1));
 		}
-
 		scan = make_shared_ptr<ProjectionRelation>(std::move(scan), std::move(expressions), std::move(aliases));
 	}
 
