@@ -286,7 +286,7 @@ void DuckDBToSubstrait::TransformConstant(Value &dval, substrait::Expression &se
 		TransformEnum(dval, sexpr);
 		break;
 	default:
-		throw InternalException("Transform constant of type %s", duckdb_type.ToString());
+		throw NotImplementedException("Consuming a value of type %s is not supported yet", duckdb_type.ToString());
 	}
 }
 
@@ -808,27 +808,23 @@ substrait::Rel *DuckDBToSubstrait::TransformTopN(LogicalOperator &dop) {
 }
 
 substrait::Rel *DuckDBToSubstrait::TransformLimit(LogicalOperator &dop) {
-	auto &dlimit = (LogicalLimit &)dop;
-	auto res = new substrait::Rel();
-	auto stopn = res->mutable_fetch();
-	stopn->set_allocated_input(TransformOp(*dop.children[0]));
-
-	idx_t limit_val;
-	idx_t offset_val;
-
+	auto &dlimit = dop.Cast<LogicalLimit>();
+	// figure out limit and offset of this node
+	int32_t limit_val;
+	int32_t offset_val;
 	switch (dlimit.limit_val.Type()) {
 	case LimitNodeType::CONSTANT_VALUE:
-		limit_val = dlimit.limit_val.GetConstantValue();
+		limit_val = static_cast<int32_t>(dlimit.limit_val.GetConstantValue());
 		break;
 	case LimitNodeType::UNSET:
-		limit_val = 2ULL << 62ULL;
+		limit_val = -1;
 		break;
 	default:
 		throw InternalException("Unsupported limit value type");
 	}
 	switch (dlimit.offset_val.Type()) {
 	case LimitNodeType::CONSTANT_VALUE:
-		offset_val = dlimit.offset_val.GetConstantValue();
+		offset_val = static_cast<int32_t>(dlimit.offset_val.GetConstantValue());
 		break;
 	case LimitNodeType::UNSET:
 		offset_val = 0;
@@ -836,6 +832,11 @@ substrait::Rel *DuckDBToSubstrait::TransformLimit(LogicalOperator &dop) {
 	default:
 		throw InternalException("Unsupported offset value type");
 	}
+
+	auto res = new substrait::Rel();
+	auto stopn = res->mutable_fetch();
+	stopn->set_allocated_input(TransformOp(*dop.children[0]));
+
 	stopn->set_offset(offset_val);
 	stopn->set_count(limit_val);
 	return res;
@@ -864,7 +865,11 @@ substrait::Rel *DuckDBToSubstrait::TransformComparisonJoin(LogicalOperator &dop)
 	auto left_col_count = dop.children[0]->types.size();
 	if (dop.children[0]->type == LogicalOperatorType::LOGICAL_COMPARISON_JOIN) {
 		auto child_join = (LogicalComparisonJoin *)dop.children[0].get();
-		left_col_count = child_join->left_projection_map.size() + child_join->right_projection_map.size();
+		if (child_join->join_type != JoinType::SEMI && child_join->join_type != JoinType::ANTI) {
+			left_col_count = child_join->left_projection_map.size() + child_join->right_projection_map.size();
+		} else {
+			left_col_count = child_join->left_projection_map.size();
+		}
 	}
 	sjoin->set_allocated_expression(
 	    CreateConjunction(djoin.conditions, [&](JoinCondition &in) { return TransformJoinCond(in, left_col_count); }));
@@ -951,6 +956,21 @@ substrait::Rel *DuckDBToSubstrait::TransformAggregateGroup(LogicalOperator &dop)
 	return res;
 }
 
+int32_t GetTimestampPrecision(LogicalTypeId type) {
+	switch (type) {
+	case LogicalTypeId::TIMESTAMP_SEC:
+		return 0;
+	case LogicalTypeId::TIMESTAMP_MS:
+		return 3;
+	case LogicalTypeId::TIMESTAMP:
+		return 6;
+	case LogicalTypeId::TIMESTAMP_NS:
+		return 9;
+	default:
+		throw InternalException("Only timestamp values can have a timestamp precision");
+	}
+}
+
 ::substrait::Type DuckDBToSubstrait::DuckToSubstraitType(const LogicalType &type, BaseStatistics *column_statistics,
                                                          bool not_null) {
 	::substrait::Type s_type;
@@ -1025,16 +1045,18 @@ substrait::Rel *DuckDBToSubstrait::TransformAggregateGroup(LogicalOperator &dop)
 	case LogicalTypeId::TIMESTAMP_MS:
 	case LogicalTypeId::TIMESTAMP_NS:
 	case LogicalTypeId::TIMESTAMP_SEC: {
-		// FIXME: Shouldn't this have a precision?
-		auto timestamp_type = new substrait::Type_Timestamp;
+		auto timestamp_type = new substrait::Type_PrecisionTimestamp;
+		timestamp_type->set_precision(GetTimestampPrecision(type.id()));
 		timestamp_type->set_nullability(type_nullability);
-		s_type.set_allocated_timestamp(timestamp_type);
+		s_type.set_allocated_precision_timestamp(timestamp_type);
 		return s_type;
 	}
 	case LogicalTypeId::TIMESTAMP_TZ: {
-		auto timestamp_type = new substrait::Type_TimestampTZ;
+		auto timestamp_type = new substrait::Type_PrecisionTimestampTZ;
+		// Timestamp tz is always 'us'
+		timestamp_type->set_precision(6);
 		timestamp_type->set_nullability(type_nullability);
-		s_type.set_allocated_timestamp_tz(timestamp_type);
+		s_type.set_allocated_precision_timestamp_tz(timestamp_type);
 		return s_type;
 	}
 	case LogicalTypeId::INTERVAL: {
@@ -1119,7 +1141,7 @@ void DuckDBToSubstrait::TransformTableScanToSubstrait(LogicalGet &dget, substrai
 	auto &table_scan_bind_data = dget.bind_data->Cast<TableScanBindData>();
 	auto &table = table_scan_bind_data.table;
 	sget->mutable_named_table()->add_names(table.name);
-	auto base_schema = new ::substrait::NamedStruct();
+	auto base_schema = new substrait::NamedStruct();
 	auto type_info = new substrait::Type_Struct();
 	type_info->set_nullability(substrait::Type_Nullability_NULLABILITY_REQUIRED);
 	auto not_null_constraint = GetNotNullConstraintCol(table);
@@ -1150,7 +1172,7 @@ void DuckDBToSubstrait::TransformParquetScanToSubstrait(LogicalGet &dget, substr
 		parquet_item->mutable_parquet();
 	}
 
-	auto base_schema = new ::substrait::NamedStruct();
+	auto base_schema = new substrait::NamedStruct();
 	auto type_info = new substrait::Type_Struct();
 	type_info->set_nullability(substrait::Type_Nullability_NULLABILITY_REQUIRED);
 	for (idx_t i = 0; i < dget.names.size(); i++) {
@@ -1171,13 +1193,24 @@ void DuckDBToSubstrait::TransformParquetScanToSubstrait(LogicalGet &dget, substr
 	sget->set_allocated_base_schema(base_schema);
 }
 
+substrait::Rel *DuckDBToSubstrait::TransformDummyScan() {
+	// I just have to turn the dummy scan to emit one garbage row, the projection will take care of the rest
+	auto get_rel = new substrait::Rel();
+	auto sget = get_rel->mutable_read();
+	auto virtual_table = sget->mutable_virtual_table();
+
+	// Add a dummy value to emit one row
+	auto dummy_value = virtual_table->add_values();
+	dummy_value->add_fields()->set_i32(42);
+	return get_rel;
+}
+
 substrait::Rel *DuckDBToSubstrait::TransformGet(LogicalOperator &dop) {
 	auto get_rel = new substrait::Rel();
-	substrait::Rel *rel = get_rel;
-	auto &dget = (LogicalGet &)dop;
+	auto &dget = dop.Cast<LogicalGet>();
 
 	if (!dget.function.get_bind_info) {
-		throw NotImplementedException("This Scanner Type can't be used in substrait because a get batch info "
+		throw NotImplementedException("This Scanner Type can't be used in substrait because a get bind info "
 		                              "is not yet implemented");
 	}
 	auto bind_info = dget.function.get_bind_info(dget.bind_data.get());
@@ -1189,8 +1222,8 @@ substrait::Rel *DuckDBToSubstrait::TransformGet(LogicalOperator &dop) {
 		    CreateConjunction(dget.table_filters.filters, [&](std::pair<const idx_t, unique_ptr<TableFilter>> &in) {
 			    auto col_idx = in.first;
 			    auto return_type = dget.returned_types[col_idx];
-			    auto &filter = *in.second;
-			    return TransformFilter(col_idx, return_type, filter, return_type);
+			    auto &inside_filter = *in.second;
+			    return TransformFilter(col_idx, return_type, inside_filter, return_type);
 		    });
 		sget->set_allocated_filter(filter);
 	}
@@ -1201,9 +1234,10 @@ substrait::Rel *DuckDBToSubstrait::TransformGet(LogicalOperator &dop) {
 		// fixme: whatever this means
 		projection->set_maintain_singular_struct(true);
 		auto select = new substrait::Expression_MaskExpression_StructSelect();
+		auto &column_ids = dget.GetColumnIds();
 		for (auto col_idx : dget.projection_ids) {
 			auto struct_item = select->add_struct_items();
-			struct_item->set_field((int32_t)dget.column_ids[col_idx]);
+			struct_item->set_field(static_cast<int32_t>(column_ids[col_idx]));
 			// FIXME do we need to set the child? if yes, to what?
 		}
 		projection->set_allocated_select(select);
@@ -1222,7 +1256,7 @@ substrait::Rel *DuckDBToSubstrait::TransformGet(LogicalOperator &dop) {
 		throw NotImplementedException("This Scan Type is not yet implement for the to_substrait function");
 	}
 
-	return rel;
+	return get_rel;
 }
 
 substrait::Rel *DuckDBToSubstrait::TransformCrossProduct(LogicalOperator &dop) {
@@ -1331,6 +1365,8 @@ substrait::Rel *DuckDBToSubstrait::TransformOp(LogicalOperator &dop) {
 		return TransformExcept(dop);
 	case LogicalOperatorType::LOGICAL_INTERSECT:
 		return TransformIntersect(dop);
+	case LogicalOperatorType::LOGICAL_DUMMY_SCAN:
+		return TransformDummyScan();
 	default:
 		throw InternalException(LogicalOperatorToString(dop.type));
 	}
@@ -1392,7 +1428,7 @@ void DuckDBToSubstrait::TransformPlan(LogicalOperator &dop) {
 	}
 	auto version = plan.mutable_version();
 	version->set_major_number(0);
-	version->set_minor_number(48);
+	version->set_minor_number(53);
 	version->set_patch_number(0);
 	auto *producer_name = new string();
 	*producer_name = "DuckDB";

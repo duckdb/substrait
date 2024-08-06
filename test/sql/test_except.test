@@ -1,6 +1,6 @@
 # name: test/sql/test_except.test
 # description: Test the EXCEPT set operation
-# group: [substrait]
+# group: [sql]
 
 require substrait
 

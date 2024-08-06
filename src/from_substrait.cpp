@@ -24,7 +24,6 @@
 #include "substrait/plan.pb.h"
 #include "google/protobuf/util/json_util.h"
 #include "duckdb/main/client_data.hpp"
-#include "duckdb/common/http_state.hpp"
 
 namespace duckdb {
 const std::unordered_map<std::string, std::string> SubstraitToDuckDB::function_names_remap = {
@@ -66,9 +65,6 @@ std::string SubstraitToDuckDB::RemoveExtension(std::string &function_name) {
 }
 
 SubstraitToDuckDB::SubstraitToDuckDB(Connection &con_p, const string &serialized, bool json) : con(con_p) {
-	auto http_state = HTTPState::TryGetState(*con_p.context);
-	http_state->Reset();
-
 	if (!json) {
 		if (!plan.ParseFromString(serialized)) {
 			throw std::runtime_error("Was not possible to convert binary into Substrait plan");
@@ -88,27 +84,21 @@ SubstraitToDuckDB::SubstraitToDuckDB(Connection &con_p, const string &serialized
 	}
 }
 
-unique_ptr<ParsedExpression> SubstraitToDuckDB::TransformLiteralExpr(const substrait::Expression &sexpr) {
-	const auto &slit = sexpr.literal();
-	Value dval;
-	if (slit.has_null()) {
-		dval = Value(LogicalType::SQLNULL);
-		return make_uniq<ConstantExpression>(dval);
+Value TransformLiteralToValue(const substrait::Expression_Literal &literal) {
+	if (literal.has_null()) {
+		return Value(LogicalType::SQLNULL);
 	}
-	switch (slit.literal_type_case()) {
+	switch (literal.literal_type_case()) {
 	case substrait::Expression_Literal::LiteralTypeCase::kFp64:
-		dval = Value::DOUBLE(slit.fp64());
-		break;
+		return Value::DOUBLE(literal.fp64());
 	case substrait::Expression_Literal::LiteralTypeCase::kFp32:
-		dval = Value::FLOAT(slit.fp32());
-		break;
+		return Value::FLOAT(literal.fp32());
 	case substrait::Expression_Literal::LiteralTypeCase::kString:
-		dval = Value(slit.string());
-		break;
+		return {literal.string()};
 	case substrait::Expression_Literal::LiteralTypeCase::kDecimal: {
-		const auto &substrait_decimal = slit.decimal();
+		const auto &substrait_decimal = literal.decimal();
 		auto raw_value = (uint64_t *)substrait_decimal.value().c_str();
-		hugeint_t substrait_value;
+		hugeint_t substrait_value {};
 		substrait_value.lower = raw_value[0];
 		substrait_value.upper = raw_value[1];
 		Value val = Value::HUGEINT(substrait_value);
@@ -116,68 +106,57 @@ unique_ptr<ParsedExpression> SubstraitToDuckDB::TransformLiteralExpr(const subst
 		// cast to correct value
 		switch (decimal_type.InternalType()) {
 		case PhysicalType::INT8:
-			dval = Value::DECIMAL(val.GetValue<int8_t>(), substrait_decimal.precision(), substrait_decimal.scale());
-			break;
+			return Value::DECIMAL(val.GetValue<int8_t>(), substrait_decimal.precision(), substrait_decimal.scale());
 		case PhysicalType::INT16:
-			dval = Value::DECIMAL(val.GetValue<int16_t>(), substrait_decimal.precision(), substrait_decimal.scale());
-			break;
+			return Value::DECIMAL(val.GetValue<int16_t>(), substrait_decimal.precision(), substrait_decimal.scale());
 		case PhysicalType::INT32:
-			dval = Value::DECIMAL(val.GetValue<int32_t>(), substrait_decimal.precision(), substrait_decimal.scale());
-			break;
+			return Value::DECIMAL(val.GetValue<int32_t>(), substrait_decimal.precision(), substrait_decimal.scale());
 		case PhysicalType::INT64:
-			dval = Value::DECIMAL(val.GetValue<int64_t>(), substrait_decimal.precision(), substrait_decimal.scale());
-			break;
+			return Value::DECIMAL(val.GetValue<int64_t>(), substrait_decimal.precision(), substrait_decimal.scale());
 		case PhysicalType::INT128:
-			dval = Value::DECIMAL(substrait_value, substrait_decimal.precision(), substrait_decimal.scale());
-			break;
+			return Value::DECIMAL(substrait_value, substrait_decimal.precision(), substrait_decimal.scale());
 		default:
 			throw InternalException("Not accepted internal type for decimal");
 		}
-		break;
 	}
 	case substrait::Expression_Literal::LiteralTypeCase::kBoolean: {
-		dval = Value(slit.boolean());
-		break;
+		return Value(literal.boolean());
 	}
 	case substrait::Expression_Literal::LiteralTypeCase::kI8:
-		dval = Value::TINYINT(slit.i8());
-		break;
+		return Value::TINYINT(literal.i8());
 	case substrait::Expression_Literal::LiteralTypeCase::kI32:
-		dval = Value::INTEGER(slit.i32());
-		break;
+		return Value::INTEGER(literal.i32());
 	case substrait::Expression_Literal::LiteralTypeCase::kI64:
-		dval = Value::BIGINT(slit.i64());
-		break;
+		return Value::BIGINT(literal.i64());
 	case substrait::Expression_Literal::LiteralTypeCase::kDate: {
-		date_t date(slit.date());
-		dval = Value::DATE(date);
-		break;
+		date_t date(literal.date());
+		return Value::DATE(date);
 	}
 	case substrait::Expression_Literal::LiteralTypeCase::kTime: {
-		dtime_t time(slit.time());
-		dval = Value::TIME(time);
-		break;
+		dtime_t time(literal.time());
+		return Value::TIME(time);
 	}
 	case substrait::Expression_Literal::LiteralTypeCase::kIntervalYearToMonth: {
-		interval_t interval;
-		interval.months = slit.interval_year_to_month().months();
+		interval_t interval {};
+		interval.months = literal.interval_year_to_month().months();
 		interval.days = 0;
 		interval.micros = 0;
-		dval = Value::INTERVAL(interval);
-		break;
+		return Value::INTERVAL(interval);
 	}
 	case substrait::Expression_Literal::LiteralTypeCase::kIntervalDayToSecond: {
-		interval_t interval;
+		interval_t interval {};
 		interval.months = 0;
-		interval.days = slit.interval_day_to_second().days();
-		interval.micros = slit.interval_day_to_second().microseconds();
-		dval = Value::INTERVAL(interval);
-		break;
+		interval.days = literal.interval_day_to_second().days();
+		interval.micros = literal.interval_day_to_second().microseconds();
+		return Value::INTERVAL(interval);
 	}
 	default:
-		throw InternalException(to_string(slit.literal_type_case()));
+		throw InternalException(to_string(literal.literal_type_case()));
 	}
-	return make_uniq<ConstantExpression>(dval);
+}
+
+unique_ptr<ParsedExpression> SubstraitToDuckDB::TransformLiteralExpr(const substrait::Expression &sexpr) {
+	return make_uniq<ConstantExpression>(TransformLiteralToValue(sexpr.literal()));
 }
 
 unique_ptr<ParsedExpression> SubstraitToDuckDB::TransformSelectionExpr(const substrait::Expression &sexpr) {
@@ -437,7 +416,10 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformCrossProductOp(const substrait:
 
 shared_ptr<Relation> SubstraitToDuckDB::TransformFetchOp(const substrait::Rel &sop) {
 	auto &slimit = sop.fetch();
-	return make_shared_ptr<LimitRelation>(TransformOp(slimit.input()), slimit.count(), slimit.offset());
+	idx_t limit, offset;
+	limit = slimit.count() == -1 ? NumericLimits<idx_t>::Maximum() : slimit.count();
+	offset = slimit.offset();
+	return make_shared_ptr<LimitRelation>(TransformOp(slimit.input()), limit, offset);
 }
 
 shared_ptr<Relation> SubstraitToDuckDB::TransformFilterOp(const substrait::Rel &sop) {
@@ -521,6 +503,19 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformReadOp(const substrait::Rel &so
 		string name = "parquet_" + StringUtil::GenerateRandomName();
 		named_parameter_map_t named_parameters({{"binary_as_string", Value::BOOLEAN(false)}});
 		scan = con.TableFunction("parquet_scan", {Value::LIST(parquet_files)}, named_parameters)->Alias(name);
+	} else if (sget.has_virtual_table()) {
+		// We need to handle a virtual table as a LogicalExpressionGet
+		auto literal_values = sget.virtual_table().values();
+		vector<vector<Value>> expression_rows;
+		for (auto &row : literal_values) {
+			auto values = row.fields();
+			vector<Value> expression_row;
+			for (const auto &value : values) {
+				expression_row.emplace_back(TransformLiteralToValue(value));
+			}
+			expression_rows.emplace_back(expression_row);
+		}
+		scan = con.Values(expression_rows);
 	} else {
 		throw NotImplementedException("Unsupported type of read operator for substrait");
 	}
@@ -539,7 +534,6 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformReadOp(const substrait::Rel &so
 			// TODO make sure nothing else is in there
 			expressions.push_back(make_uniq<PositionalReferenceExpression>(sproj.field() + 1));
 		}
-
 		scan = make_shared_ptr<ProjectionRelation>(std::move(scan), std::move(expressions), std::move(aliases));
 	}
 
@@ -554,20 +548,19 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformSortOp(const substrait::Rel &so
 	return make_shared_ptr<OrderRelation>(TransformOp(sop.sort().input()), std::move(order_nodes));
 }
 
-static duckdb::SetOperationType TransformSetOperationType(substrait::SetRel_SetOp setop) {
+static SetOperationType TransformSetOperationType(substrait::SetRel_SetOp setop) {
 	switch (setop) {
 	case substrait::SetRel_SetOp::SetRel_SetOp_SET_OP_UNION_ALL: {
-		return duckdb::SetOperationType::UNION;
+		return SetOperationType::UNION;
 	}
 	case substrait::SetRel_SetOp::SetRel_SetOp_SET_OP_MINUS_PRIMARY: {
-		return duckdb::SetOperationType::EXCEPT;
+		return SetOperationType::EXCEPT;
 	}
 	case substrait::SetRel_SetOp::SetRel_SetOp_SET_OP_INTERSECTION_PRIMARY: {
-		return duckdb::SetOperationType::INTERSECT;
+		return SetOperationType::INTERSECT;
 	}
 	default: {
-		throw duckdb::NotImplementedException("SetOperationType transform not implemented for SetRel_SetOp type %d",
-		                                      setop);
+		throw NotImplementedException("SetOperationType transform not implemented for SetRel_SetOp type %d", setop);
 	}
 	}
 }

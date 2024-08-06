@@ -1,0 +1,21 @@
+# name: test/sql/test_limit.test
+# description: Test limit and offset operations
+# group: [sql]
+
+require substrait
+
+statement ok
+PRAGMA enable_verification
+
+statement ok
+create table t as FROM range(10);
+
+statement ok
+CALL get_substrait('select * from t limit 5');
+
+statement ok
+CALL get_substrait('select * from t offset 1');
+
+statement ok
+CALL get_substrait('select * from t offset 1 limit 5');
+

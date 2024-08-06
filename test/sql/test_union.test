@@ -1,6 +1,6 @@
 # name: test/sql/test_union.test
 # description: Test the UNION set operation
-# group: [substrait]
+# group: [sql]
 
 require substrait
 

@@ -1,0 +1,22 @@
+# name: test/sql/test_virtual_table.test
+# description: Test literal conversion with substrait virtual tables
+# group: [sql]
+
+require substrait
+
+statement ok
+PRAGMA enable_verification
+
+statement ok
+CALL get_substrait('select 42')
+
+# Force projection order
+statement ok
+CALL get_substrait('select age, name from (select ''Oogie Boogie'' as name, 3 as age) as t')
+
+# Force multiple rows
+statement ok
+create table t as select * from range(10);
+
+statement ok
+CALL get_substrait('select age, name from (select ''Oogie Boogie'' as name, 3 as age from t) as t_2')

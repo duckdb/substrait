@@ -9,7 +9,7 @@ get_tpch_query = pytest.importorskip('ibis_tpch_util')
 pandas = pytest.importorskip("pandas")
 
 def unbound_from_duckdb(table):  # noqa: D103
-    return ibis.table(list(zip(table.columns, map(parse_type.parse, [str(x) for x in table.dtypes]))), name=table.alias)
+    return ibis.table(list(zip(table.columns, map(parse_type.DuckDBType.from_string, [str(x) for x in table.dtypes]))), name=table.alias)
 
 class TPCHBackend(BaseBackend.BaseBackend):  # noqa: D101
     def __init__(self,duck_con,  scale_factor=0.1):  # noqa: D107
@@ -54,6 +54,18 @@ class TPCHBackend(BaseBackend.BaseBackend):  # noqa: D101
     def list_tables(self):  # noqa: D102
         ...
 
+    def create_table(self):  # noqa: D102
+        ...
+
+    def create_view(self):  # noqa: D102
+        ...
+
+    def drop_table(self):  # noqa: D102
+        ...
+
+    def drop_view(self):  # noqa: D102
+        ...
+
     def version(self):  # noqa: D102
         return "awesome"
 
@@ -90,83 +102,79 @@ def run_query(require, query_number):
 def test_query_substrait_ibis_to_duck_01(require):
     run_query(require,1)
     
-@pytest.mark.skip(reason="Ibis Compilation: 'TableArrayView")
+@pytest.mark.skip(reason="Ibis Compilation: Subqueries are unsupported as function inputs")
 def test_query_substrait_ibis_to_duck_02(require):
     run_query(require,2)
 
-@pytest.mark.skip(reason="Attempting to fetch from an unsuccessful query result")
 def test_query_substrait_ibis_to_duck_03(require):
     run_query(require,3)
 
-@pytest.mark.skip(reason="Ibis Compilation: 'ExistsSubquery'")
+@pytest.mark.skip(reason="DuckDB Consumption: INTERNAL Error: Unsupported expression type 12")
 def test_query_substrait_ibis_to_duck_04(require):
     run_query(require,4)
 
-@pytest.mark.skip(reason="Attempting to fetch from an unsuccessful query result")
 def test_query_substrait_ibis_to_duck_05(require):
     run_query(require,5)
     
 def test_query_substrait_ibis_to_duck_06(require):
     run_query(require,6)
 
-@pytest.mark.skip(reason="Ibis Compilation: (SelfReference(table=UnboundTable: nation")
+@pytest.mark.skip(reason="Attributes of column l_year are different")
 def test_query_substrait_ibis_to_duck_07(require):
     run_query(require,7)
 
-@pytest.mark.skip(reason="Ibis Compilation: (SelfReference(table=UnboundTable: nation")
+@pytest.mark.skip(reason="Ibis Compilation: Parameter to MergeFrom() must be instance of same class")
 def test_query_substrait_ibis_to_duck_08(require):
     run_query(require,8)
 
-@pytest.mark.skip(reason="DuckDB Consumption: Unsupported expression type 10")
+@pytest.mark.skip(reason="Attributes of column o_year are different")
 def test_query_substrait_ibis_to_duck_09(require):
     run_query(require,9)
-
-@pytest.mark.skip(reason="Attempting to fetch from an unsuccessful query result")    
+   
 def test_query_substrait_ibis_to_duck_10(require):
     run_query(require,10)
 
-@pytest.mark.skip(reason="Results do not match")
+@pytest.mark.skip(reason="DataFrame are different")
 def test_query_substrait_ibis_to_duck_11(require):
     run_query(require,11)
 
 def test_query_substrait_ibis_to_duck_12(require):
     run_query(require,12)
 
-@pytest.mark.skip(reason="DuckDB Consumption: Catalog Error: Scalar Function with name not does not exist!")
 def test_query_substrait_ibis_to_duck_13(require):
     run_query(require,13)
     
-@pytest.mark.skip(reason="Ibis Compilation: Parameter to MergeFrom() must be instance of same class: expected substrait.Expression got substrait")
+@pytest.mark.skip(reason="Ibis Compilation: Parameter to MergeFrom() must be instance of same class")
 def test_query_substrait_ibis_to_duck_14(require):
     run_query(require,14)
 
-@pytest.mark.skip(reason="Ibis Compilation: non-empty child_rel_field_offsets passed in to selection translation rule")
+@pytest.mark.skip(reason="Ibis Compilation: Subqueries are unsupported as function inputs")
 def test_query_substrait_ibis_to_duck_15(require):
     run_query(require,15)
 
-@pytest.mark.skip(reason="Ibis Compilation: 'IntegerColumn' object is not iterable")
+@pytest.mark.skip(reason="Ibis Compilation: No available extension defined for function name countdistinct")
 def test_query_substrait_ibis_to_duck_16(require):
     run_query(require,16)
 
-@pytest.mark.skip(reason="Ibis Compilation: <class 'ibis.expr.operations.relations.Aggregation'>")
+@pytest.mark.skip(reason="Ibis Compilation: Subqueries are unsupported as function inputs")
 def test_query_substrait_ibis_to_duck_17(require):
     run_query(require,17)
     
-@pytest.mark.skip(reason="Ibis Compilation: 'IntegerColumn' object is not iterable")
+@pytest.mark.skip(reason="DataFrame are different")
 def test_query_substrait_ibis_to_duck_18(require):
     run_query(require,18)
 
 def test_query_substrait_ibis_to_duck_19(require):
     run_query(require,19)
 
-@pytest.mark.skip(reason="Ibis Compilation: 'IntegerColumn' object is not iterable")
+@pytest.mark.skip(reason="Invalid Input Error: Attempting to fetch from an unsuccessful query result")
 def test_query_substrait_ibis_to_duck_20(require):
     run_query(require,20)
 
-@pytest.mark.skip(reason="Ibis Compilation: 'ExistsSubquery'")
+@pytest.mark.skip(reason="Unsupported expression type 12")
 def test_query_substrait_ibis_to_duck_21(require):
     run_query(require,21)
 
-@pytest.mark.skip(reason="Ibis Compilation: 'NotExistsSubquery'")
+@pytest.mark.skip(reason="Unsupported expression type 12")
 def test_query_substrait_ibis_to_duck_22(require):
     run_query(require,22)
