@@ -808,27 +808,23 @@ substrait::Rel *DuckDBToSubstrait::TransformTopN(LogicalOperator &dop) {
 }
 
 substrait::Rel *DuckDBToSubstrait::TransformLimit(LogicalOperator &dop) {
-	auto &dlimit = (LogicalLimit &)dop;
-	auto res = new substrait::Rel();
-	auto stopn = res->mutable_fetch();
-	stopn->set_allocated_input(TransformOp(*dop.children[0]));
-
-	idx_t limit_val;
-	idx_t offset_val;
-
+	auto &dlimit = dop.Cast<LogicalLimit>();
+	// figure out limit and offset of this node
+	int32_t limit_val;
+	int32_t offset_val;
 	switch (dlimit.limit_val.Type()) {
 	case LimitNodeType::CONSTANT_VALUE:
-		limit_val = dlimit.limit_val.GetConstantValue();
+		limit_val = static_cast<int32_t>(dlimit.limit_val.GetConstantValue());
 		break;
 	case LimitNodeType::UNSET:
-		limit_val = 2ULL << 62ULL;
+		limit_val = -1;
 		break;
 	default:
 		throw InternalException("Unsupported limit value type");
 	}
 	switch (dlimit.offset_val.Type()) {
 	case LimitNodeType::CONSTANT_VALUE:
-		offset_val = dlimit.offset_val.GetConstantValue();
+		offset_val = static_cast<int32_t>(dlimit.offset_val.GetConstantValue());
 		break;
 	case LimitNodeType::UNSET:
 		offset_val = 0;
@@ -836,6 +832,11 @@ substrait::Rel *DuckDBToSubstrait::TransformLimit(LogicalOperator &dop) {
 	default:
 		throw InternalException("Unsupported offset value type");
 	}
+
+	auto res = new substrait::Rel();
+	auto stopn = res->mutable_fetch();
+	stopn->set_allocated_input(TransformOp(*dop.children[0]));
+
 	stopn->set_offset(offset_val);
 	stopn->set_count(limit_val);
 	return res;
@@ -1190,7 +1191,7 @@ substrait::Rel *DuckDBToSubstrait::TransformDummyScan() {
 
 substrait::Rel *DuckDBToSubstrait::TransformGet(LogicalOperator &dop) {
 	auto get_rel = new substrait::Rel();
-	auto &dget = (LogicalGet &)dop;
+	auto &dget = dop.Cast<LogicalGet>();
 
 	if (!dget.function.get_bind_info) {
 		throw NotImplementedException("This Scanner Type can't be used in substrait because a get bind info "
@@ -1205,8 +1206,8 @@ substrait::Rel *DuckDBToSubstrait::TransformGet(LogicalOperator &dop) {
 		    CreateConjunction(dget.table_filters.filters, [&](std::pair<const idx_t, unique_ptr<TableFilter>> &in) {
 			    auto col_idx = in.first;
 			    auto return_type = dget.returned_types[col_idx];
-			    auto &filter = *in.second;
-			    return TransformFilter(col_idx, return_type, filter, return_type);
+			    auto &inside_filter = *in.second;
+			    return TransformFilter(col_idx, return_type, inside_filter, return_type);
 		    });
 		sget->set_allocated_filter(filter);
 	}
