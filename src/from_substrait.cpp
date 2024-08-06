@@ -416,7 +416,10 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformCrossProductOp(const substrait:
 
 shared_ptr<Relation> SubstraitToDuckDB::TransformFetchOp(const substrait::Rel &sop) {
 	auto &slimit = sop.fetch();
-	return make_shared_ptr<LimitRelation>(TransformOp(slimit.input()), slimit.count(), slimit.offset());
+	idx_t limit, offset;
+	limit = slimit.count() == -1 ? NumericLimits<idx_t>::Maximum() : slimit.count();
+	offset = slimit.offset();
+	return make_shared_ptr<LimitRelation>(TransformOp(slimit.input()), limit, offset);
 }
 
 shared_ptr<Relation> SubstraitToDuckDB::TransformFilterOp(const substrait::Rel &sop) {
