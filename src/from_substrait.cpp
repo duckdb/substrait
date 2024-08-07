@@ -36,7 +36,7 @@ const case_insensitive_set_t SubstraitToDuckDB::valid_extract_subfields = {
     "year",    "month",       "day",          "decade", "century", "millenium",
     "quarter", "microsecond", "milliseconds", "second", "minute",  "hour"};
 
-std::string SubstraitToDuckDB::RemapFunctionName(std::string &function_name) {
+string SubstraitToDuckDB::RemapFunctionName(const string &function_name) {
 	// Lets first drop any extension id
 	string name;
 	for (auto &c : function_name) {
@@ -52,7 +52,7 @@ std::string SubstraitToDuckDB::RemapFunctionName(std::string &function_name) {
 	return name;
 }
 
-std::string SubstraitToDuckDB::RemoveExtension(std::string &function_name) {
+string SubstraitToDuckDB::RemoveExtension(const string &function_name) {
 	// Lets first drop any extension id
 	string name;
 	for (auto &c : function_name) {
@@ -97,10 +97,10 @@ Value TransformLiteralToValue(const substrait::Expression_Literal &literal) {
 		return {literal.string()};
 	case substrait::Expression_Literal::LiteralTypeCase::kDecimal: {
 		const auto &substrait_decimal = literal.decimal();
-		auto raw_value = (uint64_t *)substrait_decimal.value().c_str();
+		auto raw_value = reinterpret_cast<const uint64_t *>(substrait_decimal.value().c_str());
 		hugeint_t substrait_value {};
 		substrait_value.lower = raw_value[0];
-		substrait_value.upper = raw_value[1];
+		substrait_value.upper = static_cast<int64_t>(raw_value[1]);
 		Value val = Value::HUGEINT(substrait_value);
 		auto decimal_type = LogicalType::DECIMAL(substrait_decimal.precision(), substrait_decimal.scale());
 		// cast to correct value
@@ -123,7 +123,7 @@ Value TransformLiteralToValue(const substrait::Expression_Literal &literal) {
 		return Value(literal.boolean());
 	}
 	case substrait::Expression_Literal::LiteralTypeCase::kI8:
-		return Value::TINYINT(literal.i8());
+		return Value::TINYINT(static_cast<int8_t>(literal.i8()));
 	case substrait::Expression_Literal::LiteralTypeCase::kI32:
 		return Value::INTEGER(literal.i32());
 	case substrait::Expression_Literal::LiteralTypeCase::kI64:
@@ -279,26 +279,28 @@ unique_ptr<ParsedExpression> SubstraitToDuckDB::TransformIfThenExpr(const substr
 }
 
 LogicalType SubstraitToDuckDB::SubstraitToDuckType(const substrait::Type &s_type) {
-
-	if (s_type.has_bool_()) {
-		return LogicalType(LogicalTypeId::BOOLEAN);
-	} else if (s_type.has_i16()) {
-		return LogicalType(LogicalTypeId::SMALLINT);
-	} else if (s_type.has_i32()) {
-		return LogicalType(LogicalTypeId::INTEGER);
-	} else if (s_type.has_decimal()) {
+	switch (s_type.kind_case()) {
+	case substrait::Type::KindCase::kBool:
+		return {LogicalTypeId::BOOLEAN};
+	case substrait::Type::KindCase::kI16:
+		return {LogicalTypeId::SMALLINT};
+	case substrait::Type::KindCase::kI32:
+		return {LogicalTypeId::INTEGER};
+	case substrait::Type::KindCase::kI64:
+		return {LogicalTypeId::BIGINT};
+	case substrait::Type::KindCase::kDecimal: {
 		auto &s_decimal_type = s_type.decimal();
 		return LogicalType::DECIMAL(s_decimal_type.precision(), s_decimal_type.scale());
-	} else if (s_type.has_i64()) {
-		return LogicalType(LogicalTypeId::BIGINT);
-	} else if (s_type.has_date()) {
-		return LogicalType(LogicalTypeId::DATE);
-	} else if (s_type.has_varchar() || s_type.has_string()) {
-		return LogicalType(LogicalTypeId::VARCHAR);
-	} else if (s_type.has_fp64()) {
-		return LogicalType(LogicalTypeId::DOUBLE);
-	} else {
-		throw InternalException("Substrait type not yet supported");
+	}
+	case substrait::Type::KindCase::kDate:
+		return {LogicalTypeId::DATE};
+	case substrait::Type::KindCase::kVarchar:
+	case substrait::Type::KindCase::kString:
+		return {LogicalTypeId::VARCHAR};
+	case substrait::Type::KindCase::kFp64:
+		return {LogicalTypeId::DOUBLE};
+	default:
+		throw NotImplementedException("Substrait type not yet supported");
 	}
 }
 
@@ -315,7 +317,7 @@ unique_ptr<ParsedExpression> SubstraitToDuckDB::TransformInExpr(const substrait:
 	vector<unique_ptr<ParsedExpression>> values;
 	values.emplace_back(TransformExpr(substrait_in.value()));
 
-	for (idx_t i = 0; i < (idx_t)substrait_in.options_size(); i++) {
+	for (int32_t i = 0; i < substrait_in.options_size(); i++) {
 		values.emplace_back(TransformExpr(substrait_in.options(i)));
 	}
 
@@ -416,9 +418,8 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformCrossProductOp(const substrait:
 
 shared_ptr<Relation> SubstraitToDuckDB::TransformFetchOp(const substrait::Rel &sop) {
 	auto &slimit = sop.fetch();
-	idx_t limit, offset;
-	limit = slimit.count() == -1 ? NumericLimits<idx_t>::Maximum() : slimit.count();
-	offset = slimit.offset();
+	idx_t limit = slimit.count() == -1 ? NumericLimits<idx_t>::Maximum() : slimit.count();
+	idx_t offset = slimit.offset();
 	return make_shared_ptr<LimitRelation>(TransformOp(slimit.input()), limit, offset);
 }
 

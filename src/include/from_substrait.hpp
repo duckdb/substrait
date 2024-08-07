@@ -31,17 +31,17 @@ private:
 
 	//! Transform Substrait Expressions to DuckDB Expressions
 	unique_ptr<ParsedExpression> TransformExpr(const substrait::Expression &sexpr);
-	unique_ptr<ParsedExpression> TransformLiteralExpr(const substrait::Expression &sexpr);
-	unique_ptr<ParsedExpression> TransformSelectionExpr(const substrait::Expression &sexpr);
+	static unique_ptr<ParsedExpression> TransformLiteralExpr(const substrait::Expression &sexpr);
+	static unique_ptr<ParsedExpression> TransformSelectionExpr(const substrait::Expression &sexpr);
 	unique_ptr<ParsedExpression> TransformScalarFunctionExpr(const substrait::Expression &sexpr);
 	unique_ptr<ParsedExpression> TransformIfThenExpr(const substrait::Expression &sexpr);
 	unique_ptr<ParsedExpression> TransformCastExpr(const substrait::Expression &sexpr);
 	unique_ptr<ParsedExpression> TransformInExpr(const substrait::Expression &sexpr);
 
-	void VerifyCorrectExtractSubfield(const string &subfield);
-	std::string RemapFunctionName(std::string &function_name);
-	std::string RemoveExtension(std::string &function_name);
-	LogicalType SubstraitToDuckType(const substrait::Type &s_type);
+	static void VerifyCorrectExtractSubfield(const string &subfield);
+	static string RemapFunctionName(const string &function_name);
+	static string RemoveExtension(const string &function_name);
+	static LogicalType SubstraitToDuckType(const substrait::Type &s_type);
 	//! Looks up for aggregation function in functions_map
 	string FindFunction(uint64_t id);
 
