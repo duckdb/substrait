@@ -158,7 +158,7 @@ static void ToSubFunctionInternal(ClientContext &context, ToSubstraitFunctionDat
 }
 
 static void ToSubFunction(ClientContext &context, TableFunctionInput &data_p, DataChunk &output) {
-	auto &data = (ToSubstraitFunctionData &)*data_p.bind_data;
+	auto &data = data_p.bind_data->CastNoConst<ToSubstraitFunctionData>();
 	if (data.finished) {
 		return;
 	}
@@ -190,7 +190,7 @@ static void ToJsonFunctionInternal(ClientContext &context, ToSubstraitFunctionDa
 }
 
 static void ToJsonFunction(ClientContext &context, TableFunctionInput &data_p, DataChunk &output) {
-	auto &data = (ToSubstraitFunctionData &)*data_p.bind_data;
+	auto &data = data_p.bind_data->CastNoConst<ToSubstraitFunctionData>();
 	if (data.finished) {
 		return;
 	}
@@ -247,7 +247,7 @@ static unique_ptr<FunctionData> FromSubstraitBindJSON(ClientContext &context, Ta
 }
 
 static void FromSubFunction(ClientContext &context, TableFunctionInput &data_p, DataChunk &output) {
-	auto &data = (FromSubstraitFunctionData &)*data_p.bind_data;
+	auto &data = data_p.bind_data->CastNoConst<FromSubstraitFunctionData>();
 	if (!data.res) {
 		data.res = data.plan->Execute();
 	}
@@ -258,7 +258,7 @@ static void FromSubFunction(ClientContext &context, TableFunctionInput &data_p, 
 	output.Move(*result_chunk);
 }
 
-void InitializeGetSubstrait(Connection &con) {
+void InitializeGetSubstrait(const Connection &con) {
 	auto &catalog = Catalog::GetSystemCatalog(*con.context);
 
 	// create the get_substrait table function that allows us to get a substrait
@@ -270,7 +270,7 @@ void InitializeGetSubstrait(Connection &con) {
 	catalog.CreateTableFunction(*con.context, to_sub_info);
 }
 
-void InitializeGetSubstraitJSON(Connection &con) {
+void InitializeGetSubstraitJSON(const Connection &con) {
 	auto &catalog = Catalog::GetSystemCatalog(*con.context);
 
 	// create the get_substrait table function that allows us to get a substrait
@@ -282,7 +282,7 @@ void InitializeGetSubstraitJSON(Connection &con) {
 	catalog.CreateTableFunction(*con.context, get_substrait_json_info);
 }
 
-void InitializeFromSubstrait(Connection &con) {
+void InitializeFromSubstrait(const Connection &con) {
 	auto &catalog = Catalog::GetSystemCatalog(*con.context);
 
 	// create the from_substrait table function that allows us to get a query
@@ -292,7 +292,7 @@ void InitializeFromSubstrait(Connection &con) {
 	catalog.CreateTableFunction(*con.context, from_sub_info);
 }
 
-void InitializeFromSubstraitJSON(Connection &con) {
+void InitializeFromSubstraitJSON(const Connection &con) {
 	auto &catalog = Catalog::GetSystemCatalog(*con.context);
 
 	// create the from_substrait table function that allows us to get a query

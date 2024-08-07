@@ -15,7 +15,6 @@
 namespace duckdb {
 
 struct SubstraitCustomFunction {
-public:
 	SubstraitCustomFunction(string name_p, vector<string> arg_types_p)
 	    : name(std::move(name_p)), arg_types(std::move(arg_types_p)) {};
 
@@ -34,8 +33,8 @@ public:
 	    : function(std::move(function_p)), extension_path(std::move(extension_path_p)) {};
 	SubstraitFunctionExtensions() = default;
 
-	string GetExtensionURI();
-	bool IsNative();
+	string GetExtensionURI() const;
+	bool IsNative() const;
 
 	SubstraitCustomFunction function;
 	string extension_path;
@@ -66,8 +65,8 @@ struct HashSubstraitFunctionsName {
 class SubstraitCustomFunctions {
 public:
 	SubstraitCustomFunctions();
-	SubstraitFunctionExtensions Get(const string &name, const vector<::substrait::Type> &types) const;
-	vector<string> GetTypes(const vector<::substrait::Type> &types) const;
+	SubstraitFunctionExtensions Get(const string &name, const vector<substrait::Type> &types) const;
+	static vector<string> GetTypes(const vector<substrait::Type> &types);
 	void Initialize();
 
 private:

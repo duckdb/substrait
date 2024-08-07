@@ -25,8 +25,8 @@ public:
 		plan.Clear();
 	}
 	//! Serializes the substrait plan to a string
-	string SerializeToString();
-	string SerializeToJson();
+	string SerializeToString() const;
+	string SerializeToJson() const;
 
 private:
 	//! Transform DuckDB Plan to Substrait Plan
@@ -60,33 +60,33 @@ private:
 	static substrait::Rel *TransformDummyScan();
 	//! Methods to transform different LogicalGet Types (e.g., Table, Parquet)
 	//! To Substrait;
-	void TransformTableScanToSubstrait(LogicalGet &dget, substrait::ReadRel *sget);
+	void TransformTableScanToSubstrait(LogicalGet &dget, substrait::ReadRel *sget) const;
 	void TransformParquetScanToSubstrait(LogicalGet &dget, substrait::ReadRel *sget, BindInfo &bind_info,
-	                                     FunctionData &bind_data);
+	                                     const FunctionData &bind_data) const;
 
 	//! Methods to transform DuckDBConstants to Substrait Expressions
-	static void TransformConstant(Value &dval, substrait::Expression &sexpr);
-	static void TransformInteger(Value &dval, substrait::Expression &sexpr);
-	static void TransformDouble(Value &dval, substrait::Expression &sexpr);
-	static void TransformBigInt(Value &dval, substrait::Expression &sexpr);
-	static void TransformDate(Value &dval, substrait::Expression &sexpr);
-	static void TransformVarchar(Value &dval, substrait::Expression &sexpr);
-	static void TransformBoolean(Value &dval, substrait::Expression &sexpr);
-	static void TransformDecimal(Value &dval, substrait::Expression &sexpr);
-	static void TransformHugeInt(Value &dval, substrait::Expression &sexpr);
-	static void TransformSmallInt(Value &dval, substrait::Expression &sexpr);
-	static void TransformFloat(Value &dval, substrait::Expression &sexpr);
-	static void TransformTime(Value &dval, substrait::Expression &sexpr);
-	static void TransformInterval(Value &dval, substrait::Expression &sexpr);
-	static void TransformTimestamp(Value &dval, substrait::Expression &sexpr);
-	static void TransformEnum(Value &dval, substrait::Expression &sexpr);
+	static void TransformConstant(const Value &dval, substrait::Expression &sexpr);
+	static void TransformInteger(const Value &dval, substrait::Expression &sexpr);
+	static void TransformDouble(const Value &dval, substrait::Expression &sexpr);
+	static void TransformBigInt(const Value &dval, substrait::Expression &sexpr);
+	static void TransformDate(const Value &dval, substrait::Expression &sexpr);
+	static void TransformVarchar(const Value &dval, substrait::Expression &sexpr);
+	static void TransformBoolean(const Value &dval, substrait::Expression &sexpr);
+	static void TransformDecimal(const Value &dval, substrait::Expression &sexpr);
+	static void TransformHugeInt(const Value &dval, substrait::Expression &sexpr);
+	static void TransformSmallInt(const Value &dval, substrait::Expression &sexpr);
+	static void TransformFloat(const Value &dval, substrait::Expression &sexpr);
+	static void TransformTime(const Value &dval, substrait::Expression &sexpr);
+	static void TransformInterval(const Value &dval, substrait::Expression &sexpr);
+	static void TransformTimestamp(const Value &dval, substrait::Expression &sexpr);
+	static void TransformEnum(const Value &dval, substrait::Expression &sexpr);
 
 	//! Methods to transform a DuckDB Expression to a Substrait Expression
 	void TransformExpr(Expression &dexpr, substrait::Expression &sexpr, uint64_t col_offset = 0);
 	static void TransformBoundRefExpression(Expression &dexpr, substrait::Expression &sexpr, uint64_t col_offset);
 	void TransformCastExpression(Expression &dexpr, substrait::Expression &sexpr, uint64_t col_offset);
 	void TransformFunctionExpression(Expression &dexpr, substrait::Expression &sexpr, uint64_t col_offset);
-	void TransformConstantExpression(Expression &dexpr, substrait::Expression &sexpr);
+	static void TransformConstantExpression(Expression &dexpr, substrait::Expression &sexpr);
 	void TransformComparisonExpression(Expression &dexpr, substrait::Expression &sexpr);
 	void TransformConjunctionExpression(Expression &dexpr, substrait::Expression &sexpr, uint64_t col_offset);
 	void TransformNotNullExpression(Expression &dexpr, substrait::Expression &sexpr, uint64_t col_offset);
@@ -96,23 +96,23 @@ private:
 	void TransformInExpression(Expression &dexpr, substrait::Expression &sexpr);
 
 	//! Transforms a DuckDB Logical Type into a Substrait Type
-	::substrait::Type DuckToSubstraitType(const LogicalType &type, BaseStatistics *column_statistics = nullptr,
-	                                      bool not_null = false);
+	static substrait::Type DuckToSubstraitType(const LogicalType &type, BaseStatistics *column_statistics = nullptr,
+	                                           bool not_null = false);
 
 	//! Methods to transform DuckDB Filters to Substrait Expression
 	substrait::Expression *TransformFilter(uint64_t col_idx, LogicalType &column_type, TableFilter &dfilter,
 	                                       LogicalType &return_type);
-	substrait::Expression *TransformIsNotNullFilter(uint64_t col_idx, LogicalType &column_type, TableFilter &dfilter,
-	                                                LogicalType &return_type);
+	substrait::Expression *TransformIsNotNullFilter(uint64_t col_idx, const LogicalType &column_type,
+	                                                TableFilter &dfilter, const LogicalType &return_type);
 	substrait::Expression *TransformConjuctionAndFilter(uint64_t col_idx, LogicalType &column_type,
 	                                                    TableFilter &dfilter, LogicalType &return_type);
-	substrait::Expression *TransformConstantComparisonFilter(uint64_t col_idx, LogicalType &column_type,
-	                                                         TableFilter &dfilter, LogicalType &return_type);
+	substrait::Expression *TransformConstantComparisonFilter(uint64_t col_idx, const LogicalType &column_type,
+	                                                         TableFilter &dfilter, const LogicalType &return_type);
 
 	//! Transforms DuckDB Join Conditions to Substrait Expression
-	substrait::Expression *TransformJoinCond(JoinCondition &dcond, uint64_t left_ncol);
+	substrait::Expression *TransformJoinCond(const JoinCondition &dcond, uint64_t left_ncol);
 	//! Transforms DuckDB Sort Order to Substrait Sort Order
-	void TransformOrder(BoundOrderByNode &dordf, substrait::SortField &sordf);
+	void TransformOrder(const BoundOrderByNode &dordf, substrait::SortField &sordf);
 
 	static void AllocateFunctionArgument(substrait::Expression_ScalarFunction *scalar_fun,
 	                                     substrait::Expression *value);
@@ -121,7 +121,7 @@ private:
 
 	//! Creates a Conjunction
 	template <typename T, typename FUNC>
-	substrait::Expression *CreateConjunction(T &source, FUNC f) {
+	substrait::Expression *CreateConjunction(T &source, const FUNC f) {
 		substrait::Expression *res = nullptr;
 		for (auto &ele : source) {
 			auto child_expression = f(ele);

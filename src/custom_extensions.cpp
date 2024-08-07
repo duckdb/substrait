@@ -109,14 +109,14 @@ string SubstraitCustomFunction::GetName() {
 	return function_signature;
 }
 
-string SubstraitFunctionExtensions::GetExtensionURI() {
+string SubstraitFunctionExtensions::GetExtensionURI() const {
 	if (IsNative()) {
 		return "";
 	}
 	return "https://github.com/substrait-io/substrait/blob/main/extensions/" + extension_path;
 }
 
-bool SubstraitFunctionExtensions::IsNative() {
+bool SubstraitFunctionExtensions::IsNative() const {
 	return extension_path == "native";
 }
 
@@ -124,7 +124,7 @@ SubstraitCustomFunctions::SubstraitCustomFunctions() {
 	Initialize();
 };
 
-vector<string> SubstraitCustomFunctions::GetTypes(const vector<::substrait::Type> &types) const {
+vector<string> SubstraitCustomFunctions::GetTypes(const vector<substrait::Type> &types) {
 	vector<string> transformed_types;
 	for (auto &type : types) {
 		transformed_types.emplace_back(TransformTypes(type));
