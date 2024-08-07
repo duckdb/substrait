@@ -622,13 +622,37 @@ int32_t SkipColumnNames(const LogicalType &type) {
 	SkipColumnNamesRecurse(columns_to_skip, type);
 	return columns_to_skip;
 }
+
+Relation *GetProjectionRelation(Relation &relation, string &error) {
+	error += RelationTypeToString(relation.type);
+	switch (relation.type) {
+	case RelationType::PROJECTION_RELATION:
+		error += " -> ";
+		return &relation;
+	case RelationType::LIMIT_RELATION:
+		error += " -> ";
+		return GetProjectionRelation(*relation.Cast<LimitRelation>().child, error);
+	case RelationType::ORDER_RELATION:
+		error += " -> ";
+		return GetProjectionRelation(*relation.Cast<OrderRelation>().child, error);
+	case RelationType::SET_OPERATION_RELATION:
+		error += " -> ";
+		return GetProjectionRelation(*relation.Cast<SetOpRelation>().right, error);
+	default:
+		throw NotImplementedException(
+		    "Relation %s is not yet implemented as a possible root chain type of from_substrait function", error);
+	}
+}
+
 shared_ptr<Relation> SubstraitToDuckDB::TransformRootOp(const substrait::RelRoot &sop) {
 	vector<string> aliases;
 	auto column_names = sop.names();
 	vector<unique_ptr<ParsedExpression>> expressions;
 	int id = 1;
 	auto child = TransformOp(sop.input());
-	auto &columns = child->Cast<ProjectionRelation>().columns;
+	string error;
+	auto first_projection = GetProjectionRelation(*child, error);
+	auto &columns = first_projection->Cast<ProjectionRelation>().columns;
 	int32_t i = 0;
 	for (auto &column : columns) {
 		aliases.push_back(column_names[i++]);
@@ -636,15 +660,6 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformRootOp(const substrait::RelRoot
 		i += SkipColumnNames(column.GetType());
 		expressions.push_back(make_uniq<PositionalReferenceExpression>(id++));
 	}
-	// for (idx_t i = 0; i < column_names.size(); i ++) {
-	// 	aliases.push_back(column_names[i]);
-	// 	if (ty)
-	// 	expressions.push_back(make_uniq<PositionalReferenceExpression>(id++));
-	// }
-	// for (auto &column_name : column_names) {
-	// 	aliases.push_back(column_name);
-	// 	expressions.push_back(make_uniq<PositionalReferenceExpression>(id++));
-	// }
 	return make_shared_ptr<ProjectionRelation>(child, std::move(expressions), aliases);
 }
 
