@@ -278,7 +278,7 @@ unique_ptr<ParsedExpression> SubstraitToDuckDB::TransformIfThenExpr(const substr
 	return std::move(dcase);
 }
 
-LogicalType SubstraitToDuckDB::SubstraitToDuckType(const ::substrait::Type &s_type) {
+LogicalType SubstraitToDuckDB::SubstraitToDuckType(const substrait::Type &s_type) {
 
 	if (s_type.has_bool_()) {
 		return LogicalType(LogicalTypeId::BOOLEAN);
@@ -607,16 +607,45 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformOp(const substrait::Rel &sop) {
 	}
 }
 
+void SkipColumnNamesRecurse(int32_t &columns_to_skip, const LogicalType &type) {
+	if (type.id() == LogicalTypeId::STRUCT) {
+		idx_t struct_size = StructType::GetChildCount(type);
+		columns_to_skip += static_cast<int32_t>(struct_size);
+		for (auto &struct_type : StructType::GetChildTypes(type)) {
+			SkipColumnNamesRecurse(columns_to_skip, struct_type.second);
+		}
+	}
+}
+
+int32_t SkipColumnNames(const LogicalType &type) {
+	int32_t columns_to_skip = 0;
+	SkipColumnNamesRecurse(columns_to_skip, type);
+	return columns_to_skip;
+}
 shared_ptr<Relation> SubstraitToDuckDB::TransformRootOp(const substrait::RelRoot &sop) {
 	vector<string> aliases;
 	auto column_names = sop.names();
 	vector<unique_ptr<ParsedExpression>> expressions;
 	int id = 1;
-	for (auto &column_name : column_names) {
-		aliases.push_back(column_name);
+	auto child = TransformOp(sop.input());
+	auto &columns = child->Cast<ProjectionRelation>().columns;
+	int32_t i = 0;
+	for (auto &column : columns) {
+		aliases.push_back(column_names[i++]);
+		auto column_type = column.GetType();
+		i += SkipColumnNames(column.GetType());
 		expressions.push_back(make_uniq<PositionalReferenceExpression>(id++));
 	}
-	return make_shared_ptr<ProjectionRelation>(TransformOp(sop.input()), std::move(expressions), aliases);
+	// for (idx_t i = 0; i < column_names.size(); i ++) {
+	// 	aliases.push_back(column_names[i]);
+	// 	if (ty)
+	// 	expressions.push_back(make_uniq<PositionalReferenceExpression>(id++));
+	// }
+	// for (auto &column_name : column_names) {
+	// 	aliases.push_back(column_name);
+	// 	expressions.push_back(make_uniq<PositionalReferenceExpression>(id++));
+	// }
+	return make_shared_ptr<ProjectionRelation>(child, std::move(expressions), aliases);
 }
 
 shared_ptr<Relation> SubstraitToDuckDB::TransformPlan() {

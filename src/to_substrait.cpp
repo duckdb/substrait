@@ -95,9 +95,9 @@ string GetRawValue(hugeint_t value) {
 
 void DuckDBToSubstrait::TransformDecimal(Value &dval, substrait::Expression &sexpr) {
 	auto &sval = *sexpr.mutable_literal();
-	auto *allocated_decimal = new ::substrait::Expression_Literal_Decimal();
+	auto *allocated_decimal = new substrait::Expression_Literal_Decimal();
 	uint8_t scale, width;
-	hugeint_t hugeint_value;
+	hugeint_t hugeint_value {};
 	Value mock_value;
 	// alright time for some dirty switcharoo
 	switch (dval.type().InternalType()) {
@@ -197,7 +197,7 @@ void DuckDBToSubstrait::TransformInterval(Value &dval, substrait::Expression &se
 	} else {
 		auto interval_day = make_uniq<substrait::Expression_Literal_IntervalDayToSecond>();
 		interval_day->set_days(dval.GetValue<interval_t>().days);
-		interval_day->set_microseconds(dval.GetValue<interval_t>().micros);
+		interval_day->set_microseconds(static_cast<int32_t>(dval.GetValue<interval_t>().micros));
 		sval.set_allocated_interval_day_to_second(interval_day.release());
 	}
 }
@@ -215,7 +215,7 @@ void DuckDBToSubstrait::TransformBoolean(Value &dval, substrait::Expression &sex
 
 void DuckDBToSubstrait::TransformHugeInt(Value &dval, substrait::Expression &sexpr) {
 	auto &sval = *sexpr.mutable_literal();
-	auto *allocated_decimal = new ::substrait::Expression_Literal_Decimal();
+	auto *allocated_decimal = new substrait::Expression_Literal_Decimal();
 	auto hugeint = dval.GetValueUnsafe<hugeint_t>();
 	auto raw_value = GetRawValue(hugeint);
 	allocated_decimal->set_scale(0);
@@ -292,19 +292,19 @@ void DuckDBToSubstrait::TransformConstant(Value &dval, substrait::Expression &se
 
 void DuckDBToSubstrait::TransformBoundRefExpression(Expression &dexpr, substrait::Expression &sexpr,
                                                     uint64_t col_offset) {
-	auto &dref = (BoundReferenceExpression &)dexpr;
+	auto &dref = dexpr.Cast<BoundReferenceExpression>();
 	CreateFieldRef(&sexpr, dref.index + col_offset);
 }
 
 void DuckDBToSubstrait::TransformCastExpression(Expression &dexpr, substrait::Expression &sexpr, uint64_t col_offset) {
-	auto &dcast = (BoundCastExpression &)dexpr;
+	auto &dcast = dexpr.Cast<BoundCastExpression>();
 	auto scast = sexpr.mutable_cast();
 	TransformExpr(*dcast.child, *scast->mutable_input(), col_offset);
 	*scast->mutable_type() = DuckToSubstraitType(dcast.return_type);
 }
 
-bool DuckDBToSubstrait::IsExtractFunction(const string &function_name) const {
-	return DuckDBToSubstrait::valid_extract_subfields.count(function_name);
+bool DuckDBToSubstrait::IsExtractFunction(const string &function_name) {
+	return valid_extract_subfields.count(function_name);
 }
 
 void DuckDBToSubstrait::TransformFunctionExpression(Expression &dexpr, substrait::Expression &sexpr,
@@ -542,7 +542,7 @@ uint64_t DuckDBToSubstrait::RegisterFunction(const string &name, vector<::substr
 			extension_uri_map[extensionURI] = last_uri_id;
 			auto allocated_string = new string();
 			*allocated_string = extensionURI;
-			auto uri = new ::substrait::extensions::SimpleExtensionURI();
+			auto uri = new substrait::extensions::SimpleExtensionURI();
 			uri->set_allocated_uri(allocated_string);
 			uri->set_extension_uri_anchor(last_uri_id);
 			substrait_extensions->AddAllocated(uri);
@@ -582,13 +582,30 @@ uint64_t DuckDBToSubstrait::RegisterFunction(const string &name, vector<::substr
 }
 
 void DuckDBToSubstrait::CreateFieldRef(substrait::Expression *expr, uint64_t col_idx) {
-	auto selection = new ::substrait::Expression_FieldReference();
+	auto selection = new substrait::Expression_FieldReference();
 	selection->mutable_direct_reference()->mutable_struct_field()->set_field((int32_t)col_idx);
-	auto root_reference = new ::substrait::Expression_FieldReference_RootReference();
+	auto root_reference = new substrait::Expression_FieldReference_RootReference();
 	selection->set_allocated_root_reference(root_reference);
 	D_ASSERT(selection->root_type_case() == substrait::Expression_FieldReference::RootTypeCase::kRootReference);
 	expr->set_allocated_selection(selection);
 	D_ASSERT(expr->has_selection());
+}
+
+vector<string> DuckDBToSubstrait::DepthFirstNames(const LogicalType &type) {
+	vector<string> names;
+	DepthFirstNamesRecurse(names, type);
+	return names;
+}
+
+void DuckDBToSubstrait::DepthFirstNamesRecurse(vector<string> &names, const LogicalType &type) {
+	if (type.id() == LogicalTypeId::STRUCT) {
+		// Recurse this
+		idx_t struct_size = StructType::GetChildCount(type);
+		for (idx_t i = 0; i < struct_size; i++) {
+			names.emplace_back(StructType::GetChildName(type, i));
+			DepthFirstNamesRecurse(names, StructType::GetChildType(type, i));
+		}
+	}
 }
 
 substrait::Expression *DuckDBToSubstrait::TransformIsNotNullFilter(uint64_t col_idx, LogicalType &column_type,
@@ -939,7 +956,7 @@ substrait::Rel *DuckDBToSubstrait::TransformAggregateGroup(LogicalOperator &dop)
 			// TODO push projection or push substrait, too
 			throw InternalException("No non-aggregate expressions in measures yet");
 		}
-		auto &daexpr = (BoundAggregateExpression &)*dmeas;
+		auto &daexpr = dmeas->Cast<BoundAggregateExpression>();
 
 		*smeas->mutable_output_type() = DuckToSubstraitType(daexpr.return_type);
 		vector<::substrait::Type> args_types;
@@ -971,9 +988,9 @@ int32_t GetTimestampPrecision(LogicalTypeId type) {
 	}
 }
 
-::substrait::Type DuckDBToSubstrait::DuckToSubstraitType(const LogicalType &type, BaseStatistics *column_statistics,
-                                                         bool not_null) {
-	::substrait::Type s_type;
+substrait::Type DuckDBToSubstrait::DuckToSubstraitType(const LogicalType &type, BaseStatistics *column_statistics,
+                                                       bool not_null) {
+	substrait::Type s_type;
 	substrait::Type_Nullability type_nullability;
 	if (not_null) {
 		type_nullability = substrait::Type_Nullability::Type_Nullability_NULLABILITY_REQUIRED;
@@ -1147,10 +1164,11 @@ void DuckDBToSubstrait::TransformTableScanToSubstrait(LogicalGet &dget, substrai
 	auto not_null_constraint = GetNotNullConstraintCol(table);
 	for (idx_t i = 0; i < dget.names.size(); i++) {
 		auto cur_type = dget.returned_types[i];
-		if (cur_type.id() == LogicalTypeId::STRUCT) {
-			throw std::runtime_error("Structs are not yet accepted in table scans");
-		}
 		base_schema->add_names(dget.names[i]);
+		auto depth_names = DepthFirstNames(cur_type);
+		for (auto &name : depth_names) {
+			base_schema->add_names(name);
+		}
 		auto column_statistics = dget.function.statistics(context, &table_scan_bind_data, i);
 		bool not_null = not_null_constraint.find(i) != not_null_constraint.end();
 		auto new_type = type_info->add_types();
@@ -1178,12 +1196,9 @@ void DuckDBToSubstrait::TransformParquetScanToSubstrait(LogicalGet &dget, substr
 	for (idx_t i = 0; i < dget.names.size(); i++) {
 		auto cur_type = dget.returned_types[i];
 		base_schema->add_names(dget.names[i]);
-		if (cur_type.id() == LogicalTypeId::STRUCT) {
-			// Get the names
-			for (idx_t struct_idx = 0; struct_idx < StructType::GetChildCount(cur_type); struct_idx++) {
-				auto child_name = StructType::GetChildName(cur_type, struct_idx);
-				base_schema->add_names(child_name);
-			}
+		auto depth_names = DepthFirstNames(cur_type);
+		for (auto &name : depth_names) {
+			base_schema->add_names(name);
 		}
 		auto column_statistics = dget.function.statistics(context, &bind_data, i);
 		auto new_type = type_info->add_types();
@@ -1404,16 +1419,23 @@ substrait::RelRoot *DuckDBToSubstrait::TransformRootOp(LogicalOperator &dop) {
 		current_op = current_op->children[0].get();
 	}
 	root_rel->set_allocated_input(TransformOp(dop));
-	auto &dproj = (LogicalProjection &)*current_op;
+	auto &dproj = current_op->Cast<LogicalProjection>();
 	if (!weird_scenario) {
 		for (auto &expression : dproj.expressions) {
 			root_rel->add_names(expression->GetName());
+			auto depth_names = DepthFirstNames(expression->return_type);
+			for (auto &name : depth_names) {
+				root_rel->add_names(name);
+			}
 		}
 	} else {
 		for (auto &expression : dop.expressions) {
-			D_ASSERT(expression->type == ExpressionType::BOUND_REF);
-			auto b_expr = (BoundReferenceExpression *)expression.get();
-			root_rel->add_names(dproj.expressions[b_expr->index]->GetName());
+			auto &b_expr = expression->Cast<BoundReferenceExpression>();
+			root_rel->add_names(dproj.expressions[b_expr.index]->GetName());
+			auto depth_names = DepthFirstNames(expression->return_type);
+			for (auto &name : depth_names) {
+				root_rel->add_names(name);
+			}
 		}
 	}
 

@@ -5,7 +5,7 @@
 namespace duckdb {
 
 // FIXME: This cannot be the best way of getting string names of the types
-string TransformTypes(const ::substrait::Type &type) {
+string TransformTypes(const substrait::Type &type) {
 	auto str = type.DebugString();
 	string str_type;
 	for (auto &c : str) {
