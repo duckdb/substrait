@@ -41,7 +41,8 @@ const std::unordered_map<std::string, std::string> DuckDBToSubstrait::function_n
     {"!~~", "not_equal"},
     {"&", "bitwise_and"},
     {"|", "bitwise_or"},
-    {"xor", "bitwise_xor"}};
+    {"xor", "bitwise_xor"},
+    {"strlen", "octet_length"}};
 
 const case_insensitive_set_t DuckDBToSubstrait::valid_extract_subfields = {
     "year",    "month",       "day",          "decade", "century", "millenium",

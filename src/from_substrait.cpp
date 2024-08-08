@@ -31,7 +31,7 @@ const std::unordered_map<std::string, std::string> SubstraitToDuckDB::function_n
     {"ends_with", "suffix"}, {"substring", "substr"},   {"char_length", "length"},
     {"is_nan", "isnan"},     {"is_finite", "isfinite"}, {"is_infinite", "isinf"},
     {"like", "~~"},          {"extract", "date_part"},  {"bitwise_and", "&"},
-    {"bitwise_or", "|"},     {"bitwise_xor", "xor"}};
+    {"bitwise_or", "|"},     {"bitwise_xor", "xor"},    {"octet_length", "strlen"}};
 
 const case_insensitive_set_t SubstraitToDuckDB::valid_extract_subfields = {
     "year",    "month",       "day",          "decade", "century", "millenium",
