@@ -36,7 +36,7 @@ const case_insensitive_set_t SubstraitToDuckDB::valid_extract_subfields = {
     "year",    "month",       "day",          "decade", "century", "millenium",
     "quarter", "microsecond", "milliseconds", "second", "minute",  "hour"};
 
-std::string SubstraitToDuckDB::RemapFunctionName(std::string &function_name) {
+string SubstraitToDuckDB::RemapFunctionName(const string &function_name) {
 	// Lets first drop any extension id
 	string name;
 	for (auto &c : function_name) {
@@ -52,7 +52,7 @@ std::string SubstraitToDuckDB::RemapFunctionName(std::string &function_name) {
 	return name;
 }
 
-std::string SubstraitToDuckDB::RemoveExtension(std::string &function_name) {
+string SubstraitToDuckDB::RemoveExtension(const string &function_name) {
 	// Lets first drop any extension id
 	string name;
 	for (auto &c : function_name) {
@@ -97,10 +97,10 @@ Value TransformLiteralToValue(const substrait::Expression_Literal &literal) {
 		return {literal.string()};
 	case substrait::Expression_Literal::LiteralTypeCase::kDecimal: {
 		const auto &substrait_decimal = literal.decimal();
-		auto raw_value = (uint64_t *)substrait_decimal.value().c_str();
+		auto raw_value = reinterpret_cast<const uint64_t *>(substrait_decimal.value().c_str());
 		hugeint_t substrait_value {};
 		substrait_value.lower = raw_value[0];
-		substrait_value.upper = raw_value[1];
+		substrait_value.upper = static_cast<int64_t>(raw_value[1]);
 		Value val = Value::HUGEINT(substrait_value);
 		auto decimal_type = LogicalType::DECIMAL(substrait_decimal.precision(), substrait_decimal.scale());
 		// cast to correct value
@@ -123,7 +123,7 @@ Value TransformLiteralToValue(const substrait::Expression_Literal &literal) {
 		return Value(literal.boolean());
 	}
 	case substrait::Expression_Literal::LiteralTypeCase::kI8:
-		return Value::TINYINT(literal.i8());
+		return Value::TINYINT(static_cast<int8_t>(literal.i8()));
 	case substrait::Expression_Literal::LiteralTypeCase::kI32:
 		return Value::INTEGER(literal.i32());
 	case substrait::Expression_Literal::LiteralTypeCase::kI64:
@@ -278,27 +278,29 @@ unique_ptr<ParsedExpression> SubstraitToDuckDB::TransformIfThenExpr(const substr
 	return std::move(dcase);
 }
 
-LogicalType SubstraitToDuckDB::SubstraitToDuckType(const ::substrait::Type &s_type) {
-
-	if (s_type.has_bool_()) {
-		return LogicalType(LogicalTypeId::BOOLEAN);
-	} else if (s_type.has_i16()) {
-		return LogicalType(LogicalTypeId::SMALLINT);
-	} else if (s_type.has_i32()) {
-		return LogicalType(LogicalTypeId::INTEGER);
-	} else if (s_type.has_decimal()) {
+LogicalType SubstraitToDuckDB::SubstraitToDuckType(const substrait::Type &s_type) {
+	switch (s_type.kind_case()) {
+	case substrait::Type::KindCase::kBool:
+		return {LogicalTypeId::BOOLEAN};
+	case substrait::Type::KindCase::kI16:
+		return {LogicalTypeId::SMALLINT};
+	case substrait::Type::KindCase::kI32:
+		return {LogicalTypeId::INTEGER};
+	case substrait::Type::KindCase::kI64:
+		return {LogicalTypeId::BIGINT};
+	case substrait::Type::KindCase::kDecimal: {
 		auto &s_decimal_type = s_type.decimal();
 		return LogicalType::DECIMAL(s_decimal_type.precision(), s_decimal_type.scale());
-	} else if (s_type.has_i64()) {
-		return LogicalType(LogicalTypeId::BIGINT);
-	} else if (s_type.has_date()) {
-		return LogicalType(LogicalTypeId::DATE);
-	} else if (s_type.has_varchar() || s_type.has_string()) {
-		return LogicalType(LogicalTypeId::VARCHAR);
-	} else if (s_type.has_fp64()) {
-		return LogicalType(LogicalTypeId::DOUBLE);
-	} else {
-		throw InternalException("Substrait type not yet supported");
+	}
+	case substrait::Type::KindCase::kDate:
+		return {LogicalTypeId::DATE};
+	case substrait::Type::KindCase::kVarchar:
+	case substrait::Type::KindCase::kString:
+		return {LogicalTypeId::VARCHAR};
+	case substrait::Type::KindCase::kFp64:
+		return {LogicalTypeId::DOUBLE};
+	default:
+		throw NotImplementedException("Substrait type not yet supported");
 	}
 }
 
@@ -315,7 +317,7 @@ unique_ptr<ParsedExpression> SubstraitToDuckDB::TransformInExpr(const substrait:
 	vector<unique_ptr<ParsedExpression>> values;
 	values.emplace_back(TransformExpr(substrait_in.value()));
 
-	for (idx_t i = 0; i < (idx_t)substrait_in.options_size(); i++) {
+	for (int32_t i = 0; i < substrait_in.options_size(); i++) {
 		values.emplace_back(TransformExpr(substrait_in.options(i)));
 	}
 
@@ -416,9 +418,8 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformCrossProductOp(const substrait:
 
 shared_ptr<Relation> SubstraitToDuckDB::TransformFetchOp(const substrait::Rel &sop) {
 	auto &slimit = sop.fetch();
-	idx_t limit, offset;
-	limit = slimit.count() == -1 ? NumericLimits<idx_t>::Maximum() : slimit.count();
-	offset = slimit.offset();
+	idx_t limit = slimit.count() == -1 ? NumericLimits<idx_t>::Maximum() : slimit.count();
+	idx_t offset = slimit.offset();
 	return make_shared_ptr<LimitRelation>(TransformOp(slimit.input()), limit, offset);
 }
 
@@ -607,16 +608,60 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformOp(const substrait::Rel &sop) {
 	}
 }
 
+void SkipColumnNamesRecurse(int32_t &columns_to_skip, const LogicalType &type) {
+	if (type.id() == LogicalTypeId::STRUCT) {
+		idx_t struct_size = StructType::GetChildCount(type);
+		columns_to_skip += static_cast<int32_t>(struct_size);
+		for (auto &struct_type : StructType::GetChildTypes(type)) {
+			SkipColumnNamesRecurse(columns_to_skip, struct_type.second);
+		}
+	}
+}
+
+int32_t SkipColumnNames(const LogicalType &type) {
+	int32_t columns_to_skip = 0;
+	SkipColumnNamesRecurse(columns_to_skip, type);
+	return columns_to_skip;
+}
+
+Relation *GetProjectionRelation(Relation &relation, string &error) {
+	error += RelationTypeToString(relation.type);
+	switch (relation.type) {
+	case RelationType::PROJECTION_RELATION:
+		error += " -> ";
+		return &relation;
+	case RelationType::LIMIT_RELATION:
+		error += " -> ";
+		return GetProjectionRelation(*relation.Cast<LimitRelation>().child, error);
+	case RelationType::ORDER_RELATION:
+		error += " -> ";
+		return GetProjectionRelation(*relation.Cast<OrderRelation>().child, error);
+	case RelationType::SET_OPERATION_RELATION:
+		error += " -> ";
+		return GetProjectionRelation(*relation.Cast<SetOpRelation>().right, error);
+	default:
+		throw NotImplementedException(
+		    "Relation %s is not yet implemented as a possible root chain type of from_substrait function", error);
+	}
+}
+
 shared_ptr<Relation> SubstraitToDuckDB::TransformRootOp(const substrait::RelRoot &sop) {
 	vector<string> aliases;
 	auto column_names = sop.names();
 	vector<unique_ptr<ParsedExpression>> expressions;
 	int id = 1;
-	for (auto &column_name : column_names) {
-		aliases.push_back(column_name);
+	auto child = TransformOp(sop.input());
+	string error;
+	auto first_projection = GetProjectionRelation(*child, error);
+	auto &columns = first_projection->Cast<ProjectionRelation>().columns;
+	int32_t i = 0;
+	for (auto &column : columns) {
+		aliases.push_back(column_names[i++]);
+		auto column_type = column.GetType();
+		i += SkipColumnNames(column.GetType());
 		expressions.push_back(make_uniq<PositionalReferenceExpression>(id++));
 	}
-	return make_shared_ptr<ProjectionRelation>(TransformOp(sop.input()), std::move(expressions), aliases);
+	return make_shared_ptr<ProjectionRelation>(child, std::move(expressions), aliases);
 }
 
 shared_ptr<Relation> SubstraitToDuckDB::TransformPlan() {
