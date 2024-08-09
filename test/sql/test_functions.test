@@ -1,0 +1,40 @@
+# name: test/sql/test_functions.test
+# description: Test functions roundtrip
+# group: [sql]
+
+require substrait
+
+statement ok
+PRAGMA enable_verification
+
+statement ok
+create table t as select 1 as a ,2 as b;
+
+# bitwise_and
+statement ok
+CALL get_substrait('select a & b from t', strict = true)
+
+# bitwise_or
+statement ok
+CALL get_substrait('select a | b from t', strict = true)
+
+# bitwise_xor
+statement ok
+CALL get_substrait('select xor(a,b) from t', strict = true)
+
+# strlen gets transformed to octet_length
+statement ok
+CALL get_substrait('select strlen(a::varchar) from t', strict = true)
+
+# coalesce
+statement ok
+CALL get_substrait('select coalesce(a) from t', strict = true)
+
+# acosh
+# asinh
+# atanh
+# cosh
+# sinh
+# tanh
+statement ok
+CALL get_substrait('select acosh(a),asinh(a),atanh(a),cosh(a),sinh(a),tanh(a) from t', strict = true)
