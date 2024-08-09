@@ -1,0 +1,20 @@
+# name: test/sql/test_join.test
+# description: Test Join operators
+# group: [sql]
+
+require substrait
+
+statement ok
+PRAGMA enable_verification
+
+statement ok
+CREATE table customer as select range c_custkey, range::VARCHAR c_name from range(10000);
+
+# Test Full outer join
+statement ok
+CALL get_substrait('
+    WITH raw_data as (SELECT * from customer),
+    cte1 as (SELECT c_custkey as join_custkey, c_name from raw_data where c_custkey = 800),
+    cte2 as (SELECT c_custkey as other_custkey, c_name from raw_data where c_custkey = 900)
+    select * from cte1 full join cte2 on join_custkey = other_custkey;
+  ');
