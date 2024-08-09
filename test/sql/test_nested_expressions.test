@@ -21,3 +21,28 @@ CALL get_substrait('SELECT [a,a,10] from t;')
 # Test map creation
 statement ok
 CALL get_substrait('SELECT MAP {a: a} from t;')
+
+# Test nested-> nested
+statement ok
+CALL get_substrait('SELECT MAP {[a,a,10]: [a,a,10]} from t;')
+
+statement ok
+CALL get_substrait('SELECT MAP {[row(a,a,10),row(a,a,10),row(a,a,10)]: [row(a,a,10),row(a,a,10),row(a,a,10)]} from t;')
+
+statement ok
+CALL get_substrait('SELECT row([a,a,10],[a,a,10],[a,a,10]) from t;')
+
+statement ok
+CALL get_substrait('SELECT row([MAP {a: a},MAP {a: a},MAP {a: a}],[MAP {a: a},MAP {a: a},MAP {a: a}],[MAP {a: a},MAP {a: a},MAP {a: a}]) from t;')
+
+statement ok
+CALL get_substrait('SELECT MAP {[a,a,10]: [a,a,10]} from t;')
+
+statement ok
+CALL get_substrait('SELECT MAP {[row(a,a,10),row(a,a,10),row(a,a,10)]: [row(a,a,10),row(a,a,10),row(a,a,10)]} from t;')
+
+statement ok
+CALL get_substrait('SELECT row(row(row(a,a,10),row(a,a,10),row(a,a,10)),row(row(a,a,10),row(a,a,10),row(a,a,10)),row(row(a,a,10),row(a,a,10),row(a,a,10))) from t;')
+
+statement ok
+CALL get_substrait('SELECT [[[a,a,10], [a,a,10], [a,a,10]], [[a,a,10], [a,a,10], [a,a,10]], [[a,a,10], [a,a,10], [a,a,10]]] from t;')
