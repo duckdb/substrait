@@ -1,0 +1,48 @@
+# name: test/sql/test_nested_expressions.test
+# description: Test nested expressions
+# group: [sql]
+
+require substrait
+
+statement ok
+PRAGMA enable_verification
+
+statement ok
+create table t as select range as a from range(10)
+
+# Test struct creation
+statement ok
+CALL get_substrait('SELECT row(a,a,10) from t;')
+
+# Test list creation
+statement ok
+CALL get_substrait('SELECT [a,a,10] from t;')
+
+# Test map creation
+statement ok
+CALL get_substrait('SELECT MAP {a: a} from t;')
+
+# Test nested-> nested
+statement ok
+CALL get_substrait('SELECT MAP {[a,a,10]: [a,a,10]} from t;')
+
+statement ok
+CALL get_substrait('SELECT MAP {[row(a,a,10),row(a,a,10),row(a,a,10)]: [row(a,a,10),row(a,a,10),row(a,a,10)]} from t;')
+
+statement ok
+CALL get_substrait('SELECT row([a,a,10],[a,a,10],[a,a,10]) from t;')
+
+statement ok
+CALL get_substrait('SELECT row([MAP {a: a},MAP {a: a},MAP {a: a}],[MAP {a: a},MAP {a: a},MAP {a: a}],[MAP {a: a},MAP {a: a},MAP {a: a}]) from t;')
+
+statement ok
+CALL get_substrait('SELECT MAP {[a,a,10]: [a,a,10]} from t;')
+
+statement ok
+CALL get_substrait('SELECT MAP {[row(a,a,10),row(a,a,10),row(a,a,10)]: [row(a,a,10),row(a,a,10),row(a,a,10)]} from t;')
+
+statement ok
+CALL get_substrait('SELECT row(row(row(a,a,10),row(a,a,10),row(a,a,10)),row(row(a,a,10),row(a,a,10),row(a,a,10)),row(row(a,a,10),row(a,a,10),row(a,a,10))) from t;')
+
+statement ok
+CALL get_substrait('SELECT [[[a,a,10], [a,a,10], [a,a,10]], [[a,a,10], [a,a,10], [a,a,10]], [[a,a,10], [a,a,10], [a,a,10]]] from t;')
