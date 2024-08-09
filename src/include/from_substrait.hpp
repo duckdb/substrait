@@ -37,6 +37,7 @@ private:
 	unique_ptr<ParsedExpression> TransformIfThenExpr(const substrait::Expression &sexpr);
 	unique_ptr<ParsedExpression> TransformCastExpr(const substrait::Expression &sexpr);
 	unique_ptr<ParsedExpression> TransformInExpr(const substrait::Expression &sexpr);
+	unique_ptr<ParsedExpression> TransformNested(const substrait::Expression &sexpr);
 
 	static void VerifyCorrectExtractSubfield(const string &subfield);
 	static string RemapFunctionName(const string &function_name);
@@ -57,5 +58,6 @@ private:
 	//! names
 	static const unordered_map<std::string, std::string> function_names_remap;
 	static const case_insensitive_set_t valid_extract_subfields;
+	vector<ParsedExpression*> struct_expressions;
 };
 } // namespace duckdb
