@@ -325,6 +325,37 @@ unique_ptr<ParsedExpression> SubstraitToDuckDB::TransformInExpr(const substrait:
 	return make_uniq<OperatorExpression>(ExpressionType::COMPARE_IN, std::move(values));
 }
 
+unique_ptr<ParsedExpression> SubstraitToDuckDB::TransformNested(const substrait::Expression &sexpr) {
+	auto &nested_expression = sexpr.nested();
+	if (nested_expression.has_struct_()) {
+		auto &struct_expression = nested_expression.struct_();
+		 vector<unique_ptr<ParsedExpression>> children;
+		for (auto& child: struct_expression.fields()) {
+			children.emplace_back(TransformExpr(child));
+		}
+		return make_uniq<FunctionExpression>("row", std::move(children));
+	} else if (nested_expression.has_list()) {
+		auto &list_expression = nested_expression.list();
+		 vector<unique_ptr<ParsedExpression>> children;
+		for (auto& child: list_expression.values()) {
+			children.emplace_back(TransformExpr(child));
+		}
+		return make_uniq<FunctionExpression>("list_value", std::move(children));
+
+	} else if (nested_expression.has_map()) {
+		auto &map_expression = nested_expression.map();
+		 vector<unique_ptr<ParsedExpression>> children;
+		auto key_value = map_expression.key_values();
+		children.emplace_back(TransformExpr(key_value[0].key()));
+		children.emplace_back(TransformExpr(key_value[0].value()));
+		return make_uniq<FunctionExpression>("map", std::move(children));
+
+	} else{
+		throw NotImplementedException("Substrait nested expression is not yet implemented.");
+	}
+
+}
+
 unique_ptr<ParsedExpression> SubstraitToDuckDB::TransformExpr(const substrait::Expression &sexpr) {
 	switch (sexpr.rex_type_case()) {
 	case substrait::Expression::RexTypeCase::kLiteral:
@@ -339,6 +370,8 @@ unique_ptr<ParsedExpression> SubstraitToDuckDB::TransformExpr(const substrait::E
 		return TransformCastExpr(sexpr);
 	case substrait::Expression::RexTypeCase::kSingularOrList:
 		return TransformInExpr(sexpr);
+	case substrait::Expression::RexTypeCase::kNested:
+		return TransformNested(sexpr);
 	case substrait::Expression::RexTypeCase::kSubquery:
 	default:
 		throw InternalException("Unsupported expression type " + to_string(sexpr.rex_type_case()));

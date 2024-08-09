@@ -314,9 +314,40 @@ bool DuckDBToSubstrait::IsExtractFunction(const string &function_name) {
 void DuckDBToSubstrait::TransformFunctionExpression(Expression &dexpr, substrait::Expression &sexpr,
                                                     uint64_t col_offset) {
 	auto &dfun = dexpr.Cast<BoundFunctionExpression>();
-	auto sfun = sexpr.mutable_scalar_function();
+
 
 	auto function_name = dfun.function.name;
+
+	if (function_name == "row") {
+		auto nested_expression = sexpr.mutable_nested();
+		auto struct_expression = nested_expression->mutable_struct_();
+		for (auto& child: dfun.children) {
+			auto child_expression = struct_expression->add_fields();
+			TransformExpr(*child, *child_expression);
+		}
+		return;
+	}
+	if (function_name == "list_value" || function_name == "list_pack") {
+		auto nested_expression = sexpr.mutable_nested();
+		auto list_expression = nested_expression->mutable_list();
+		for (auto& child: dfun.children) {
+			auto child_value = list_expression->add_values();
+			TransformExpr(*child, *child_value);
+		}
+		return;
+	}
+	if (function_name == "map") {
+		auto nested_expression = sexpr.mutable_nested();
+		auto map_expression = nested_expression->mutable_map();
+		D_ASSERT(dfun.children.size() == 2);
+		auto child_value = map_expression->add_key_values();
+		auto key = child_value->mutable_key();
+		auto value = child_value->mutable_value();
+		TransformExpr(*dfun.children[0], *key);
+		TransformExpr(*dfun.children[1], *value);
+		return;
+	}
+	auto sfun = sexpr.mutable_scalar_function();
 	if (IsExtractFunction(function_name)) {
 		// Change the name to 'extract', and add an Enum argument containing the subfield
 		auto subfield = function_name;
@@ -324,7 +355,7 @@ void DuckDBToSubstrait::TransformFunctionExpression(Expression &dexpr, substrait
 		auto enum_arg = sfun->add_arguments();
 		*enum_arg->mutable_enum_() = subfield;
 	}
-	vector<::substrait::Type> args_types;
+	vector<substrait::Type> args_types;
 	for (auto &darg : dfun.children) {
 		auto sarg = sfun->add_arguments();
 		TransformExpr(*darg, *sarg->mutable_value(), col_offset);
