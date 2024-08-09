@@ -568,7 +568,7 @@ uint64_t DuckDBToSubstrait::RegisterFunction(const string &name, vector<::substr
 				std::ostringstream error;
 				// Casting Error Message
 				error << "Could not find function \"" << function.function.GetName() << "\" with argument types: (";
-				auto types = custom_functions.GetTypes(args_types);
+				auto types = SubstraitCustomFunctions::GetTypes(args_types);
 				for (idx_t i = 0; i < types.size(); i++) {
 					error << "\'" << types[i] << "\'";
 					if (i != types.size() - 1) {
@@ -911,6 +911,9 @@ substrait::Rel *DuckDBToSubstrait::TransformComparisonJoin(LogicalOperator &dop)
 		break;
 	case JoinType::SEMI:
 		sjoin->set_type(substrait::JoinRel::JoinType::JoinRel_JoinType_JOIN_TYPE_SEMI);
+		break;
+	case JoinType::OUTER:
+		sjoin->set_type(substrait::JoinRel::JoinType::JoinRel_JoinType_JOIN_TYPE_OUTER);
 		break;
 	default:
 		throw InternalException("Unsupported join type " + JoinTypeToString(djoin.join_type));

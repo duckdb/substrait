@@ -401,6 +401,9 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformJoinOp(const substrait::Rel &so
 	case substrait::JoinRel::JoinType::JoinRel_JoinType_JOIN_TYPE_SEMI:
 		djointype = JoinType::SEMI;
 		break;
+	case substrait::JoinRel::JoinType::JoinRel_JoinType_JOIN_TYPE_OUTER:
+		djointype = JoinType::OUTER;
+		break;
 	default:
 		throw InternalException("Unsupported join type");
 	}
