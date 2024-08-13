@@ -923,10 +923,10 @@ substrait::Rel *DuckDBToSubstrait::TransformComparisonJoin(LogicalOperator &dop)
 		sjoin->set_type(substrait::JoinRel::JoinType::JoinRel_JoinType_JOIN_TYPE_RIGHT);
 		break;
 	case JoinType::SINGLE:
-		sjoin->set_type(substrait::JoinRel::JoinType::JoinRel_JoinType_JOIN_TYPE_SINGLE);
+		sjoin->set_type(substrait::JoinRel::JoinType::JoinRel_JoinType_JOIN_TYPE_LEFT_SINGLE);
 		break;
 	case JoinType::SEMI:
-		sjoin->set_type(substrait::JoinRel::JoinType::JoinRel_JoinType_JOIN_TYPE_SEMI);
+		sjoin->set_type(substrait::JoinRel::JoinType::JoinRel_JoinType_JOIN_TYPE_LEFT_SEMI);
 		break;
 	case JoinType::MARK:
 		sjoin->set_type(substrait::JoinRel::JoinType::JoinRel_JoinType_JOIN_TYPE_MARK);
@@ -945,13 +945,13 @@ substrait::Rel *DuckDBToSubstrait::TransformDelimiterJoin(LogicalOperator &dop) 
 	duplicate_eliminated_parent_ptr = &djoin;
 	auto res = new substrait::Rel();
 
-	auto sjoin = res->mutable_delim_join();
+	auto sjoin = res->mutable_duplicate_eliminated_join();
 
 	auto lhs_child = TransformOp(*dop.children[0]);
 	auto rhs_child = TransformOp(*dop.children[1]);
 	if (djoin.delim_flipped) {
 		// right side is where our delim is
-		sjoin->set_delimiter_side(substrait::DelimJoinRel_DelimiterSide::DelimJoinRel_DelimiterSide_RIGHT);
+		sjoin->set_duplicate_eliminated_side(substrait::DuplicateEliminatedJoinRel::DUPLICATE_ELIMINATED_SIDE_RIGHT);
 		plan.add_relations()->set_allocated_rel(rhs_child);
 		sjoin->set_allocated_left(lhs_child);
 		auto rhs_res = new substrait::Rel();
@@ -960,7 +960,7 @@ substrait::Rel *DuckDBToSubstrait::TransformDelimiterJoin(LogicalOperator &dop) 
 		sjoin->set_allocated_right(rhs_res);
 	} else {
 		// left side is where our delim is
-		sjoin->set_delimiter_side(substrait::DelimJoinRel_DelimiterSide::DelimJoinRel_DelimiterSide_LEFT);
+		sjoin->set_duplicate_eliminated_side(substrait::DuplicateEliminatedJoinRel::DUPLICATE_ELIMINATED_SIDE_LEFT);
 		plan.add_relations()->set_allocated_rel(lhs_child);
 		sjoin->set_allocated_right(rhs_child);
 		auto lhs_res = new substrait::Rel();
@@ -979,25 +979,32 @@ substrait::Rel *DuckDBToSubstrait::TransformDelimiterJoin(LogicalOperator &dop) 
 
 	switch (djoin.join_type) {
 	case JoinType::INNER:
-		sjoin->set_type(substrait::DelimJoinRel_JoinType::DelimJoinRel_JoinType_JOIN_TYPE_INNER);
+		sjoin->set_type(
+		    substrait::DuplicateEliminatedJoinRel_JoinType::DuplicateEliminatedJoinRel_JoinType_JOIN_TYPE_INNER);
 		break;
 	case JoinType::LEFT:
-		sjoin->set_type(substrait::DelimJoinRel_JoinType::DelimJoinRel_JoinType_JOIN_TYPE_LEFT);
+		sjoin->set_type(
+		    substrait::DuplicateEliminatedJoinRel_JoinType::DuplicateEliminatedJoinRel_JoinType_JOIN_TYPE_LEFT);
 		break;
 	case JoinType::RIGHT:
-		sjoin->set_type(substrait::DelimJoinRel_JoinType::DelimJoinRel_JoinType_JOIN_TYPE_RIGHT);
+		sjoin->set_type(
+		    substrait::DuplicateEliminatedJoinRel_JoinType::DuplicateEliminatedJoinRel_JoinType_JOIN_TYPE_RIGHT);
 		break;
 	case JoinType::SINGLE:
-		sjoin->set_type(substrait::DelimJoinRel_JoinType::DelimJoinRel_JoinType_JOIN_TYPE_SINGLE);
+		sjoin->set_type(
+		    substrait::DuplicateEliminatedJoinRel_JoinType::DuplicateEliminatedJoinRel_JoinType_JOIN_TYPE_LEFT_SINGLE);
 		break;
 	case JoinType::RIGHT_SEMI:
-		sjoin->set_type(substrait::DelimJoinRel_JoinType::DelimJoinRel_JoinType_JOIN_TYPE_RIGHT_SEMI);
+		sjoin->set_type(
+		    substrait::DuplicateEliminatedJoinRel_JoinType::DuplicateEliminatedJoinRel_JoinType_JOIN_TYPE_RIGHT_SEMI);
 		break;
 	case JoinType::MARK:
-		sjoin->set_type(substrait::DelimJoinRel_JoinType::DelimJoinRel_JoinType_JOIN_TYPE_MARK);
+		sjoin->set_type(
+		    substrait::DuplicateEliminatedJoinRel_JoinType::DuplicateEliminatedJoinRel_JoinType_JOIN_TYPE_MARK);
 		break;
 	case JoinType::RIGHT_ANTI:
-		sjoin->set_type(substrait::DelimJoinRel_JoinType::DelimJoinRel_JoinType_JOIN_TYPE_RIGHT_ANTI);
+		sjoin->set_type(
+		    substrait::DuplicateEliminatedJoinRel_JoinType::DuplicateEliminatedJoinRel_JoinType_JOIN_TYPE_RIGHT_ANTI);
 		break;
 	default:
 		throw InternalException("Unsupported join type " + JoinTypeToString(djoin.join_type));
@@ -1389,7 +1396,7 @@ substrait::Rel *DuckDBToSubstrait::TransformIntersect(LogicalOperator &dop) {
 
 substrait::Rel *DuckDBToSubstrait::TransformDelimGet() {
 	auto rel = new substrait::Rel();
-	auto delim_get = rel->mutable_delim_get();
+	auto delim_get = rel->mutable_duplicate_eliminated_get();
 	D_ASSERT(duplicate_eliminated_parent_ptr);
 	for (auto &dup_col : duplicate_eliminated_parent_ptr->duplicate_eliminated_columns) {
 		auto &dref = dup_col->Cast<BoundReferenceExpression>();

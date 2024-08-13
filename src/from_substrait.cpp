@@ -410,10 +410,10 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformJoinOp(const substrait::Rel &so
 	case substrait::JoinRel::JoinType::JoinRel_JoinType_JOIN_TYPE_RIGHT:
 		djointype = JoinType::RIGHT;
 		break;
-	case substrait::JoinRel::JoinType::JoinRel_JoinType_JOIN_TYPE_SINGLE:
+	case substrait::JoinRel::JoinType::JoinRel_JoinType_JOIN_TYPE_LEFT_SINGLE:
 		djointype = JoinType::SINGLE;
 		break;
-	case substrait::JoinRel::JoinType::JoinRel_JoinType_JOIN_TYPE_SEMI:
+	case substrait::JoinRel::JoinType::JoinRel_JoinType_JOIN_TYPE_LEFT_SEMI:
 		djointype = JoinType::SEMI;
 		break;
 	case substrait::JoinRel::JoinType::JoinRel_JoinType_JOIN_TYPE_MARK:
@@ -432,7 +432,7 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformJoinOp(const substrait::Rel &so
 }
 
 shared_ptr<Relation> SubstraitToDuckDB::TransformDelimJoinOp(const substrait::Rel &sop) {
-	auto &sjoin = sop.delim_join();
+	auto &sjoin = sop.duplicate_eliminated_join();
 
 	vector<unique_ptr<ParsedExpression>> duplicate_eliminated_columns;
 	for (auto &col : sjoin.duplicate_eliminated_columns()) {
@@ -442,25 +442,25 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformDelimJoinOp(const substrait::Re
 
 	JoinType djointype;
 	switch (sjoin.type()) {
-	case substrait::DelimJoinRel_JoinType::DelimJoinRel_JoinType_JOIN_TYPE_INNER:
+	case substrait::DuplicateEliminatedJoinRel_JoinType::DuplicateEliminatedJoinRel_JoinType_JOIN_TYPE_INNER:
 		djointype = JoinType::INNER;
 		break;
-	case substrait::DelimJoinRel_JoinType::DelimJoinRel_JoinType_JOIN_TYPE_LEFT:
+	case substrait::DuplicateEliminatedJoinRel_JoinType::DuplicateEliminatedJoinRel_JoinType_JOIN_TYPE_LEFT:
 		djointype = JoinType::LEFT;
 		break;
-	case substrait::DelimJoinRel_JoinType::DelimJoinRel_JoinType_JOIN_TYPE_RIGHT:
+	case substrait::DuplicateEliminatedJoinRel_JoinType::DuplicateEliminatedJoinRel_JoinType_JOIN_TYPE_RIGHT:
 		djointype = JoinType::RIGHT;
 		break;
-	case substrait::DelimJoinRel_JoinType::DelimJoinRel_JoinType_JOIN_TYPE_SINGLE:
+	case substrait::DuplicateEliminatedJoinRel_JoinType::DuplicateEliminatedJoinRel_JoinType_JOIN_TYPE_LEFT_SINGLE:
 		djointype = JoinType::SINGLE;
 		break;
-	case substrait::DelimJoinRel_JoinType::DelimJoinRel_JoinType_JOIN_TYPE_RIGHT_SEMI:
+	case substrait::DuplicateEliminatedJoinRel_JoinType::DuplicateEliminatedJoinRel_JoinType_JOIN_TYPE_RIGHT_SEMI:
 		djointype = JoinType::RIGHT_SEMI;
 		break;
-	case substrait::DelimJoinRel_JoinType::DelimJoinRel_JoinType_JOIN_TYPE_MARK:
+	case substrait::DuplicateEliminatedJoinRel_JoinType::DuplicateEliminatedJoinRel_JoinType_JOIN_TYPE_MARK:
 		djointype = JoinType::MARK;
 		break;
-	case substrait::DelimJoinRel_JoinType::DelimJoinRel_JoinType_JOIN_TYPE_RIGHT_ANTI:
+	case substrait::DuplicateEliminatedJoinRel_JoinType::DuplicateEliminatedJoinRel_JoinType_JOIN_TYPE_RIGHT_ANTI:
 		djointype = JoinType::RIGHT_ANTI;
 		break;
 	default:
@@ -471,9 +471,10 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformDelimJoinOp(const substrait::Re
 	auto right_op = TransformOp(sjoin.right())->Alias("right");
 	auto join =
 	    make_shared_ptr<JoinRelation>(std::move(left_op), std::move(right_op), std::move(join_condition), djointype);
-	if (sjoin.delimiter_side() == substrait::DelimJoinRel_DelimiterSide::DelimJoinRel_DelimiterSide_RIGHT) {
+	if (sjoin.duplicate_eliminated_side() == substrait::DuplicateEliminatedJoinRel::DUPLICATE_ELIMINATED_SIDE_RIGHT) {
 		join->delim_flipped = true;
-	} else if (sjoin.delimiter_side() == substrait::DelimJoinRel_DelimiterSide::DelimJoinRel_DelimiterSide_LEFT) {
+	} else if (sjoin.duplicate_eliminated_side() ==
+	           substrait::DuplicateEliminatedJoinRel::DUPLICATE_ELIMINATED_SIDE_LEFT) {
 		join->delim_flipped = false;
 	} else {
 		throw InvalidInputException("The plan has a delimiter join with an invalid type for it's delimiter side.");
@@ -483,7 +484,7 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformDelimJoinOp(const substrait::Re
 }
 
 shared_ptr<Relation> SubstraitToDuckDB::TransformDelimGetOp(const substrait::Rel &sop) {
-	auto &delim_get = sop.delim_get();
+	auto &delim_get = sop.duplicate_eliminated_get();
 	auto subtree = TransformReferenceOp(delim_get.input());
 
 	auto &client_context = con.context;
@@ -684,9 +685,9 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformOp(const substrait::Rel &sop) {
 		return TransformSortOp(sop);
 	case substrait::Rel::RelTypeCase::kSet:
 		return TransformSetOp(sop);
-	case substrait::Rel::RelTypeCase::kDelimJoin:
+	case substrait::Rel::RelTypeCase::kDuplicateEliminatedJoin:
 		return TransformDelimJoinOp(sop);
-	case substrait::Rel::RelTypeCase::kDelimGet:
+	case substrait::Rel::RelTypeCase::kDuplicateEliminatedGet:
 		return TransformDelimGetOp(sop);
 	case substrait::Rel::RelTypeCase::kReference:
 		return TransformReferenceOp(sop.reference());
