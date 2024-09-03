@@ -560,13 +560,14 @@ enum JoinRel_JoinType : int {
   JoinRel_JoinType_JOIN_TYPE_RIGHT_SEMI = 8,
   JoinRel_JoinType_JOIN_TYPE_RIGHT_ANTI = 9,
   JoinRel_JoinType_JOIN_TYPE_RIGHT_SINGLE = 10,
-  JoinRel_JoinType_JOIN_TYPE_MARK = 11,
+  JoinRel_JoinType_JOIN_TYPE_LEFT_MARK = 11,
+  JoinRel_JoinType_JOIN_TYPE_RIGHT_MARK = 12,
   JoinRel_JoinType_JoinRel_JoinType_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
   JoinRel_JoinType_JoinRel_JoinType_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
 };
 bool JoinRel_JoinType_IsValid(int value);
 constexpr JoinRel_JoinType JoinRel_JoinType_JoinType_MIN = JoinRel_JoinType_JOIN_TYPE_UNSPECIFIED;
-constexpr JoinRel_JoinType JoinRel_JoinType_JoinType_MAX = JoinRel_JoinType_JOIN_TYPE_MARK;
+constexpr JoinRel_JoinType JoinRel_JoinType_JoinType_MAX = JoinRel_JoinType_JOIN_TYPE_RIGHT_MARK;
 constexpr int JoinRel_JoinType_JoinType_ARRAYSIZE = JoinRel_JoinType_JoinType_MAX + 1;
 
 const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* JoinRel_JoinType_descriptor();
@@ -761,13 +762,14 @@ enum HashJoinRel_JoinType : int {
   HashJoinRel_JoinType_JOIN_TYPE_RIGHT_ANTI = 8,
   HashJoinRel_JoinType_JOIN_TYPE_LEFT_SINGLE = 9,
   HashJoinRel_JoinType_JOIN_TYPE_RIGHT_SINGLE = 10,
-  HashJoinRel_JoinType_JOIN_TYPE_MARK = 11,
+  HashJoinRel_JoinType_JOIN_TYPE_LEFT_MARK = 11,
+  HashJoinRel_JoinType_JOIN_TYPE_RIGHT_MARK = 12,
   HashJoinRel_JoinType_HashJoinRel_JoinType_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
   HashJoinRel_JoinType_HashJoinRel_JoinType_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
 };
 bool HashJoinRel_JoinType_IsValid(int value);
 constexpr HashJoinRel_JoinType HashJoinRel_JoinType_JoinType_MIN = HashJoinRel_JoinType_JOIN_TYPE_UNSPECIFIED;
-constexpr HashJoinRel_JoinType HashJoinRel_JoinType_JoinType_MAX = HashJoinRel_JoinType_JOIN_TYPE_MARK;
+constexpr HashJoinRel_JoinType HashJoinRel_JoinType_JoinType_MAX = HashJoinRel_JoinType_JOIN_TYPE_RIGHT_MARK;
 constexpr int HashJoinRel_JoinType_JoinType_ARRAYSIZE = HashJoinRel_JoinType_JoinType_MAX + 1;
 
 const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* HashJoinRel_JoinType_descriptor();
@@ -796,13 +798,14 @@ enum MergeJoinRel_JoinType : int {
   MergeJoinRel_JoinType_JOIN_TYPE_RIGHT_ANTI = 8,
   MergeJoinRel_JoinType_JOIN_TYPE_LEFT_SINGLE = 9,
   MergeJoinRel_JoinType_JOIN_TYPE_RIGHT_SINGLE = 10,
-  MergeJoinRel_JoinType_JOIN_TYPE_MARK = 11,
+  MergeJoinRel_JoinType_JOIN_TYPE_LEFT_MARK = 11,
+  MergeJoinRel_JoinType_JOIN_TYPE_RIGHT_MARK = 12,
   MergeJoinRel_JoinType_MergeJoinRel_JoinType_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
   MergeJoinRel_JoinType_MergeJoinRel_JoinType_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
 };
 bool MergeJoinRel_JoinType_IsValid(int value);
 constexpr MergeJoinRel_JoinType MergeJoinRel_JoinType_JoinType_MIN = MergeJoinRel_JoinType_JOIN_TYPE_UNSPECIFIED;
-constexpr MergeJoinRel_JoinType MergeJoinRel_JoinType_JoinType_MAX = MergeJoinRel_JoinType_JOIN_TYPE_MARK;
+constexpr MergeJoinRel_JoinType MergeJoinRel_JoinType_JoinType_MAX = MergeJoinRel_JoinType_JOIN_TYPE_RIGHT_MARK;
 constexpr int MergeJoinRel_JoinType_JoinType_ARRAYSIZE = MergeJoinRel_JoinType_JoinType_MAX + 1;
 
 const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* MergeJoinRel_JoinType_descriptor();
@@ -831,13 +834,14 @@ enum NestedLoopJoinRel_JoinType : int {
   NestedLoopJoinRel_JoinType_JOIN_TYPE_RIGHT_ANTI = 8,
   NestedLoopJoinRel_JoinType_JOIN_TYPE_LEFT_SINGLE = 9,
   NestedLoopJoinRel_JoinType_JOIN_TYPE_RIGHT_SINGLE = 10,
-  NestedLoopJoinRel_JoinType_JOIN_TYPE_MARK = 11,
+  NestedLoopJoinRel_JoinType_JOIN_TYPE_LEFT_MARK = 11,
+  NestedLoopJoinRel_JoinType_JOIN_TYPE_RIGHT_MARK = 12,
   NestedLoopJoinRel_JoinType_NestedLoopJoinRel_JoinType_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
   NestedLoopJoinRel_JoinType_NestedLoopJoinRel_JoinType_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
 };
 bool NestedLoopJoinRel_JoinType_IsValid(int value);
 constexpr NestedLoopJoinRel_JoinType NestedLoopJoinRel_JoinType_JoinType_MIN = NestedLoopJoinRel_JoinType_JOIN_TYPE_UNSPECIFIED;
-constexpr NestedLoopJoinRel_JoinType NestedLoopJoinRel_JoinType_JoinType_MAX = NestedLoopJoinRel_JoinType_JOIN_TYPE_MARK;
+constexpr NestedLoopJoinRel_JoinType NestedLoopJoinRel_JoinType_JoinType_MAX = NestedLoopJoinRel_JoinType_JOIN_TYPE_RIGHT_MARK;
 constexpr int NestedLoopJoinRel_JoinType_JoinType_ARRAYSIZE = NestedLoopJoinRel_JoinType_JoinType_MAX + 1;
 
 const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* NestedLoopJoinRel_JoinType_descriptor();
@@ -892,13 +896,14 @@ enum DuplicateEliminatedJoinRel_JoinType : int {
   DuplicateEliminatedJoinRel_JoinType_JOIN_TYPE_RIGHT_SEMI = 8,
   DuplicateEliminatedJoinRel_JoinType_JOIN_TYPE_RIGHT_ANTI = 9,
   DuplicateEliminatedJoinRel_JoinType_JOIN_TYPE_RIGHT_SINGLE = 10,
-  DuplicateEliminatedJoinRel_JoinType_JOIN_TYPE_MARK = 11,
+  DuplicateEliminatedJoinRel_JoinType_JOIN_TYPE_LEFT_MARK = 11,
+  DuplicateEliminatedJoinRel_JoinType_JOIN_TYPE_RIGHT_MARK = 12,
   DuplicateEliminatedJoinRel_JoinType_DuplicateEliminatedJoinRel_JoinType_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
   DuplicateEliminatedJoinRel_JoinType_DuplicateEliminatedJoinRel_JoinType_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
 };
 bool DuplicateEliminatedJoinRel_JoinType_IsValid(int value);
 constexpr DuplicateEliminatedJoinRel_JoinType DuplicateEliminatedJoinRel_JoinType_JoinType_MIN = DuplicateEliminatedJoinRel_JoinType_JOIN_TYPE_UNSPECIFIED;
-constexpr DuplicateEliminatedJoinRel_JoinType DuplicateEliminatedJoinRel_JoinType_JoinType_MAX = DuplicateEliminatedJoinRel_JoinType_JOIN_TYPE_MARK;
+constexpr DuplicateEliminatedJoinRel_JoinType DuplicateEliminatedJoinRel_JoinType_JoinType_MAX = DuplicateEliminatedJoinRel_JoinType_JOIN_TYPE_RIGHT_MARK;
 constexpr int DuplicateEliminatedJoinRel_JoinType_JoinType_ARRAYSIZE = DuplicateEliminatedJoinRel_JoinType_JoinType_MAX + 1;
 
 const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* DuplicateEliminatedJoinRel_JoinType_descriptor();
@@ -4704,8 +4709,10 @@ class JoinRel final :
     JoinRel_JoinType_JOIN_TYPE_RIGHT_ANTI;
   static constexpr JoinType JOIN_TYPE_RIGHT_SINGLE =
     JoinRel_JoinType_JOIN_TYPE_RIGHT_SINGLE;
-  static constexpr JoinType JOIN_TYPE_MARK =
-    JoinRel_JoinType_JOIN_TYPE_MARK;
+  static constexpr JoinType JOIN_TYPE_LEFT_MARK =
+    JoinRel_JoinType_JOIN_TYPE_LEFT_MARK;
+  static constexpr JoinType JOIN_TYPE_RIGHT_MARK =
+    JoinRel_JoinType_JOIN_TYPE_RIGHT_MARK;
   static inline bool JoinType_IsValid(int value) {
     return JoinRel_JoinType_IsValid(value);
   }
@@ -11959,8 +11966,10 @@ class HashJoinRel final :
     HashJoinRel_JoinType_JOIN_TYPE_LEFT_SINGLE;
   static constexpr JoinType JOIN_TYPE_RIGHT_SINGLE =
     HashJoinRel_JoinType_JOIN_TYPE_RIGHT_SINGLE;
-  static constexpr JoinType JOIN_TYPE_MARK =
-    HashJoinRel_JoinType_JOIN_TYPE_MARK;
+  static constexpr JoinType JOIN_TYPE_LEFT_MARK =
+    HashJoinRel_JoinType_JOIN_TYPE_LEFT_MARK;
+  static constexpr JoinType JOIN_TYPE_RIGHT_MARK =
+    HashJoinRel_JoinType_JOIN_TYPE_RIGHT_MARK;
   static inline bool JoinType_IsValid(int value) {
     return HashJoinRel_JoinType_IsValid(value);
   }
@@ -12315,8 +12324,10 @@ class MergeJoinRel final :
     MergeJoinRel_JoinType_JOIN_TYPE_LEFT_SINGLE;
   static constexpr JoinType JOIN_TYPE_RIGHT_SINGLE =
     MergeJoinRel_JoinType_JOIN_TYPE_RIGHT_SINGLE;
-  static constexpr JoinType JOIN_TYPE_MARK =
-    MergeJoinRel_JoinType_JOIN_TYPE_MARK;
+  static constexpr JoinType JOIN_TYPE_LEFT_MARK =
+    MergeJoinRel_JoinType_JOIN_TYPE_LEFT_MARK;
+  static constexpr JoinType JOIN_TYPE_RIGHT_MARK =
+    MergeJoinRel_JoinType_JOIN_TYPE_RIGHT_MARK;
   static inline bool JoinType_IsValid(int value) {
     return MergeJoinRel_JoinType_IsValid(value);
   }
@@ -12671,8 +12682,10 @@ class NestedLoopJoinRel final :
     NestedLoopJoinRel_JoinType_JOIN_TYPE_LEFT_SINGLE;
   static constexpr JoinType JOIN_TYPE_RIGHT_SINGLE =
     NestedLoopJoinRel_JoinType_JOIN_TYPE_RIGHT_SINGLE;
-  static constexpr JoinType JOIN_TYPE_MARK =
-    NestedLoopJoinRel_JoinType_JOIN_TYPE_MARK;
+  static constexpr JoinType JOIN_TYPE_LEFT_MARK =
+    NestedLoopJoinRel_JoinType_JOIN_TYPE_LEFT_MARK;
+  static constexpr JoinType JOIN_TYPE_RIGHT_MARK =
+    NestedLoopJoinRel_JoinType_JOIN_TYPE_RIGHT_MARK;
   static inline bool JoinType_IsValid(int value) {
     return NestedLoopJoinRel_JoinType_IsValid(value);
   }
@@ -12947,28 +12960,9 @@ class DuplicateEliminatedGetRel final :
   // accessors -------------------------------------------------------
 
   enum : int {
-    kColumnIdsFieldNumber = 3,
     kCommonFieldNumber = 1,
     kInputFieldNumber = 2,
   };
-  // repeated .substrait.Expression.FieldReference column_ids = 3;
-  int column_ids_size() const;
-  private:
-  int _internal_column_ids_size() const;
-  public:
-  void clear_column_ids();
-  ::substrait::Expression_FieldReference* mutable_column_ids(int index);
-  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Expression_FieldReference >*
-      mutable_column_ids();
-  private:
-  const ::substrait::Expression_FieldReference& _internal_column_ids(int index) const;
-  ::substrait::Expression_FieldReference* _internal_add_column_ids();
-  public:
-  const ::substrait::Expression_FieldReference& column_ids(int index) const;
-  ::substrait::Expression_FieldReference* add_column_ids();
-  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Expression_FieldReference >&
-      column_ids() const;
-
   // .substrait.RelCommon common = 1;
   bool has_common() const;
   private:
@@ -13012,7 +13006,6 @@ class DuplicateEliminatedGetRel final :
   template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
-  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Expression_FieldReference > column_ids_;
   ::substrait::RelCommon* common_;
   ::substrait::ReferenceRel* input_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
@@ -13194,8 +13187,10 @@ class DuplicateEliminatedJoinRel final :
     DuplicateEliminatedJoinRel_JoinType_JOIN_TYPE_RIGHT_ANTI;
   static constexpr JoinType JOIN_TYPE_RIGHT_SINGLE =
     DuplicateEliminatedJoinRel_JoinType_JOIN_TYPE_RIGHT_SINGLE;
-  static constexpr JoinType JOIN_TYPE_MARK =
-    DuplicateEliminatedJoinRel_JoinType_JOIN_TYPE_MARK;
+  static constexpr JoinType JOIN_TYPE_LEFT_MARK =
+    DuplicateEliminatedJoinRel_JoinType_JOIN_TYPE_LEFT_MARK;
+  static constexpr JoinType JOIN_TYPE_RIGHT_MARK =
+    DuplicateEliminatedJoinRel_JoinType_JOIN_TYPE_RIGHT_MARK;
   static inline bool JoinType_IsValid(int value) {
     return DuplicateEliminatedJoinRel_JoinType_IsValid(value);
   }
@@ -41264,46 +41259,6 @@ inline void DuplicateEliminatedGetRel::set_allocated_input(::substrait::Referenc
   }
   input_ = input;
   // @@protoc_insertion_point(field_set_allocated:substrait.DuplicateEliminatedGetRel.input)
-}
-
-// repeated .substrait.Expression.FieldReference column_ids = 3;
-inline int DuplicateEliminatedGetRel::_internal_column_ids_size() const {
-  return column_ids_.size();
-}
-inline int DuplicateEliminatedGetRel::column_ids_size() const {
-  return _internal_column_ids_size();
-}
-inline void DuplicateEliminatedGetRel::clear_column_ids() {
-  column_ids_.Clear();
-}
-inline ::substrait::Expression_FieldReference* DuplicateEliminatedGetRel::mutable_column_ids(int index) {
-  // @@protoc_insertion_point(field_mutable:substrait.DuplicateEliminatedGetRel.column_ids)
-  return column_ids_.Mutable(index);
-}
-inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Expression_FieldReference >*
-DuplicateEliminatedGetRel::mutable_column_ids() {
-  // @@protoc_insertion_point(field_mutable_list:substrait.DuplicateEliminatedGetRel.column_ids)
-  return &column_ids_;
-}
-inline const ::substrait::Expression_FieldReference& DuplicateEliminatedGetRel::_internal_column_ids(int index) const {
-  return column_ids_.Get(index);
-}
-inline const ::substrait::Expression_FieldReference& DuplicateEliminatedGetRel::column_ids(int index) const {
-  // @@protoc_insertion_point(field_get:substrait.DuplicateEliminatedGetRel.column_ids)
-  return _internal_column_ids(index);
-}
-inline ::substrait::Expression_FieldReference* DuplicateEliminatedGetRel::_internal_add_column_ids() {
-  return column_ids_.Add();
-}
-inline ::substrait::Expression_FieldReference* DuplicateEliminatedGetRel::add_column_ids() {
-  ::substrait::Expression_FieldReference* _add = _internal_add_column_ids();
-  // @@protoc_insertion_point(field_add:substrait.DuplicateEliminatedGetRel.column_ids)
-  return _add;
-}
-inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::substrait::Expression_FieldReference >&
-DuplicateEliminatedGetRel::column_ids() const {
-  // @@protoc_insertion_point(field_list:substrait.DuplicateEliminatedGetRel.column_ids)
-  return column_ids_;
 }
 
 // -------------------------------------------------------------------

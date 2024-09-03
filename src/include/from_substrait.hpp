@@ -60,5 +60,7 @@ private:
 	//! names
 	static const unordered_map<std::string, std::string> function_names_remap;
 	static const case_insensitive_set_t valid_extract_subfields;
+	//! Pointer to last seen duplicate_eliminated_columns
+	vector<unique_ptr<ParsedExpression>> *duplicate_eliminated_columns_ptr = nullptr;
 };
 } // namespace duckdb
