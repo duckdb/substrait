@@ -441,35 +441,27 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformDelimJoinOp(const substrait::Re
 	}
 	duplicate_eliminated_columns_ptr = &duplicate_eliminated_columns;
 	JoinType djointype;
-	bool delim_flipped;
 	switch (sjoin.type()) {
 	case substrait::DuplicateEliminatedJoinRel_JoinType::DuplicateEliminatedJoinRel_JoinType_JOIN_TYPE_INNER:
 		djointype = JoinType::INNER;
-		delim_flipped = false;
 		break;
 	case substrait::DuplicateEliminatedJoinRel_JoinType::DuplicateEliminatedJoinRel_JoinType_JOIN_TYPE_LEFT:
 		djointype = JoinType::LEFT;
-		delim_flipped = false;
 		break;
 	case substrait::DuplicateEliminatedJoinRel_JoinType::DuplicateEliminatedJoinRel_JoinType_JOIN_TYPE_RIGHT:
 		djointype = JoinType::RIGHT;
-		delim_flipped = true;
 		break;
 	case substrait::DuplicateEliminatedJoinRel_JoinType::DuplicateEliminatedJoinRel_JoinType_JOIN_TYPE_LEFT_SINGLE:
 		djointype = JoinType::SINGLE;
-		delim_flipped = false;
 		break;
 	case substrait::DuplicateEliminatedJoinRel_JoinType::DuplicateEliminatedJoinRel_JoinType_JOIN_TYPE_RIGHT_SEMI:
 		djointype = JoinType::RIGHT_SEMI;
-		delim_flipped = true;
 		break;
 	case substrait::DuplicateEliminatedJoinRel_JoinType::DuplicateEliminatedJoinRel_JoinType_JOIN_TYPE_LEFT_MARK:
 		djointype = JoinType::MARK;
-		delim_flipped = false;
 		break;
 	case substrait::DuplicateEliminatedJoinRel_JoinType::DuplicateEliminatedJoinRel_JoinType_JOIN_TYPE_RIGHT_ANTI:
 		djointype = JoinType::RIGHT_ANTI;
-		delim_flipped = true;
 		break;
 	default:
 		throw InternalException("Unsupported join type");
@@ -479,7 +471,14 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformDelimJoinOp(const substrait::Re
 	auto right_op = TransformOp(sjoin.right())->Alias("right");
 	auto join =
 	    make_shared_ptr<JoinRelation>(std::move(left_op), std::move(right_op), std::move(join_condition), djointype);
-	join->delim_flipped = delim_flipped;
+	if (sjoin.duplicate_eliminated_side() == substrait::DuplicateEliminatedJoinRel::DUPLICATE_ELIMINATED_SIDE_RIGHT) {
+		join->delim_flipped = true;
+	} else if (sjoin.duplicate_eliminated_side() ==
+	           substrait::DuplicateEliminatedJoinRel::DUPLICATE_ELIMINATED_SIDE_LEFT) {
+		join->delim_flipped = false;
+	} else {
+		throw InvalidInputException("The plan has a delimiter join with an invalid type for it's delimiter side.");
+	}
 	join->duplicate_eliminated_columns = std::move(duplicate_eliminated_columns);
 	return join;
 }
@@ -492,7 +491,7 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformDelimGetOp(const substrait::Rel
 	vector<LogicalType> chunk_types;
 	auto &input_columns = subtree->Columns();
 	for (auto &col : *duplicate_eliminated_columns_ptr) {
-		auto &col_ref = col->Cast<PositionalReferenceExpression>();
+		auto& col_ref = col->Cast<PositionalReferenceExpression>();
 		chunk_types.emplace_back(input_columns[col_ref.index - 1].Type());
 	}
 	duplicate_eliminated_columns_ptr = nullptr;

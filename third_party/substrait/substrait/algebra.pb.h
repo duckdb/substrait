@@ -858,6 +858,32 @@ inline bool NestedLoopJoinRel_JoinType_Parse(
   return ::PROTOBUF_NAMESPACE_ID::internal::ParseNamedEnum<NestedLoopJoinRel_JoinType>(
     NestedLoopJoinRel_JoinType_descriptor(), name, value);
 }
+enum DuplicateEliminatedJoinRel_DuplicateEliminatedSide : int {
+  DuplicateEliminatedJoinRel_DuplicateEliminatedSide_DUPLICATE_ELIMINATED_SIDE_UNSPECIFIED = 0,
+  DuplicateEliminatedJoinRel_DuplicateEliminatedSide_DUPLICATE_ELIMINATED_SIDE_LEFT = 1,
+  DuplicateEliminatedJoinRel_DuplicateEliminatedSide_DUPLICATE_ELIMINATED_SIDE_RIGHT = 2,
+  DuplicateEliminatedJoinRel_DuplicateEliminatedSide_DuplicateEliminatedJoinRel_DuplicateEliminatedSide_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
+  DuplicateEliminatedJoinRel_DuplicateEliminatedSide_DuplicateEliminatedJoinRel_DuplicateEliminatedSide_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
+};
+bool DuplicateEliminatedJoinRel_DuplicateEliminatedSide_IsValid(int value);
+constexpr DuplicateEliminatedJoinRel_DuplicateEliminatedSide DuplicateEliminatedJoinRel_DuplicateEliminatedSide_DuplicateEliminatedSide_MIN = DuplicateEliminatedJoinRel_DuplicateEliminatedSide_DUPLICATE_ELIMINATED_SIDE_UNSPECIFIED;
+constexpr DuplicateEliminatedJoinRel_DuplicateEliminatedSide DuplicateEliminatedJoinRel_DuplicateEliminatedSide_DuplicateEliminatedSide_MAX = DuplicateEliminatedJoinRel_DuplicateEliminatedSide_DUPLICATE_ELIMINATED_SIDE_RIGHT;
+constexpr int DuplicateEliminatedJoinRel_DuplicateEliminatedSide_DuplicateEliminatedSide_ARRAYSIZE = DuplicateEliminatedJoinRel_DuplicateEliminatedSide_DuplicateEliminatedSide_MAX + 1;
+
+const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* DuplicateEliminatedJoinRel_DuplicateEliminatedSide_descriptor();
+template<typename T>
+inline const std::string& DuplicateEliminatedJoinRel_DuplicateEliminatedSide_Name(T enum_t_value) {
+  static_assert(::std::is_same<T, DuplicateEliminatedJoinRel_DuplicateEliminatedSide>::value ||
+    ::std::is_integral<T>::value,
+    "Incorrect type passed to function DuplicateEliminatedJoinRel_DuplicateEliminatedSide_Name.");
+  return ::PROTOBUF_NAMESPACE_ID::internal::NameOfEnum(
+    DuplicateEliminatedJoinRel_DuplicateEliminatedSide_descriptor(), enum_t_value);
+}
+inline bool DuplicateEliminatedJoinRel_DuplicateEliminatedSide_Parse(
+    ::PROTOBUF_NAMESPACE_ID::ConstStringParam name, DuplicateEliminatedJoinRel_DuplicateEliminatedSide* value) {
+  return ::PROTOBUF_NAMESPACE_ID::internal::ParseNamedEnum<DuplicateEliminatedJoinRel_DuplicateEliminatedSide>(
+    DuplicateEliminatedJoinRel_DuplicateEliminatedSide_descriptor(), name, value);
+}
 enum DuplicateEliminatedJoinRel_JoinType : int {
   DuplicateEliminatedJoinRel_JoinType_JOIN_TYPE_UNSPECIFIED = 0,
   DuplicateEliminatedJoinRel_JoinType_JOIN_TYPE_INNER = 1,
@@ -13106,6 +13132,38 @@ class DuplicateEliminatedJoinRel final :
 
   // nested types ----------------------------------------------------
 
+  typedef DuplicateEliminatedJoinRel_DuplicateEliminatedSide DuplicateEliminatedSide;
+  static constexpr DuplicateEliminatedSide DUPLICATE_ELIMINATED_SIDE_UNSPECIFIED =
+    DuplicateEliminatedJoinRel_DuplicateEliminatedSide_DUPLICATE_ELIMINATED_SIDE_UNSPECIFIED;
+  static constexpr DuplicateEliminatedSide DUPLICATE_ELIMINATED_SIDE_LEFT =
+    DuplicateEliminatedJoinRel_DuplicateEliminatedSide_DUPLICATE_ELIMINATED_SIDE_LEFT;
+  static constexpr DuplicateEliminatedSide DUPLICATE_ELIMINATED_SIDE_RIGHT =
+    DuplicateEliminatedJoinRel_DuplicateEliminatedSide_DUPLICATE_ELIMINATED_SIDE_RIGHT;
+  static inline bool DuplicateEliminatedSide_IsValid(int value) {
+    return DuplicateEliminatedJoinRel_DuplicateEliminatedSide_IsValid(value);
+  }
+  static constexpr DuplicateEliminatedSide DuplicateEliminatedSide_MIN =
+    DuplicateEliminatedJoinRel_DuplicateEliminatedSide_DuplicateEliminatedSide_MIN;
+  static constexpr DuplicateEliminatedSide DuplicateEliminatedSide_MAX =
+    DuplicateEliminatedJoinRel_DuplicateEliminatedSide_DuplicateEliminatedSide_MAX;
+  static constexpr int DuplicateEliminatedSide_ARRAYSIZE =
+    DuplicateEliminatedJoinRel_DuplicateEliminatedSide_DuplicateEliminatedSide_ARRAYSIZE;
+  static inline const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor*
+  DuplicateEliminatedSide_descriptor() {
+    return DuplicateEliminatedJoinRel_DuplicateEliminatedSide_descriptor();
+  }
+  template<typename T>
+  static inline const std::string& DuplicateEliminatedSide_Name(T enum_t_value) {
+    static_assert(::std::is_same<T, DuplicateEliminatedSide>::value ||
+      ::std::is_integral<T>::value,
+      "Incorrect type passed to function DuplicateEliminatedSide_Name.");
+    return DuplicateEliminatedJoinRel_DuplicateEliminatedSide_Name(enum_t_value);
+  }
+  static inline bool DuplicateEliminatedSide_Parse(::PROTOBUF_NAMESPACE_ID::ConstStringParam name,
+      DuplicateEliminatedSide* value) {
+    return DuplicateEliminatedJoinRel_DuplicateEliminatedSide_Parse(name, value);
+  }
+
   typedef DuplicateEliminatedJoinRel_JoinType JoinType;
   static constexpr JoinType JOIN_TYPE_UNSPECIFIED =
     DuplicateEliminatedJoinRel_JoinType_JOIN_TYPE_UNSPECIFIED;
@@ -13167,8 +13225,9 @@ class DuplicateEliminatedJoinRel final :
     kRightFieldNumber = 3,
     kExpressionFieldNumber = 4,
     kPostJoinFilterFieldNumber = 5,
-    kAdvancedExtensionFieldNumber = 8,
+    kAdvancedExtensionFieldNumber = 10,
     kTypeFieldNumber = 6,
+    kDuplicateEliminatedSideFieldNumber = 8,
   };
   // repeated .substrait.Expression.FieldReference duplicate_eliminated_columns = 7;
   int duplicate_eliminated_columns_size() const;
@@ -13278,7 +13337,7 @@ class DuplicateEliminatedJoinRel final :
       ::substrait::Expression* post_join_filter);
   ::substrait::Expression* unsafe_arena_release_post_join_filter();
 
-  // .substrait.extensions.AdvancedExtension advanced_extension = 8;
+  // .substrait.extensions.AdvancedExtension advanced_extension = 10;
   bool has_advanced_extension() const;
   private:
   bool _internal_has_advanced_extension() const;
@@ -13305,6 +13364,15 @@ class DuplicateEliminatedJoinRel final :
   void _internal_set_type(::substrait::DuplicateEliminatedJoinRel_JoinType value);
   public:
 
+  // .substrait.DuplicateEliminatedJoinRel.DuplicateEliminatedSide duplicate_eliminated_side = 8;
+  void clear_duplicate_eliminated_side();
+  ::substrait::DuplicateEliminatedJoinRel_DuplicateEliminatedSide duplicate_eliminated_side() const;
+  void set_duplicate_eliminated_side(::substrait::DuplicateEliminatedJoinRel_DuplicateEliminatedSide value);
+  private:
+  ::substrait::DuplicateEliminatedJoinRel_DuplicateEliminatedSide _internal_duplicate_eliminated_side() const;
+  void _internal_set_duplicate_eliminated_side(::substrait::DuplicateEliminatedJoinRel_DuplicateEliminatedSide value);
+  public:
+
   // @@protoc_insertion_point(class_scope:substrait.DuplicateEliminatedJoinRel)
  private:
   class _Internal;
@@ -13320,6 +13388,7 @@ class DuplicateEliminatedJoinRel final :
   ::substrait::Expression* post_join_filter_;
   ::substrait::extensions::AdvancedExtension* advanced_extension_;
   int type_;
+  int duplicate_eliminated_side_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_substrait_2falgebra_2eproto;
 };
@@ -41706,7 +41775,27 @@ DuplicateEliminatedJoinRel::duplicate_eliminated_columns() const {
   return duplicate_eliminated_columns_;
 }
 
-// .substrait.extensions.AdvancedExtension advanced_extension = 8;
+// .substrait.DuplicateEliminatedJoinRel.DuplicateEliminatedSide duplicate_eliminated_side = 8;
+inline void DuplicateEliminatedJoinRel::clear_duplicate_eliminated_side() {
+  duplicate_eliminated_side_ = 0;
+}
+inline ::substrait::DuplicateEliminatedJoinRel_DuplicateEliminatedSide DuplicateEliminatedJoinRel::_internal_duplicate_eliminated_side() const {
+  return static_cast< ::substrait::DuplicateEliminatedJoinRel_DuplicateEliminatedSide >(duplicate_eliminated_side_);
+}
+inline ::substrait::DuplicateEliminatedJoinRel_DuplicateEliminatedSide DuplicateEliminatedJoinRel::duplicate_eliminated_side() const {
+  // @@protoc_insertion_point(field_get:substrait.DuplicateEliminatedJoinRel.duplicate_eliminated_side)
+  return _internal_duplicate_eliminated_side();
+}
+inline void DuplicateEliminatedJoinRel::_internal_set_duplicate_eliminated_side(::substrait::DuplicateEliminatedJoinRel_DuplicateEliminatedSide value) {
+  
+  duplicate_eliminated_side_ = value;
+}
+inline void DuplicateEliminatedJoinRel::set_duplicate_eliminated_side(::substrait::DuplicateEliminatedJoinRel_DuplicateEliminatedSide value) {
+  _internal_set_duplicate_eliminated_side(value);
+  // @@protoc_insertion_point(field_set:substrait.DuplicateEliminatedJoinRel.duplicate_eliminated_side)
+}
+
+// .substrait.extensions.AdvancedExtension advanced_extension = 10;
 inline bool DuplicateEliminatedJoinRel::_internal_has_advanced_extension() const {
   return this != internal_default_instance() && advanced_extension_ != nullptr;
 }
@@ -53697,6 +53786,11 @@ template <> struct is_proto_enum< ::substrait::NestedLoopJoinRel_JoinType> : ::s
 template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::substrait::NestedLoopJoinRel_JoinType>() {
   return ::substrait::NestedLoopJoinRel_JoinType_descriptor();
+}
+template <> struct is_proto_enum< ::substrait::DuplicateEliminatedJoinRel_DuplicateEliminatedSide> : ::std::true_type {};
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::substrait::DuplicateEliminatedJoinRel_DuplicateEliminatedSide>() {
+  return ::substrait::DuplicateEliminatedJoinRel_DuplicateEliminatedSide_descriptor();
 }
 template <> struct is_proto_enum< ::substrait::DuplicateEliminatedJoinRel_JoinType> : ::std::true_type {};
 template <>

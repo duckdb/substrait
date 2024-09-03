@@ -951,6 +951,7 @@ substrait::Rel *DuckDBToSubstrait::TransformDelimiterJoin(LogicalOperator &dop) 
 	auto rhs_child = TransformOp(*dop.children[1]);
 	if (djoin.delim_flipped) {
 		// right side is where our delim is
+		sjoin->set_duplicate_eliminated_side(substrait::DuplicateEliminatedJoinRel::DUPLICATE_ELIMINATED_SIDE_RIGHT);
 		plan.add_relations()->set_allocated_rel(rhs_child);
 		sjoin->set_allocated_left(lhs_child);
 		auto rhs_res = new substrait::Rel();
@@ -959,6 +960,7 @@ substrait::Rel *DuckDBToSubstrait::TransformDelimiterJoin(LogicalOperator &dop) 
 		sjoin->set_allocated_right(rhs_res);
 	} else {
 		// left side is where our delim is
+		sjoin->set_duplicate_eliminated_side(substrait::DuplicateEliminatedJoinRel::DUPLICATE_ELIMINATED_SIDE_LEFT);
 		plan.add_relations()->set_allocated_rel(lhs_child);
 		sjoin->set_allocated_right(rhs_child);
 		auto lhs_res = new substrait::Rel();
@@ -989,27 +991,16 @@ substrait::Rel *DuckDBToSubstrait::TransformDelimiterJoin(LogicalOperator &dop) 
 		    substrait::DuplicateEliminatedJoinRel_JoinType::DuplicateEliminatedJoinRel_JoinType_JOIN_TYPE_RIGHT);
 		break;
 	case JoinType::SINGLE:
-		if (djoin.delim_flipped) {
-			sjoin->set_type(substrait::DuplicateEliminatedJoinRel_JoinType::
-			                    DuplicateEliminatedJoinRel_JoinType_JOIN_TYPE_RIGHT_SINGLE);
-
-		} else {
-			sjoin->set_type(substrait::DuplicateEliminatedJoinRel_JoinType::
-			                    DuplicateEliminatedJoinRel_JoinType_JOIN_TYPE_LEFT_SINGLE);
-		}
+		sjoin->set_type(
+		    substrait::DuplicateEliminatedJoinRel_JoinType::DuplicateEliminatedJoinRel_JoinType_JOIN_TYPE_LEFT_SINGLE);
 		break;
 	case JoinType::RIGHT_SEMI:
 		sjoin->set_type(
 		    substrait::DuplicateEliminatedJoinRel_JoinType::DuplicateEliminatedJoinRel_JoinType_JOIN_TYPE_RIGHT_SEMI);
 		break;
 	case JoinType::MARK:
-		if (djoin.delim_flipped) {
-			sjoin->set_type(substrait::DuplicateEliminatedJoinRel_JoinType::
-			                    DuplicateEliminatedJoinRel_JoinType_JOIN_TYPE_RIGHT_MARK);
-		} else {
-			sjoin->set_type(substrait::DuplicateEliminatedJoinRel_JoinType::
-			                    DuplicateEliminatedJoinRel_JoinType_JOIN_TYPE_LEFT_MARK);
-		}
+		sjoin->set_type(
+		    substrait::DuplicateEliminatedJoinRel_JoinType::DuplicateEliminatedJoinRel_JoinType_JOIN_TYPE_LEFT_MARK);
 		break;
 	case JoinType::RIGHT_ANTI:
 		sjoin->set_type(
