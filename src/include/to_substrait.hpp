@@ -37,7 +37,7 @@ private:
 	void CreateFieldRef(substrait::Expression *expr, uint64_t col_idx);
 
 	//! Transforms Relation Root
-	substrait::RelRoot *TransformRootOp(LogicalOperator &dop);
+	void TransformRootOp(substrait::RelRoot &root_rel, LogicalOperator &dop);
 
 	//! Methods to Transform Logical Operators to Substrait Relations
 	substrait::Rel *TransformOp(duckdb::LogicalOperator &dop);
@@ -47,6 +47,7 @@ private:
 	substrait::Rel *TransformLimit(duckdb::LogicalOperator &dop);
 	substrait::Rel *TransformOrderBy(duckdb::LogicalOperator &dop);
 	substrait::Rel *TransformComparisonJoin(duckdb::LogicalOperator &dop);
+	substrait::Rel *TransformDelimiterJoin(duckdb::LogicalOperator &dop);
 	substrait::Rel *TransformAggregateGroup(duckdb::LogicalOperator &dop);
 	substrait::Rel *TransformGet(duckdb::LogicalOperator &dop);
 	substrait::Rel *TransformCrossProduct(duckdb::LogicalOperator &dop);
@@ -54,6 +55,11 @@ private:
 	substrait::Rel *TransformDistinct(duckdb::LogicalOperator &dop);
 	substrait::Rel *TransformExcept(LogicalOperator &dop);
 	substrait::Rel *TransformIntersect(LogicalOperator &dop);
+	substrait::Rel *TransformDelimGet();
+
+	//! Auxiliary function to create Projection on top of a Join
+	substrait::Rel *ProjectJoinRelation(LogicalComparisonJoin &djoin, substrait::Rel *join_relation,
+	                                    idx_t left_col_count);
 
 	//! Methods to transform different LogicalGet Types (e.g., Table, Parquet)
 	//! To Substrait;
@@ -160,5 +166,11 @@ private:
 	//! things don't go perfectly shiny
 	bool strict;
 	string errors;
+	//! Index of the current subtree relation we are looking at
+	//! This really only matters for delim joins/gets, since these are
+	//! the only splits we currently support.
+	int32_t cur_subtree_relation = 1;
+	//! The pointer to a delim join
+	LogicalComparisonJoin *duplicate_eliminated_parent_ptr = nullptr;
 };
 } // namespace duckdb

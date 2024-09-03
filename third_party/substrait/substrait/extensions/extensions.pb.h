@@ -1115,23 +1115,23 @@ class AdvancedExtension final :
     kOptimizationFieldNumber = 1,
     kEnhancementFieldNumber = 2,
   };
-  // .google.protobuf.Any optimization = 1;
-  bool has_optimization() const;
+  // repeated .google.protobuf.Any optimization = 1;
+  int optimization_size() const;
   private:
-  bool _internal_has_optimization() const;
+  int _internal_optimization_size() const;
   public:
   void clear_optimization();
-  const ::PROTOBUF_NAMESPACE_ID::Any& optimization() const;
-  PROTOBUF_NODISCARD ::PROTOBUF_NAMESPACE_ID::Any* release_optimization();
-  ::PROTOBUF_NAMESPACE_ID::Any* mutable_optimization();
-  void set_allocated_optimization(::PROTOBUF_NAMESPACE_ID::Any* optimization);
+  ::PROTOBUF_NAMESPACE_ID::Any* mutable_optimization(int index);
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::PROTOBUF_NAMESPACE_ID::Any >*
+      mutable_optimization();
   private:
-  const ::PROTOBUF_NAMESPACE_ID::Any& _internal_optimization() const;
-  ::PROTOBUF_NAMESPACE_ID::Any* _internal_mutable_optimization();
+  const ::PROTOBUF_NAMESPACE_ID::Any& _internal_optimization(int index) const;
+  ::PROTOBUF_NAMESPACE_ID::Any* _internal_add_optimization();
   public:
-  void unsafe_arena_set_allocated_optimization(
-      ::PROTOBUF_NAMESPACE_ID::Any* optimization);
-  ::PROTOBUF_NAMESPACE_ID::Any* unsafe_arena_release_optimization();
+  const ::PROTOBUF_NAMESPACE_ID::Any& optimization(int index) const;
+  ::PROTOBUF_NAMESPACE_ID::Any* add_optimization();
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::PROTOBUF_NAMESPACE_ID::Any >&
+      optimization() const;
 
   // .google.protobuf.Any enhancement = 2;
   bool has_enhancement() const;
@@ -1158,7 +1158,7 @@ class AdvancedExtension final :
   template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
-  ::PROTOBUF_NAMESPACE_ID::Any* optimization_;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::PROTOBUF_NAMESPACE_ID::Any > optimization_;
   ::PROTOBUF_NAMESPACE_ID::Any* enhancement_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_substrait_2fextensions_2fextensions_2eproto;
@@ -1769,90 +1769,41 @@ inline SimpleExtensionDeclaration::MappingTypeCase SimpleExtensionDeclaration::m
 
 // AdvancedExtension
 
-// .google.protobuf.Any optimization = 1;
-inline bool AdvancedExtension::_internal_has_optimization() const {
-  return this != internal_default_instance() && optimization_ != nullptr;
+// repeated .google.protobuf.Any optimization = 1;
+inline int AdvancedExtension::_internal_optimization_size() const {
+  return optimization_.size();
 }
-inline bool AdvancedExtension::has_optimization() const {
-  return _internal_has_optimization();
+inline int AdvancedExtension::optimization_size() const {
+  return _internal_optimization_size();
 }
-inline const ::PROTOBUF_NAMESPACE_ID::Any& AdvancedExtension::_internal_optimization() const {
-  const ::PROTOBUF_NAMESPACE_ID::Any* p = optimization_;
-  return p != nullptr ? *p : reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Any&>(
-      ::PROTOBUF_NAMESPACE_ID::_Any_default_instance_);
-}
-inline const ::PROTOBUF_NAMESPACE_ID::Any& AdvancedExtension::optimization() const {
-  // @@protoc_insertion_point(field_get:substrait.extensions.AdvancedExtension.optimization)
-  return _internal_optimization();
-}
-inline void AdvancedExtension::unsafe_arena_set_allocated_optimization(
-    ::PROTOBUF_NAMESPACE_ID::Any* optimization) {
-  if (GetArenaForAllocation() == nullptr) {
-    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(optimization_);
-  }
-  optimization_ = optimization;
-  if (optimization) {
-    
-  } else {
-    
-  }
-  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:substrait.extensions.AdvancedExtension.optimization)
-}
-inline ::PROTOBUF_NAMESPACE_ID::Any* AdvancedExtension::release_optimization() {
-  
-  ::PROTOBUF_NAMESPACE_ID::Any* temp = optimization_;
-  optimization_ = nullptr;
-#ifdef PROTOBUF_FORCE_COPY_IN_RELEASE
-  auto* old =  reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(temp);
-  temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
-  if (GetArenaForAllocation() == nullptr) { delete old; }
-#else  // PROTOBUF_FORCE_COPY_IN_RELEASE
-  if (GetArenaForAllocation() != nullptr) {
-    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
-  }
-#endif  // !PROTOBUF_FORCE_COPY_IN_RELEASE
-  return temp;
-}
-inline ::PROTOBUF_NAMESPACE_ID::Any* AdvancedExtension::unsafe_arena_release_optimization() {
-  // @@protoc_insertion_point(field_release:substrait.extensions.AdvancedExtension.optimization)
-  
-  ::PROTOBUF_NAMESPACE_ID::Any* temp = optimization_;
-  optimization_ = nullptr;
-  return temp;
-}
-inline ::PROTOBUF_NAMESPACE_ID::Any* AdvancedExtension::_internal_mutable_optimization() {
-  
-  if (optimization_ == nullptr) {
-    auto* p = CreateMaybeMessage<::PROTOBUF_NAMESPACE_ID::Any>(GetArenaForAllocation());
-    optimization_ = p;
-  }
-  return optimization_;
-}
-inline ::PROTOBUF_NAMESPACE_ID::Any* AdvancedExtension::mutable_optimization() {
-  ::PROTOBUF_NAMESPACE_ID::Any* _msg = _internal_mutable_optimization();
+inline ::PROTOBUF_NAMESPACE_ID::Any* AdvancedExtension::mutable_optimization(int index) {
   // @@protoc_insertion_point(field_mutable:substrait.extensions.AdvancedExtension.optimization)
-  return _msg;
+  return optimization_.Mutable(index);
 }
-inline void AdvancedExtension::set_allocated_optimization(::PROTOBUF_NAMESPACE_ID::Any* optimization) {
-  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
-  if (message_arena == nullptr) {
-    delete reinterpret_cast< ::PROTOBUF_NAMESPACE_ID::MessageLite*>(optimization_);
-  }
-  if (optimization) {
-    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
-        ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper<
-            ::PROTOBUF_NAMESPACE_ID::MessageLite>::GetOwningArena(
-                reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(optimization));
-    if (message_arena != submessage_arena) {
-      optimization = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
-          message_arena, optimization, submessage_arena);
-    }
-    
-  } else {
-    
-  }
-  optimization_ = optimization;
-  // @@protoc_insertion_point(field_set_allocated:substrait.extensions.AdvancedExtension.optimization)
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::PROTOBUF_NAMESPACE_ID::Any >*
+AdvancedExtension::mutable_optimization() {
+  // @@protoc_insertion_point(field_mutable_list:substrait.extensions.AdvancedExtension.optimization)
+  return &optimization_;
+}
+inline const ::PROTOBUF_NAMESPACE_ID::Any& AdvancedExtension::_internal_optimization(int index) const {
+  return optimization_.Get(index);
+}
+inline const ::PROTOBUF_NAMESPACE_ID::Any& AdvancedExtension::optimization(int index) const {
+  // @@protoc_insertion_point(field_get:substrait.extensions.AdvancedExtension.optimization)
+  return _internal_optimization(index);
+}
+inline ::PROTOBUF_NAMESPACE_ID::Any* AdvancedExtension::_internal_add_optimization() {
+  return optimization_.Add();
+}
+inline ::PROTOBUF_NAMESPACE_ID::Any* AdvancedExtension::add_optimization() {
+  ::PROTOBUF_NAMESPACE_ID::Any* _add = _internal_add_optimization();
+  // @@protoc_insertion_point(field_add:substrait.extensions.AdvancedExtension.optimization)
+  return _add;
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::PROTOBUF_NAMESPACE_ID::Any >&
+AdvancedExtension::optimization() const {
+  // @@protoc_insertion_point(field_list:substrait.extensions.AdvancedExtension.optimization)
+  return optimization_;
 }
 
 // .google.protobuf.Any enhancement = 2;

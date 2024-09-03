@@ -89,26 +89,28 @@ shared_ptr<Relation> SubstraitPlanToDuckDBRel(Connection &conn, const string &se
 
 static void VerifySubstraitRoundtrip(unique_ptr<LogicalOperator> &query_plan, Connection &con,
                                      ToSubstraitFunctionData &data, const string &serialized, bool is_json) {
-	// We round-trip the generated json and verify if the result is the same
-	auto actual_result = con.Query(data.query);
-
+	bool is_optimizer_enabled = con.context->config.enable_optimizer;
+	con.context->config.enable_optimizer = false;
 	auto sub_relation = SubstraitPlanToDuckDBRel(con, serialized, is_json);
 	unique_ptr<QueryResult> substrait_result;
+
 	try {
 		substrait_result = sub_relation->Execute();
-
 	} catch (std::exception &ex) {
 		// Ideally we don't have to do that, we should change to capture the error and throw it here at some point
 		query_plan->Print();
 		sub_relation->Print();
-
 		throw InternalException("Substrait Plan Execution Failed");
 	}
+	con.context->config.enable_optimizer = is_optimizer_enabled;
+	// We round-trip the generated json and verify if the result is the same
+	auto actual_result = con.Query(data.query);
+
 	substrait_result->names = actual_result->names;
 	unique_ptr<MaterializedQueryResult> substrait_materialized;
 
 	if (substrait_result->type == QueryResultType::STREAM_RESULT) {
-		auto &stream_query = substrait_result->Cast<duckdb::StreamQueryResult>();
+		auto &stream_query = substrait_result->Cast<StreamQueryResult>();
 
 		substrait_materialized = stream_query.Materialize();
 	} else if (substrait_result->type == QueryResultType::MATERIALIZED_RESULT) {
@@ -152,6 +154,7 @@ static DuckDBToSubstrait InitPlanExtractor(ClientContext &context, ToSubstraitFu
 	set<OptimizerType> disabled_optimizers = DBConfig::GetConfig(context).options.disabled_optimizers;
 	disabled_optimizers.insert(OptimizerType::IN_CLAUSE);
 	disabled_optimizers.insert(OptimizerType::COMPRESSED_MATERIALIZATION);
+	disabled_optimizers.insert(OptimizerType::MATERIALIZED_CTE);
 	DBConfig::GetConfig(*new_conn.context).options.disabled_optimizers = disabled_optimizers;
 
 	query_plan = new_conn.context->ExtractPlan(data.query);

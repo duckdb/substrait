@@ -689,6 +689,9 @@ substrait::Expression *DuckDBToSubstrait::TransformJoinCond(JoinCondition &dcond
 	case ExpressionType::COMPARE_LESSTHAN:
 		join_comparision = "lt";
 		break;
+	case ExpressionType::COMPARE_NOTEQUAL:
+		join_comparision = "not_equal";
+		break;
 	default:
 		throw InternalException("Unsupported join comparison: " + ExpressionTypeToOperator(dcond.comparison));
 	}
@@ -854,6 +857,42 @@ substrait::Rel *DuckDBToSubstrait::TransformOrderBy(LogicalOperator &dop) {
 	return res;
 }
 
+substrait::Rel *DuckDBToSubstrait::ProjectJoinRelation(LogicalComparisonJoin &djoin, substrait::Rel *join_relation,
+                                                       idx_t left_col_count) {
+
+	// somewhat odd semantics on our side
+	if (djoin.left_projection_map.empty()) {
+		for (uint64_t i = 0; i < djoin.children[0]->types.size(); i++) {
+			djoin.left_projection_map.push_back(i);
+		}
+	}
+	if (djoin.right_projection_map.empty()) {
+		for (uint64_t i = 0; i < djoin.children[1]->types.size(); i++) {
+			djoin.right_projection_map.push_back(i);
+		}
+	}
+	auto proj_rel = new substrait::Rel();
+	auto projection = proj_rel->mutable_project();
+	if (djoin.join_type == JoinType::RIGHT_SEMI || djoin.join_type == JoinType::RIGHT_ANTI) {
+		// We project everything from the right table
+		for (auto right_idx : djoin.right_projection_map) {
+			CreateFieldRef(projection->add_expressions(), right_idx);
+		}
+	} else {
+		for (auto left_idx : djoin.left_projection_map) {
+			CreateFieldRef(projection->add_expressions(), left_idx);
+		}
+		if (djoin.join_type != JoinType::SEMI) {
+			for (auto right_idx : djoin.right_projection_map) {
+				CreateFieldRef(projection->add_expressions(), right_idx + left_col_count);
+			}
+		}
+	}
+
+	projection->set_allocated_input(join_relation);
+	return proj_rel;
+}
+
 substrait::Rel *DuckDBToSubstrait::TransformComparisonJoin(LogicalOperator &dop) {
 	auto res = new substrait::Rel();
 	auto sjoin = res->mutable_join();
@@ -884,41 +923,101 @@ substrait::Rel *DuckDBToSubstrait::TransformComparisonJoin(LogicalOperator &dop)
 		sjoin->set_type(substrait::JoinRel::JoinType::JoinRel_JoinType_JOIN_TYPE_RIGHT);
 		break;
 	case JoinType::SINGLE:
-		sjoin->set_type(substrait::JoinRel::JoinType::JoinRel_JoinType_JOIN_TYPE_SINGLE);
+		sjoin->set_type(substrait::JoinRel::JoinType::JoinRel_JoinType_JOIN_TYPE_LEFT_SINGLE);
 		break;
 	case JoinType::SEMI:
-		sjoin->set_type(substrait::JoinRel::JoinType::JoinRel_JoinType_JOIN_TYPE_SEMI);
+		sjoin->set_type(substrait::JoinRel::JoinType::JoinRel_JoinType_JOIN_TYPE_LEFT_SEMI);
 		break;
 	case JoinType::MARK:
-		sjoin->set_type(substrait::JoinRel::JoinType::JoinRel_JoinType_JOIN_TYPE_MARK);
+		sjoin->set_type(substrait::JoinRel::JoinType::JoinRel_JoinType_JOIN_TYPE_LEFT_MARK);
+		break;
+	case JoinType::RIGHT_SEMI:
+		sjoin->set_type(substrait::JoinRel::JoinType::JoinRel_JoinType_JOIN_TYPE_RIGHT_SEMI);
 		break;
 	default:
 		throw InternalException("Unsupported join type " + JoinTypeToString(djoin.join_type));
 	}
-	// somewhat odd semantics on our side
-	if (djoin.left_projection_map.empty()) {
-		for (uint64_t i = 0; i < dop.children[0]->types.size(); i++) {
-			djoin.left_projection_map.push_back(i);
-		}
-	}
-	if (djoin.right_projection_map.empty()) {
-		for (uint64_t i = 0; i < dop.children[1]->types.size(); i++) {
-			djoin.right_projection_map.push_back(i);
-		}
-	}
-	auto proj_rel = new substrait::Rel();
-	auto projection = proj_rel->mutable_project();
-	for (auto left_idx : djoin.left_projection_map) {
-		CreateFieldRef(projection->add_expressions(), left_idx);
-	}
-	if (djoin.join_type != JoinType::SEMI) {
-		for (auto right_idx : djoin.right_projection_map) {
-			CreateFieldRef(projection->add_expressions(), right_idx + left_col_count);
-		}
+	return ProjectJoinRelation(djoin, res, left_col_count);
+}
+
+substrait::Rel *DuckDBToSubstrait::TransformDelimiterJoin(LogicalOperator &dop) {
+	auto &djoin = dop.Cast<LogicalComparisonJoin>();
+	duplicate_eliminated_parent_ptr = &djoin;
+	auto res = new substrait::Rel();
+
+	auto sjoin = res->mutable_duplicate_eliminated_join();
+
+	auto lhs_child = TransformOp(*dop.children[0]);
+	auto rhs_child = TransformOp(*dop.children[1]);
+	if (djoin.delim_flipped) {
+		// right side is where our delim is
+		sjoin->set_duplicate_eliminated_side(substrait::DuplicateEliminatedJoinRel::DUPLICATE_ELIMINATED_SIDE_RIGHT);
+		plan.add_relations()->set_allocated_rel(rhs_child);
+		sjoin->set_allocated_left(lhs_child);
+		auto rhs_res = new substrait::Rel();
+		auto rhs_ref_rel = rhs_res->mutable_reference();
+		rhs_ref_rel->set_subtree_ordinal(cur_subtree_relation++);
+		sjoin->set_allocated_right(rhs_res);
+	} else {
+		// left side is where our delim is
+		sjoin->set_duplicate_eliminated_side(substrait::DuplicateEliminatedJoinRel::DUPLICATE_ELIMINATED_SIDE_LEFT);
+		plan.add_relations()->set_allocated_rel(lhs_child);
+		sjoin->set_allocated_right(rhs_child);
+		auto lhs_res = new substrait::Rel();
+		auto lhs_ref_rel = lhs_res->mutable_reference();
+		lhs_ref_rel->set_subtree_ordinal(cur_subtree_relation++);
+		sjoin->set_allocated_left(lhs_res);
 	}
 
-	projection->set_allocated_input(res);
-	return proj_rel;
+	auto left_col_count = dop.children[0]->types.size();
+	if (dop.children[0]->type == LogicalOperatorType::LOGICAL_COMPARISON_JOIN) {
+		auto child_join = (LogicalComparisonJoin *)dop.children[0].get();
+		left_col_count = child_join->left_projection_map.size() + child_join->right_projection_map.size();
+	}
+	sjoin->set_allocated_expression(
+	    CreateConjunction(djoin.conditions, [&](JoinCondition &in) { return TransformJoinCond(in, left_col_count); }));
+
+	switch (djoin.join_type) {
+	case JoinType::INNER:
+		sjoin->set_type(
+		    substrait::DuplicateEliminatedJoinRel_JoinType::DuplicateEliminatedJoinRel_JoinType_JOIN_TYPE_INNER);
+		break;
+	case JoinType::LEFT:
+		sjoin->set_type(
+		    substrait::DuplicateEliminatedJoinRel_JoinType::DuplicateEliminatedJoinRel_JoinType_JOIN_TYPE_LEFT);
+		break;
+	case JoinType::RIGHT:
+		sjoin->set_type(
+		    substrait::DuplicateEliminatedJoinRel_JoinType::DuplicateEliminatedJoinRel_JoinType_JOIN_TYPE_RIGHT);
+		break;
+	case JoinType::SINGLE:
+		sjoin->set_type(
+		    substrait::DuplicateEliminatedJoinRel_JoinType::DuplicateEliminatedJoinRel_JoinType_JOIN_TYPE_LEFT_SINGLE);
+		break;
+	case JoinType::RIGHT_SEMI:
+		sjoin->set_type(
+		    substrait::DuplicateEliminatedJoinRel_JoinType::DuplicateEliminatedJoinRel_JoinType_JOIN_TYPE_RIGHT_SEMI);
+		break;
+	case JoinType::MARK:
+		sjoin->set_type(
+		    substrait::DuplicateEliminatedJoinRel_JoinType::DuplicateEliminatedJoinRel_JoinType_JOIN_TYPE_LEFT_MARK);
+		break;
+	case JoinType::RIGHT_ANTI:
+		sjoin->set_type(
+		    substrait::DuplicateEliminatedJoinRel_JoinType::DuplicateEliminatedJoinRel_JoinType_JOIN_TYPE_RIGHT_ANTI);
+		break;
+	default:
+		throw InternalException("Unsupported join type " + JoinTypeToString(djoin.join_type));
+	}
+
+	// Have to add duplicate_eliminated_columns if any
+	for (auto &dup_col : djoin.duplicate_eliminated_columns) {
+		auto &dref = dup_col->Cast<BoundReferenceExpression>();
+		auto s_dup_col = sjoin->add_duplicate_eliminated_columns();
+		s_dup_col->mutable_direct_reference()->mutable_struct_field()->set_field(static_cast<int32_t>(dref.index));
+	}
+
+	return ProjectJoinRelation(djoin, res, left_col_count);
 }
 
 substrait::Rel *DuckDBToSubstrait::TransformAggregateGroup(LogicalOperator &dop) {
@@ -1192,9 +1291,10 @@ substrait::Rel *DuckDBToSubstrait::TransformGet(LogicalOperator &dop) {
 		// fixme: whatever this means
 		projection->set_maintain_singular_struct(true);
 		auto select = new substrait::Expression_MaskExpression_StructSelect();
+		auto &column_ids = dget.GetColumnIds();
 		for (auto col_idx : dget.projection_ids) {
 			auto struct_item = select->add_struct_items();
-			struct_item->set_field((int32_t)dget.column_ids[col_idx]);
+			struct_item->set_field(static_cast<int32_t>(column_ids[col_idx]));
 			// FIXME do we need to set the child? if yes, to what?
 		}
 		projection->set_allocated_select(select);
@@ -1294,6 +1394,15 @@ substrait::Rel *DuckDBToSubstrait::TransformIntersect(LogicalOperator &dop) {
 	return rel;
 }
 
+substrait::Rel *DuckDBToSubstrait::TransformDelimGet() {
+	auto rel = new substrait::Rel();
+	auto delim_get = rel->mutable_duplicate_eliminated_get();
+	auto ref_input = delim_get->mutable_input();
+	ref_input->set_subtree_ordinal(cur_subtree_relation);
+	duplicate_eliminated_parent_ptr = nullptr;
+	return rel;
+}
+
 substrait::Rel *DuckDBToSubstrait::TransformOp(LogicalOperator &dop) {
 	switch (dop.type) {
 	case LogicalOperatorType::LOGICAL_FILTER:
@@ -1306,6 +1415,8 @@ substrait::Rel *DuckDBToSubstrait::TransformOp(LogicalOperator &dop) {
 		return TransformOrderBy(dop);
 	case LogicalOperatorType::LOGICAL_PROJECTION:
 		return TransformProjection(dop);
+	case LogicalOperatorType::LOGICAL_DELIM_JOIN:
+		return TransformDelimiterJoin(dop);
 	case LogicalOperatorType::LOGICAL_COMPARISON_JOIN:
 		return TransformComparisonJoin(dop);
 	case LogicalOperatorType::LOGICAL_AGGREGATE_AND_GROUP_BY:
@@ -1322,6 +1433,8 @@ substrait::Rel *DuckDBToSubstrait::TransformOp(LogicalOperator &dop) {
 		return TransformExcept(dop);
 	case LogicalOperatorType::LOGICAL_INTERSECT:
 		return TransformIntersect(dop);
+	case LogicalOperatorType::LOGICAL_DELIM_GET:
+		return TransformDelimGet();
 	default:
 		throw InternalException(LogicalOperatorToString(dop.type));
 	}
@@ -1332,8 +1445,7 @@ static bool IsSetOperation(LogicalOperator &op) {
 	       op.type == LogicalOperatorType::LOGICAL_INTERSECT;
 }
 
-substrait::RelRoot *DuckDBToSubstrait::TransformRootOp(LogicalOperator &dop) {
-	auto root_rel = new substrait::RelRoot();
+void DuckDBToSubstrait::TransformRootOp(substrait::RelRoot &root_rel, LogicalOperator &dop) {
 	LogicalOperator *current_op = &dop;
 	bool weird_scenario = current_op->type == LogicalOperatorType::LOGICAL_PROJECTION &&
 	                      current_op->children[0]->type == LogicalOperatorType::LOGICAL_TOP_N;
@@ -1358,35 +1470,33 @@ substrait::RelRoot *DuckDBToSubstrait::TransformRootOp(LogicalOperator &dop) {
 		}
 		current_op = current_op->children[0].get();
 	}
-	root_rel->set_allocated_input(TransformOp(dop));
+	root_rel.set_allocated_input(TransformOp(dop));
 	auto &dproj = (LogicalProjection &)*current_op;
 	if (!weird_scenario) {
 		for (auto &expression : dproj.expressions) {
-			root_rel->add_names(expression->GetName());
+			root_rel.add_names(expression->GetName());
 		}
 	} else {
 		for (auto &expression : dop.expressions) {
 			D_ASSERT(expression->type == ExpressionType::BOUND_REF);
 			auto b_expr = (BoundReferenceExpression *)expression.get();
-			root_rel->add_names(dproj.expressions[b_expr->index]->GetName());
+			root_rel.add_names(dproj.expressions[b_expr->index]->GetName());
 		}
 	}
-
-	return root_rel;
 }
 
 void DuckDBToSubstrait::TransformPlan(LogicalOperator &dop) {
-	substrait::RelRoot *root;
+	auto root = new substrait::RelRoot();
+	plan.add_relations()->set_allocated_root(root);
 	try {
-		root = TransformRootOp(dop);
+		TransformRootOp(*root, dop);
 	} catch (std::exception &ex) {
 		// Ideally we don't have to do that, we should change to capture the error and throw it here at some point
-		::duckdb::ErrorData parsed_error(ex);
+		ErrorData parsed_error(ex);
 		throw NotImplementedException("Something in this plan is not yet implemented in the DuckDB -> Substrait plan "
 		                              "conversion.\n DuckDB Plan:\n" +
 		                              dop.ToString() + "Not Implemented error message: " + parsed_error.RawMessage());
 	}
-	plan.add_relations()->set_allocated_root(root);
 	if (strict && !errors.empty()) {
 		throw InvalidInputException("Strict Mode is set to true, and the following warnings/errors happened. \n" +
 		                            errors);
