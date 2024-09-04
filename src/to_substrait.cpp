@@ -414,6 +414,29 @@ void DuckDBToSubstrait::TransformComparisonExpression(Expression &dexpr, substra
 	*scalar_fun->mutable_output_type() = DuckToSubstraitType(dcomp.return_type);
 }
 
+void DuckDBToSubstrait::TransformBetweenExpression(Expression &dexpr, substrait::Expression &sexpr) {
+	auto &dcomp = dexpr.Cast<BoundBetweenExpression>();
+
+	if (dexpr.type != ExpressionType::COMPARE_BETWEEN) {
+		throw InternalException("Not a between comparison expression");
+	}
+
+	auto scalar_fun = sexpr.mutable_scalar_function();
+	vector<::substrait::Type> args_types;
+	args_types.emplace_back(DuckToSubstraitType(dcomp.input->return_type));
+	args_types.emplace_back(DuckToSubstraitType(dcomp.lower->return_type));
+	args_types.emplace_back(DuckToSubstraitType(dcomp.upper->return_type));
+	scalar_fun->set_function_reference(RegisterFunction("between", args_types));
+	
+	auto sarg = scalar_fun->add_arguments();
+	TransformExpr(*dcomp.input, *sarg->mutable_value(), 0);
+	sarg = scalar_fun->add_arguments();
+	TransformExpr(*dcomp.lower, *sarg->mutable_value(), 0);
+	sarg = scalar_fun->add_arguments();
+	TransformExpr(*dcomp.upper, *sarg->mutable_value(), 0);
+	*scalar_fun->mutable_output_type() = DuckToSubstraitType(dcomp.return_type);
+}
+
 void DuckDBToSubstrait::TransformConjunctionExpression(Expression &dexpr, substrait::Expression &sexpr,
                                                        uint64_t col_offset) {
 	auto &dconj = dexpr.Cast<BoundConjunctionExpression>();
@@ -537,6 +560,9 @@ void DuckDBToSubstrait::TransformExpr(Expression &dexpr, substrait::Expression &
 	case ExpressionType::COMPARE_NOTEQUAL:
 	case ExpressionType::COMPARE_NOT_DISTINCT_FROM:
 		TransformComparisonExpression(dexpr, sexpr);
+		break;
+	case ExpressionType::COMPARE_BETWEEN:
+		TransformBetweenExpression(dexpr, sexpr);
 		break;
 	case ExpressionType::CONJUNCTION_AND:
 	case ExpressionType::CONJUNCTION_OR:
