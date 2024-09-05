@@ -25,7 +25,7 @@
 #include "google/protobuf/util/json_util.h"
 #include "substrait/plan.pb.h"
 
-#include <duckdb/main/relation/table_relation.hpp>
+#include "duckdb/main/relation/table_relation.hpp"
 
 namespace duckdb {
 const std::unordered_map<std::string, std::string> SubstraitToDuckDB::function_names_remap = {
