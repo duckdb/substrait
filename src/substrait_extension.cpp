@@ -163,6 +163,8 @@ static void ToSubFunction(ClientContext &context, TableFunctionInput &data_p, Da
 		return;
 	}
 	auto new_conn = Connection(*context.db);
+	// If error(varchar) gets implemented in substrait this can be removed
+	new_conn.Query("SET scalar_subquery_error_on_multiple_rows=false;");
 
 	unique_ptr<LogicalOperator> query_plan;
 	string serialized;
@@ -195,6 +197,8 @@ static void ToJsonFunction(ClientContext &context, TableFunctionInput &data_p, D
 		return;
 	}
 	auto new_conn = Connection(*context.db);
+	// If error(varchar) gets implemented in substrait this can be removed
+	new_conn.Query("SET scalar_subquery_error_on_multiple_rows=false;");
 
 	unique_ptr<LogicalOperator> query_plan;
 	string serialized;
