@@ -252,7 +252,6 @@ unique_ptr<ParsedExpression> SubstraitToDuckDB::TransformScalarFunctionExpr(cons
 		return make_uniq<ComparisonExpression>(ExpressionType::COMPARE_NOT_DISTINCT_FROM, std::move(children[0]),
 		                                       std::move(children[1]));
 	} else if (function_name == "between") {
-		// FIXME: ADD between to substrait extension
 		D_ASSERT(children.size() == 3);
 		return make_uniq<BetweenExpression>(std::move(children[0]), std::move(children[1]), std::move(children[2]));
 	} else if (function_name == "extract") {
