@@ -21,9 +21,11 @@
 
 #include "duckdb/parser/expression/comparison_expression.hpp"
 
-#include "substrait/plan.pb.h"
-#include "google/protobuf/util/json_util.h"
 #include "duckdb/main/client_data.hpp"
+#include "google/protobuf/util/json_util.h"
+#include "substrait/plan.pb.h"
+
+#include "duckdb/main/relation/table_relation.hpp"
 
 namespace duckdb {
 const std::unordered_map<std::string, std::string> SubstraitToDuckDB::function_names_remap = {
@@ -660,21 +662,22 @@ int32_t SkipColumnNames(const LogicalType &type) {
 	return columns_to_skip;
 }
 
-Relation *GetProjectionRelation(Relation &relation, string &error) {
+Relation *GetProjectionOrTableRelation(Relation &relation, string &error) {
 	error += RelationTypeToString(relation.type);
 	switch (relation.type) {
+	case RelationType::TABLE_RELATION:
 	case RelationType::PROJECTION_RELATION:
 		error += " -> ";
 		return &relation;
 	case RelationType::LIMIT_RELATION:
 		error += " -> ";
-		return GetProjectionRelation(*relation.Cast<LimitRelation>().child, error);
+		return GetProjectionOrTableRelation(*relation.Cast<LimitRelation>().child, error);
 	case RelationType::ORDER_RELATION:
 		error += " -> ";
-		return GetProjectionRelation(*relation.Cast<OrderRelation>().child, error);
+		return GetProjectionOrTableRelation(*relation.Cast<OrderRelation>().child, error);
 	case RelationType::SET_OPERATION_RELATION:
 		error += " -> ";
-		return GetProjectionRelation(*relation.Cast<SetOpRelation>().right, error);
+		return GetProjectionOrTableRelation(*relation.Cast<SetOpRelation>().right, error);
 	default:
 		throw NotImplementedException(
 		    "Relation %s is not yet implemented as a possible root chain type of from_substrait function", error);
@@ -683,15 +686,20 @@ Relation *GetProjectionRelation(Relation &relation, string &error) {
 
 shared_ptr<Relation> SubstraitToDuckDB::TransformRootOp(const substrait::RelRoot &sop) {
 	vector<string> aliases;
-	auto column_names = sop.names();
+	const auto &column_names = sop.names();
 	vector<unique_ptr<ParsedExpression>> expressions;
 	int id = 1;
 	auto child = TransformOp(sop.input());
 	string error;
-	auto first_projection = GetProjectionRelation(*child, error);
-	auto &columns = first_projection->Cast<ProjectionRelation>().columns;
+	auto first_projection_or_table = GetProjectionOrTableRelation(*child, error);
+	vector<ColumnDefinition> *column_definitions;
+	if (first_projection_or_table->type == RelationType::PROJECTION_RELATION) {
+		column_definitions = &first_projection_or_table->Cast<ProjectionRelation>().columns;
+	} else {
+		column_definitions = &first_projection_or_table->Cast<TableRelation>().description->columns;
+	}
 	int32_t i = 0;
-	for (auto &column : columns) {
+	for (auto &column : *column_definitions) {
 		aliases.push_back(column_names[i++]);
 		auto column_type = column.GetType();
 		i += SkipColumnNames(column.GetType());

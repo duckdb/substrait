@@ -1,0 +1,78 @@
+# name: test/sql/test_direct_scan.test
+# description: Test that a direct table scan works
+# group: [sql]
+
+require substrait
+
+statement ok
+PRAGMA enable_verification
+
+statement ok
+create table users (user_id varchar, name varchar, paid_for_service bool);
+
+statement ok
+insert into users values ('1', 'Pedro', false);
+
+statement ok
+CALL get_substrait('FROM users')
+
+query III
+CALL from_substrait_json('{
+  "relations": [
+    {
+      "root": {
+        "input": {
+          "read": {
+            "common": {
+              "direct": {}
+            },
+            "baseSchema": {
+              "names": [
+                "user_id",
+                "name",
+                "paid_for_service"
+              ],
+              "struct": {
+                "types": [
+                  {
+                    "string": {
+                      "nullability": "NULLABILITY_NULLABLE"
+                    }
+                  },
+                  {
+                    "string": {
+                      "nullability": "NULLABILITY_NULLABLE"
+                    }
+                  },
+                  {
+                    "bool": {
+                      "nullability": "NULLABILITY_NULLABLE"
+                    }
+                  }
+                ],
+                "nullability": "NULLABILITY_REQUIRED"
+              }
+            },
+            "namedTable": {
+              "names": [
+                "users"
+              ]
+            }
+          }
+        },
+        "names": [
+          "user_id",
+          "name",
+          "paid_for_service"
+        ]
+      }
+    }
+  ],
+  "version": {
+    "minorNumber": 52,
+    "producer": "spark-substrait-gateway"
+  }
+}
+')
+----
+1	Pedro	false
