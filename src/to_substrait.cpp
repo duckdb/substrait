@@ -561,9 +561,9 @@ void DuckDBToSubstrait::TransformExpr(Expression &dexpr, substrait::Expression &
 	case ExpressionType::COMPARE_NOT_DISTINCT_FROM:
 		TransformComparisonExpression(dexpr, sexpr);
 		break;
-	// case ExpressionType::COMPARE_BETWEEN:
-	// 	TransformBetweenExpression(dexpr, sexpr);
-	// 	break;
+	case ExpressionType::COMPARE_BETWEEN:
+		TransformBetweenExpression(dexpr, sexpr);
+		break;
 	case ExpressionType::CONJUNCTION_AND:
 	case ExpressionType::CONJUNCTION_OR:
 		TransformConjunctionExpression(dexpr, sexpr, col_offset);
