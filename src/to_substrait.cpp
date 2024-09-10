@@ -315,13 +315,12 @@ void DuckDBToSubstrait::TransformFunctionExpression(Expression &dexpr, substrait
                                                     uint64_t col_offset) {
 	auto &dfun = dexpr.Cast<BoundFunctionExpression>();
 
-
 	auto function_name = dfun.function.name;
 
 	if (function_name == "row") {
 		auto nested_expression = sexpr.mutable_nested();
 		auto struct_expression = nested_expression->mutable_struct_();
-		for (auto& child: dfun.children) {
+		for (auto &child : dfun.children) {
 			auto child_expression = struct_expression->add_fields();
 			TransformExpr(*child, *child_expression);
 		}
@@ -330,7 +329,7 @@ void DuckDBToSubstrait::TransformFunctionExpression(Expression &dexpr, substrait
 	if (function_name == "list_value" || function_name == "list_pack") {
 		auto nested_expression = sexpr.mutable_nested();
 		auto list_expression = nested_expression->mutable_list();
-		for (auto& child: dfun.children) {
+		for (auto &child : dfun.children) {
 			auto child_value = list_expression->add_values();
 			TransformExpr(*child, *child_value);
 		}
