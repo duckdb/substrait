@@ -58,6 +58,6 @@ private:
 	//! names
 	static const unordered_map<std::string, std::string> function_names_remap;
 	static const case_insensitive_set_t valid_extract_subfields;
-	vector<ParsedExpression*> struct_expressions;
+	vector<ParsedExpression *> struct_expressions;
 };
 } // namespace duckdb
