@@ -36,12 +36,6 @@ release_r: release
 debug_python: debug
 release_python: release
 
-# Main tests
-test: test_release
-
-test_release: release
-	build/release/test/unittest "$(PROJ_DIR)test/*"
-
 test_debug: debug
 	build/debug/test/unittest "$(PROJ_DIR)test/*"
 
