@@ -1,0 +1,27 @@
+# This workflow calls the main distribution pipeline from DuckDB to build, test and (optionally) release the extension
+#
+name: Main Extension Distribution Pipeline
+on:
+  pull_request:
+    paths-ignore:
+      - '**/README.md'
+      - 'doc/**'
+  push:
+    paths-ignore:
+      - '**/README.md'
+      - 'doc/**'
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.head_ref || '' }}-${{ github.base_ref || '' }}-${{ github.ref != 'refs/heads/main' || github.sha }}
+  cancel-in-progress: true
+
+jobs:
+  duckdb-main-build:
+    name: Build extension binaries
+    uses: duckdb/extension-ci-tools/.github/workflows/_extension_distribution.yml@main
+    with:
+      duckdb_version: main
+      exclude_archs: "wasm_mvp;wasm_eh;wasm_threads;windows_amd64;windows_amd64_rtools"
+      extension_name: substrait
+

@@ -11,7 +11,7 @@ make
 
 To run, run the bundled `duckdb` shell:
 ```
- ./duckdb/build/release/duckdb 
+ ./build/release/duckdb 
 ```
 
 Then, load the Substrait - DuckDB extension like so:

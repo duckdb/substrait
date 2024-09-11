@@ -19,7 +19,7 @@ driver_path = duckdb.duckdb.__file__
 
 def find_substrait():
     # Paths to search for extensions
-    build = normpath(join(dirname(__file__), "../../duckdb/build/"))
+    build = normpath(join(dirname(__file__), "../../build/"))
     extension = "extension/*/*.duckdb_extension"
 
     extension_search_patterns = [
