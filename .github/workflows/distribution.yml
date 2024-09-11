@@ -27,6 +27,7 @@ jobs:
     uses: duckdb/extension-ci-tools/.github/workflows/_extension_distribution.yml@v1.1.0
     with:
       duckdb_version: v1.1.0
+      exclude_archs: "wasm_mvp;wasm_eh;wasm_threads;windows_amd64;windows_amd64_rtools"
       extension_name: substrait
 
   duckdb-stable-deploy:
@@ -36,4 +37,5 @@ jobs:
     secrets: inherit
     with:
       duckdb_version: v1.1.0
+      exclude_archs: "wasm_mvp;wasm_eh;wasm_threads;windows_amd64;windows_amd64_rtools"
       extension_name: substrait
