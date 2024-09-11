@@ -584,7 +584,7 @@ void DuckDBToSubstrait::TransformExpr(Expression &dexpr, substrait::Expression &
 		TransformNotExpression(dexpr, sexpr, col_offset);
 		break;
 	default:
-		throw InternalException(ExpressionTypeToString(dexpr.type));
+		throw NotImplementedException(ExpressionTypeToString(dexpr.type));
 	}
 }
 
@@ -973,7 +973,7 @@ substrait::Rel *DuckDBToSubstrait::TransformComparisonJoin(LogicalOperator &dop)
 		sjoin->set_type(substrait::JoinRel::JoinType::JoinRel_JoinType_JOIN_TYPE_OUTER);
 		break;
 	default:
-		throw InternalException("Unsupported join type " + JoinTypeToString(djoin.join_type));
+		throw NotImplementedException("Unsupported join type " + JoinTypeToString(djoin.join_type));
 	}
 	// somewhat odd semantics on our side
 	if (djoin.left_projection_map.empty()) {
@@ -1449,7 +1449,7 @@ substrait::Rel *DuckDBToSubstrait::TransformOp(LogicalOperator &dop) {
 	case LogicalOperatorType::LOGICAL_DUMMY_SCAN:
 		return TransformDummyScan();
 	default:
-		throw InternalException(LogicalOperatorToString(dop.type));
+		throw NotImplementedException(LogicalOperatorToString(dop.type));
 	}
 }
 
