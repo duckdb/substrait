@@ -39,3 +39,4 @@ jobs:
       duckdb_version: v1.1.0
       exclude_archs: "wasm_mvp;wasm_eh;wasm_threads;windows_amd64;windows_amd64_rtools"
       extension_name: substrait
+      deploy_latest: true
