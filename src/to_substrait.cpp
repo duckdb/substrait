@@ -769,7 +769,7 @@ substrait::Expression *DuckDBToSubstrait::TransformJoinCond(const JoinCondition 
 		join_comparision = "lt";
 		break;
 	default:
-		throw InternalException("Unsupported join comparison: " + ExpressionTypeToOperator(dcond.comparison));
+		throw NotImplementedException("Unsupported join comparison: " + ExpressionTypeToOperator(dcond.comparison));
 	}
 	vector<::substrait::Type> args_types;
 	auto scalar_fun = expr->mutable_scalar_function();
@@ -1011,7 +1011,7 @@ substrait::Rel *DuckDBToSubstrait::TransformAggregateGroup(LogicalOperator &dop)
 	for (auto &dgrp : daggr.groups) {
 		if (dgrp->type != ExpressionType::BOUND_REF) {
 			// TODO push projection or push substrait to allow expressions here
-			throw InternalException("No expressions in groupings yet");
+			throw NotImplementedException("No expressions in groupings yet");
 		}
 		TransformExpr(*dgrp, *sgrp->add_grouping_expressions());
 	}
@@ -1019,7 +1019,7 @@ substrait::Rel *DuckDBToSubstrait::TransformAggregateGroup(LogicalOperator &dop)
 		auto smeas = saggr->add_measures()->mutable_measure();
 		if (dmeas->type != ExpressionType::BOUND_AGGREGATE) {
 			// TODO push projection or push substrait, too
-			throw InternalException("No non-aggregate expressions in measures yet");
+			throw NotImplementedException("No non-aggregate expressions in measures yet");
 		}
 		auto &daexpr = dmeas->Cast<BoundAggregateExpression>();
 
