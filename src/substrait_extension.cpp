@@ -101,15 +101,6 @@ void CleanupConnection(ClientContext& context) const {
 
 
 
-static void ToJsonFunctionInternal(ClientContext &context, ToSubstraitFunctionData &data, DataChunk &output,
-                                   unique_ptr<LogicalOperator> &query_plan, string &serialized);
-static void ToSubFunctionInternal(ClientContext &context, ToSubstraitFunctionData &data, DataChunk &output,
-                                   unique_ptr<LogicalOperator> &query_plan, string &serialized);
-
-static void VerifyJSONRoundtrip(unique_ptr<LogicalOperator> &query_plan, Connection &con, ToSubstraitFunctionData &data,
-                                const string &serialized);
-static void VerifyBlobRoundtrip(unique_ptr<LogicalOperator> &query_plan, Connection &con, ToSubstraitFunctionData &data,
-                                const string &serialized);
 
 static void SetOptions(ToSubstraitFunctionData &function, const ClientConfig &config,
                        const named_parameter_map_t &named_params) {
@@ -162,9 +153,10 @@ shared_ptr<Relation> SubstraitPlanToDuckDBRel(Connection &conn, const string &se
 	return transformer_s2d.TransformPlan();
 }
 
-static void VerifySubstraitRoundtrip(unique_ptr<LogicalOperator> &query_plan, Connection &con,
+static void VerifySubstraitRoundtrip(unique_ptr<LogicalOperator> &query_plan, ClientContext &context,
                                      ToSubstraitFunctionData &data, const string &serialized, bool is_json) {
 	// We round-trip the generated json and verify if the result is the same
+	auto con = Connection(*context.db);
 	auto actual_result = con.Query(data.query);
 
 	auto sub_relation = SubstraitPlanToDuckDBRel(con, serialized, is_json);
@@ -191,14 +183,14 @@ static void VerifySubstraitRoundtrip(unique_ptr<LogicalOperator> &query_plan, Co
 	}
 }
 
-static void VerifyBlobRoundtrip(unique_ptr<LogicalOperator> &query_plan, Connection &con, ToSubstraitFunctionData &data,
+static void VerifyBlobRoundtrip(unique_ptr<LogicalOperator> &query_plan, ClientContext &context, ToSubstraitFunctionData &data,
                                 const string &serialized) {
-	VerifySubstraitRoundtrip(query_plan, con, data, serialized, false);
+	VerifySubstraitRoundtrip(query_plan, context, data, serialized, false);
 }
 
-static void VerifyJSONRoundtrip(unique_ptr<LogicalOperator> &query_plan, Connection &con, ToSubstraitFunctionData &data,
+static void VerifyJSONRoundtrip(unique_ptr<LogicalOperator> &query_plan, ClientContext &context, ToSubstraitFunctionData &data,
                                 const string &serialized) {
-	VerifySubstraitRoundtrip(query_plan, con, data, serialized, true);
+	VerifySubstraitRoundtrip(query_plan, context, data, serialized, true);
 }
 
 
@@ -208,6 +200,15 @@ static void ToSubFunctionInternal(ClientContext &context, ToSubstraitFunctionDat
 	auto transformer_d2s = 	DuckDBToSubstrait(context, *query_plan , data.strict);
 	serialized = transformer_d2s.SerializeToString();
 	output.SetValue(0, 0, Value::BLOB_RAW(serialized));
+}
+
+static void ToJsonFunctionInternal(ClientContext &context, ToSubstraitFunctionData &data, DataChunk &output,
+                                    unique_ptr<LogicalOperator> &query_plan, string &serialized) {
+	output.SetCardinality(1);
+	query_plan = data.ExtractPlan(context);
+	auto transformer_d2s = DuckDBToSubstrait(context, *query_plan, data.strict);;
+	serialized = transformer_d2s.SerializeToJson();
+	output.SetValue(0, 0, serialized);
 }
 
 static void ToSubFunction(ClientContext &context, TableFunctionInput &data_p, DataChunk &output) {
@@ -224,28 +225,21 @@ static void ToSubFunction(ClientContext &context, TableFunctionInput &data_p, Da
 	if (!context.config.query_verification_enabled) {
 		return;
 	}
-	VerifyBlobRoundtrip(query_plan, data, serialized);
+	VerifyBlobRoundtrip(query_plan,context, data, serialized);
 	// Also run the ToJson path and verify round-trip for that
 	DataChunk other_output;
 	other_output.Initialize(context, {LogicalType::VARCHAR});
 	ToJsonFunctionInternal(context, data, other_output, query_plan, serialized);
-	VerifyJSONRoundtrip(query_plan, data, serialized);
+	VerifyJSONRoundtrip(query_plan, context, data, serialized);
 }
 
-static void ToJsonFunctionInternal(ClientContext &context, ToSubstraitFunctionData &data, DataChunk &output,
-                                   Connection &new_conn, unique_ptr<LogicalOperator> &query_plan, string &serialized) {
-	output.SetCardinality(1);
-	auto transformer_d2s = DuckDBToSubstrait(context, *data.ExtractPlan(context), data.strict);;
-	serialized = transformer_d2s.SerializeToJson();
-	output.SetValue(0, 0, serialized);
-}
+
 
 static void ToJsonFunction(ClientContext &context, TableFunctionInput &data_p, DataChunk &output) {
 	auto &data = data_p.bind_data->CastNoConst<ToSubstraitFunctionData>();
 	if (data.finished) {
 		return;
 	}
-
 	unique_ptr<LogicalOperator> query_plan;
 	string serialized;
 	ToJsonFunctionInternal(context, data, output, query_plan, serialized);
@@ -255,12 +249,12 @@ static void ToJsonFunction(ClientContext &context, TableFunctionInput &data_p, D
 	if (!context.config.query_verification_enabled) {
 		return;
 	}
-	VerifyJSONRoundtrip(query_plan, data, serialized);
+	VerifyJSONRoundtrip(query_plan, context, data, serialized);
 	// Also run the ToJson path and verify round-trip for that
 	DataChunk other_output;
 	other_output.Initialize(context, {LogicalType::BLOB});
 	ToSubFunctionInternal(context, data, other_output, query_plan, serialized);
-	VerifyBlobRoundtrip(query_plan, data, serialized);
+	VerifyBlobRoundtrip(query_plan, context, data, serialized);
 }
 
 struct FromSubstraitFunctionData : public TableFunctionData {
@@ -322,7 +316,6 @@ void InitializeGetSubstrait(const Connection &con) {
 
 void InitializeGetSubstraitJSON(const Connection &con) {
 	auto &catalog = Catalog::GetSystemCatalog(*con.context);
-
 	// create the get_substrait table function that allows us to get a substrait
 	// JSON from a valid SQL Query
 	TableFunction get_substrait_json("get_substrait_json", {LogicalType::VARCHAR}, ToJsonFunction, ToJsonBind);
@@ -344,7 +337,6 @@ void InitializeFromSubstrait(const Connection &con) {
 
 void InitializeFromSubstraitJSON(const Connection &con) {
 	auto &catalog = Catalog::GetSystemCatalog(*con.context);
-
 	// create the from_substrait table function that allows us to get a query
 	// result from a substrait plan
 	TableFunction from_sub_func_json("from_substrait_json", {LogicalType::VARCHAR}, FromSubFunction,
