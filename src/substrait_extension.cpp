@@ -98,10 +98,6 @@ void CleanupConnection(ClientContext& context) const {
 
 };
 
-
-
-
-
 static void SetOptions(ToSubstraitFunctionData &function, const ClientConfig &config,
                        const named_parameter_map_t &named_params) {
 	bool optimizer_option_set = false;
@@ -148,8 +144,8 @@ static unique_ptr<FunctionData> ToJsonBind(ClientContext &context, TableFunction
 	return InitToSubstraitFunctionData(context.config, input);
 }
 
-shared_ptr<Relation> SubstraitPlanToDuckDBRel(Connection &conn, const string &serialized, bool json = false) {
-	SubstraitToDuckDB transformer_s2d(conn, serialized, json);
+shared_ptr<Relation> SubstraitPlanToDuckDBRel(ClientContext &context, const string &serialized, bool json = false) {
+	SubstraitToDuckDB transformer_s2d(context, serialized, json);
 	return transformer_s2d.TransformPlan();
 }
 
@@ -159,7 +155,7 @@ static void VerifySubstraitRoundtrip(unique_ptr<LogicalOperator> &query_plan, Cl
 	auto con = Connection(*context.db);
 	auto actual_result = con.Query(data.query);
 
-	auto sub_relation = SubstraitPlanToDuckDBRel(con, serialized, is_json);
+	auto sub_relation = SubstraitPlanToDuckDBRel(context, serialized, is_json);
 	auto substrait_result = sub_relation->Execute();
 	substrait_result->names = actual_result->names;
 	unique_ptr<MaterializedQueryResult> substrait_materialized;
@@ -261,18 +257,16 @@ struct FromSubstraitFunctionData : public TableFunctionData {
 	FromSubstraitFunctionData() = default;
 	shared_ptr<Relation> plan;
 	unique_ptr<QueryResult> res;
-	unique_ptr<Connection> conn;
 };
 
 static unique_ptr<FunctionData> SubstraitBind(ClientContext &context, TableFunctionBindInput &input,
                                               vector<LogicalType> &return_types, vector<string> &names, bool is_json) {
 	auto result = make_uniq<FromSubstraitFunctionData>();
-	result->conn = make_uniq<Connection>(*context.db);
 	if (input.inputs[0].IsNull()) {
 		throw BinderException("from_substrait cannot be called with a NULL parameter");
 	}
 	string serialized = input.inputs[0].GetValueUnsafe<string>();
-	result->plan = SubstraitPlanToDuckDBRel(*result->conn, serialized, is_json);
+	result->plan = SubstraitPlanToDuckDBRel(context, serialized, is_json);
 	for (auto &column : result->plan->Columns()) {
 		return_types.emplace_back(column.Type());
 		names.emplace_back(column.Name());

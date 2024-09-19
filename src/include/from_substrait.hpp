@@ -10,7 +10,7 @@ namespace duckdb {
 
 class SubstraitToDuckDB {
 public:
-	SubstraitToDuckDB(Connection &con_p, const string &serialized, bool json = false);
+	SubstraitToDuckDB(ClientContext &context_p, const string &serialized, bool json = false);
 	//! Transforms Substrait Plan to DuckDB Relation
 	shared_ptr<Relation> TransformPlan();
 
@@ -48,8 +48,8 @@ private:
 
 	//! Transform Substrait Sort Order to DuckDB Order
 	OrderByNode TransformOrder(const substrait::SortField &sordf);
-	//! DuckDB Connection
-	Connection &con;
+	//! DuckDB Client Context
+	shared_ptr<ClientContext> context;
 	//! Substrait Plan
 	substrait::Plan plan;
 	//! Variable used to register functions
