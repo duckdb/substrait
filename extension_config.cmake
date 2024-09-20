@@ -5,4 +5,5 @@ duckdb_extension_load(substrait
     SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}
     INCLUDE_DIR ${CMAKE_CURRENT_LIST_DIR}/src/include
     LOAD_TESTS
+    DONT_LINK
 )

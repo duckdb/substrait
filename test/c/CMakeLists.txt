@@ -12,10 +12,15 @@ include_directories(../../duckdb/src/include)
 include_directories(../../duckdb/test/include)
 include_directories(../../duckdb/third_party/catch)
 
-set(ALL_SOURCES test_substrait_c_api.cpp)
+# get all source files from test/helpers
+file(GLOB TEST_HELPER_SOURCES "../../duckdb/test/helpers/*.cpp")
+set(ALL_SOURCES ${EXTENSION_SOURCES} ${TEST_HELPER_SOURCES} test_substrait_c_api.cpp)
 
+# this add_executable is needed to make unit test a target
+add_executable(test_substrait test_substrait_c_api.cpp ${ALL_SOURCES})
+# add duckdb static library to the test so that duckdb symbols are available
+target_link_libraries(test_substrait duckdb_static)
 
-add_library_unity(test_substrait OBJECT ${ALL_SOURCES})
 set(ALL_OBJECT_FILES
     ${ALL_OBJECT_FILES} $<TARGET_OBJECTS:test_substrait>
     PARENT_SCOPE)
