@@ -1,3 +1,11 @@
+//===----------------------------------------------------------------------===//
+//                         DuckDB
+//
+// from_substrait.hpp
+//
+//
+//===----------------------------------------------------------------------===//
+
 #pragma once
 
 #include <string>
@@ -10,7 +18,7 @@ namespace duckdb {
 
 class SubstraitToDuckDB {
 public:
-	SubstraitToDuckDB(ClientContext &context_p, const string &serialized, bool json = false);
+	SubstraitToDuckDB(shared_ptr<ClientContext> &context_p, const string &serialized, bool json = false);
 	//! Transforms Substrait Plan to DuckDB Relation
 	shared_ptr<Relation> TransformPlan();
 
