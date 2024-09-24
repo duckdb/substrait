@@ -46,3 +46,149 @@ CALL get_substrait('SELECT row(row(row(a,a,10),row(a,a,10),row(a,a,10)),row(row(
 
 statement ok
 CALL get_substrait('SELECT [[[a,a,10], [a,a,10], [a,a,10]], [[a,a,10], [a,a,10], [a,a,10]], [[a,a,10], [a,a,10], [a,a,10]]] from t;')
+
+require tpch
+
+statement ok
+CALL dbgen(sf=0.01)
+
+query I
+CALL from_substrait_json('
+{
+  "relations": [
+    {
+      "root": {
+        "input": {
+          "fetch": {
+            "common": {
+              "direct": {}
+            },
+            "input": {
+              "project": {
+                "common": {
+                  "emit": {
+                    "outputMapping": 8
+                  }
+                },
+                "input": {
+                  "read": {
+                    "common": {
+                      "direct": {}
+                    },
+                    "baseSchema": {
+                      "names": [
+                        "c_custkey",
+                        "c_name",
+                        "c_address",
+                        "c_nationkey",
+                        "c_phone",
+                        "c_acctbal",
+                        "c_mktsegment",
+                        "c_comment"
+                      ],
+                      "struct": {
+                        "types": [
+                          {
+                            "i64": {
+                              "nullability": "NULLABILITY_NULLABLE"
+                            }
+                          },
+                          {
+                            "string": {
+                              "nullability": "NULLABILITY_NULLABLE"
+                            }
+                          },
+                          {
+                            "string": {
+                              "nullability": "NULLABILITY_NULLABLE"
+                            }
+                          },
+                          {
+                            "i32": {
+                              "nullability": "NULLABILITY_NULLABLE"
+                            }
+                          },
+                          {
+                            "string": {
+                              "nullability": "NULLABILITY_NULLABLE"
+                            }
+                          },
+                          {
+                            "decimal": {
+                              "scale": 2,
+                              "precision": 15,
+                              "nullability": "NULLABILITY_NULLABLE"
+                            }
+                          },
+                          {
+                            "string": {
+                              "nullability": "NULLABILITY_NULLABLE"
+                            }
+                          },
+                          {
+                            "string": {
+                              "nullability": "NULLABILITY_NULLABLE"
+                            }
+                          }
+                        ],
+                        "nullability": "NULLABILITY_REQUIRED"
+                      }
+                    },
+                    "namedTable": {
+                      "names": [
+                        "customer"
+                      ]
+                    }
+                  }
+                },
+                "expressions": [
+                  {
+                    "nested": {
+                      "struct": {
+                        "fields": [
+                          {
+                            "selection": {
+                              "directReference": {
+                                "structField": {}
+                              },
+                              "rootReference": {}
+                            }
+                          },
+                          {
+                            "selection": {
+                              "directReference": {
+                                "structField": {
+                                  "field": 1
+                                }
+                              },
+                              "rootReference": {}
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            "count": 3
+          }
+        },
+        "names": [
+          "test_struct",
+          "custid",
+          "custname"
+        ]
+      }
+    }
+  ],
+  "version": {
+    "minorNumber": 52,
+    "producer": "spark-substrait-gateway"
+  }
+}
+')
+----
+{'custid': 1, 'custname': Customer#000000001}
+{'custid': 2, 'custname': Customer#000000002}
+{'custid': 3, 'custname': Customer#000000003}
