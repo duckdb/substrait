@@ -146,18 +146,23 @@ static unique_ptr<FunctionData> ToJsonBind(ClientContext &context, TableFunction
 }
 
 shared_ptr<Relation> SubstraitPlanToDuckDBRel(shared_ptr<ClientContext> &context, const string &serialized,
-                                              bool json = false) {
-	SubstraitToDuckDB transformer_s2d(context, serialized, json);
+                                              bool json = false, bool acquire_lock = false) {
+	SubstraitToDuckDB transformer_s2d(context, serialized, json, acquire_lock);
 	return transformer_s2d.TransformPlan();
 }
 
+//! This function matches results of substrait plans with direct Duckdb queries
+//! Is only executed when pragma enable_verification = true
+//! It creates extra connections to be able to execute the consumed DuckDB Plan
+//! And the SQL query itself, ideally this wouldn't be necessary and won't
+//! work for round-tripping tests over temporary objects.
 static void VerifySubstraitRoundtrip(unique_ptr<LogicalOperator> &query_plan, ClientContext &context,
                                      ToSubstraitFunctionData &data, const string &serialized, bool is_json) {
 	// We round-trip the generated json and verify if the result is the same
 	auto con = Connection(*context.db);
 	auto actual_result = con.Query(data.query);
-	shared_ptr<ClientContext> c_ptr(&context, do_nothing);
-	auto sub_relation = SubstraitPlanToDuckDBRel(c_ptr, serialized, is_json);
+	auto con_2 = Connection(*context.db);
+	auto sub_relation = SubstraitPlanToDuckDBRel(con_2.context, serialized, is_json, true);
 	auto substrait_result = sub_relation->Execute();
 	substrait_result->names = actual_result->names;
 	unique_ptr<MaterializedQueryResult> substrait_materialized;

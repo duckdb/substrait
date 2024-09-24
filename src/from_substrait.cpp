@@ -75,8 +75,9 @@ string SubstraitToDuckDB::RemoveExtension(const string &function_name) {
 	return name;
 }
 
-SubstraitToDuckDB::SubstraitToDuckDB(shared_ptr<ClientContext> &context_p, const string &serialized, bool json)
-    : context(context_p) {
+SubstraitToDuckDB::SubstraitToDuckDB(shared_ptr<ClientContext> &context_p, const string &serialized, bool json,
+                                     bool acquire_lock_p)
+    : context(context_p), acquire_lock(acquire_lock_p) {
 	if (!json) {
 		if (!plan.ParseFromString(serialized)) {
 			throw std::runtime_error("Was not possible to convert binary into Substrait plan");
@@ -549,9 +550,9 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformReadOp(const substrait::Rel &so
 			if (!table_info) {
 				throw CatalogException("Table '%s' does not exist!", table_name);
 			}
-			return make_shared_ptr<TableRelation>(context, std::move(table_info), false);
+			scan = make_shared_ptr<TableRelation>(context, std::move(table_info), acquire_lock);
 		} catch (...) {
-			scan = make_shared_ptr<ViewRelation>(context, DEFAULT_SCHEMA, table_name, false);
+			scan = make_shared_ptr<ViewRelation>(context, DEFAULT_SCHEMA, table_name, acquire_lock);
 		}
 	} else if (sget.has_local_files()) {
 		vector<Value> parquet_files;
@@ -573,8 +574,8 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformReadOp(const substrait::Rel &so
 		string name = "parquet_" + StringUtil::GenerateRandomName();
 		named_parameter_map_t named_parameters({{"binary_as_string", Value::BOOLEAN(false)}});
 		vector<Value> parameters {Value::LIST(parquet_files)};
-		auto scan_rel = make_shared_ptr<TableFunctionRelation>(context, "parquet_scan", parameters,
-		                                                       std::move(named_parameters), nullptr, true, false);
+		auto scan_rel = make_shared_ptr<TableFunctionRelation>(
+		    context, "parquet_scan", parameters, std::move(named_parameters), nullptr, true, acquire_lock);
 		auto rel = static_cast<Relation *>(scan_rel.get());
 		scan = rel->Alias(name);
 	} else if (sget.has_virtual_table()) {
@@ -590,7 +591,7 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformReadOp(const substrait::Rel &so
 			expression_rows.emplace_back(expression_row);
 		}
 		vector<string> column_names;
-		scan = make_shared_ptr<ValueRelation>(context, expression_rows, column_names, "values", false);
+		scan = make_shared_ptr<ValueRelation>(context, expression_rows, column_names, "values", acquire_lock);
 	} else {
 		throw NotImplementedException("Unsupported type of read operator for substrait");
 	}

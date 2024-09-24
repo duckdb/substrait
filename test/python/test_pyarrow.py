@@ -42,4 +42,4 @@ def test_substrait_pyarrow(require):
    
     arrow_result = execute_query(connection, "arrow_integers")
 
-    assert connection.execute("FROM arrow_result").fetchall() == 0
+    assert connection.execute("FROM arrow_result").fetchall() == [(0, 'a'), (1, 'b')]
