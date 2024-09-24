@@ -16,10 +16,24 @@
 #include "google/protobuf/util/json_util.h"
 #include "substrait/plan.pb.h"
 
-#include "substrait_relations.hpp"
-#include "duckdb/common/helper.hpp"
 #include "duckdb/main/table_description.hpp"
+
 #include "duckdb/catalog/catalog_entry/table_catalog_entry.hpp"
+#include "duckdb/common/helper.hpp"
+
+#include "duckdb/main/relation.hpp"
+#include "duckdb/main/relation/table_relation.hpp"
+#include "duckdb/main/relation/table_function_relation.hpp"
+#include "duckdb/main/relation/value_relation.hpp"
+#include "duckdb/main/relation/view_relation.hpp"
+#include "duckdb/main/relation/aggregate_relation.hpp"
+#include "duckdb/main/relation/cross_product_relation.hpp"
+#include "duckdb/main/relation/filter_relation.hpp"
+#include "duckdb/main/relation/join_relation.hpp"
+#include "duckdb/main/relation/limit_relation.hpp"
+#include "duckdb/main/relation/order_relation.hpp"
+#include "duckdb/main/relation/projection_relation.hpp"
+#include "duckdb/main/relation/setop_relation.hpp"
 
 namespace duckdb {
 const std::unordered_map<std::string, std::string> SubstraitToDuckDB::function_names_remap = {
@@ -61,8 +75,8 @@ string SubstraitToDuckDB::RemoveExtension(const string &function_name) {
 	return name;
 }
 
-
-SubstraitToDuckDB::SubstraitToDuckDB(shared_ptr<ClientContext> &context_p, const string &serialized, bool json):context(context_p)  {
+SubstraitToDuckDB::SubstraitToDuckDB(shared_ptr<ClientContext> &context_p, const string &serialized, bool json)
+    : context(context_p) {
 	if (!json) {
 		if (!plan.ParseFromString(serialized)) {
 			throw std::runtime_error("Was not possible to convert binary into Substrait plan");
@@ -437,7 +451,7 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformJoinOp(const substrait::Rel &so
 		throw InternalException("Unsupported join type");
 	}
 	unique_ptr<ParsedExpression> join_condition = TransformExpr(sjoin.expression());
-	return make_shared_ptr<SubstraitJoinRelation>(TransformOp(sjoin.left())->Alias("left"),
+	return make_shared_ptr<JoinRelation>(TransformOp(sjoin.left())->Alias("left"),
 	                                     TransformOp(sjoin.right())->Alias("right"), std::move(join_condition),
 	                                     djointype);
 }
@@ -445,7 +459,7 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformJoinOp(const substrait::Rel &so
 shared_ptr<Relation> SubstraitToDuckDB::TransformCrossProductOp(const substrait::Rel &sop) {
 	auto &sub_cross = sop.cross();
 
-	return make_shared_ptr<SubstraitCrossProductRelation>(TransformOp(sub_cross.left())->Alias("left"),
+	return make_shared_ptr<CrossProductRelation>(TransformOp(sub_cross.left())->Alias("left"),
 	                                             TransformOp(sub_cross.right())->Alias("right"));
 }
 
@@ -453,12 +467,12 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformFetchOp(const substrait::Rel &s
 	auto &slimit = sop.fetch();
 	idx_t limit = slimit.count() == -1 ? NumericLimits<idx_t>::Maximum() : slimit.count();
 	idx_t offset = slimit.offset();
-	return make_shared_ptr<SubstraitLimitRelation>(TransformOp(slimit.input()), limit, offset);
+	return make_shared_ptr<LimitRelation>(TransformOp(slimit.input()), limit, offset);
 }
 
 shared_ptr<Relation> SubstraitToDuckDB::TransformFilterOp(const substrait::Rel &sop) {
 	auto &sfilter = sop.filter();
-	return make_shared_ptr<SubstraitFilterRelation>(TransformOp(sfilter.input()), TransformExpr(sfilter.condition()));
+	return make_shared_ptr<FilterRelation>(TransformOp(sfilter.input()), TransformExpr(sfilter.condition()));
 }
 
 shared_ptr<Relation> SubstraitToDuckDB::TransformProjectOp(const substrait::Rel &sop) {
@@ -471,7 +485,7 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformProjectOp(const substrait::Rel 
 	for (size_t i = 0; i < expressions.size(); i++) {
 		mock_aliases.push_back("expr_" + to_string(i));
 	}
-	return make_shared_ptr<SubstraitProjectionRelation>(TransformOp(sop.project().input()), std::move(expressions),
+	return make_shared_ptr<ProjectionRelation>(TransformOp(sop.project().input()), std::move(expressions),
 	                                           std::move(mock_aliases));
 }
 
@@ -503,16 +517,16 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformAggregateOp(const substrait::Re
 		                                                    nullptr, nullptr, is_distinct));
 	}
 
-	return make_shared_ptr<SubstraitAggregateRelation>(TransformOp(sop.aggregate().input()), std::move(expressions),
+	return make_shared_ptr<AggregateRelation>(TransformOp(sop.aggregate().input()), std::move(expressions),
 	                                          std::move(groups));
 }
-unique_ptr<TableDescription> TableInfo(ClientContext& context, const string &schema_name, const string &table_name) {
+unique_ptr<TableDescription> TableInfo(ClientContext &context, const string &schema_name, const string &table_name) {
 	unique_ptr<TableDescription> result;
 	// obtain the table info
 	auto table = Catalog::GetEntry<TableCatalogEntry>(context, INVALID_CATALOG, schema_name, table_name,
-		                                                  OnEntryNotFound::RETURN_NULL);
+	                                                  OnEntryNotFound::RETURN_NULL);
 	if (!table) {
-		return{};
+		return {};
 	}
 	// write the table info to the result
 	result = make_uniq<TableDescription>();
@@ -531,13 +545,13 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformReadOp(const substrait::Rel &so
 		auto table_name = sget.named_table().names(0);
 		// If we can't find a table with that name, let's try a view.
 		try {
-			auto table_info =TableInfo(*context, DEFAULT_SCHEMA, table_name);
+			auto table_info = TableInfo(*context, DEFAULT_SCHEMA, table_name);
 			if (!table_info) {
 				throw CatalogException("Table '%s' does not exist!", table_name);
 			}
-			return make_shared_ptr<SubstraitTableRelation>(context, std::move(table_info));
+			return make_shared_ptr<TableRelation>(context, std::move(table_info), false);
 		} catch (...) {
-			scan = make_shared_ptr<SubstraitViewRelation>(context, DEFAULT_SCHEMA, table_name);
+			scan = make_shared_ptr<ViewRelation>(context, DEFAULT_SCHEMA, table_name, false);
 		}
 	} else if (sget.has_local_files()) {
 		vector<Value> parquet_files;
@@ -558,9 +572,11 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformReadOp(const substrait::Rel &so
 		}
 		string name = "parquet_" + StringUtil::GenerateRandomName();
 		named_parameter_map_t named_parameters({{"binary_as_string", Value::BOOLEAN(false)}});
-		// auto scan_rel = make_shared_ptr<SubstraitTableFunctionRelation>(context, "parquet_scan", {Value::LIST(parquet_files)}, named_parameters);
-		// auto rel = static_cast<Relation*>(scan_rel.get());
-		// scan = rel->Alias(name);
+		vector<Value> parameters {Value::LIST(parquet_files)};
+		auto scan_rel = make_shared_ptr<TableFunctionRelation>(context, "parquet_scan", parameters,
+		                                                       std::move(named_parameters), nullptr, true, false);
+		auto rel = static_cast<Relation *>(scan_rel.get());
+		scan = rel->Alias(name);
 	} else if (sget.has_virtual_table()) {
 		// We need to handle a virtual table as a LogicalExpressionGet
 		auto literal_values = sget.virtual_table().values();
@@ -574,13 +590,13 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformReadOp(const substrait::Rel &so
 			expression_rows.emplace_back(expression_row);
 		}
 		vector<string> column_names;
-		scan = make_shared_ptr<SubstraitValueRelation>(context, expression_rows, column_names, "values");
+		scan = make_shared_ptr<ValueRelation>(context, expression_rows, column_names, "values", false);
 	} else {
 		throw NotImplementedException("Unsupported type of read operator for substrait");
 	}
 
 	if (sget.has_filter()) {
-		scan = make_shared_ptr<SubstraitFilterRelation>(std::move(scan), TransformExpr(sget.filter()));
+		scan = make_shared_ptr<FilterRelation>(std::move(scan), TransformExpr(sget.filter()));
 	}
 
 	if (sget.has_projection()) {
@@ -593,7 +609,7 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformReadOp(const substrait::Rel &so
 			// TODO make sure nothing else is in there
 			expressions.push_back(make_uniq<PositionalReferenceExpression>(sproj.field() + 1));
 		}
-		scan = make_shared_ptr<SubstraitProjectionRelation>(std::move(scan), std::move(expressions), std::move(aliases));
+		scan = make_shared_ptr<ProjectionRelation>(std::move(scan), std::move(expressions), std::move(aliases));
 	}
 
 	return scan;
@@ -604,7 +620,7 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformSortOp(const substrait::Rel &so
 	for (auto &sordf : sop.sort().sorts()) {
 		order_nodes.push_back(TransformOrder(sordf));
 	}
-	return make_shared_ptr<SubstraitOrderRelation>(TransformOp(sop.sort().input()), std::move(order_nodes));
+	return make_shared_ptr<OrderRelation>(TransformOp(sop.sort().input()), std::move(order_nodes));
 }
 
 static SetOperationType TransformSetOperationType(substrait::SetRel_SetOp setop) {
@@ -638,7 +654,7 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformSetOp(const substrait::Rel &sop
 	auto lhs = TransformOp(inputs[0]);
 	auto rhs = TransformOp(inputs[1]);
 
-	return make_shared_ptr<SubstraitSetOpRelation>(std::move(lhs), std::move(rhs), type);
+	return make_shared_ptr<SetOpRelation>(std::move(lhs), std::move(rhs), type);
 }
 
 shared_ptr<Relation> SubstraitToDuckDB::TransformOp(const substrait::Rel &sop) {
@@ -687,11 +703,11 @@ Relation *GetProjection(Relation &relation) {
 	case RelationType::PROJECTION_RELATION:
 		return &relation;
 	case RelationType::LIMIT_RELATION:
-		return GetProjection(*relation.Cast<SubstraitLimitRelation>().child);
+		return GetProjection(*relation.Cast<LimitRelation>().child);
 	case RelationType::ORDER_RELATION:
-		return GetProjection(*relation.Cast<SubstraitOrderRelation>().child);
+		return GetProjection(*relation.Cast<OrderRelation>().child);
 	case RelationType::SET_OPERATION_RELATION:
-		return GetProjection(*relation.Cast<SubstraitSetOpRelation>().right);
+		return GetProjection(*relation.Cast<SetOpRelation>().right);
 	default:
 		return nullptr;
 	}
@@ -705,7 +721,7 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformRootOp(const substrait::RelRoot
 	auto child = TransformOp(sop.input());
 	auto first_projection_or_table = GetProjection(*child);
 	if (first_projection_or_table) {
-		vector<ColumnDefinition> *column_definitions = &first_projection_or_table->Cast<SubstraitProjectionRelation>().columns;
+		vector<ColumnDefinition> *column_definitions = &first_projection_or_table->Cast<ProjectionRelation>().columns;
 		int32_t i = 0;
 		for (auto &column : *column_definitions) {
 			aliases.push_back(column_names[i++]);
@@ -720,7 +736,7 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformRootOp(const substrait::RelRoot
 		}
 	}
 
-	return make_shared_ptr<SubstraitProjectionRelation>(child, std::move(expressions), aliases);
+	return make_shared_ptr<ProjectionRelation>(child, std::move(expressions), aliases);
 }
 
 shared_ptr<Relation> SubstraitToDuckDB::TransformPlan() {
