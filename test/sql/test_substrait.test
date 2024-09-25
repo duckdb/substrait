@@ -63,8 +63,6 @@ CALL from_substrait(NULL)
 ----
 from_substrait cannot be called with a NULL parameter
 
-
-
 # Should fail with Invalid Query
 statement error
 CALL get_substrait('select bla from t')
