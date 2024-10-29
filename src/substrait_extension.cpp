@@ -250,10 +250,43 @@ static unique_ptr<FunctionData> FromSubstraitBindJSON(ClientContext &context, Ta
 	return SubstraitBind(context, input, return_types, names, true);
 }
 
+static unique_ptr<FunctionData> ExplainSubstraitBind(ClientContext &context, TableFunctionBindInput &input,
+                                                     vector<LogicalType> &return_types, vector<string> &names) {
+	if (input.inputs[0].IsNull()) {
+		throw BinderException("explain_substrait cannot be called with a NULL parameter");
+	}
+
+	constexpr bool is_json = false;
+	string serialized = input.inputs[0].GetValueUnsafe<string>();
+
+	// We can reuse the `FromSubstraitFunctionData` struct to return the explain plan
+	auto result = make_uniq<FromSubstraitFunctionData>();
+	result->conn = make_uniq<Connection>(*context.db);
+	result->plan = SubstraitPlanToDuckDBRel(*result->conn, serialized, is_json);
+
+	// But, we need to customize the return type to just be a string
+	return_types.emplace_back(LogicalType::VARCHAR);
+	names.emplace_back("Explain Plan");
+
+	return std::move(result);
+}
+
 static void FromSubFunction(ClientContext &context, TableFunctionInput &data_p, DataChunk &output) {
 	auto &data = data_p.bind_data->CastNoConst<FromSubstraitFunctionData>();
 	if (!data.res) {
 		data.res = data.plan->Execute();
+	}
+	auto result_chunk = data.res->Fetch();
+	if (!result_chunk) {
+		return;
+	}
+	output.Move(*result_chunk);
+}
+
+static void ExplainSubFunction(ClientContext &context, TableFunctionInput &data_p, DataChunk &output) {
+	auto &data = data_p.bind_data->CastNoConst<FromSubstraitFunctionData>();
+	if (!data.res) {
+		data.res = data.plan->Explain();
 	}
 	auto result_chunk = data.res->Fetch();
 	if (!result_chunk) {
@@ -296,6 +329,16 @@ void InitializeFromSubstrait(const Connection &con) {
 	catalog.CreateTableFunction(*con.context, from_sub_info);
 }
 
+void InitializeExplainSubstrait(const Connection &con) {
+	auto &catalog = Catalog::GetSystemCatalog(*con.context);
+
+	// create the explain_substrait table function that returns a stringified query
+	// plan from a substrait plan
+	TableFunction explain_sub_func("explain_substrait", {LogicalType::BLOB}, ExplainSubFunction, ExplainSubstraitBind);
+	CreateTableFunctionInfo explain_sub_info(explain_sub_func);
+	catalog.CreateTableFunction(*con.context, explain_sub_info);
+}
+
 void InitializeFromSubstraitJSON(const Connection &con) {
 	auto &catalog = Catalog::GetSystemCatalog(*con.context);
 
@@ -316,6 +359,7 @@ void SubstraitExtension::Load(DuckDB &db) {
 
 	InitializeFromSubstrait(con);
 	InitializeFromSubstraitJSON(con);
+	InitializeExplainSubstrait(con);
 
 	con.Commit();
 }
