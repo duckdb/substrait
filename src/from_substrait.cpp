@@ -264,7 +264,6 @@ unique_ptr<ParsedExpression> SubstraitToDuckDB::TransformScalarFunctionExpr(cons
 		return make_uniq<ComparisonExpression>(ExpressionType::COMPARE_NOT_DISTINCT_FROM, std::move(children[0]),
 		                                       std::move(children[1]));
 	} else if (function_name == "between") {
-		// FIXME: ADD between to substrait extension
 		D_ASSERT(children.size() == 3);
 		return make_uniq<BetweenExpression>(std::move(children[0]), std::move(children[1]), std::move(children[2]));
 	} else if (function_name == "extract") {
@@ -541,7 +540,6 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformAggregateOp(const substrait::Re
 	                                          std::move(groups));
 }
 unique_ptr<TableDescription> TableInfo(ClientContext &context, const string &schema_name, const string &table_name) {
-	unique_ptr<TableDescription> result;
 	// obtain the table info
 	auto table = Catalog::GetEntry<TableCatalogEntry>(context, INVALID_CATALOG, schema_name, table_name,
 	                                                  OnEntryNotFound::RETURN_NULL);
@@ -549,9 +547,7 @@ unique_ptr<TableDescription> TableInfo(ClientContext &context, const string &sch
 		return {};
 	}
 	// write the table info to the result
-	result = make_uniq<TableDescription>();
-	result->schema = schema_name;
-	result->table = table_name;
+	auto result = make_uniq<TableDescription>(INVALID_CATALOG, schema_name, table_name);
 	for (auto &column : table->GetColumns().Logical()) {
 		result->columns.emplace_back(column.Copy());
 	}
@@ -561,6 +557,7 @@ unique_ptr<TableDescription> TableInfo(ClientContext &context, const string &sch
 shared_ptr<Relation> SubstraitToDuckDB::TransformReadOp(const substrait::Rel &sop) {
 	auto &sget = sop.read();
 	shared_ptr<Relation> scan;
+	auto context_wrapper = make_shared_ptr<RelationContextWrapper>(context);
 	if (sget.has_named_table()) {
 		auto table_name = sget.named_table().names(0);
 		// If we can't find a table with that name, let's try a view.
@@ -569,9 +566,19 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformReadOp(const substrait::Rel &so
 			if (!table_info) {
 				throw CatalogException("Table '%s' does not exist!", table_name);
 			}
-			scan = make_shared_ptr<TableRelation>(context, std::move(table_info), acquire_lock);
+			if (acquire_lock) {
+				scan = make_shared_ptr<TableRelation>(context, std::move(table_info));
+
+			} else {
+				scan = make_shared_ptr<TableRelation>(context_wrapper, std::move(table_info));
+			}
 		} catch (...) {
-			scan = make_shared_ptr<ViewRelation>(context, DEFAULT_SCHEMA, table_name, acquire_lock);
+			if (acquire_lock) {
+				scan = make_shared_ptr<ViewRelation>(context, DEFAULT_SCHEMA, table_name);
+
+			} else {
+				scan = make_shared_ptr<ViewRelation>(context_wrapper, DEFAULT_SCHEMA, table_name);
+			}
 		}
 	} else if (sget.has_local_files()) {
 		vector<Value> parquet_files;
@@ -593,8 +600,15 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformReadOp(const substrait::Rel &so
 		string name = "parquet_" + StringUtil::GenerateRandomName();
 		named_parameter_map_t named_parameters({{"binary_as_string", Value::BOOLEAN(false)}});
 		vector<Value> parameters {Value::LIST(parquet_files)};
-		auto scan_rel = make_shared_ptr<TableFunctionRelation>(
-		    context, "parquet_scan", parameters, std::move(named_parameters), nullptr, true, acquire_lock);
+		shared_ptr<TableFunctionRelation> scan_rel;
+		if (acquire_lock) {
+			scan_rel = make_shared_ptr<TableFunctionRelation>(context, "parquet_scan", parameters,
+			                                                  std::move(named_parameters));
+		} else {
+			scan_rel = make_shared_ptr<TableFunctionRelation>(context_wrapper, "parquet_scan", parameters,
+			                                                  std::move(named_parameters));
+		}
+
 		auto rel = static_cast<Relation *>(scan_rel.get());
 		scan = rel->Alias(name);
 	} else if (sget.has_virtual_table()) {
@@ -610,7 +624,12 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformReadOp(const substrait::Rel &so
 			expression_rows.emplace_back(expression_row);
 		}
 		vector<string> column_names;
-		scan = make_shared_ptr<ValueRelation>(context, expression_rows, column_names, "values", acquire_lock);
+		if (acquire_lock) {
+			scan = make_shared_ptr<ValueRelation>(context, expression_rows, column_names);
+
+		} else {
+			scan = make_shared_ptr<ValueRelation>(context_wrapper, expression_rows, column_names);
+		}
 	} else {
 		throw NotImplementedException("Unsupported type of read operator for substrait");
 	}

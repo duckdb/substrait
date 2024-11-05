@@ -1,0 +1,14 @@
+# name: test/sql/test_between.test
+# description: Test BETWEEN comparison
+# group: [sql]
+
+require substrait
+
+statement ok
+PRAGMA enable_verification
+
+statement ok
+create table t as select * from range(100) as t(x)
+
+statement ok
+CALL get_substrait('select * from t where x BETWEEN 4 AND 6;', enable_optimizer = false );

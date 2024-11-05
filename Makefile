@@ -6,7 +6,7 @@ all: release
 EXT_NAME=substrait
 EXT_CONFIG=${PROJ_DIR}extension_config.cmake
 
-CORE_EXTENSIONS='tpch;json'
+CORE_EXTENSIONS='tpch;tpcds;json'
 
 # Set this flag during building to enable the benchmark runner
 ifeq (${BUILD_BENCHMARK}, 1)
