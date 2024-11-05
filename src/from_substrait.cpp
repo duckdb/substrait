@@ -521,7 +521,6 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformAggregateOp(const substrait::Re
 	                                          std::move(groups));
 }
 unique_ptr<TableDescription> TableInfo(ClientContext &context, const string &schema_name, const string &table_name) {
-	unique_ptr<TableDescription> result;
 	// obtain the table info
 	auto table = Catalog::GetEntry<TableCatalogEntry>(context, INVALID_CATALOG, schema_name, table_name,
 	                                                  OnEntryNotFound::RETURN_NULL);
@@ -529,9 +528,7 @@ unique_ptr<TableDescription> TableInfo(ClientContext &context, const string &sch
 		return {};
 	}
 	// write the table info to the result
-	result = make_uniq<TableDescription>();
-	result->schema = schema_name;
-	result->table = table_name;
+	auto result = make_uniq<TableDescription>(INVALID_CATALOG, schema_name, table_name);
 	for (auto &column : table->GetColumns().Logical()) {
 		result->columns.emplace_back(column.Copy());
 	}
