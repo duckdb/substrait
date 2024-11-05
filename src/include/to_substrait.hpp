@@ -96,6 +96,7 @@ private:
 	void TransformFunctionExpression(Expression &dexpr, substrait::Expression &sexpr, uint64_t col_offset);
 	static void TransformConstantExpression(Expression &dexpr, substrait::Expression &sexpr);
 	void TransformComparisonExpression(Expression &dexpr, substrait::Expression &sexpr);
+	void TransformBetweenExpression(Expression &dexpr, substrait::Expression &sexpr);
 	void TransformConjunctionExpression(Expression &dexpr, substrait::Expression &sexpr, uint64_t col_offset);
 	void TransformNotNullExpression(Expression &dexpr, substrait::Expression &sexpr, uint64_t col_offset);
 	void TransformIsNullExpression(Expression &dexpr, substrait::Expression &sexpr, uint64_t col_offset);

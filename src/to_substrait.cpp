@@ -413,6 +413,29 @@ void DuckDBToSubstrait::TransformComparisonExpression(Expression &dexpr, substra
 	*scalar_fun->mutable_output_type() = DuckToSubstraitType(dcomp.return_type);
 }
 
+void DuckDBToSubstrait::TransformBetweenExpression(Expression &dexpr, substrait::Expression &sexpr) {
+	auto &dcomp = dexpr.Cast<BoundBetweenExpression>();
+
+	if (dexpr.type != ExpressionType::COMPARE_BETWEEN) {
+		throw InternalException("Not a between comparison expression");
+	}
+
+	auto scalar_fun = sexpr.mutable_scalar_function();
+	vector<::substrait::Type> args_types;
+	args_types.emplace_back(DuckToSubstraitType(dcomp.input->return_type));
+	args_types.emplace_back(DuckToSubstraitType(dcomp.lower->return_type));
+	args_types.emplace_back(DuckToSubstraitType(dcomp.upper->return_type));
+	scalar_fun->set_function_reference(RegisterFunction("between", args_types));
+	
+	auto sarg = scalar_fun->add_arguments();
+	TransformExpr(*dcomp.input, *sarg->mutable_value(), 0);
+	sarg = scalar_fun->add_arguments();
+	TransformExpr(*dcomp.lower, *sarg->mutable_value(), 0);
+	sarg = scalar_fun->add_arguments();
+	TransformExpr(*dcomp.upper, *sarg->mutable_value(), 0);
+	*scalar_fun->mutable_output_type() = DuckToSubstraitType(dcomp.return_type);
+}
+
 void DuckDBToSubstrait::TransformConjunctionExpression(Expression &dexpr, substrait::Expression &sexpr,
                                                        uint64_t col_offset) {
 	auto &dconj = dexpr.Cast<BoundConjunctionExpression>();
@@ -537,6 +560,9 @@ void DuckDBToSubstrait::TransformExpr(Expression &dexpr, substrait::Expression &
 	case ExpressionType::COMPARE_NOT_DISTINCT_FROM:
 		TransformComparisonExpression(dexpr, sexpr);
 		break;
+	case ExpressionType::COMPARE_BETWEEN:
+		TransformBetweenExpression(dexpr, sexpr);
+		break;
 	case ExpressionType::CONJUNCTION_AND:
 	case ExpressionType::CONJUNCTION_OR:
 		TransformConjunctionExpression(dexpr, sexpr, col_offset);
@@ -557,7 +583,7 @@ void DuckDBToSubstrait::TransformExpr(Expression &dexpr, substrait::Expression &
 		TransformNotExpression(dexpr, sexpr, col_offset);
 		break;
 	default:
-		throw InternalException(ExpressionTypeToString(dexpr.type));
+		throw NotImplementedException(ExpressionTypeToString(dexpr.type));
 	}
 }
 
@@ -742,7 +768,7 @@ substrait::Expression *DuckDBToSubstrait::TransformJoinCond(const JoinCondition 
 		join_comparision = "lt";
 		break;
 	default:
-		throw InternalException("Unsupported join comparison: " + ExpressionTypeToOperator(dcond.comparison));
+		throw NotImplementedException("Unsupported join comparison: " + ExpressionTypeToOperator(dcond.comparison));
 	}
 	vector<::substrait::Type> args_types;
 	auto scalar_fun = expr->mutable_scalar_function();
@@ -946,7 +972,7 @@ substrait::Rel *DuckDBToSubstrait::TransformComparisonJoin(LogicalOperator &dop)
 		sjoin->set_type(substrait::JoinRel::JoinType::JoinRel_JoinType_JOIN_TYPE_OUTER);
 		break;
 	default:
-		throw InternalException("Unsupported join type " + JoinTypeToString(djoin.join_type));
+		throw NotImplementedException("Unsupported join type " + JoinTypeToString(djoin.join_type));
 	}
 	// somewhat odd semantics on our side
 	if (djoin.left_projection_map.empty()) {
@@ -984,7 +1010,7 @@ substrait::Rel *DuckDBToSubstrait::TransformAggregateGroup(LogicalOperator &dop)
 	for (auto &dgrp : daggr.groups) {
 		if (dgrp->type != ExpressionType::BOUND_REF) {
 			// TODO push projection or push substrait to allow expressions here
-			throw InternalException("No expressions in groupings yet");
+			throw NotImplementedException("No expressions in groupings yet");
 		}
 		TransformExpr(*dgrp, *sgrp->add_grouping_expressions());
 	}
@@ -992,7 +1018,7 @@ substrait::Rel *DuckDBToSubstrait::TransformAggregateGroup(LogicalOperator &dop)
 		auto smeas = saggr->add_measures()->mutable_measure();
 		if (dmeas->type != ExpressionType::BOUND_AGGREGATE) {
 			// TODO push projection or push substrait, too
-			throw InternalException("No non-aggregate expressions in measures yet");
+			throw NotImplementedException("No non-aggregate expressions in measures yet");
 		}
 		auto &daexpr = dmeas->Cast<BoundAggregateExpression>();
 
@@ -1422,7 +1448,7 @@ substrait::Rel *DuckDBToSubstrait::TransformOp(LogicalOperator &dop) {
 	case LogicalOperatorType::LOGICAL_DUMMY_SCAN:
 		return TransformDummyScan();
 	default:
-		throw InternalException(LogicalOperatorToString(dop.type));
+		throw NotImplementedException(LogicalOperatorToString(dop.type));
 	}
 }
 
