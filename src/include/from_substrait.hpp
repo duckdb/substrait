@@ -1,3 +1,11 @@
+//===----------------------------------------------------------------------===//
+//                         DuckDB
+//
+// from_substrait.hpp
+//
+//
+//===----------------------------------------------------------------------===//
+
 #pragma once
 
 #include <string>
@@ -10,7 +18,8 @@ namespace duckdb {
 
 class SubstraitToDuckDB {
 public:
-	SubstraitToDuckDB(Connection &con_p, const string &serialized, bool json = false);
+	SubstraitToDuckDB(shared_ptr<ClientContext> &context_p, const string &serialized, bool json = false,
+	                  bool acquire_lock = false);
 	//! Transforms Substrait Plan to DuckDB Relation
 	shared_ptr<Relation> TransformPlan();
 
@@ -48,8 +57,8 @@ private:
 
 	//! Transform Substrait Sort Order to DuckDB Order
 	OrderByNode TransformOrder(const substrait::SortField &sordf);
-	//! DuckDB Connection
-	Connection &con;
+	//! DuckDB Client Context
+	shared_ptr<ClientContext> context;
 	//! Substrait Plan
 	substrait::Plan plan;
 	//! Variable used to register functions
@@ -59,5 +68,7 @@ private:
 	static const unordered_map<std::string, std::string> function_names_remap;
 	static const case_insensitive_set_t valid_extract_subfields;
 	vector<ParsedExpression *> struct_expressions;
+	//! If we should acquire a client context lock when creating the relatiosn
+	const bool acquire_lock;
 };
 } // namespace duckdb

@@ -2,15 +2,6 @@
 
 #include "duckdb/common/types/value.hpp"
 #include "duckdb/parser/expression/list.hpp"
-#include "duckdb/main/relation/join_relation.hpp"
-#include "duckdb/main/relation/cross_product_relation.hpp"
-
-#include "duckdb/main/relation/limit_relation.hpp"
-#include "duckdb/main/relation/projection_relation.hpp"
-#include "duckdb/main/relation/setop_relation.hpp"
-#include "duckdb/main/relation/aggregate_relation.hpp"
-#include "duckdb/main/relation/filter_relation.hpp"
-#include "duckdb/main/relation/order_relation.hpp"
 #include "duckdb/main/connection.hpp"
 #include "duckdb/parser/parser.hpp"
 #include "duckdb/common/exception.hpp"
@@ -25,7 +16,24 @@
 #include "google/protobuf/util/json_util.h"
 #include "substrait/plan.pb.h"
 
+#include "duckdb/main/table_description.hpp"
+
+#include "duckdb/catalog/catalog_entry/table_catalog_entry.hpp"
+#include "duckdb/common/helper.hpp"
+
+#include "duckdb/main/relation.hpp"
 #include "duckdb/main/relation/table_relation.hpp"
+#include "duckdb/main/relation/table_function_relation.hpp"
+#include "duckdb/main/relation/value_relation.hpp"
+#include "duckdb/main/relation/view_relation.hpp"
+#include "duckdb/main/relation/aggregate_relation.hpp"
+#include "duckdb/main/relation/cross_product_relation.hpp"
+#include "duckdb/main/relation/filter_relation.hpp"
+#include "duckdb/main/relation/join_relation.hpp"
+#include "duckdb/main/relation/limit_relation.hpp"
+#include "duckdb/main/relation/order_relation.hpp"
+#include "duckdb/main/relation/projection_relation.hpp"
+#include "duckdb/main/relation/setop_relation.hpp"
 
 namespace duckdb {
 const std::unordered_map<std::string, std::string> SubstraitToDuckDB::function_names_remap = {
@@ -40,7 +48,7 @@ const case_insensitive_set_t SubstraitToDuckDB::valid_extract_subfields = {
     "quarter", "microsecond", "milliseconds", "second", "minute",  "hour"};
 
 string SubstraitToDuckDB::RemapFunctionName(const string &function_name) {
-	// Lets first drop any extension id
+	// Let's first drop any extension id
 	string name;
 	for (auto &c : function_name) {
 		if (c == ':') {
@@ -67,7 +75,9 @@ string SubstraitToDuckDB::RemoveExtension(const string &function_name) {
 	return name;
 }
 
-SubstraitToDuckDB::SubstraitToDuckDB(Connection &con_p, const string &serialized, bool json) : con(con_p) {
+SubstraitToDuckDB::SubstraitToDuckDB(shared_ptr<ClientContext> &context_p, const string &serialized, bool json,
+                                     bool acquire_lock_p)
+    : context(context_p), acquire_lock(acquire_lock_p) {
 	if (!json) {
 		if (!plan.ParseFromString(serialized)) {
 			throw std::runtime_error("Was not possible to convert binary into Substrait plan");
@@ -510,16 +520,46 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformAggregateOp(const substrait::Re
 	return make_shared_ptr<AggregateRelation>(TransformOp(sop.aggregate().input()), std::move(expressions),
 	                                          std::move(groups));
 }
+unique_ptr<TableDescription> TableInfo(ClientContext &context, const string &schema_name, const string &table_name) {
+	// obtain the table info
+	auto table = Catalog::GetEntry<TableCatalogEntry>(context, INVALID_CATALOG, schema_name, table_name,
+	                                                  OnEntryNotFound::RETURN_NULL);
+	if (!table) {
+		return {};
+	}
+	// write the table info to the result
+	auto result = make_uniq<TableDescription>(INVALID_CATALOG, schema_name, table_name);
+	for (auto &column : table->GetColumns().Logical()) {
+		result->columns.emplace_back(column.Copy());
+	}
+	return result;
+}
 
 shared_ptr<Relation> SubstraitToDuckDB::TransformReadOp(const substrait::Rel &sop) {
 	auto &sget = sop.read();
 	shared_ptr<Relation> scan;
+	auto context_wrapper = make_shared_ptr<RelationContextWrapper>(context);
 	if (sget.has_named_table()) {
+		auto table_name = sget.named_table().names(0);
 		// If we can't find a table with that name, let's try a view.
 		try {
-			scan = con.Table(sget.named_table().names(0));
+			auto table_info = TableInfo(*context, DEFAULT_SCHEMA, table_name);
+			if (!table_info) {
+				throw CatalogException("Table '%s' does not exist!", table_name);
+			}
+			if (acquire_lock) {
+				scan = make_shared_ptr<TableRelation>(context, std::move(table_info));
+
+			} else {
+				scan = make_shared_ptr<TableRelation>(context_wrapper, std::move(table_info));
+			}
 		} catch (...) {
-			scan = con.View(sget.named_table().names(0));
+			if (acquire_lock) {
+				scan = make_shared_ptr<ViewRelation>(context, DEFAULT_SCHEMA, table_name);
+
+			} else {
+				scan = make_shared_ptr<ViewRelation>(context_wrapper, DEFAULT_SCHEMA, table_name);
+			}
 		}
 	} else if (sget.has_local_files()) {
 		vector<Value> parquet_files;
@@ -540,7 +580,18 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformReadOp(const substrait::Rel &so
 		}
 		string name = "parquet_" + StringUtil::GenerateRandomName();
 		named_parameter_map_t named_parameters({{"binary_as_string", Value::BOOLEAN(false)}});
-		scan = con.TableFunction("parquet_scan", {Value::LIST(parquet_files)}, named_parameters)->Alias(name);
+		vector<Value> parameters {Value::LIST(parquet_files)};
+		shared_ptr<TableFunctionRelation> scan_rel;
+		if (acquire_lock) {
+			scan_rel = make_shared_ptr<TableFunctionRelation>(context, "parquet_scan", parameters,
+			                                                  std::move(named_parameters));
+		} else {
+			scan_rel = make_shared_ptr<TableFunctionRelation>(context_wrapper, "parquet_scan", parameters,
+			                                                  std::move(named_parameters));
+		}
+
+		auto rel = static_cast<Relation *>(scan_rel.get());
+		scan = rel->Alias(name);
 	} else if (sget.has_virtual_table()) {
 		// We need to handle a virtual table as a LogicalExpressionGet
 		auto literal_values = sget.virtual_table().values();
@@ -553,7 +604,13 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformReadOp(const substrait::Rel &so
 			}
 			expression_rows.emplace_back(expression_row);
 		}
-		scan = con.Values(expression_rows);
+		vector<string> column_names;
+		if (acquire_lock) {
+			scan = make_shared_ptr<ValueRelation>(context, expression_rows, column_names);
+
+		} else {
+			scan = make_shared_ptr<ValueRelation>(context_wrapper, expression_rows, column_names);
+		}
 	} else {
 		throw NotImplementedException("Unsupported type of read operator for substrait");
 	}

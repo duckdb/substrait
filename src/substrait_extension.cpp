@@ -1,8 +1,13 @@
 #define DUCKDB_EXTENSION_MAIN
 
-#include "from_substrait.hpp"
 #include "substrait_extension.hpp"
+#include "from_substrait.hpp"
 #include "to_substrait.hpp"
+
+#include "duckdb/execution/column_binding_resolver.hpp"
+#include "duckdb/optimizer/optimizer.hpp"
+#include "duckdb/parser/parser.hpp"
+#include "duckdb/planner/planner.hpp"
 
 #ifndef DUCKDB_AMALGAMATION
 #include "duckdb/common/enums/optimizer_type.hpp"
@@ -17,6 +22,9 @@
 
 namespace duckdb {
 
+void do_nothing(ClientContext *) {
+}
+
 struct ToSubstraitFunctionData : public TableFunctionData {
 	ToSubstraitFunctionData() = default;
 	string query;
@@ -24,17 +32,72 @@ struct ToSubstraitFunctionData : public TableFunctionData {
 	//! We will fail the conversion on possible warnings
 	bool strict = false;
 	bool finished = false;
+	//! Original options from the connection
+	ClientConfig original_config;
+	set<OptimizerType> original_disabled_optimizers;
+
+	// Setup configurations
+	void PrepareConnection(ClientContext &context) {
+		// First collect original options
+		original_config = context.config;
+		original_disabled_optimizers = DBConfig::GetConfig(context).options.disabled_optimizers;
+
+		// The user might want to disable the optimizer of the new connection
+		context.config.enable_optimizer = enable_optimizer;
+		context.config.use_replacement_scans = false;
+		// We want for sure to disable the internal compression optimizations.
+		// These are DuckDB specific, no other system implements these. Also,
+		// respect the user's settings if they chose to disable any specific optimizers.
+		//
+		// The InClauseRewriter optimization converts large `IN` clauses to a
+		// "mark join" against a `ColumnDataCollection`, which may not make
+		// sense in other systems and would complicate the conversion to Substrait.
+		set<OptimizerType> disabled_optimizers = DBConfig::GetConfig(context).options.disabled_optimizers;
+		disabled_optimizers.insert(OptimizerType::IN_CLAUSE);
+		disabled_optimizers.insert(OptimizerType::COMPRESSED_MATERIALIZATION);
+		disabled_optimizers.insert(OptimizerType::MATERIALIZED_CTE);
+		// If error(varchar) gets implemented in substrait this can be removed
+		context.config.scalar_subquery_error_on_multiple_rows = false;
+		DBConfig::GetConfig(context).options.disabled_optimizers = disabled_optimizers;
+	}
+
+	unique_ptr<LogicalOperator> ExtractPlan(ClientContext &context) {
+		PrepareConnection(context);
+		unique_ptr<LogicalOperator> plan;
+		try {
+			Parser parser(context.GetParserOptions());
+			parser.ParseQuery(query);
+
+			Planner planner(context);
+			planner.CreatePlan(std::move(parser.statements[0]));
+			D_ASSERT(planner.plan);
+
+			plan = std::move(planner.plan);
+
+			if (context.config.enable_optimizer) {
+				Optimizer optimizer(*planner.binder, context);
+				plan = optimizer.Optimize(std::move(plan));
+			}
+
+			ColumnBindingResolver resolver;
+			ColumnBindingResolver::Verify(*plan);
+			resolver.VisitOperator(*plan);
+			plan->ResolveOperatorTypes();
+		} catch (...) {
+			CleanupConnection(context);
+			throw;
+		}
+
+		CleanupConnection(context);
+		return plan;
+	}
+
+	// Reset configuration
+	void CleanupConnection(ClientContext &context) const {
+		DBConfig::GetConfig(context).options.disabled_optimizers = original_disabled_optimizers;
+		context.config = original_config;
+	}
 };
-
-static void ToJsonFunctionInternal(ClientContext &context, ToSubstraitFunctionData &data, DataChunk &output,
-                                   Connection &new_conn, unique_ptr<LogicalOperator> &query_plan, string &serialized);
-static void ToSubFunctionInternal(ClientContext &context, ToSubstraitFunctionData &data, DataChunk &output,
-                                  Connection &new_conn, unique_ptr<LogicalOperator> &query_plan, string &serialized);
-
-static void VerifyJSONRoundtrip(unique_ptr<LogicalOperator> &query_plan, Connection &con, ToSubstraitFunctionData &data,
-                                const string &serialized);
-static void VerifyBlobRoundtrip(unique_ptr<LogicalOperator> &query_plan, Connection &con, ToSubstraitFunctionData &data,
-                                const string &serialized);
 
 static void SetOptions(ToSubstraitFunctionData &function, const ClientConfig &config,
                        const named_parameter_map_t &named_params) {
@@ -82,17 +145,24 @@ static unique_ptr<FunctionData> ToJsonBind(ClientContext &context, TableFunction
 	return InitToSubstraitFunctionData(context.config, input);
 }
 
-shared_ptr<Relation> SubstraitPlanToDuckDBRel(Connection &conn, const string &serialized, bool json = false) {
-	SubstraitToDuckDB transformer_s2d(conn, serialized, json);
+shared_ptr<Relation> SubstraitPlanToDuckDBRel(shared_ptr<ClientContext> &context, const string &serialized,
+                                              bool json = false, bool acquire_lock = false) {
+	SubstraitToDuckDB transformer_s2d(context, serialized, json, acquire_lock);
 	return transformer_s2d.TransformPlan();
 }
 
-static void VerifySubstraitRoundtrip(unique_ptr<LogicalOperator> &query_plan, Connection &con,
+//! This function matches results of substrait plans with direct Duckdb queries
+//! Is only executed when pragma enable_verification = true
+//! It creates extra connections to be able to execute the consumed DuckDB Plan
+//! And the SQL query itself, ideally this wouldn't be necessary and won't
+//! work for round-tripping tests over temporary objects.
+static void VerifySubstraitRoundtrip(unique_ptr<LogicalOperator> &query_plan, ClientContext &context,
                                      ToSubstraitFunctionData &data, const string &serialized, bool is_json) {
 	// We round-trip the generated json and verify if the result is the same
+	auto con = Connection(*context.db);
 	auto actual_result = con.Query(data.query);
-
-	auto sub_relation = SubstraitPlanToDuckDBRel(con, serialized, is_json);
+	auto con_2 = Connection(*context.db);
+	auto sub_relation = SubstraitPlanToDuckDBRel(con_2.context, serialized, is_json, true);
 	auto substrait_result = sub_relation->Execute();
 	substrait_result->names = actual_result->names;
 	unique_ptr<MaterializedQueryResult> substrait_materialized;
@@ -116,45 +186,33 @@ static void VerifySubstraitRoundtrip(unique_ptr<LogicalOperator> &query_plan, Co
 	}
 }
 
-static void VerifyBlobRoundtrip(unique_ptr<LogicalOperator> &query_plan, Connection &con, ToSubstraitFunctionData &data,
-                                const string &serialized) {
-	VerifySubstraitRoundtrip(query_plan, con, data, serialized, false);
+static void VerifyBlobRoundtrip(unique_ptr<LogicalOperator> &query_plan, ClientContext &context,
+                                ToSubstraitFunctionData &data, const string &serialized) {
+	VerifySubstraitRoundtrip(query_plan, context, data, serialized, false);
 }
 
-static void VerifyJSONRoundtrip(unique_ptr<LogicalOperator> &query_plan, Connection &con, ToSubstraitFunctionData &data,
-                                const string &serialized) {
-	VerifySubstraitRoundtrip(query_plan, con, data, serialized, true);
-}
-
-static DuckDBToSubstrait InitPlanExtractor(ClientContext &context, ToSubstraitFunctionData &data, Connection &new_conn,
-                                           unique_ptr<LogicalOperator> &query_plan) {
-	// The user might want to disable the optimizer of the new connection
-	new_conn.context->config.enable_optimizer = data.enable_optimizer;
-	new_conn.context->config.use_replacement_scans = false;
-
-	// We want for sure to disable the internal compression optimizations.
-	// These are DuckDB specific, no other system implements these. Also,
-	// respect the user's settings if they chose to disable any specific optimizers.
-	//
-	// The InClauseRewriter optimization converts large `IN` clauses to a
-	// "mark join" against a `ColumnDataCollection`, which may not make
-	// sense in other systems and would complicate the conversion to Substrait.
-	set<OptimizerType> disabled_optimizers = DBConfig::GetConfig(context).options.disabled_optimizers;
-	disabled_optimizers.insert(OptimizerType::IN_CLAUSE);
-	disabled_optimizers.insert(OptimizerType::COMPRESSED_MATERIALIZATION);
-	disabled_optimizers.insert(OptimizerType::MATERIALIZED_CTE);
-	DBConfig::GetConfig(*new_conn.context).options.disabled_optimizers = disabled_optimizers;
-
-	query_plan = new_conn.context->ExtractPlan(data.query);
-	return DuckDBToSubstrait(context, *query_plan, data.strict);
+static void VerifyJSONRoundtrip(unique_ptr<LogicalOperator> &query_plan, ClientContext &context,
+                                ToSubstraitFunctionData &data, const string &serialized) {
+	VerifySubstraitRoundtrip(query_plan, context, data, serialized, true);
 }
 
 static void ToSubFunctionInternal(ClientContext &context, ToSubstraitFunctionData &data, DataChunk &output,
-                                  Connection &new_conn, unique_ptr<LogicalOperator> &query_plan, string &serialized) {
+                                  unique_ptr<LogicalOperator> &query_plan, string &serialized) {
 	output.SetCardinality(1);
-	auto transformer_d2s = InitPlanExtractor(context, data, new_conn, query_plan);
+	query_plan = data.ExtractPlan(context);
+	auto transformer_d2s = DuckDBToSubstrait(context, *query_plan, data.strict);
 	serialized = transformer_d2s.SerializeToString();
 	output.SetValue(0, 0, Value::BLOB_RAW(serialized));
+}
+
+static void ToJsonFunctionInternal(ClientContext &context, ToSubstraitFunctionData &data, DataChunk &output,
+                                   unique_ptr<LogicalOperator> &query_plan, string &serialized) {
+	output.SetCardinality(1);
+	query_plan = data.ExtractPlan(context);
+	auto transformer_d2s = DuckDBToSubstrait(context, *query_plan, data.strict);
+	;
+	serialized = transformer_d2s.SerializeToJson();
+	output.SetValue(0, 0, serialized);
 }
 
 static void ToSubFunction(ClientContext &context, TableFunctionInput &data_p, DataChunk &output) {
@@ -162,33 +220,21 @@ static void ToSubFunction(ClientContext &context, TableFunctionInput &data_p, Da
 	if (data.finished) {
 		return;
 	}
-	auto new_conn = Connection(*context.db);
-	// If error(varchar) gets implemented in substrait this can be removed
-	new_conn.Query("SET scalar_subquery_error_on_multiple_rows=false;");
-
 	unique_ptr<LogicalOperator> query_plan;
 	string serialized;
-	ToSubFunctionInternal(context, data, output, new_conn, query_plan, serialized);
+	ToSubFunctionInternal(context, data, output, query_plan, serialized);
 
 	data.finished = true;
 
 	if (!context.config.query_verification_enabled) {
 		return;
 	}
-	VerifyBlobRoundtrip(query_plan, new_conn, data, serialized);
+	VerifyBlobRoundtrip(query_plan, context, data, serialized);
 	// Also run the ToJson path and verify round-trip for that
 	DataChunk other_output;
 	other_output.Initialize(context, {LogicalType::VARCHAR});
-	ToJsonFunctionInternal(context, data, other_output, new_conn, query_plan, serialized);
-	VerifyJSONRoundtrip(query_plan, new_conn, data, serialized);
-}
-
-static void ToJsonFunctionInternal(ClientContext &context, ToSubstraitFunctionData &data, DataChunk &output,
-                                   Connection &new_conn, unique_ptr<LogicalOperator> &query_plan, string &serialized) {
-	output.SetCardinality(1);
-	auto transformer_d2s = InitPlanExtractor(context, data, new_conn, query_plan);
-	serialized = transformer_d2s.SerializeToJson();
-	output.SetValue(0, 0, serialized);
+	ToJsonFunctionInternal(context, data, other_output, query_plan, serialized);
+	VerifyJSONRoundtrip(query_plan, context, data, serialized);
 }
 
 static void ToJsonFunction(ClientContext &context, TableFunctionInput &data_p, DataChunk &output) {
@@ -196,75 +242,43 @@ static void ToJsonFunction(ClientContext &context, TableFunctionInput &data_p, D
 	if (data.finished) {
 		return;
 	}
-	auto new_conn = Connection(*context.db);
-	// If error(varchar) gets implemented in substrait this can be removed
-	new_conn.Query("SET scalar_subquery_error_on_multiple_rows=false;");
-
 	unique_ptr<LogicalOperator> query_plan;
 	string serialized;
-	ToJsonFunctionInternal(context, data, output, new_conn, query_plan, serialized);
+	ToJsonFunctionInternal(context, data, output, query_plan, serialized);
 
 	data.finished = true;
 
 	if (!context.config.query_verification_enabled) {
 		return;
 	}
-	VerifyJSONRoundtrip(query_plan, new_conn, data, serialized);
+	VerifyJSONRoundtrip(query_plan, context, data, serialized);
 	// Also run the ToJson path and verify round-trip for that
 	DataChunk other_output;
 	other_output.Initialize(context, {LogicalType::BLOB});
-	ToSubFunctionInternal(context, data, other_output, new_conn, query_plan, serialized);
-	VerifyBlobRoundtrip(query_plan, new_conn, data, serialized);
+	ToSubFunctionInternal(context, data, other_output, query_plan, serialized);
+	VerifyBlobRoundtrip(query_plan, context, data, serialized);
 }
 
-struct FromSubstraitFunctionData : public TableFunctionData {
-	FromSubstraitFunctionData() = default;
-	shared_ptr<Relation> plan;
-	unique_ptr<QueryResult> res;
-	unique_ptr<Connection> conn;
-};
-
-static unique_ptr<FunctionData> SubstraitBind(ClientContext &context, TableFunctionBindInput &input,
-                                              vector<LogicalType> &return_types, vector<string> &names, bool is_json) {
-	auto result = make_uniq<FromSubstraitFunctionData>();
-	result->conn = make_uniq<Connection>(*context.db);
+static unique_ptr<TableRef> SubstraitBind(ClientContext &context, TableFunctionBindInput &input, bool is_json) {
 	if (input.inputs[0].IsNull()) {
 		throw BinderException("from_substrait cannot be called with a NULL parameter");
 	}
 	string serialized = input.inputs[0].GetValueUnsafe<string>();
-	result->plan = SubstraitPlanToDuckDBRel(*result->conn, serialized, is_json);
-	for (auto &column : result->plan->Columns()) {
-		return_types.emplace_back(column.Type());
-		names.emplace_back(column.Name());
-	}
-	return std::move(result);
+	shared_ptr<ClientContext> c_ptr(&context, do_nothing);
+	auto plan = SubstraitPlanToDuckDBRel(c_ptr, serialized, is_json);
+	return plan->GetTableRef();
 }
 
-static unique_ptr<FunctionData> FromSubstraitBind(ClientContext &context, TableFunctionBindInput &input,
-                                                  vector<LogicalType> &return_types, vector<string> &names) {
-	return SubstraitBind(context, input, return_types, names, false);
+static unique_ptr<TableRef> FromSubstraitBind(ClientContext &context, TableFunctionBindInput &input) {
+	return SubstraitBind(context, input, false);
 }
 
-static unique_ptr<FunctionData> FromSubstraitBindJSON(ClientContext &context, TableFunctionBindInput &input,
-                                                      vector<LogicalType> &return_types, vector<string> &names) {
-	return SubstraitBind(context, input, return_types, names, true);
-}
-
-static void FromSubFunction(ClientContext &context, TableFunctionInput &data_p, DataChunk &output) {
-	auto &data = data_p.bind_data->CastNoConst<FromSubstraitFunctionData>();
-	if (!data.res) {
-		data.res = data.plan->Execute();
-	}
-	auto result_chunk = data.res->Fetch();
-	if (!result_chunk) {
-		return;
-	}
-	output.Move(*result_chunk);
+static unique_ptr<TableRef> FromSubstraitBindJSON(ClientContext &context, TableFunctionBindInput &input) {
+	return SubstraitBind(context, input, true);
 }
 
 void InitializeGetSubstrait(const Connection &con) {
 	auto &catalog = Catalog::GetSystemCatalog(*con.context);
-
 	// create the get_substrait table function that allows us to get a substrait
 	// binary from a valid SQL Query
 	TableFunction to_sub_func("get_substrait", {LogicalType::VARCHAR}, ToSubFunction, ToSubstraitBind);
@@ -276,7 +290,6 @@ void InitializeGetSubstrait(const Connection &con) {
 
 void InitializeGetSubstraitJSON(const Connection &con) {
 	auto &catalog = Catalog::GetSystemCatalog(*con.context);
-
 	// create the get_substrait table function that allows us to get a substrait
 	// JSON from a valid SQL Query
 	TableFunction get_substrait_json("get_substrait_json", {LogicalType::VARCHAR}, ToJsonFunction, ToJsonBind);
@@ -291,18 +304,18 @@ void InitializeFromSubstrait(const Connection &con) {
 
 	// create the from_substrait table function that allows us to get a query
 	// result from a substrait plan
-	TableFunction from_sub_func("from_substrait", {LogicalType::BLOB}, FromSubFunction, FromSubstraitBind);
+	TableFunction from_sub_func("from_substrait", {LogicalType::BLOB}, nullptr, nullptr);
+	from_sub_func.bind_replace = FromSubstraitBind;
 	CreateTableFunctionInfo from_sub_info(from_sub_func);
 	catalog.CreateTableFunction(*con.context, from_sub_info);
 }
 
 void InitializeFromSubstraitJSON(const Connection &con) {
 	auto &catalog = Catalog::GetSystemCatalog(*con.context);
-
 	// create the from_substrait table function that allows us to get a query
 	// result from a substrait plan
-	TableFunction from_sub_func_json("from_substrait_json", {LogicalType::VARCHAR}, FromSubFunction,
-	                                 FromSubstraitBindJSON);
+	TableFunction from_sub_func_json("from_substrait_json", {LogicalType::VARCHAR}, nullptr, nullptr);
+	from_sub_func_json.bind_replace = FromSubstraitBindJSON;
 	CreateTableFunctionInfo from_sub_info_json(from_sub_func_json);
 	catalog.CreateTableFunction(*con.context, from_sub_info_json);
 }
