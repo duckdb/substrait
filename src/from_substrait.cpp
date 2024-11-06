@@ -336,7 +336,8 @@ unique_ptr<ParsedExpression> SubstraitToDuckDB::TransformInExpr(const substrait:
 	return make_uniq<OperatorExpression>(ExpressionType::COMPARE_IN, std::move(values));
 }
 
-unique_ptr<ParsedExpression> SubstraitToDuckDB::TransformNested(const substrait::Expression &sexpr) {
+unique_ptr<ParsedExpression> SubstraitToDuckDB::TransformNested(const substrait::Expression &sexpr,
+                                                                RootNameIterator *iterator) {
 	auto &nested_expression = sexpr.nested();
 	if (nested_expression.has_struct_()) {
 		auto &struct_expression = nested_expression.struct_();
@@ -344,7 +345,16 @@ unique_ptr<ParsedExpression> SubstraitToDuckDB::TransformNested(const substrait:
 		for (auto &child : struct_expression.fields()) {
 			children.emplace_back(TransformExpr(child));
 		}
-		return make_uniq<FunctionExpression>("row", std::move(children));
+		if (iterator && !iterator->Finished() && iterator->Unique(children.size())) {
+			for (auto &child : children) {
+				child->alias = iterator->GetCurrentName();
+				iterator->Next();
+			}
+			return make_uniq<FunctionExpression>("struct_pack", std::move(children));
+		} else {
+			return make_uniq<FunctionExpression>("row", std::move(children));
+		}
+
 	} else if (nested_expression.has_list()) {
 		auto &list_expression = nested_expression.list();
 		vector<unique_ptr<ParsedExpression>> children;
@@ -366,7 +376,11 @@ unique_ptr<ParsedExpression> SubstraitToDuckDB::TransformNested(const substrait:
 	}
 }
 
-unique_ptr<ParsedExpression> SubstraitToDuckDB::TransformExpr(const substrait::Expression &sexpr) {
+unique_ptr<ParsedExpression> SubstraitToDuckDB::TransformExpr(const substrait::Expression &sexpr,
+                                                              RootNameIterator *iterator) {
+	if (iterator) {
+		iterator->Next();
+	}
 	switch (sexpr.rex_type_case()) {
 	case substrait::Expression::RexTypeCase::kLiteral:
 		return TransformLiteralExpr(sexpr);
@@ -381,7 +395,7 @@ unique_ptr<ParsedExpression> SubstraitToDuckDB::TransformExpr(const substrait::E
 	case substrait::Expression::RexTypeCase::kSingularOrList:
 		return TransformInExpr(sexpr);
 	case substrait::Expression::RexTypeCase::kNested:
-		return TransformNested(sexpr);
+		return TransformNested(sexpr, iterator);
 	case substrait::Expression::RexTypeCase::kSubquery:
 	default:
 		throw InternalException("Unsupported expression type " + to_string(sexpr.rex_type_case()));
@@ -463,11 +477,12 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformCrossProductOp(const substrait:
 	                                             TransformOp(sub_cross.right())->Alias("right"));
 }
 
-shared_ptr<Relation> SubstraitToDuckDB::TransformFetchOp(const substrait::Rel &sop) {
+shared_ptr<Relation> SubstraitToDuckDB::TransformFetchOp(const substrait::Rel &sop,
+                                                         const google::protobuf::RepeatedPtrField<std::string> *names) {
 	auto &slimit = sop.fetch();
 	idx_t limit = slimit.count() == -1 ? NumericLimits<idx_t>::Maximum() : slimit.count();
 	idx_t offset = slimit.offset();
-	return make_shared_ptr<LimitRelation>(TransformOp(slimit.input()), limit, offset);
+	return make_shared_ptr<LimitRelation>(TransformOp(slimit.input(), names), limit, offset);
 }
 
 shared_ptr<Relation> SubstraitToDuckDB::TransformFilterOp(const substrait::Rel &sop) {
@@ -475,10 +490,14 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformFilterOp(const substrait::Rel &
 	return make_shared_ptr<FilterRelation>(TransformOp(sfilter.input()), TransformExpr(sfilter.condition()));
 }
 
-shared_ptr<Relation> SubstraitToDuckDB::TransformProjectOp(const substrait::Rel &sop) {
+shared_ptr<Relation>
+SubstraitToDuckDB::TransformProjectOp(const substrait::Rel &sop,
+                                      const google::protobuf::RepeatedPtrField<std::string> *names) {
 	vector<unique_ptr<ParsedExpression>> expressions;
+	RootNameIterator iterator(names);
+
 	for (auto &sexpr : sop.project().expressions()) {
-		expressions.push_back(TransformExpr(sexpr));
+		expressions.push_back(TransformExpr(sexpr, &iterator));
 	}
 
 	vector<string> mock_aliases;
@@ -635,12 +654,13 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformReadOp(const substrait::Rel &so
 	return scan;
 }
 
-shared_ptr<Relation> SubstraitToDuckDB::TransformSortOp(const substrait::Rel &sop) {
+shared_ptr<Relation> SubstraitToDuckDB::TransformSortOp(const substrait::Rel &sop,
+                                                        const google::protobuf::RepeatedPtrField<std::string> *names) {
 	vector<OrderByNode> order_nodes;
 	for (auto &sordf : sop.sort().sorts()) {
 		order_nodes.push_back(TransformOrder(sordf));
 	}
-	return make_shared_ptr<OrderRelation>(TransformOp(sop.sort().input()), std::move(order_nodes));
+	return make_shared_ptr<OrderRelation>(TransformOp(sop.sort().input(), names), std::move(order_nodes));
 }
 
 static SetOperationType TransformSetOperationType(substrait::SetRel_SetOp setop) {
@@ -660,7 +680,8 @@ static SetOperationType TransformSetOperationType(substrait::SetRel_SetOp setop)
 	}
 }
 
-shared_ptr<Relation> SubstraitToDuckDB::TransformSetOp(const substrait::Rel &sop) {
+shared_ptr<Relation> SubstraitToDuckDB::TransformSetOp(const substrait::Rel &sop,
+                                                       const google::protobuf::RepeatedPtrField<std::string> *names) {
 	D_ASSERT(sop.has_set());
 	auto &set = sop.set();
 	auto set_op_type = set.op();
@@ -672,31 +693,32 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformSetOp(const substrait::Rel &sop
 		throw NotImplementedException("The amount of inputs (%d) is not supported for this set operation", input_count);
 	}
 	auto lhs = TransformOp(inputs[0]);
-	auto rhs = TransformOp(inputs[1]);
+	auto rhs = TransformOp(inputs[1], names);
 
 	return make_shared_ptr<SetOpRelation>(std::move(lhs), std::move(rhs), type);
 }
 
-shared_ptr<Relation> SubstraitToDuckDB::TransformOp(const substrait::Rel &sop) {
+shared_ptr<Relation> SubstraitToDuckDB::TransformOp(const substrait::Rel &sop,
+                                                    const google::protobuf::RepeatedPtrField<std::string> *names) {
 	switch (sop.rel_type_case()) {
 	case substrait::Rel::RelTypeCase::kJoin:
 		return TransformJoinOp(sop);
 	case substrait::Rel::RelTypeCase::kCross:
 		return TransformCrossProductOp(sop);
 	case substrait::Rel::RelTypeCase::kFetch:
-		return TransformFetchOp(sop);
+		return TransformFetchOp(sop, names);
 	case substrait::Rel::RelTypeCase::kFilter:
 		return TransformFilterOp(sop);
 	case substrait::Rel::RelTypeCase::kProject:
-		return TransformProjectOp(sop);
+		return TransformProjectOp(sop, names);
 	case substrait::Rel::RelTypeCase::kAggregate:
 		return TransformAggregateOp(sop);
 	case substrait::Rel::RelTypeCase::kRead:
 		return TransformReadOp(sop);
 	case substrait::Rel::RelTypeCase::kSort:
-		return TransformSortOp(sop);
+		return TransformSortOp(sop, names);
 	case substrait::Rel::RelTypeCase::kSet:
-		return TransformSetOp(sop);
+		return TransformSetOp(sop, names);
 	default:
 		throw InternalException("Unsupported relation type " + to_string(sop.rel_type_case()));
 	}
@@ -738,7 +760,7 @@ shared_ptr<Relation> SubstraitToDuckDB::TransformRootOp(const substrait::RelRoot
 	const auto &column_names = sop.names();
 	vector<unique_ptr<ParsedExpression>> expressions;
 	int id = 1;
-	auto child = TransformOp(sop.input());
+	auto child = TransformOp(sop.input(), &column_names);
 	auto first_projection_or_table = GetProjection(*child);
 	if (first_projection_or_table) {
 		vector<ColumnDefinition> *column_definitions = &first_projection_or_table->Cast<ProjectionRelation>().columns;
